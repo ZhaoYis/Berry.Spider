@@ -1,5 +1,6 @@
 using Berry.Spider.Core;
 using Berry.Spider.Proxy;
+using Berry.Spider.TouTiao.Contracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,6 +14,7 @@ namespace Berry.Spider.TouTiao;
 [DependsOn(
     typeof(SpiderCoreModule),
     typeof(SpiderProxyModule),
+    typeof(TouTiaoSpiderContractsModule),
     typeof(AbpEventBusRabbitMqModule)
 )]
 public class TouTiaoSpiderModule : AbpModule

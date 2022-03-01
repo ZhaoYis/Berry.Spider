@@ -1,4 +1,3 @@
-using Berry.Spider.Core;
 using Volo.Abp.EventBus;
 
 namespace Berry.Spider.TouTiao;
@@ -7,8 +6,15 @@ namespace Berry.Spider.TouTiao;
 /// 头条资讯
 /// </summary>
 [EventName("Berry.TouTiao.Information")]
-public class TouTiaoSpiderEto : SpiderBaseEto
+public class TouTiaoSpiderEto
 {
+    /// <summary>
+    /// 搜索关键字
+    /// </summary>
+    public string Keyword { get; set; }
+    /// <summary>
+    /// 检索后结果
+    /// </summary>
     public List<TouTiaoDataItem> Items { get; set; } = new List<TouTiaoDataItem>();
 }
 

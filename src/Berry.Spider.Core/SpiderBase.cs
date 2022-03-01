@@ -6,20 +6,22 @@ namespace Berry.Spider.Core;
 /// </summary>
 public abstract class SpiderBase
 {
-    protected SpiderBase()
+    protected SpiderBase(string homePage)
     {
+        this.HomePageUrl = homePage;
+        
         this.Init();
     }
 
     /// <summary>
     /// 入口页面
     /// </summary>
-    protected abstract string HomePageUrl { get; }
+    protected string HomePageUrl { get; }
 
     /// <summary>
-    /// 初始化爬虫
+    /// 初始化爬虫相关操作
     /// </summary>
-    private void Init()
+    protected virtual void Init()
     {
         
     }

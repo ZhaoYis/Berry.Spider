@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Proxy", "src\B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.TouTiao.Sender", "src\Berry.Spider.TouTiao.Sender\Berry.Spider.TouTiao.Sender.csproj", "{5625D539-2432-4A05-AB0C-3E1DE23EA36D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.TouTiao.Contracts", "src\Berry.Spider.TouTiao.Contracts\Berry.Spider.TouTiao.Contracts.csproj", "{91D15849-22D6-42CD-84D7-35A96C0D2EAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,7 @@ Global
 		{09A70376-3B22-413F-A2D8-80C9B81E2C88} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 		{8F5EFA6F-6997-4E36-A943-A28C48313310} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 		{5625D539-2432-4A05-AB0C-3E1DE23EA36D} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
+		{91D15849-22D6-42CD-84D7-35A96C0D2EAB} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5CCD2E94-01CF-4F72-99B2-5DF458747F99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -40,5 +43,9 @@ Global
 		{5625D539-2432-4A05-AB0C-3E1DE23EA36D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5625D539-2432-4A05-AB0C-3E1DE23EA36D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5625D539-2432-4A05-AB0C-3E1DE23EA36D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91D15849-22D6-42CD-84D7-35A96C0D2EAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91D15849-22D6-42CD-84D7-35A96C0D2EAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91D15849-22D6-42CD-84D7-35A96C0D2EAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91D15849-22D6-42CD-84D7-35A96C0D2EAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

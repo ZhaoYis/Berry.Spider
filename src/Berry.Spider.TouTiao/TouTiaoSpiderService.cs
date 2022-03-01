@@ -1,8 +1,6 @@
 using System.Drawing;
 using Berry.Spider.Core;
-using Berry.Spider.Proxy;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
@@ -18,17 +16,21 @@ namespace Berry.Spider.TouTiao;
 public class TouTiaoSpiderService : SpiderBase, ITouTiaoSpiderService
 {
     private ILogger<TouTiaoSpiderService> Logger { get; }
-    private IHttpProxy HttpProxy { get; }
+    private ISeleniumProxyProvider SeleniumProxyProvider { get; }
     private IDistributedEventBus DistributedEventBus { get; }
 
-    protected override string HomePageUrl => "https://so.toutiao.com/search?keyword={0}&pd=information&dvpf=pc";
-
-    public TouTiaoSpiderService(ILogger<TouTiaoSpiderService> logger, IHttpProxy httpProxy,
-        IDistributedEventBus eventBus)
+    public TouTiaoSpiderService(ILogger<TouTiaoSpiderService> logger, ISeleniumProxyProvider proxyProvider,
+        IDistributedEventBus eventBus) : base("https://so.toutiao.com/search?keyword={0}&pd=information&dvpf=pc")
     {
         this.Logger = logger;
-        this.HttpProxy = httpProxy;
+        this.SeleniumProxyProvider = proxyProvider;
         this.DistributedEventBus = eventBus;
+    }
+
+    protected override void Init()
+    {
+        new DriverManager().SetUpDriver(new ChromeConfig());
+        base.Init();
     }
 
     /// <summary>
@@ -36,18 +38,13 @@ public class TouTiaoSpiderService : SpiderBase, ITouTiaoSpiderService
     /// </summary>
     public override async Task ExecuteAsync()
     {
-        new DriverManager().SetUpDriver(new ChromeConfig());
-
-        var options = new ChromeOptions();
-        OpenQA.Selenium.Proxy proxy = new OpenQA.Selenium.Proxy();
-        proxy.Kind = ProxyKind.Manual;
-        proxy.IsAutoDetect = false;
-        proxy.HttpProxy = await this.HttpProxy.GetProxyUriAsync();
-        options.Proxy = proxy;
+        ChromeOptions options = new ChromeOptions();
+        options.Proxy = await this.SeleniumProxyProvider.GetProxyAsync();
 
         using (var driver = new ChromeDriver("/usr/local/webdriver", options))
         {
-            driver.Navigate().GoToUrl(string.Format(this.HomePageUrl, "死神都不敢惹的五大星座"));
+            string keyword = "死神都不敢惹的五大星座";
+            driver.Navigate().GoToUrl(string.Format(this.HomePageUrl, keyword));
 
             string title = driver.Title;
             string url = driver.Url;
@@ -86,7 +83,7 @@ public class TouTiaoSpiderService : SpiderBase, ITouTiaoSpiderService
 
             if (resultContent.Count > 0)
             {
-                TouTiaoSpiderEto eto = new TouTiaoSpiderEto();
+                TouTiaoSpiderEto eto = new TouTiaoSpiderEto {Keyword = keyword};
 
                 foreach (IWebElement element in resultContent)
                 {
