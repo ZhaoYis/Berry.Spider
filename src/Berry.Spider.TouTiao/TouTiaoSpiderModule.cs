@@ -21,7 +21,6 @@ public class TouTiaoSpiderModule : AbpModule
     {
         var logger = context.ServiceProvider.GetRequiredService<ILogger<TouTiaoSpiderModule>>();
         var configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
-        logger.LogInformation($"MySettingName => {configuration["MySettingName"]}");
 
         var hostEnvironment = context.ServiceProvider.GetRequiredService<IHostEnvironment>();
         logger.LogInformation($"EnvironmentName => {hostEnvironment.EnvironmentName}");

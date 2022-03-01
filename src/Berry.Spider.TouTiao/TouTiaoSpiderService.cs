@@ -17,15 +17,16 @@ namespace Berry.Spider.TouTiao;
 /// </summary>
 public class TouTiaoSpiderService : SpiderBase, ITouTiaoSpiderService
 {
-    private ILogger<TouTiaoSpiderService> Logger { get; set; }
+    private ILogger<TouTiaoSpiderService> Logger { get; }
     private IHttpProxy HttpProxy { get; }
     private IDistributedEventBus DistributedEventBus { get; }
 
     protected override string HomePageUrl => "https://so.toutiao.com/search?keyword={0}&pd=information&dvpf=pc";
 
-    public TouTiaoSpiderService(IHttpProxy httpProxy, IDistributedEventBus eventBus)
+    public TouTiaoSpiderService(ILogger<TouTiaoSpiderService> logger, IHttpProxy httpProxy,
+        IDistributedEventBus eventBus)
     {
-        this.Logger = NullLogger<TouTiaoSpiderService>.Instance;
+        this.Logger = logger;
         this.HttpProxy = httpProxy;
         this.DistributedEventBus = eventBus;
     }
@@ -50,8 +51,10 @@ public class TouTiaoSpiderService : SpiderBase, ITouTiaoSpiderService
 
             string title = driver.Title;
             string url = driver.Url;
+            this.Logger.LogInformation("开始执行[{0}]，页面地址：{1}", title, url);
+
             string current = driver.CurrentWindowHandle;
-            Console.WriteLine("当前窗口句柄：" + current);
+            this.Logger.LogInformation("当前窗口句柄：" + current);
 
             // 隐式等待
             //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -79,7 +82,7 @@ public class TouTiaoSpiderService : SpiderBase, ITouTiaoSpiderService
 
             IWebElement webElement = wait.Until(drv => drv.FindElement(By.ClassName("s-result-list")));
             var resultContent = webElement.FindElements(By.ClassName("result-content"));
-            Console.WriteLine("总共获取到记录：" + resultContent.Count);
+            this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 
             if (resultContent.Count > 0)
             {
@@ -94,8 +97,7 @@ public class TouTiaoSpiderService : SpiderBase, ITouTiaoSpiderService
                         {
                             string text = a.Text;
                             string href = a.GetAttribute("href");
-
-                            Console.WriteLine(text + "  ---> " + href);
+                            this.Logger.LogInformation(text + "  ---> " + href);
 
                             eto.Items.Add(new TouTiaoDataItem
                             {
@@ -106,17 +108,18 @@ public class TouTiaoSpiderService : SpiderBase, ITouTiaoSpiderService
                     }
                     catch (NoSuchElementException elementException)
                     {
-                        Console.WriteLine(elementException.Message);
+                        this.Logger.LogException(elementException);
                     }
                     catch (Exception exception)
                     {
-                        Console.WriteLine(exception.Message);
+                        this.Logger.LogException(exception);
                     }
                 }
 
                 if (eto.Items.Any())
                 {
                     await this.DistributedEventBus.PublishAsync(eto);
+                    this.Logger.LogInformation("事件发布成功，等待消费...");
                 }
             }
 
