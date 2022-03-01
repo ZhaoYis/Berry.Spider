@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using Volo.Abp.EventBus.Distributed;
 using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 
@@ -18,13 +19,15 @@ public class TouTiaoSpiderService : SpiderBase, ITouTiaoSpiderService
 {
     private ILogger<TouTiaoSpiderService> Logger { get; set; }
     private IHttpProxy HttpProxy { get; }
+    private IDistributedEventBus DistributedEventBus { get; }
 
     protected override string HomePageUrl => "https://so.toutiao.com/search?keyword={0}&pd=information&dvpf=pc";
 
-    public TouTiaoSpiderService(IHttpProxy httpProxy)
+    public TouTiaoSpiderService(IHttpProxy httpProxy, IDistributedEventBus eventBus)
     {
         this.Logger = NullLogger<TouTiaoSpiderService>.Instance;
         this.HttpProxy = httpProxy;
+        this.DistributedEventBus = eventBus;
     }
 
     /// <summary>
@@ -40,7 +43,7 @@ public class TouTiaoSpiderService : SpiderBase, ITouTiaoSpiderService
         proxy.IsAutoDetect = false;
         proxy.HttpProxy = await this.HttpProxy.GetProxyUriAsync();
         options.Proxy = proxy;
-        
+
         using (var driver = new ChromeDriver("/usr/local/webdriver", options))
         {
             driver.Navigate().GoToUrl(string.Format(this.HomePageUrl, "死神都不敢惹的五大星座"));
@@ -80,15 +83,26 @@ public class TouTiaoSpiderService : SpiderBase, ITouTiaoSpiderService
 
             if (resultContent.Count > 0)
             {
+                TouTiaoSpiderEto eto = new TouTiaoSpiderEto();
+
                 foreach (IWebElement element in resultContent)
                 {
                     try
                     {
                         var a = element.FindElement(By.TagName("a"));
-                        string text = a?.Text;
-                        string href = a?.GetAttribute("href");
+                        if (a != null)
+                        {
+                            string text = a.Text;
+                            string href = a.GetAttribute("href");
 
-                        Console.WriteLine(text + "  ---> " + href);
+                            Console.WriteLine(text + "  ---> " + href);
+
+                            eto.Items.Add(new TouTiaoDataItem
+                            {
+                                Title = text,
+                                Href = href
+                            });
+                        }
                     }
                     catch (NoSuchElementException elementException)
                     {
@@ -98,6 +112,11 @@ public class TouTiaoSpiderService : SpiderBase, ITouTiaoSpiderService
                     {
                         Console.WriteLine(exception.Message);
                     }
+                }
+
+                if (eto.Items.Any())
+                {
+                    await this.DistributedEventBus.PublishAsync(eto);
                 }
             }
 
