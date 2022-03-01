@@ -6,16 +6,16 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Volo.Abp;
 
-namespace Berry.Spider.TouTiao.Sender;
+namespace Berry.Spider.Consumers;
 
-public class TouTiaoSpiderSenderHostedService : IHostedService
+public class SpiderConsumersHostedService : IHostedService
 {
     private IAbpApplicationWithInternalServiceProvider _abpApplication;
 
     private readonly IConfiguration _configuration;
     private readonly IHostEnvironment _hostEnvironment;
 
-    public TouTiaoSpiderSenderHostedService(IConfiguration configuration, IHostEnvironment hostEnvironment)
+    public SpiderConsumersHostedService(IConfiguration configuration, IHostEnvironment hostEnvironment)
     {
         _configuration = configuration;
         _hostEnvironment = hostEnvironment;
@@ -23,7 +23,7 @@ public class TouTiaoSpiderSenderHostedService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        _abpApplication =  await AbpApplicationFactory.CreateAsync<TouTiaoSpiderSenderModule>(options =>
+        _abpApplication =  await AbpApplicationFactory.CreateAsync<SpiderConsumersModule>(options =>
         {
             options.Services.ReplaceConfiguration(_configuration);
             options.Services.AddSingleton(_hostEnvironment);
@@ -33,10 +33,6 @@ public class TouTiaoSpiderSenderHostedService : IHostedService
         });
 
         await _abpApplication.InitializeAsync();
-
-        var touTiaoSpiderService = _abpApplication.ServiceProvider.GetRequiredService<ITouTiaoSpiderService>();
-
-        await touTiaoSpiderService.ExecuteAsync();
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)

@@ -251,5 +251,5 @@ paket-files/
 .idea/
 *.sln.iml
 
-# Sender
-src/Berry.Spider.TouTiao.Sender.ConsoleApp/Logs/logs.txt
+# Consumers
+src/Berry.Spider.Consumers.ConsoleApp/Logs/logs.txt
