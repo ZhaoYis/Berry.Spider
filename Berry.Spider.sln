@@ -22,6 +22,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "toutiao", "toutiao", "{EDB4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.EntityFrameworkCore", "src\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj", "{7D96A8D8-811E-4A6E-856C-0A6D0588D368}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Domain", "src\Berry.Spider.Domain\Berry.Spider.Domain.csproj", "{C7F95C49-1A57-431F-99B4-644EBF85033E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Domain.Shared", "src\Berry.Spider.Domain.Shared\Berry.Spider.Domain.Shared.csproj", "{19700694-945A-4484-9EB5-2CC5A9114CF1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,8 @@ Global
 		{91D15849-22D6-42CD-84D7-35A96C0D2EAB} = {EDB4C913-7DC8-493B-B057-9B7090448DDE}
 		{09A70376-3B22-413F-A2D8-80C9B81E2C88} = {EDB4C913-7DC8-493B-B057-9B7090448DDE}
 		{7D96A8D8-811E-4A6E-856C-0A6D0588D368} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
+		{C7F95C49-1A57-431F-99B4-644EBF85033E} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
+		{19700694-945A-4484-9EB5-2CC5A9114CF1} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5CCD2E94-01CF-4F72-99B2-5DF458747F99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -67,5 +73,13 @@ Global
 		{7D96A8D8-811E-4A6E-856C-0A6D0588D368}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D96A8D8-811E-4A6E-856C-0A6D0588D368}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D96A8D8-811E-4A6E-856C-0A6D0588D368}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7F95C49-1A57-431F-99B4-644EBF85033E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7F95C49-1A57-431F-99B4-644EBF85033E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7F95C49-1A57-431F-99B4-644EBF85033E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7F95C49-1A57-431F-99B4-644EBF85033E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19700694-945A-4484-9EB5-2CC5A9114CF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19700694-945A-4484-9EB5-2CC5A9114CF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19700694-945A-4484-9EB5-2CC5A9114CF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19700694-945A-4484-9EB5-2CC5A9114CF1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

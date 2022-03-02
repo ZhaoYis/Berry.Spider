@@ -8,11 +8,6 @@
 
     <ItemGroup>
       <PackageReference Include="Volo.Abp.Core" Version="5.1.4" />
-      <PackageReference Include="Volo.Abp.EventBus.Abstractions" Version="5.1.4" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Berry.Spider.Domain.Shared\Berry.Spider.Domain.Shared.csproj" />
     </ItemGroup>
 
 </Project>

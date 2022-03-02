@@ -43,7 +43,7 @@ public class TouTiaoSpiderService : SpiderBase, ITouTiaoSpiderService
 
         using (var driver = new ChromeDriver("/usr/local/webdriver", options))
         {
-            string keyword = "死神都不敢惹的五大星座";
+            string keyword = "描写荷花的句子";
             driver.Navigate().GoToUrl(string.Format(this.HomePageUrl, keyword));
 
             string title = driver.Title;

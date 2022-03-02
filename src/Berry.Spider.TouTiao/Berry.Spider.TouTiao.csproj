@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Berry.Spider.Core\Berry.Spider.Core.csproj" />
+      <ProjectReference Include="..\Berry.Spider.Domain\Berry.Spider.Domain.csproj" />
       <ProjectReference Include="..\Berry.Spider.Proxy\Berry.Spider.Proxy.csproj" />
       <ProjectReference Include="..\Berry.Spider.TouTiao.Contracts\Berry.Spider.TouTiao.Contracts.csproj" />
     </ItemGroup>

@@ -1,4 +1,5 @@
 using Berry.Spider.Core;
+using Berry.Spider.Domain;
 using Berry.Spider.Proxy;
 using Berry.Spider.TouTiao.Contracts;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ namespace Berry.Spider.TouTiao;
     typeof(SpiderCoreModule),
     typeof(SpiderProxyModule),
     typeof(TouTiaoSpiderContractsModule),
+    typeof(SpiderDomainModule),
     typeof(AbpEventBusRabbitMqModule)
 )]
 public class TouTiaoSpiderModule : AbpModule
