@@ -1,6 +1,6 @@
 启动selenium：
 cd /usr/local/software/selenium
-java -jar selenium-server-4.1.2.jar standalone --port 4444
+java -jar selenium-server-4.1.2.jar standalone --port 4445
 
 Selenium grid配置参数：
 -throwOnCapabilityNotPresent: [true|false]
