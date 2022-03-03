@@ -1,11 +1,11 @@
 ﻿using System.Drawing;
 using Berry.Spider.Contracts;
+using Berry.Spider.Core;
 using Berry.Spider.Domain.Shared;
 using Berry.Spider.TouTiao.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
@@ -19,27 +19,24 @@ namespace Berry.Spider.TouTiao;
 public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
 {
     private ILogger<TouTiaoSpider4InformationProvider> Logger { get; }
-    private IDriverOptionsProvider DriverOptionsProvider { get; }
+    private IWebDriverProvider WebDriverProvider { get; }
     private IDistributedEventBus DistributedEventBus { get; }
 
     public TouTiaoSpider4InformationProvider(ILogger<TouTiaoSpider4InformationProvider> logger,
-        IDriverOptionsProvider optionsProvider,
+        IWebDriverProvider webDriverProvider,
         IDistributedEventBus eventBus)
     {
         this.Logger = logger;
-        this.DriverOptionsProvider = optionsProvider;
+        this.WebDriverProvider = webDriverProvider;
         this.DistributedEventBus = eventBus;
     }
 
     public async Task ExecuteAsync()
     {
-        // using (var driver = new ChromeDriver("/usr/local/webdriver", options))
-        var options = await this.DriverOptionsProvider.BuildAsync();
-        using (var driver = new RemoteWebDriver(new Uri("http://124.223.62.114:4444"), options))
+        using (var driver = await this.WebDriverProvider.GetAsync())
         {
             string keyword = "描写荷花的句子";
-            string targetUrl =
-                string.Format("https://so.toutiao.com/search?keyword={0}&pd=information&dvpf=pc", keyword);
+            string targetUrl = string.Format("https://so.toutiao.com/search?keyword={0}&pd=information&dvpf=pc", keyword);
             driver.Navigate().GoToUrl(targetUrl);
 
             string title = driver.Title;
@@ -105,8 +102,8 @@ public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
                     this.Logger.LogInformation("事件发布成功，等待消费...");
                 }
             }
-
-            // driver.Quit();
         }
+
+        // driver.Quit();
     }
 }

@@ -1,6 +1,4 @@
 using Berry.Spider.Contracts;
-using WebDriverManager;
-using WebDriverManager.DriverConfigs.Impl;
 
 namespace Berry.Spider.TouTiao;
 
@@ -14,12 +12,6 @@ public class TouTiaoSpiderService : SpiderBaseService, ITouTiaoSpiderService
     public TouTiaoSpiderService(IEnumerable<ITouTiaoSpiderProvider> spiderProviders)
     {
         this.TiaoSpiderProviders = spiderProviders;
-    }
-
-    protected override void Init()
-    {
-        new DriverManager().SetUpDriver(new ChromeConfig());
-        base.Init();
     }
 
     /// <summary>

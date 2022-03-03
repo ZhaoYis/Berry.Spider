@@ -1,7 +1,7 @@
 ﻿using OpenQA.Selenium.Chrome;
 using Volo.Abp.DependencyInjection;
 
-namespace Berry.Spider.TouTiao;
+namespace Berry.Spider.Core;
 
 public interface IDriverOptionsProvider : ITransientDependency
 {

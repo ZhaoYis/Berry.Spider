@@ -1,6 +1,6 @@
 using Volo.Abp.DependencyInjection;
 
-namespace Berry.Spider.TouTiao;
+namespace Berry.Spider.Core;
 
 public interface ISeleniumProxyProvider : ITransientDependency
 {

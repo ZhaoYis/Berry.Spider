@@ -23,7 +23,7 @@ public class TouTiaoSpiderSenderHostedService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        _abpApplication =  await AbpApplicationFactory.CreateAsync<TouTiaoSpiderSenderModule>(options =>
+        _abpApplication = await AbpApplicationFactory.CreateAsync<TouTiaoSpiderSenderModule>(options =>
         {
             options.Services.ReplaceConfiguration(_configuration);
             options.Services.AddSingleton(_hostEnvironment);
@@ -34,8 +34,8 @@ public class TouTiaoSpiderSenderHostedService : IHostedService
 
         await _abpApplication.InitializeAsync();
 
+        //TODO:可以通过其他方式来调用
         var touTiaoSpiderService = _abpApplication.ServiceProvider.GetRequiredService<ITouTiaoSpiderService>();
-
         await touTiaoSpiderService.ExecuteAsync();
     }
 

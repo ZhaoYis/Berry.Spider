@@ -1,7 +1,7 @@
 using Berry.Spider.Proxy;
 using OpenQA.Selenium;
 
-namespace Berry.Spider.TouTiao;
+namespace Berry.Spider.Core;
 
 /// <summary>
 /// Selenium代理提供器

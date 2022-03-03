@@ -2,7 +2,7 @@
 using OpenQA.Selenium.Chrome;
 using Volo.Abp.DependencyInjection;
 
-namespace Berry.Spider.TouTiao;
+namespace Berry.Spider.Core;
 
 /// <summary>
 /// Chrome选项提供器
