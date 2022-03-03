@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Berry.Spider.Domain.Shared;
 using Berry.Spider.Domain.TouTiao;
-using Berry.Spider.TouTiao;
+using Berry.Spider.TouTiao.Contracts;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
 
@@ -12,7 +11,7 @@ namespace Berry.Spider.Consumers;
 /// <summary>
 /// 头条消息消费者
 /// </summary>
-public class TouTiaoSpiderEventHandler : IDistributedEventHandler<TouTiaoSpiderEto>, ITransientDependency
+public class TouTiaoSpiderEventHandler : IDistributedEventHandler<TouTiaoSpider4InformationEto>, ITransientDependency
 {
     private ITouTiaoSpiderRepository TiaoSpiderRepository { get; }
 
@@ -21,7 +20,7 @@ public class TouTiaoSpiderEventHandler : IDistributedEventHandler<TouTiaoSpiderE
         this.TiaoSpiderRepository = repository;
     }
 
-    public async Task HandleEventAsync(TouTiaoSpiderEto eventData)
+    public async Task HandleEventAsync(TouTiaoSpider4InformationEto eventData)
     {
         List<TouTiaoSpiderContent> contents = new List<TouTiaoSpiderContent>();
 
@@ -29,7 +28,8 @@ public class TouTiaoSpiderEventHandler : IDistributedEventHandler<TouTiaoSpiderE
         {
             eventData.Items.ForEach(c =>
             {
-                contents.Add(new TouTiaoSpiderContent(c.Title, c.Href, SpiderSourceFrom.TouTiao, c.Href));
+                //TODO:根据实际href获取具体content信息
+                contents.Add(new TouTiaoSpiderContent(c.Title, c.Href, eventData.SourceFrom, c.Href));
             });
 
             await this.TiaoSpiderRepository.InsertManyAsync(contents);

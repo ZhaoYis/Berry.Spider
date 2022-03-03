@@ -26,6 +26,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Domain", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Domain.Shared", "src\Berry.Spider.Domain.Shared\Berry.Spider.Domain.Shared.csproj", "{19700694-945A-4484-9EB5-2CC5A9114CF1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{093F9BD9-59EE-49FA-87D2-96AB2995EE26}"
+	ProjectSection(SolutionItems) = preProject
+		doc\Selenium.README.txt = doc\Selenium.README.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Contracts", "src\Berry.Spider.Contracts\Berry.Spider.Contracts.csproj", "{A0D6AA7D-9654-4185-945E-33B1831F73BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +50,7 @@ Global
 		{7D96A8D8-811E-4A6E-856C-0A6D0588D368} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 		{C7F95C49-1A57-431F-99B4-644EBF85033E} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 		{19700694-945A-4484-9EB5-2CC5A9114CF1} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
+		{A0D6AA7D-9654-4185-945E-33B1831F73BD} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5CCD2E94-01CF-4F72-99B2-5DF458747F99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -81,5 +89,9 @@ Global
 		{19700694-945A-4484-9EB5-2CC5A9114CF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19700694-945A-4484-9EB5-2CC5A9114CF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19700694-945A-4484-9EB5-2CC5A9114CF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0D6AA7D-9654-4185-945E-33B1831F73BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0D6AA7D-9654-4185-945E-33B1831F73BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0D6AA7D-9654-4185-945E-33B1831F73BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0D6AA7D-9654-4185-945E-33B1831F73BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

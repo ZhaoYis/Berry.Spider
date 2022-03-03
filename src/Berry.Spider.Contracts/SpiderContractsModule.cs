@@ -1,12 +1,12 @@
-using Berry.Spider.Contracts;
+﻿using Berry.Spider.Domain.Shared;
 using Volo.Abp.Modularity;
 
-namespace Berry.Spider.TouTiao.Contracts;
+namespace Berry.Spider.Contracts;
 
 [DependsOn(
-    typeof(SpiderContractsModule)
+    typeof(SpiderDomainSharedModule)
 )]
-public class TouTiaoSpiderContractsModule : AbpModule
+public class SpiderContractsModule : AbpModule
 {
     public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
     {

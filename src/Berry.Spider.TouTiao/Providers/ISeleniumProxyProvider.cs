@@ -4,5 +4,5 @@ namespace Berry.Spider.TouTiao;
 
 public interface ISeleniumProxyProvider : ITransientDependency
 {
-    Task<OpenQA.Selenium.Proxy> GetProxyAsync();
+    Task<OpenQA.Selenium.Proxy?> GetProxyAsync();
 }

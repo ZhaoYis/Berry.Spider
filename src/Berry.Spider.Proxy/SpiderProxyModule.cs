@@ -16,7 +16,7 @@ public class SpiderProxyModule : AbpModule
         context.Services.AddHttpClient<ProxyPoolHttpClient>();
         context.Services.Configure<HttpProxyOptions>(opt =>
         {
-            opt.ProxyPoolApiHost = "http://127.0.0.1:5010";
+            opt.ProxyPoolApiHost = "http://124.223.62.114:5010";
         });
 
         return base.ConfigureServicesAsync(context);
