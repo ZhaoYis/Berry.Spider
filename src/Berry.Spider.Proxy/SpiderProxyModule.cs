@@ -13,12 +13,14 @@ public class SpiderProxyModule : AbpModule
 
     public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
     {
-        context.Services.AddHttpClient<ProxyPoolHttpClient>();
-        context.Services.Configure<HttpProxyOptions>(opt =>
-        {
-            opt.ProxyPoolApiHost = "http://124.223.62.114:5010";
-        });
+        var configuration = context.Services.GetConfiguration();
 
-        return base.ConfigureServicesAsync(context);
+        //注册ProxyPoolHttpClient
+        context.Services.AddHttpClient<ProxyPoolHttpClient>();
+
+        //配置HttpProxyOptions
+        context.Services.Configure<HttpProxyOptions>(configuration.GetSection(nameof(HttpProxyOptions)));
+
+        return Task.CompletedTask;
     }
 }
