@@ -10,7 +10,7 @@ namespace Berry.Spider.TouTiao.Contracts;
 [EventName("Berry.TouTiao.Information")]
 public class TouTiaoSpider4InformationEto : SpiderBaseEto
 {
-    public TouTiaoSpider4InformationEto(SpiderSourceFrom @from) : base(@from)
+    public TouTiaoSpider4InformationEto() : base(SpiderSourceFrom.TouTiao_Information)
     {
     }
 }

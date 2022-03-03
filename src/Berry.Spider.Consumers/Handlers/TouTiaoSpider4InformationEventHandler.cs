@@ -9,13 +9,14 @@ using Volo.Abp.EventBus.Distributed;
 namespace Berry.Spider.Consumers;
 
 /// <summary>
-/// 头条消息消费者
+/// 头条：资讯
 /// </summary>
-public class TouTiaoSpiderEventHandler : IDistributedEventHandler<TouTiaoSpider4InformationEto>, ITransientDependency
+public class TouTiaoSpider4InformationEventHandler : IDistributedEventHandler<TouTiaoSpider4InformationEto>,
+    ITransientDependency
 {
     private ITouTiaoSpiderRepository TiaoSpiderRepository { get; }
 
-    public TouTiaoSpiderEventHandler(ITouTiaoSpiderRepository repository)
+    public TouTiaoSpider4InformationEventHandler(ITouTiaoSpiderRepository repository)
     {
         this.TiaoSpiderRepository = repository;
     }

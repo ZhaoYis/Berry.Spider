@@ -36,7 +36,8 @@ public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
         using (var driver = await this.WebDriverProvider.GetAsync())
         {
             string keyword = "描写荷花的句子";
-            string targetUrl = string.Format("https://so.toutiao.com/search?keyword={0}&pd=information&dvpf=pc", keyword);
+            string targetUrl =
+                string.Format("https://so.toutiao.com/search?keyword={0}&pd=information&dvpf=pc", keyword);
             driver.Navigate().GoToUrl(targetUrl);
 
             string title = driver.Title;
@@ -65,7 +66,7 @@ public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
 
             if (resultContent.Count > 0)
             {
-                var eto = new TouTiaoSpider4InformationEto(SpiderSourceFrom.TouTiao_Information) { Keyword = keyword };
+                var eto = new TouTiaoSpider4InformationEto() { Keyword = keyword };
 
                 foreach (IWebElement element in resultContent)
                 {
@@ -103,7 +104,5 @@ public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
                 }
             }
         }
-
-        // driver.Quit();
     }
 }

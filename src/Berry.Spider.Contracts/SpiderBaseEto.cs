@@ -4,7 +4,7 @@ namespace Berry.Spider.Contracts
 {
     public class SpiderBaseEto
     {
-        public SpiderBaseEto(SpiderSourceFrom @from)
+        protected SpiderBaseEto(SpiderSourceFrom @from)
         {
             this.SourceFrom = from;
         }
