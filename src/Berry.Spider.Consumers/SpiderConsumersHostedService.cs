@@ -23,7 +23,7 @@ public class SpiderConsumersHostedService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        _abpApplication =  await AbpApplicationFactory.CreateAsync<SpiderConsumersModule>(options =>
+        _abpApplication = await AbpApplicationFactory.CreateAsync<SpiderConsumersModule>(options =>
         {
             options.Services.ReplaceConfiguration(_configuration);
             options.Services.AddSingleton(_hostEnvironment);

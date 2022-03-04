@@ -27,11 +27,11 @@ public class TouTiaoSpider4InformationEventHandler : IDistributedEventHandler<To
 
         if (eventData.Items.Any())
         {
-            eventData.Items.ForEach(c =>
+            foreach (var item in eventData.Items)
             {
-                //TODO:根据实际href获取具体content信息
-                contents.Add(new TouTiaoSpiderContent(c.Title, c.Href, eventData.SourceFrom, c.Href));
-            });
+                //TODO:获取具体内容
+                contents.Add(new TouTiaoSpiderContent(item.Title, item.Href, eventData.SourceFrom, item.Href));
+            }
 
             await this.TiaoSpiderRepository.InsertManyAsync(contents);
         }

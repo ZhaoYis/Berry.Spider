@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Berry.Spider.Core;
 using Berry.Spider.EntityFrameworkCore;
+using Berry.Spider.Proxy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,7 +16,8 @@ namespace Berry.Spider.Consumers;
 [DependsOn(
     typeof(AbpAutofacModule),
     typeof(AbpEventBusRabbitMqModule),
-    // typeof(TouTiaoSpiderModule),
+    typeof(SpiderCoreModule),
+    typeof(SpiderProxyModule),
     typeof(SpiderEntityFrameworkCoreModule)
 )]
 public class SpiderConsumersModule : AbpModule
