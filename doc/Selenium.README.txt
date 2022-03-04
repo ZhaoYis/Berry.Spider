@@ -1,6 +1,8 @@
 启动selenium：
 cd /usr/local/software/selenium
 java -jar selenium-server-4.1.2.jar standalone --port 4445
+以服务的方式运行：
+nohup java -jar /usr/local/software/selenium/selenium-server-4.1.2.jar standalone --port 4445 >/usr/local/software/selenium/console.log &
 
 Selenium grid配置参数：
 -throwOnCapabilityNotPresent: [true|false]

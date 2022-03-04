@@ -34,84 +34,92 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
     {
         using (var driver = await this.WebDriverProvider.GetAsync())
         {
-            string keyword = "描写荷花的句子";
-            string targetUrl = string.Format("https://so.toutiao.com/search?keyword={0}&pd=question&dvpf=pc", keyword);
-            driver.Navigate().GoToUrl(targetUrl);
-
-            string title = driver.Title;
-            string url = driver.Url;
-            this.Logger.LogInformation("开始执行[{0}]，页面地址：{1}", title, url);
-
-            string current = driver.CurrentWindowHandle;
-            this.Logger.LogInformation("当前窗口句柄：" + current);
-
-            // 隐式等待
-            //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            // 设置Cookie
-            // driver.Manage().Cookies.AddCookie(new Cookie("key", "value"));
-            // 将窗口移动到主显示器的左上角
-            driver.Manage().Window.Position = new Point(0, 0);
-
-            WebDriverWait wait = new WebDriverWait(driver, timeout: TimeSpan.FromSeconds(30))
+            try
             {
-                PollingInterval = TimeSpan.FromSeconds(5),
-            };
-            wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+                string keyword = "描写荷花的句子";
+                string targetUrl = string.Format("https://so.toutiao.com/search?keyword={0}&pd=question&dvpf=pc",
+                    keyword);
+                driver.Navigate().GoToUrl(targetUrl);
 
-            IWebElement webElement = wait.Until(drv => drv.FindElement(By.ClassName("s-result-list")));
-            var resultContent = webElement.FindElements(By.ClassName("result-content"));
-            this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+                string title = driver.Title;
+                string url = driver.Url;
+                this.Logger.LogInformation("开始执行[{0}]，页面地址：{1}", title, url);
 
-            if (resultContent.Count > 0)
-            {
-                var eto = new TouTiaoSpider4QuestionEto() { Keyword = keyword };
+                string current = driver.CurrentWindowHandle;
+                this.Logger.LogInformation("当前窗口句柄：" + current);
 
-                foreach (IWebElement element in resultContent)
+                // 隐式等待
+                //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+                // 设置Cookie
+                // driver.Manage().Cookies.AddCookie(new Cookie("key", "value"));
+                // 将窗口移动到主显示器的左上角
+                driver.Manage().Window.Position = new Point(0, 0);
+
+                WebDriverWait wait = new WebDriverWait(driver, timeout: TimeSpan.FromSeconds(30))
                 {
-                    try
+                    PollingInterval = TimeSpan.FromSeconds(5),
+                };
+                wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+
+                IWebElement webElement = wait.Until(drv => drv.FindElement(By.ClassName("s-result-list")));
+                var resultContent = webElement.FindElements(By.ClassName("result-content"));
+                this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+
+                if (resultContent.Count > 0)
+                {
+                    var eto = new TouTiaoSpider4QuestionEto() { Keyword = keyword };
+
+                    foreach (IWebElement element in resultContent)
                     {
-                        //只取 大家都在问 的部分
-                        // //*[@id="s-dom-bcef6410"]/div/div/div/div[2]/div/a/div/div[1]/span[1]
-                        // cs-view cs-view-flex align-items-center flex-row cs-source-content
-                        var span = element.FindElement(By.XPath(""));
-                        if (span != null)
+                        try
                         {
-                            if (span.Text.Trim().Equals("大家都在问"))
+                            //只取 大家都在问 的部分
+                            // //*[@id="s-dom-bcef6410"]/div/div/div/div[2]/div/a/div/div[1]/span[1]
+                            // cs-view cs-view-flex align-items-center flex-row cs-source-content
+                            var span = element.FindElement(By.ClassName(
+                                "//div[@class='cs-view cs-view-flex align-items-center flex-row cs-source-content']"));
+                            if (span != null)
                             {
-                                
+                                if (span.Text.Trim().Equals("大家都在问"))
+                                {
+                                }
+                            }
+
+                            var a = element.FindElement(By.TagName("a"));
+                            if (a != null)
+                            {
+                                string text = a.Text;
+                                string href = a.GetAttribute("href");
+
+                                eto.Items.Add(new SpiderChildPageDataItem
+                                {
+                                    Title = text,
+                                    Href = href
+                                });
+
+                                this.Logger.LogInformation(text + "  ---> " + href);
                             }
                         }
-
-                        var a = element.FindElement(By.TagName("a"));
-                        if (a != null)
+                        catch (WebDriverException exception)
                         {
-                            string text = a.Text;
-                            string href = a.GetAttribute("href");
-
-                            eto.Items.Add(new SpiderChildPageDataItem
-                            {
-                                Title = text,
-                                Href = href
-                            });
-
-                            this.Logger.LogInformation(text + "  ---> " + href);
+                            this.Logger.LogException(exception);
+                        }
+                        catch (Exception exception)
+                        {
+                            this.Logger.LogException(exception);
                         }
                     }
-                    catch (WebDriverException exception)
-                    {
-                        this.Logger.LogException(exception);
-                    }
-                    catch (Exception exception)
-                    {
-                        this.Logger.LogException(exception);
-                    }
-                }
 
-                if (eto.Items.Any())
-                {
-                    await this.DistributedEventBus.PublishAsync(eto);
-                    this.Logger.LogInformation("事件发布成功，等待消费...");
+                    if (eto.Items.Any())
+                    {
+                        await this.DistributedEventBus.PublishAsync(eto);
+                        this.Logger.LogInformation("事件发布成功，等待消费...");
+                    }
                 }
+            }
+            finally
+            {
+                driver.Quit();
             }
         }
     }
