@@ -30,7 +30,7 @@ public class SpiderEntityFrameworkCoreModule : AbpModule
         {
             /* The main point to change your DBMS.
              * See also SpiderDbContextFactory for EF Core tooling. */
-            options.UseSqlite();
+            options.UseMySQL();
         });
         
         return Task.CompletedTask;

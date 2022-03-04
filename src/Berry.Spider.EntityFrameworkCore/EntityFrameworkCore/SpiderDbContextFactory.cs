@@ -4,14 +4,15 @@ using Microsoft.Extensions.Configuration;
 
 namespace Berry.Spider.EntityFrameworkCore.EntityFrameworkCore;
 
-public class SpiderDbContextFactory: IDesignTimeDbContextFactory<SpiderDbContext>
+public class SpiderDbContextFactory : IDesignTimeDbContextFactory<SpiderDbContext>
 {
     public SpiderDbContext CreateDbContext(string[] args)
     {
         var configuration = BuildConfiguration();
 
         var builder = new DbContextOptionsBuilder<SpiderDbContext>()
-            .UseSqlite(configuration.GetConnectionString("Default"));
+            .UseMySql(configuration.GetConnectionString("Default"),
+                ServerVersion.AutoDetect(configuration.GetConnectionString("Default")));
 
         return new SpiderDbContext(builder.Options);
     }
