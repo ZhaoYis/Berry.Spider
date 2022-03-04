@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Web;
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.TouTiao.Contracts;
@@ -74,30 +75,37 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
                         try
                         {
                             //只取 大家都在问 的部分
-                            // //*[@id="s-dom-bcef6410"]/div/div/div/div[2]/div/a/div/div[1]/span[1]
-                            // cs-view cs-view-flex align-items-center flex-row cs-source-content
-                            var span = element.FindElement(By.ClassName(
-                                "//div[@class='cs-view cs-view-flex align-items-center flex-row cs-source-content']"));
-                            if (span != null)
-                            {
-                                if (span.Text.Trim().Equals("大家都在问"))
-                                {
-                                }
-                            }
+                            // var span = element.FindElement(By.ClassName(
+                            //     "//div[@class='cs-view cs-view-flex align-items-center flex-row cs-source-content']"));
+                            // if (span != null)
+                            // {
+                            //     if (span.Text.Trim().Equals("大家都在问"))
+                            //     {
+                            //     }
+                            // }
 
+                            //https://so.toutiao.com/search/jump?url=https://so.toutiao.com/s/search_wenda_pc/list/?qid=6959168672381092127&enter_answer_id=6959174410759323942&enter_from=search_result&aid=4916&jtoken=c47d820935b56f1e45ae0f2b729ffa52df0fa9ae4d13f409a370b005eb0492689aeea6f8881750a45f53aaca866c7950849eb3e24f7d4db160483899ca0389bd
                             var a = element.FindElement(By.TagName("a"));
                             if (a != null)
                             {
                                 string text = a.Text;
                                 string href = a.GetAttribute("href");
 
-                                eto.Items.Add(new SpiderChildPageDataItem
+                                //去获取so.toutiao.com的记录
+                                Uri sourceUri = new Uri(href);
+                                //?url=https://so.toutiao.com/s/search_wenda_pc/list/?qid=6959168672381092127&enter_answer_id=6959174410759323942&enter_from=search_result&aid=4916&jtoken=c47d820935b56f1e45ae0f2b729ffa52df0fa9ae4d13f409a370b005eb0492689aeea6f8881750a45f53aaca866c7950849eb3e24f7d4db160483899ca0389bd
+                                string jumpUrl = sourceUri.Query.Substring(5);
+                                Uri jumpUri = new Uri(HttpUtility.UrlDecode(jumpUrl));
+                                if (sourceUri.Host.Equals(jumpUri.Host))
                                 {
-                                    Title = text,
-                                    Href = href
-                                });
+                                    eto.Items.Add(new SpiderChildPageDataItem
+                                    {
+                                        Title = text,
+                                        Href = jumpUri.ToString()
+                                    });
 
-                                this.Logger.LogInformation(text + "  ---> " + href);
+                                    this.Logger.LogInformation(text + "  ---> " + href);
+                                }
                             }
                         }
                         catch (WebDriverException exception)

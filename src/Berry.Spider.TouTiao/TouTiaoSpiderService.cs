@@ -23,7 +23,10 @@ public class TouTiaoSpiderService : SpiderBaseService, ITouTiaoSpiderService
 
         foreach (ITouTiaoSpiderProvider provider in this.TiaoSpiderProviders)
         {
-            await provider.ExecuteAsync();
+            if (provider is TouTiaoSpider4QuestionProvider)
+            {
+                await provider.ExecuteAsync();
+            }
         }
     }
 }
