@@ -16,9 +16,4 @@ public abstract class SpiderBaseService
     protected virtual void Init()
     {
     }
-
-    /// <summary>
-    /// 执行爬虫
-    /// </summary>
-    public abstract Task ExecuteAsync();
 }

@@ -1,8 +1,8 @@
-using Volo.Abp.DependencyInjection;
+using Berry.Spider.Contracts;
 
 namespace Berry.Spider.TouTiao;
 
-public interface ITouTiaoSpiderService : ITransientDependency
+public interface ITouTiaoSpiderService : ISpiderService
 {
-    Task ExecuteAsync();
+
 }

@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Berry.Spider.TouTiao.Contracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -36,7 +37,7 @@ public class TouTiaoSpiderSenderHostedService : IHostedService
 
         //TODO:可以通过其他方式来调用
         var touTiaoSpiderService = _abpApplication.ServiceProvider.GetRequiredService<ITouTiaoSpiderService>();
-        await touTiaoSpiderService.ExecuteAsync();
+        await touTiaoSpiderService.ExecuteAsync<TouTiaoSpiderRequest>(new TouTiaoSpiderRequest{ Keyword = "春天的句子"});
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
