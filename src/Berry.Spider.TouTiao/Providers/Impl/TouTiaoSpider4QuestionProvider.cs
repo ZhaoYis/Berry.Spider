@@ -70,6 +70,18 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
                 {
                     try
                     {
+                        //只取 大家都在问 的部分
+                        // //*[@id="s-dom-bcef6410"]/div/div/div/div[2]/div/a/div/div[1]/span[1]
+                        // cs-view cs-view-flex align-items-center flex-row cs-source-content
+                        var span = element.FindElement(By.XPath(""));
+                        if (span != null)
+                        {
+                            if (span.Text.Trim().Equals("大家都在问"))
+                            {
+                                
+                            }
+                        }
+
                         var a = element.FindElement(By.TagName("a"));
                         if (a != null)
                         {
@@ -85,9 +97,9 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
                             this.Logger.LogInformation(text + "  ---> " + href);
                         }
                     }
-                    catch (NoSuchElementException elementException)
+                    catch (WebDriverException exception)
                     {
-                        this.Logger.LogException(elementException);
+                        this.Logger.LogException(exception);
                     }
                     catch (Exception exception)
                     {

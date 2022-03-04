@@ -87,9 +87,9 @@ public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
                             this.Logger.LogInformation(text + "  ---> " + href);
                         }
                     }
-                    catch (NoSuchElementException elementException)
+                    catch (WebDriverException exception)
                     {
-                        this.Logger.LogException(elementException);
+                        this.Logger.LogException(exception);
                     }
                     catch (Exception exception)
                     {
