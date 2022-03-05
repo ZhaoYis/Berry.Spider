@@ -34,27 +34,26 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
 
     public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest
     {
-        while (true)
-        {
-            var eto = new TouTiaoSpider4QuestionEto
-            {
-                Keyword = "写莲花外貌的句子150字？",
-                SourceFrom = SpiderSourceFrom.TouTiao_Question,
-                Items = new List<SpiderChildPageDataItem>
-                {
-                    new SpiderChildPageDataItem
-                    {
-                        Title = "写莲花外貌的句子150字？",
-                        Href =
-                            "https://so.toutiao.com/s/search_wenda_pc/list/?qid=6959168672381092127&enter_answer_id=6959174410759323942&enter_from=search_result"
-                    }
-                }
-            };
-            await this.DistributedEventBus.PublishAsync(eto);
-            
-            Thread.Sleep(5000);
-        }
-
+        // while (true)
+        // {
+        //     var eto = new TouTiaoSpider4QuestionEto
+        //     {
+        //         Keyword = "写莲花外貌的句子150字？",
+        //         SourceFrom = SpiderSourceFrom.TouTiao_Question,
+        //         Items = new List<SpiderChildPageDataItem>
+        //         {
+        //             new SpiderChildPageDataItem
+        //             {
+        //                 Title = "春天的句子？",
+        //                 Href =
+        //                     "https://so.toutiao.com/s/search_wenda_pc/list/?qid=6959168672381092127&enter_answer_id=6959174410759323942&enter_from=search_result"
+        //             }
+        //         }
+        //     };
+        //     await this.DistributedEventBus.PublishAsync(eto);
+        //     
+        //     Thread.Sleep(5000);
+        // }
 
         string targetUrl = string.Format(this.HomePage, request.Keyword);
         await this.WebElementLoadProvider.InvokeAsync(
@@ -67,7 +66,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
 
                 if (resultContent.Count > 0)
                 {
-                    var eto = new TouTiaoSpider4QuestionEto() {Keyword = request.Keyword};
+                    var eto = new TouTiaoSpider4QuestionEto() {Keyword = request.Keyword, Title = request.Keyword};
 
                     foreach (IWebElement element in resultContent)
                     {

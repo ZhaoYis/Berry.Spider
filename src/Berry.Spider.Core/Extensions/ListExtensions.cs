@@ -23,4 +23,21 @@ public static class ListExtensions
 
         return builder.ToString();
     }
+
+    /// <summary>
+    /// 随机打乱List集合
+    /// </summary>
+    /// <returns></returns>
+    public static void RandomSort<T>(this List<T> sources)
+    {
+        Random rd = new Random();
+        for (int i = 0; i < sources.Count; i++)
+        {
+            var index = rd.Next(0, sources.Count - 1);
+            if (index != i)
+            {
+                (sources[i], sources[index]) = (sources[index], sources[i]);
+            }
+        }
+    }
 }

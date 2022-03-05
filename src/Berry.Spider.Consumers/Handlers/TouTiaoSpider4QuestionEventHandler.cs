@@ -81,10 +81,11 @@ public class TouTiaoSpider4QuestionEventHandler : IDistributedEventHandler<TouTi
 
             //去重
             contentItems = contentItems.Distinct().ToList();
+            contentItems.RandomSort();
             string mainContent = contentItems.BuildMainContent();
             if (!string.IsNullOrEmpty(mainContent))
             {
-                var content = new TouTiaoSpiderContent(eventData.Keyword, mainContent, eventData.SourceFrom);
+                var content = new TouTiaoSpiderContent(eventData.Title, mainContent, eventData.SourceFrom);
                 await this.TiaoSpiderRepository.InsertAsync(content);
             }
         }
