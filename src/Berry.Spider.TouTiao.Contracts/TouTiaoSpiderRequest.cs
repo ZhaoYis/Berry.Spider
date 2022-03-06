@@ -4,5 +4,4 @@ namespace Berry.Spider.TouTiao.Contracts;
 
 public class TouTiaoSpiderRequest : SpiderRequestBase
 {
-    
 }

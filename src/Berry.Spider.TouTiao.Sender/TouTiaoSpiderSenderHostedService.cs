@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Berry.Spider.Domain.Shared;
 using Berry.Spider.TouTiao.Contracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,11 +39,13 @@ public class TouTiaoSpiderSenderHostedService : IHostedService
 
         //TODO:可以通过其他方式来调用
         var touTiaoSpiderService = _abpApplication.ServiceProvider.GetRequiredService<ITouTiaoSpiderService>();
-        string sources = await File.ReadAllTextAsync("/Users/mrzhaoyi/Workspace/DotNetProject/Berry.Spider/doc/0305.txt");
+        string sources =
+            await File.ReadAllTextAsync("/Users/mrzhaoyi/Workspace/DotNetProject/Berry.Spider/doc/0305.txt");
         string[] list = sources.Split("\n");
         foreach (string s in list)
         {
-            await touTiaoSpiderService.ExecuteAsync<TouTiaoSpiderRequest>(new TouTiaoSpiderRequest{ Keyword = s});
+            await touTiaoSpiderService.ExecuteAsync<TouTiaoSpiderRequest>(
+                new TouTiaoSpiderRequest() {Keyword = s, SourceFrom = SpiderSourceFrom.TouTiao_Question});
         }
     }
 

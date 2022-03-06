@@ -1,5 +1,5 @@
 using Berry.Spider.Contracts;
-using Berry.Spider.TouTiao.Contracts;
+using Berry.Spider.Domain.Shared;
 
 namespace Berry.Spider.TouTiao;
 
@@ -20,11 +20,15 @@ public class TouTiaoSpiderService : SpiderBaseService, ITouTiaoSpiderService
     /// </summary>
     public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest
     {
-        //TODO 可根据实际情况选择那种具体处理的Provider
-
         foreach (ITouTiaoSpiderProvider provider in this.TiaoSpiderProviders)
         {
-            if (provider is TouTiaoSpider4QuestionProvider)
+            if (provider is TouTiaoSpider4QuestionProvider &&
+                request.SourceFrom == SpiderSourceFrom.TouTiao_Question)
+            {
+                await provider.ExecuteAsync(request);
+            }
+            else if (provider is TouTiaoSpider4InformationProvider &&
+                     request.SourceFrom == SpiderSourceFrom.TouTiao_Information)
             {
                 await provider.ExecuteAsync(request);
             }

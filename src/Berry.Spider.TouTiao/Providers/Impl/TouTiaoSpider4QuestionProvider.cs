@@ -1,7 +1,6 @@
 ﻿using System.Web;
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
-using Berry.Spider.Domain.Shared;
 using Berry.Spider.TouTiao.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -89,16 +88,19 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
                                 Uri sourceUri = new Uri(href);
                                 //?url=https://so.toutiao.com/s/search_wenda_pc/list/?qid=6959168672381092127&enter_answer_id=6959174410759323942&enter_from=search_result&aid=4916&jtoken=c47d820935b56f1e45ae0f2b729ffa52df0fa9ae4d13f409a370b005eb0492689aeea6f8881750a45f53aaca866c7950849eb3e24f7d4db160483899ca0389bd
                                 string jumpUrl = sourceUri.Query.Substring(5);
-                                Uri jumpUri = new Uri(HttpUtility.UrlDecode(jumpUrl));
-                                if (jumpUri.Host.Contains("toutiao"))
+                                if (jumpUrl.StartsWith("http://") || jumpUrl.StartsWith("https://"))
                                 {
-                                    eto.Items.Add(new SpiderChildPageDataItem
+                                    Uri jumpUri = new Uri(HttpUtility.UrlDecode(jumpUrl));
+                                    if (jumpUri.Host.Contains("toutiao"))
                                     {
-                                        Title = text,
-                                        Href = jumpUri.ToString()
-                                    });
+                                        eto.Items.Add(new SpiderChildPageDataItem
+                                        {
+                                            Title = text,
+                                            Href = jumpUri.ToString()
+                                        });
 
-                                    this.Logger.LogInformation(text + "  ---> " + href);
+                                        this.Logger.LogInformation(text + "  ---> " + href);
+                                    }
                                 }
                             }
                         }

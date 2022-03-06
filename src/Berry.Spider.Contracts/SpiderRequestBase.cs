@@ -1,3 +1,5 @@
+using Berry.Spider.Domain.Shared;
+
 namespace Berry.Spider.Contracts;
 
 /// <summary>
@@ -9,4 +11,9 @@ public class SpiderRequestBase : ISpiderRequest
     /// 检索关键字
     /// </summary>
     public virtual string Keyword { get; set; }
+
+    /// <summary>
+    /// 来源
+    /// </summary>
+    public SpiderSourceFrom SourceFrom { get; set; }
 }

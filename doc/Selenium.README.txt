@@ -2,50 +2,11 @@
 cd /usr/local/software/selenium
 java -jar selenium-server-4.1.2.jar standalone --port 4445
 以服务的方式运行：
-nohup java -jar /usr/local/software/selenium/selenium-server-4.1.2.jar standalone --port 4445 >/usr/local/software/selenium/console.log &
+nohup java -jar /usr/local/software/selenium/selenium-server-4.1.2.jar standalone  --max-sessions 5 --port 4445 >/usr/local/software/selenium/console.log &
 
-Selenium grid配置参数：
--throwOnCapabilityNotPresent: [true|false]
-默认为true，如果为true则hub只有在当前有测试代理注册的情况下才会接受测试请求；如果为false则如果当前没有代理注册也会接受请求保存到队列直到有代理注册为止。
+查处进程：
+lsof -i:4445
+结束进程：
+kill -9 进程号
 
--capabilityMatcher:xxx
-一个实现了CapabilityMatcher接口的类，默认指向org.openqa.grid.internal.utils.DefaultCapabilityMatcher；该类用于实现grid在分布测试任务到对应代理时所使用的匹配规则，如果想要更精确的测试分配规则，那么就注册一个自己定义的匹配类。
-
--prioritizer:XXXclass
-一个实现了Prioritizer接口的类。设置grid执行test任务的优先逻辑；默认为null，先来先执行。
-
--newSessionWaitTimeout:XXX
-默认-1，即没有超时；指定一个新的测试session等待执行的间隔时间。即一个代理节点上前后2个测试中间的延时时间，单位为毫秒。
-
--servlets: XXXserlet
-在hub上注册一个新的serlet，访问地址为/grid/admin/XXXserlet
-
--browserTimeout:
-浏览器无响应的超时时间
-
--role: [node|wd|rc]
-为node值时表示注册的RC可以支持selenium1、selenium2两种方式的测试请求，推荐；
-为wd值时表示注册的RC仅支持selenium2的webdriver方式的测试请求，遗留；
-为rc值时表示注册的RC仅支持selenium1方式的测试请求，遗留。
-
--hub：url_to_hub
-url_to_hub值为hub启动的注册地址，默认为ttp://ip_for_hub:4444/grid/register；具体的根据你启动hub时的参数所对应。
-该选项包含了-hubHost和-hubPort两个选项
-
--registerCycle：xxx
-代理节点自动重新注册的周期，单位毫秒；适应于重启了hub时不需要重启所有的代理节点。
-
--nodePolling:XXX
-hub检查代理节点的周期
-
--unregisterIfStillDownAfter:XXX
-单位毫秒，设定代理节点在无响应多长时间后hub才会注销代理节点注册信息；默认1分钟
-
--nodeTimeout：xxx
-客户端的无心跳超时时间
-
--maxSession：xx
-一个代理节点可以同时启动的浏览器最大数量，即session数量
-
--cleanupCycle:XXX
-代理节点检查超时的周期
+https://www.selenium.dev/zh-cn/documentation/grid/configuration/cli_options/
