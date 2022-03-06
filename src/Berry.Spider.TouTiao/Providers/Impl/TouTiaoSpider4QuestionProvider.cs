@@ -63,7 +63,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
             string targetUrl = string.Format(this.HomePage, request.Keyword);
             await this.WebElementLoadProvider.InvokeAsync(
                 targetUrl,
-                drv => drv.FindElement(By.ClassName("s-result-list")),
+                drv =>  drv.FindElement(By.ClassName("s-result-list")),
                 async root =>
                 {
                     var resultContent = root.FindElements(By.ClassName("result-content"));
@@ -88,7 +88,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
                                 Uri sourceUri = new Uri(href);
                                 //?url=https://so.toutiao.com/s/search_wenda_pc/list/?qid=6959168672381092127&enter_answer_id=6959174410759323942&enter_from=search_result&aid=4916&jtoken=c47d820935b56f1e45ae0f2b729ffa52df0fa9ae4d13f409a370b005eb0492689aeea6f8881750a45f53aaca866c7950849eb3e24f7d4db160483899ca0389bd
                                 string jumpUrl = sourceUri.Query.Substring(5);
-                                if (jumpUrl.StartsWith("http://") || jumpUrl.StartsWith("https://"))
+                                if (jumpUrl.StartsWith("http") || jumpUrl.StartsWith("https"))
                                 {
                                     Uri jumpUri = new Uri(HttpUtility.UrlDecode(jumpUrl));
                                     if (jumpUri.Host.Contains("toutiao"))
