@@ -11,7 +11,7 @@ public class TextAnalysisProvider : ITextAnalysisProvider
     public async Task<List<string>> InvokeAsync(string source)
     {
         List<string> list = new List<string>();
-        Regex regex = new Regex(@"^\d+(、|\.)*");
+        Regex regex = new Regex(@"^\d+(、|\.|\．)*");
 
         //根据\n进行分割
         string[] sources = source.Split('\n');

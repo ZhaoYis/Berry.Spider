@@ -35,24 +35,24 @@ public class TouTiaoSpider4QuestionEventHandler : IDistributedEventHandler<TouTi
 
     public async Task HandleEventAsync(TouTiaoSpider4QuestionEto eventData)
     {
-        List<string> contentItems = new List<string>();
-
-        if (eventData.Items.Any())
+        try
         {
-            foreach (var item in eventData.Items)
-            {
-                await this.WebElementLoadProvider.InvokeAsync(
-                    item.Href,
-                    drv => drv.FindElement(By.ClassName("s-container")),
-                    async root =>
-                    {
-                        var resultContent = root.FindElements(By.ClassName("list"));
+            List<string> contentItems = new List<string>();
 
-                        if (resultContent.Count > 0)
+            if (eventData.Items.Any())
+            {
+                foreach (var item in eventData.Items)
+                {
+                    await this.WebElementLoadProvider.InvokeAsync(
+                        item.Href,
+                        drv => drv.FindElement(By.ClassName("s-container")),
+                        async root =>
                         {
-                            foreach (IWebElement element in resultContent)
+                            var resultContent = root.FindElements(By.ClassName("list"));
+
+                            if (resultContent.Count > 0)
                             {
-                                try
+                                foreach (IWebElement element in resultContent)
                                 {
                                     var answer = element
                                         .FindElements(By.TagName("div"))
@@ -69,25 +69,29 @@ public class TouTiaoSpider4QuestionEventHandler : IDistributedEventHandler<TouTi
                                         }
                                     }
                                 }
-                                catch (Exception exception)
-                                {
-                                    this.Logger.LogException(exception);
-                                }
                             }
                         }
-                    }
-                );
-            }
+                    );
+                }
 
-            //去重
-            contentItems = contentItems.Distinct().ToList();
-            contentItems.RandomSort();
-            string mainContent = contentItems.BuildMainContent();
-            if (!string.IsNullOrEmpty(mainContent))
-            {
-                var content = new TouTiaoSpiderContent(eventData.Title, mainContent, eventData.SourceFrom);
-                await this.TiaoSpiderRepository.InsertAsync(content);
+                //去重
+                contentItems = contentItems.Distinct().ToList();
+                contentItems.RandomSort();
+                string mainContent = contentItems.BuildMainContent();
+                if (!string.IsNullOrEmpty(mainContent))
+                {
+                    var content = new TouTiaoSpiderContent(eventData.Title, mainContent, eventData.SourceFrom);
+                    await this.TiaoSpiderRepository.InsertAsync(content);
+                }
             }
+        }
+        catch (Exception exception)
+        {
+            this.Logger.LogException(exception);
+        }
+        finally
+        {
+            //ignore..
         }
     }
 }

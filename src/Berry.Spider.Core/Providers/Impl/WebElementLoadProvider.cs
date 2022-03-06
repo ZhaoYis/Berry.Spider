@@ -49,10 +49,6 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                 IWebElement webElement = wait.Until(selector);
                 await executor.Invoke(webElement);
             }
-            catch (WebDriverException exception)
-            {
-                this.Logger.LogException(exception);
-            }
             catch (Exception exception)
             {
                 this.Logger.LogException(exception);

@@ -34,6 +34,8 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
 
     public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest
     {
+        #region 用于测试
+
         // while (true)
         // {
         //     var eto = new TouTiaoSpider4QuestionEto
@@ -55,22 +57,24 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
         //     Thread.Sleep(5000);
         // }
 
-        string targetUrl = string.Format(this.HomePage, request.Keyword);
-        await this.WebElementLoadProvider.InvokeAsync(
-            targetUrl,
-            drv => drv.FindElement(By.ClassName("s-result-list")),
-            async root =>
-            {
-                var resultContent = root.FindElements(By.ClassName("result-content"));
-                this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+        #endregion
 
-                if (resultContent.Count > 0)
+        try
+        {
+            string targetUrl = string.Format(this.HomePage, request.Keyword);
+            await this.WebElementLoadProvider.InvokeAsync(
+                targetUrl,
+                drv => drv.FindElement(By.ClassName("s-result-list")),
+                async root =>
                 {
-                    var eto = new TouTiaoSpider4QuestionEto() {Keyword = request.Keyword, Title = request.Keyword};
+                    var resultContent = root.FindElements(By.ClassName("result-content"));
+                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 
-                    foreach (IWebElement element in resultContent)
+                    if (resultContent.Count > 0)
                     {
-                        try
+                        var eto = new TouTiaoSpider4QuestionEto() {Keyword = request.Keyword, Title = request.Keyword};
+
+                        foreach (IWebElement element in resultContent)
                         {
                             //TODO:只取 大家都在问 的部分
 
@@ -81,12 +85,12 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
                                 string text = a.Text;
                                 string href = a.GetAttribute("href");
 
-                                //去获取so.toutiao.com的记录
+                                //去获取so.toutiao.com、tsearch.toutiaoapi.com的记录
                                 Uri sourceUri = new Uri(href);
                                 //?url=https://so.toutiao.com/s/search_wenda_pc/list/?qid=6959168672381092127&enter_answer_id=6959174410759323942&enter_from=search_result&aid=4916&jtoken=c47d820935b56f1e45ae0f2b729ffa52df0fa9ae4d13f409a370b005eb0492689aeea6f8881750a45f53aaca866c7950849eb3e24f7d4db160483899ca0389bd
                                 string jumpUrl = sourceUri.Query.Substring(5);
                                 Uri jumpUri = new Uri(HttpUtility.UrlDecode(jumpUrl));
-                                if (sourceUri.Host.Equals(jumpUri.Host))
+                                if (jumpUri.Host.Contains("toutiao"))
                                 {
                                     eto.Items.Add(new SpiderChildPageDataItem
                                     {
@@ -98,22 +102,22 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
                                 }
                             }
                         }
-                        catch (WebDriverException exception)
-                        {
-                            this.Logger.LogException(exception);
-                        }
-                        catch (Exception exception)
-                        {
-                            this.Logger.LogException(exception);
-                        }
-                    }
 
-                    if (eto.Items.Any())
-                    {
-                        await this.DistributedEventBus.PublishAsync(eto);
-                        this.Logger.LogInformation("事件发布成功，等待消费...");
+                        if (eto.Items.Any())
+                        {
+                            await this.DistributedEventBus.PublishAsync(eto);
+                            this.Logger.LogInformation("事件发布成功，等待消费...");
+                        }
                     }
-                }
-            });
+                });
+        }
+        catch (Exception exception)
+        {
+            this.Logger.LogException(exception);
+        }
+        finally
+        {
+            //ignore..
+        }
     }
 }

@@ -32,22 +32,22 @@ public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
 
     public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest
     {
-        string targetUrl = string.Format(this.HomePage, request.Keyword);
-        await this.WebElementLoadProvider.InvokeAsync(
-            targetUrl,
-            drv => drv.FindElement(By.ClassName("s-result-list")),
-            async root =>
-            {
-                var resultContent = root.FindElements(By.ClassName("result-content"));
-                this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
-
-                if (resultContent.Count > 0)
+        try
+        {
+            string targetUrl = string.Format(this.HomePage, request.Keyword);
+            await this.WebElementLoadProvider.InvokeAsync(
+                targetUrl,
+                drv => drv.FindElement(By.ClassName("s-result-list")),
+                async root =>
                 {
-                    var eto = new TouTiaoSpider4QuestionEto() {Keyword = request.Keyword, Title = request.Keyword};
+                    var resultContent = root.FindElements(By.ClassName("result-content"));
+                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 
-                    foreach (IWebElement element in resultContent)
+                    if (resultContent.Count > 0)
                     {
-                        try
+                        var eto = new TouTiaoSpider4QuestionEto() {Keyword = request.Keyword, Title = request.Keyword};
+
+                        foreach (IWebElement element in resultContent)
                         {
                             var a = element.FindElement(By.TagName("a"));
                             if (a != null)
@@ -64,22 +64,22 @@ public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
                                 this.Logger.LogInformation(text + "  ---> " + href);
                             }
                         }
-                        catch (WebDriverException exception)
-                        {
-                            this.Logger.LogException(exception);
-                        }
-                        catch (Exception exception)
-                        {
-                            this.Logger.LogException(exception);
-                        }
-                    }
 
-                    if (eto.Items.Any())
-                    {
-                        await this.DistributedEventBus.PublishAsync(eto);
-                        this.Logger.LogInformation("事件发布成功，等待消费...");
+                        if (eto.Items.Any())
+                        {
+                            await this.DistributedEventBus.PublishAsync(eto);
+                            this.Logger.LogInformation("事件发布成功，等待消费...");
+                        }
                     }
-                }
-            });
+                });
+        }
+        catch (Exception exception)
+        {
+            this.Logger.LogException(exception);
+        }
+        finally
+        {
+            //ignore..
+        }
     }
 }
