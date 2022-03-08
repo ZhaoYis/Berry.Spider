@@ -2,7 +2,7 @@
 cd /usr/local/software/selenium
 java -jar selenium-server-4.1.2.jar standalone --port 4445
 以服务的方式运行：
-nohup java -jar /usr/local/software/selenium/selenium-server-4.1.2.jar standalone  --max-sessions 5 --port 4445 >/usr/local/software/selenium/console.log &
+nohup java -jar /usr/local/software/selenium/selenium-server-4.1.2.jar standalone  --max-sessions 2 --port 4445 >/usr/local/software/selenium/console.log &
 
 查处进程：
 lsof -i:4445

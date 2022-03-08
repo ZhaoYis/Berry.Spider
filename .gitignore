@@ -253,3 +253,4 @@ paket-files/
 
 # Consumers
 src/Berry.Spider.Consumers.ConsoleApp/Logs/logs.txt
+host/Berry.Spider.HttpApi.Host/Logs/
