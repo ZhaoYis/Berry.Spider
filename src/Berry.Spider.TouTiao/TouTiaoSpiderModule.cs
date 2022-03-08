@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Volo.Abp;
+using Volo.Abp.Application;
 using Volo.Abp.EventBus.RabbitMq;
 using Volo.Abp.Modularity;
 
@@ -17,7 +18,8 @@ namespace Berry.Spider.TouTiao;
     typeof(SpiderProxyModule),
     typeof(TouTiaoSpiderContractsModule),
     typeof(SpiderDomainModule),
-    typeof(AbpEventBusRabbitMqModule)
+    typeof(AbpEventBusRabbitMqModule),
+    typeof(AbpDddApplicationModule)
 )]
 public class TouTiaoSpiderModule : AbpModule
 {

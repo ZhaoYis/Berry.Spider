@@ -38,7 +38,7 @@ public class TouTiaoSpiderSenderHostedService : IHostedService
         await _abpApplication.InitializeAsync();
 
         //TODO:可以通过其他方式来调用
-        var touTiaoSpiderService = _abpApplication.ServiceProvider.GetRequiredService<ITouTiaoSpiderService>();
+        var touTiaoSpiderService = _abpApplication.ServiceProvider.GetRequiredService<ITouTiaoSpiderAppService>();
         string sources =
             await File.ReadAllTextAsync("/Users/mrzhaoyi/Workspace/DotNetProject/Berry.Spider/doc/0305.txt");
         string[] list = sources.Split("\n");

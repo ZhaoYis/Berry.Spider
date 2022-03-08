@@ -1,18 +1,28 @@
 using Berry.Spider.Contracts;
 using Berry.Spider.Domain.Shared;
+using Volo.Abp.Application.Services;
 
 namespace Berry.Spider.TouTiao;
 
 /// <summary>
 /// 今日头条爬虫
 /// </summary>
-public class TouTiaoSpiderService : SpiderBaseService, ITouTiaoSpiderService
+public class TouTiaoSpiderAppService : ApplicationService, ITouTiaoSpiderAppService
 {
     private IEnumerable<ITouTiaoSpiderProvider> TiaoSpiderProviders { get; }
 
-    public TouTiaoSpiderService(IEnumerable<ITouTiaoSpiderProvider> spiderProviders)
+    public TouTiaoSpiderAppService(IEnumerable<ITouTiaoSpiderProvider> spiderProviders)
     {
         this.TiaoSpiderProviders = spiderProviders;
+    }
+
+    /// <summary>
+    /// 获取爬虫列表
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<SpiderDto>> GetListAsync(GetListInput input)
+    {
+        return await Task.FromResult(new List<SpiderDto>());
     }
 
     /// <summary>

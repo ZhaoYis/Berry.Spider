@@ -1,10 +1,12 @@
 using Berry.Spider.Contracts;
+using Volo.Abp.Application;
 using Volo.Abp.Modularity;
 
 namespace Berry.Spider.TouTiao.Contracts;
 
 [DependsOn(
-    typeof(SpiderContractsModule)
+    typeof(SpiderContractsModule),
+    typeof(AbpDddApplicationContractsModule)
 )]
 public class TouTiaoSpiderContractsModule : AbpModule
 {
