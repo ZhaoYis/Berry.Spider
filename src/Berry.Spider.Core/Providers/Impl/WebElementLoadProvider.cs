@@ -17,8 +17,8 @@ public class WebElementLoadProvider : IWebElementLoadProvider
         this.WebDriverProvider = webDriverProvider;
     }
 
-    public async Task InvokeAsync(string targetUrl, Func<IWebDriver, IWebElement> selector,
-        Func<IWebElement, Task> executor)
+    public async Task InvokeAsync(string targetUrl, Func<IWebDriver, IWebElement?> selector,
+        Func<IWebElement?, Task> executor)
     {
         using (var driver = await this.WebDriverProvider.GetAsync())
         {
@@ -46,7 +46,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                 };
                 wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
 
-                IWebElement webElement = wait.Until(selector);
+                IWebElement? webElement = wait.Until(selector);
                 await executor.Invoke(webElement);
             }
             catch (Exception exception)

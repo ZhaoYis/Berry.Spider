@@ -37,15 +37,27 @@ public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
             string targetUrl = string.Format(this.HomePage, request.Keyword);
             await this.WebElementLoadProvider.InvokeAsync(
                 targetUrl,
-                drv => drv.FindElement(By.ClassName("s-result-list")),
+                drv =>
+                {
+                    try
+                    {
+                        return drv.FindElement(By.ClassName("s-result-list"));
+                    }
+                    catch (Exception e)
+                    {
+                        return null;
+                    }
+                },
                 async root =>
                 {
+                    if (root == null) return;
+
                     var resultContent = root.FindElements(By.ClassName("result-content"));
                     this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 
                     if (resultContent.Count > 0)
                     {
-                        var eto = new TouTiaoSpider4QuestionEto() {Keyword = request.Keyword, Title = request.Keyword};
+                        var eto = new TouTiaoSpider4QuestionEto { Keyword = request.Keyword, Title = request.Keyword };
 
                         foreach (IWebElement element in resultContent)
                         {
