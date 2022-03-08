@@ -28,7 +28,7 @@ public class SpiderHttpApiHostModule : AbpModule
         context.Services.AddAbpSwaggerGen(
             options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo {Title = "Spider API", Version = "v1"});
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Spider API", Version = "v1" });
                 options.DocInclusionPredicate((docName, description) => true);
                 options.CustomSchemaIds(type => type.FullName);
             });
@@ -37,7 +37,7 @@ public class SpiderHttpApiHostModule : AbpModule
         {
             opt.AutoValidate = false;
         });
-        
+
         context.Services.AddCors(options =>
         {
             options.AddDefaultPolicy(builder =>

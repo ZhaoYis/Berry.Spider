@@ -5,7 +5,7 @@ public static class AsciiCodeExtensions
     /**
      * 中文范围：4E00-9FA5
      */
-    
+
     /**
      * 中文符号
      */

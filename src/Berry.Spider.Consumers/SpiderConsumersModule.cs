@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
-using Berry.Spider.Core;
+﻿using Berry.Spider.Core;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.Proxy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Autofac;
 using Volo.Abp.EventBus.RabbitMq;

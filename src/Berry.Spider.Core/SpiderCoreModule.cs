@@ -11,7 +11,7 @@ public class SpiderCoreModule : AbpModule
     {
         return base.OnApplicationInitializationAsync(context);
     }
-    
+
     public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();

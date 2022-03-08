@@ -1,12 +1,12 @@
-﻿using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using Berry.Spider.Domain.Shared;
+﻿using Berry.Spider.Domain.Shared;
 using Berry.Spider.TouTiao.Contracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Volo.Abp;
 
 namespace Berry.Spider.TouTiao.Sender;
@@ -45,7 +45,7 @@ public class TouTiaoSpiderSenderHostedService : IHostedService
         foreach (string s in list)
         {
             await touTiaoSpiderService.ExecuteAsync<TouTiaoSpiderRequest>(
-                new TouTiaoSpiderRequest() {Keyword = s, SourceFrom = SpiderSourceFrom.TouTiao_Question});
+                new TouTiaoSpiderRequest() { Keyword = s, SourceFrom = SpiderSourceFrom.TouTiao_Question });
         }
     }
 

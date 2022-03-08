@@ -7,10 +7,10 @@ using Volo.Abp.EntityFrameworkCore.Modeling;
 namespace Berry.Spider.EntityFrameworkCore.EntityFrameworkCore;
 
 [ConnectionStringName("Default")]
-public class SpiderDbContext: AbpDbContext<SpiderDbContext>
+public class SpiderDbContext : AbpDbContext<SpiderDbContext>
 {
     public DbSet<TouTiaoSpiderContent> TouTiaoSpiderContents { get; set; }
-    
+
     public SpiderDbContext(DbContextOptions<SpiderDbContext> options) : base(options)
     {
     }
@@ -18,11 +18,11 @@ public class SpiderDbContext: AbpDbContext<SpiderDbContext>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
+
         builder.Entity<TouTiaoSpiderContent>(b =>
         {
             b.ToTable("Content");
-        
+
             //Configure the base properties
             b.ConfigureByConvention();
         });

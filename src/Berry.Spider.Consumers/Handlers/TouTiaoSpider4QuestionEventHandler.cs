@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Berry.Spider.Core;
+﻿using Berry.Spider.Core;
 using Berry.Spider.Domain.TouTiao;
 using Berry.Spider.TouTiao.Contracts;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
 

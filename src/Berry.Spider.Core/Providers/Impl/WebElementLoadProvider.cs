@@ -1,7 +1,7 @@
-using System.Drawing;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using System.Drawing;
 
 namespace Berry.Spider.Core;
 

@@ -25,14 +25,14 @@ public class SpiderEntityFrameworkCoreModule : AbpModule
             //自定义仓储
             options.AddRepository<TouTiaoSpiderContent, TouTiaoSpiderRepository>();
         });
-        
+
         Configure<AbpDbContextOptions>(options =>
         {
             /* The main point to change your DBMS.
              * See also SpiderDbContextFactory for EF Core tooling. */
             options.UseMySQL();
         });
-        
+
         return Task.CompletedTask;
     }
 }

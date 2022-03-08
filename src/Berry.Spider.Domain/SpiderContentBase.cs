@@ -1,7 +1,7 @@
+using Berry.Spider.Domain.Shared;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
-using Berry.Spider.Domain.Shared;
 
 namespace Berry.Spider.Domain;
 

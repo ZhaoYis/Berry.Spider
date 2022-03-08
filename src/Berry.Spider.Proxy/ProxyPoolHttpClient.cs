@@ -1,5 +1,5 @@
-using System.Net.Http.Json;
 using Microsoft.Extensions.Options;
+using System.Net.Http.Json;
 
 namespace Berry.Spider.Proxy;
 
@@ -11,7 +11,7 @@ public class ProxyPoolHttpClient
     public ProxyPoolHttpClient(IOptions<HttpProxyOptions> options, HttpClient httpClient)
     {
         this.Options = options.Value;
-        
+
         httpClient.BaseAddress = new Uri(this.Options.ProxyPoolApiHost);
         this.Client = httpClient;
     }
