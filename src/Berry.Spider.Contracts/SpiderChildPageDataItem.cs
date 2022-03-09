@@ -1,4 +1,4 @@
-﻿namespace Berry.Spider.Contracts;
+﻿namespace Berry.Spider;
 
 /// <summary>
 /// 二级页面地址信息

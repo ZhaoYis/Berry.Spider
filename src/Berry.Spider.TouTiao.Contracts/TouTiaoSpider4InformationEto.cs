@@ -2,7 +2,7 @@
 using Berry.Spider.Domain.Shared;
 using Volo.Abp.EventBus;
 
-namespace Berry.Spider.TouTiao.Contracts;
+namespace Berry.Spider.TouTiao;
 
 /// <summary>
 /// 头条：资讯

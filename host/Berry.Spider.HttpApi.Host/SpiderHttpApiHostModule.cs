@@ -1,3 +1,4 @@
+using Berry.Spider.Application;
 using Berry.Spider.TouTiao;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.OpenApi.Models;
@@ -16,7 +17,9 @@ namespace Berry.Spider.HttpApi.Host;
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule),
     //今日头条模块
-    typeof(TouTiaoSpiderModule)
+    typeof(TouTiaoSpiderModule),
+    //爬虫模块
+    typeof(SpiderApplicationModule)
 )]
 public class SpiderHttpApiHostModule : AbpModule
 {
@@ -33,10 +36,7 @@ public class SpiderHttpApiHostModule : AbpModule
                 options.CustomSchemaIds(type => type.FullName);
             });
 
-        Configure<AbpAntiForgeryOptions>(opt =>
-        {
-            opt.AutoValidate = false;
-        });
+        Configure<AbpAntiForgeryOptions>(opt => { opt.AutoValidate = false; });
 
         context.Services.AddCors(options =>
         {

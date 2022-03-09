@@ -1,6 +1,6 @@
 ﻿using Volo.Abp.Application.Dtos;
 
-namespace Berry.Spider.Contracts;
+namespace Berry.Spider;
 
 public class GetListInput : PagedResultRequestDto
 {

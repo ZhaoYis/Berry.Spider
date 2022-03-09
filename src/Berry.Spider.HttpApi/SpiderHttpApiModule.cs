@@ -1,4 +1,5 @@
-using Berry.Spider.TouTiao.Contracts;
+using Berry.Spider.Contracts;
+using Berry.Spider.TouTiao;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.AspNetCore.Mvc;
 using Volo.Abp.Modularity;
@@ -6,7 +7,10 @@ using Volo.Abp.Modularity;
 namespace Berry.Spider;
 
 [DependsOn(
+    //头条模块服务
     typeof(TouTiaoSpiderContractsModule),
+    //爬虫模块服务
+    typeof(SpiderContractsModule),
     typeof(AbpAspNetCoreMvcModule))]
 public class SpiderHttpApiModule : AbpModule
 {

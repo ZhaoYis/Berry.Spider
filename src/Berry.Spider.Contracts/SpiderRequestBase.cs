@@ -1,6 +1,6 @@
 using Berry.Spider.Domain.Shared;
 
-namespace Berry.Spider.Contracts;
+namespace Berry.Spider;
 
 /// <summary>
 /// 爬虫请求参数基类

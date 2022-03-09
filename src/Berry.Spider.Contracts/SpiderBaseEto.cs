@@ -1,6 +1,6 @@
 using Berry.Spider.Domain.Shared;
 
-namespace Berry.Spider.Contracts
+namespace Berry.Spider
 {
     public class SpiderBaseEto
     {

@@ -1,10 +1,12 @@
 ﻿using Berry.Spider.Domain.Shared;
+using Volo.Abp.Application;
 using Volo.Abp.Modularity;
 
-namespace Berry.Spider.Contracts;
+namespace Berry.Spider;
 
 [DependsOn(
-    typeof(SpiderDomainSharedModule)
+    typeof(SpiderDomainSharedModule),
+    typeof(AbpDddApplicationContractsModule)
 )]
 public class SpiderContractsModule : AbpModule
 {

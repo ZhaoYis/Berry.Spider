@@ -20,6 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\src\Berry.Spider.Application\Berry.Spider.Application.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.HttpApi\Berry.Spider.HttpApi.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.TouTiao\Berry.Spider.TouTiao.csproj" />
     </ItemGroup>

@@ -1,5 +1,4 @@
 ﻿using Berry.Spider.Domain.Shared;
-using Berry.Spider.TouTiao.Contracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

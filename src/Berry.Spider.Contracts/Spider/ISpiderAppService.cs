@@ -1,7 +1,7 @@
 using Volo.Abp.Application.Services;
 using Volo.Abp.DependencyInjection;
 
-namespace Berry.Spider.Contracts;
+namespace Berry.Spider;
 
 public interface ISpiderAppService : IApplicationService, ITransientDependency
 {

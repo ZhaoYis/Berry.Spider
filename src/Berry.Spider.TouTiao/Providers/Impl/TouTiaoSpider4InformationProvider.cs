@@ -1,6 +1,5 @@
 ﻿using Berry.Spider.Contracts;
 using Berry.Spider.Core;
-using Berry.Spider.TouTiao.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;

@@ -17,15 +17,6 @@ public class TouTiaoSpiderAppService : ApplicationService, ITouTiaoSpiderAppServ
     }
 
     /// <summary>
-    /// 获取爬虫列表
-    /// </summary>
-    /// <returns></returns>
-    public async Task<List<SpiderDto>> GetListAsync(GetListInput input)
-    {
-        return await Task.FromResult(new List<SpiderDto>());
-    }
-
-    /// <summary>
     /// 执行爬虫
     /// </summary>
     public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest

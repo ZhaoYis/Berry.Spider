@@ -1,8 +1,8 @@
 using Berry.Spider.Domain.TouTiao;
-using Berry.Spider.TouTiao.Contracts;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Berry.Spider.TouTiao;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
 
