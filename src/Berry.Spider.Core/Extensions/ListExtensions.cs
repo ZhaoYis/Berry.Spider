@@ -17,8 +17,11 @@ public static class ListExtensions
 
         foreach (string item in items)
         {
-            index++;
-            builder.AppendFormat("<p>{0}、{1}</p>", index, item);
+            if (!string.IsNullOrWhiteSpace(item))
+            {
+                index++;
+                builder.AppendFormat("<p>{0}、{1}</p>", index, item);
+            }
         }
 
         return builder.ToString();

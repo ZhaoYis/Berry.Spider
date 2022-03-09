@@ -1,5 +1,4 @@
-﻿using Berry.Spider.Contracts;
-using Berry.Spider.Domain.Shared;
+﻿using Berry.Spider.Domain.Shared;
 using Volo.Abp.EventBus;
 
 namespace Berry.Spider.TouTiao;

@@ -39,6 +39,8 @@ public class TextAnalysisProvider : ITextAnalysisProvider
                 string newItem = regex.Replace(data, "").Trim();
                 if (!string.IsNullOrEmpty(newItem))
                 {
+                    //TODO：处理黑名单词汇，这部分词语直接替换
+                    
                     list.Add(newItem);
                 }
             }

@@ -75,7 +75,9 @@ public class TouTiaoSpider4QuestionEventHandler : IDistributedEventHandler<TouTi
 
                 //去重
                 contentItems = contentItems.Distinct().ToList();
+                //打乱
                 contentItems.RandomSort();
+                
                 string mainContent = contentItems.BuildMainContent();
                 if (!string.IsNullOrEmpty(mainContent))
                 {
