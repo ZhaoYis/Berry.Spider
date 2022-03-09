@@ -32,10 +32,15 @@ public class TextAnalysisProvider : ITextAnalysisProvider
                 // }
                 // string newItem = Encoding.UTF8.GetString(Encoding.Default.GetBytes(newArray.ToArray()));
 
+                //清理掉所有空格
+                string data = item.Replace(" ", "");
+                
                 //通过正则替换的方式
-                string newItem = regex.Replace(item, "").Trim();
-
-                list.Add(newItem);
+                string newItem = regex.Replace(data, "").Trim();
+                if (!string.IsNullOrEmpty(newItem))
+                {
+                    list.Add(newItem);
+                }
             }
         }
 
