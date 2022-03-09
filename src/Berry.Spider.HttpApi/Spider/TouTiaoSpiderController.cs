@@ -17,7 +17,7 @@ public class TouTiaoSpiderController : SpiderControllerBase
     }
 
     /// <summary>
-    /// 执行头条的爬虫任务
+    /// 执行爬虫任务
     /// </summary>
     [HttpPost, Route("execute")]
     public async Task ExecuteAsync(TouTiaoSpiderRequest request)

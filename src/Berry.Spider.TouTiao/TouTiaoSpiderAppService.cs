@@ -1,4 +1,3 @@
-using Berry.Spider.Contracts;
 using Berry.Spider.Domain.Shared;
 using Volo.Abp.Application.Services;
 
@@ -11,9 +10,9 @@ public class TouTiaoSpiderAppService : ApplicationService, ITouTiaoSpiderAppServ
 {
     private IEnumerable<ITouTiaoSpiderProvider> TiaoSpiderProviders { get; }
 
-    public TouTiaoSpiderAppService(IEnumerable<ITouTiaoSpiderProvider> spiderProviders)
+    public TouTiaoSpiderAppService(IEnumerable<ITouTiaoSpiderProvider> providers)
     {
-        this.TiaoSpiderProviders = spiderProviders;
+        this.TiaoSpiderProviders = providers;
     }
 
     /// <summary>

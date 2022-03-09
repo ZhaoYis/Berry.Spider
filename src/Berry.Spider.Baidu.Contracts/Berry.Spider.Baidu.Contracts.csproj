@@ -4,17 +4,16 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>Berry.Spider</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="5.1.4" />
       <PackageReference Include="Volo.Abp.Core" Version="5.1.4" />
+      <PackageReference Include="Volo.Abp.Ddd.Application.Contracts" Version="5.1.4" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Berry.Spider.Baidu.Contracts\Berry.Spider.Baidu.Contracts.csproj" />
-      <ProjectReference Include="..\Berry.Spider.TouTiao.Contracts\Berry.Spider.TouTiao.Contracts.csproj" />
+      <ProjectReference Include="..\Berry.Spider.Contracts\Berry.Spider.Contracts.csproj" />
+      <ProjectReference Include="..\Berry.Spider.Domain.Shared\Berry.Spider.Domain.Shared.csproj" />
     </ItemGroup>
 
 </Project>

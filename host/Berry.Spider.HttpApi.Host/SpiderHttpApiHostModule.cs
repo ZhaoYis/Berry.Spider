@@ -1,4 +1,5 @@
 using Berry.Spider.Application;
+using Berry.Spider.Baidu;
 using Berry.Spider.TouTiao;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.OpenApi.Models;
@@ -18,6 +19,8 @@ namespace Berry.Spider.HttpApi.Host;
     typeof(AbpSwashbuckleModule),
     //今日头条模块
     typeof(TouTiaoSpiderModule),
+    //百度模块
+    typeof(BaiduSpiderModule),
     //爬虫模块
     typeof(SpiderApplicationModule)
 )]

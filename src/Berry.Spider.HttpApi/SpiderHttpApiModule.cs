@@ -1,4 +1,4 @@
-using Berry.Spider.Contracts;
+using Berry.Spider.Baidu;
 using Berry.Spider.TouTiao;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.AspNetCore.Mvc;
@@ -9,6 +9,8 @@ namespace Berry.Spider;
 [DependsOn(
     //头条模块服务
     typeof(TouTiaoSpiderContractsModule),
+    //百度模块服务
+    typeof(BaiduSpiderContractsModule),
     //爬虫模块服务
     typeof(SpiderContractsModule),
     typeof(AbpAspNetCoreMvcModule))]
