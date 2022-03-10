@@ -38,6 +38,10 @@ public class TouTiaoSpiderSenderHostedService : IHostedService
 
         //TODO:可以通过其他方式来调用
         var touTiaoSpiderService = _abpApplication.ServiceProvider.GetRequiredService<ITouTiaoSpiderAppService>();
+
+        // await touTiaoSpiderService.ExecuteAsync(new TouTiaoSpiderRequest
+        //     { Keyword = "关于热爱生活的名言", SourceFrom=SpiderSourceFrom.TouTiao_Question });
+
         string sources =
             await File.ReadAllTextAsync("/Users/mrzhaoyi/Workspace/DotNetProject/Berry.Spider/doc/0305.txt");
         string[] list = sources.Split("\n");

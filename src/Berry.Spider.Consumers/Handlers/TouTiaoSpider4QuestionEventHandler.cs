@@ -44,27 +44,44 @@ public class TouTiaoSpider4QuestionEventHandler : IDistributedEventHandler<TouTi
                 {
                     await this.WebElementLoadProvider.InvokeAsync(
                         item.Href,
-                        drv => drv.FindElement(By.ClassName("s-container")),
+                        drv =>
+                        {
+                            try
+                            {
+                                return drv.FindElement(By.ClassName("s-container"));
+                            }
+                            catch (Exception e)
+                            {
+                                return null;
+                            }
+                        },
                         async root =>
                         {
-                            var resultContent = root.FindElements(By.ClassName("list"));
+                            if (root == null) return;
 
+                            var resultContent = root.FindElements(By.ClassName("list"));
                             if (resultContent.Count > 0)
                             {
                                 foreach (IWebElement element in resultContent)
                                 {
-                                    var answer = element
+                                    var answerList = element
                                         .FindElements(By.TagName("div"))
-                                        .FirstOrDefault(c =>
-                                            c.GetAttribute("class").StartsWith("answer_layout_wrapper_"));
-                                    if (answer != null && !string.IsNullOrWhiteSpace(answer.Text))
+                                        .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))
+                                        .ToList();
+                                    if (answerList.Any())
                                     {
-                                        //解析内容
-                                        var list = await this.TextAnalysisProvider.InvokeAsync(answer.Text);
-                                        if (list.Count > 0)
+                                        foreach (IWebElement answer in answerList)
                                         {
-                                            contentItems.AddRange(list);
-                                            this.Logger.LogInformation("总共获取到记录：" + list.Count);
+                                            if (answer != null && !string.IsNullOrWhiteSpace(answer.Text))
+                                            {
+                                                //解析内容
+                                                var list = await this.TextAnalysisProvider.InvokeAsync(answer.Text);
+                                                if (list.Count > 0)
+                                                {
+                                                    contentItems.AddRange(list);
+                                                    this.Logger.LogInformation("总共获取到记录：" + list.Count);
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -77,7 +94,7 @@ public class TouTiaoSpider4QuestionEventHandler : IDistributedEventHandler<TouTi
                 contentItems = contentItems.Distinct().ToList();
                 //打乱
                 contentItems.RandomSort();
-                
+
                 string mainContent = contentItems.BuildMainContent();
                 if (!string.IsNullOrEmpty(mainContent))
                 {

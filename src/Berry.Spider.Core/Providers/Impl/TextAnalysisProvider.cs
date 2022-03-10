@@ -6,7 +6,7 @@ public class TextAnalysisProvider : ITextAnalysisProvider
 {
     //https://www.jianshu.com/p/a1a9a98c7bd9
     //https://blog.csdn.net/xjp_xujiping/article/details/50210533
-    
+
     private static readonly Regex ReplaceRegex = new Regex(@"^\d+(、|\.|\．|,|，)*");
 
     public async Task<List<string>> InvokeAsync(string source)
@@ -34,19 +34,16 @@ public class TextAnalysisProvider : ITextAnalysisProvider
                 //     newArray.Add(c);
                 // }
                 // string newItem = Encoding.UTF8.GetString(Encoding.Default.GetBytes(newArray.ToArray()));
-                
+
                 #endregion
-                
-                //清理掉所有空格
-                string data = item.Replace(" ", "");
 
                 //通过正则替换的方式
-                string newItem = ReplaceRegex.Replace(data, "");
+                string newItem = ReplaceRegex.Replace(item, "");
+                //处理黑名单词汇，这部分词语直接替换
+                newItem = newItem.ReplaceTo(' ').Replace(" ", "").Trim();
+
                 if (!string.IsNullOrEmpty(newItem))
                 {
-                    //处理黑名单词汇，这部分词语直接替换
-                    newItem = newItem.ReplaceTo(Convert.ToChar("")).Trim();
-
                     list.Add(newItem);
                 }
             }
