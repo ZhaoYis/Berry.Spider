@@ -1,5 +1,4 @@
-﻿using Berry.Spider.Baidu.Impl;
-using Berry.Spider.Domain.Shared;
+﻿using Berry.Spider.Domain.Shared;
 using Volo.Abp.Application.Services;
 
 namespace Berry.Spider.Baidu;
@@ -9,25 +8,17 @@ namespace Berry.Spider.Baidu;
 /// </summary>
 public class BaiduSpiderAppService : ApplicationService, IBaiduSpiderAppService
 {
-    private IEnumerable<IBaiduSpiderProvider> BaiduSpiderProviders { get; }
-
-    public BaiduSpiderAppService(IEnumerable<IBaiduSpiderProvider> providers)
-    {
-        this.BaiduSpiderProviders = providers;
-    }
-
     /// <summary>
     /// 执行爬虫
     /// </summary>
     public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest
     {
-        foreach (IBaiduSpiderProvider provider in this.BaiduSpiderProviders)
+        IBaiduSpiderProvider? provider = request.SourceFrom switch
         {
-            if (provider is BaiduSpider4RelatedSearchProvider &&
-                request.SourceFrom == SpiderSourceFrom.Baidu_RelatedSearch)
-            {
-                await provider.ExecuteAsync(request);
-            }
-        }
+            SpiderSourceFrom.Baidu_RelatedSearch => this.LazyServiceProvider.LazyGetRequiredService<BaiduSpider4RelatedSearchProvider>(),
+            _ => throw new NotImplementedException()
+        };
+
+        await provider.ExecuteAsync(request);
     }
 }

@@ -8,30 +8,18 @@ namespace Berry.Spider.TouTiao;
 /// </summary>
 public class TouTiaoSpiderAppService : ApplicationService, ITouTiaoSpiderAppService
 {
-    private IEnumerable<ITouTiaoSpiderProvider> TiaoSpiderProviders { get; }
-
-    public TouTiaoSpiderAppService(IEnumerable<ITouTiaoSpiderProvider> providers)
-    {
-        this.TiaoSpiderProviders = providers;
-    }
-
     /// <summary>
     /// 执行爬虫
     /// </summary>
     public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest
     {
-        foreach (ITouTiaoSpiderProvider provider in this.TiaoSpiderProviders)
+        ITouTiaoSpiderProvider? provider = request.SourceFrom switch
         {
-            if (provider is TouTiaoSpider4QuestionProvider &&
-                request.SourceFrom == SpiderSourceFrom.TouTiao_Question)
-            {
-                await provider.ExecuteAsync(request);
-            }
-            else if (provider is TouTiaoSpider4InformationProvider &&
-                     request.SourceFrom == SpiderSourceFrom.TouTiao_Information)
-            {
-                await provider.ExecuteAsync(request);
-            }
-        }
+            SpiderSourceFrom.TouTiao_Question => this.LazyServiceProvider.LazyGetRequiredService<TouTiaoSpider4QuestionProvider>(),
+            SpiderSourceFrom.TouTiao_Information => this.LazyServiceProvider.LazyGetRequiredService<TouTiaoSpider4InformationProvider>(),
+            _ => throw new NotImplementedException()
+        };
+
+        await provider.ExecuteAsync(request);
     }
 }

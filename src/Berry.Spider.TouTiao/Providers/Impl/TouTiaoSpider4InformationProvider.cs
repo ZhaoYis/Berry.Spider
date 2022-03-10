@@ -1,9 +1,6 @@
-﻿using Berry.Spider.Contracts;
-using Berry.Spider.Core;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Berry.Spider.Core;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
-using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
 
 namespace Berry.Spider.TouTiao;
@@ -11,7 +8,6 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：资讯
 /// </summary>
-[Dependency(ServiceLifetime.Transient), ExposeServices(typeof(ITouTiaoSpiderProvider))]
 public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
 {
     private ILogger<TouTiaoSpider4InformationProvider> Logger { get; }
@@ -56,7 +52,7 @@ public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
 
                     if (resultContent.Count > 0)
                     {
-                        var eto = new TouTiaoSpider4QuestionEto { Keyword = request.Keyword, Title = request.Keyword };
+                        var eto = new TouTiaoSpider4QuestionEto {Keyword = request.Keyword, Title = request.Keyword};
 
                         foreach (IWebElement element in resultContent)
                         {

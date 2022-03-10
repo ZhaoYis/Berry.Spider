@@ -1,12 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Volo.Abp.DependencyInjection;
-
-namespace Berry.Spider.Baidu.Impl;
+﻿namespace Berry.Spider.Baidu;
 
 /// <summary>
 /// 百度：相关推荐
 /// </summary>
-[Dependency(ServiceLifetime.Transient), ExposeServices(typeof(IBaiduSpiderProvider))]
 public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
 {
     public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest

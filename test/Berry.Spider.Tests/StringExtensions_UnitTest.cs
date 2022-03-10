@@ -23,14 +23,4 @@ public class StringExtensions_UnitTest
         string result = source.ReplaceTo('*');
         result.ShouldBe("");
     }
-    
-    [Fact]
-    public void Replace_Source_Null_Test()
-    {
-        string source = "";
-        string result = source.ReplaceTo('*');
-        result.ShouldBe("");
-    }
-    
-    
 }
