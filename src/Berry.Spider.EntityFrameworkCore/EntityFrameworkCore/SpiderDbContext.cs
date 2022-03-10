@@ -1,4 +1,4 @@
-using Berry.Spider.Domain.TouTiao;
+using Berry.Spider.Domain;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
@@ -9,7 +9,7 @@ namespace Berry.Spider.EntityFrameworkCore.EntityFrameworkCore;
 [ConnectionStringName("Default")]
 public class SpiderDbContext : AbpDbContext<SpiderDbContext>
 {
-    public DbSet<TouTiaoSpiderContent> TouTiaoSpiderContents { get; set; }
+    public DbSet<SpiderContent> SpiderContents { get; set; }
 
     public SpiderDbContext(DbContextOptions<SpiderDbContext> options) : base(options)
     {
@@ -19,7 +19,7 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<TouTiaoSpiderContent>(b =>
+        builder.Entity<SpiderContent>(b =>
         {
             b.ToTable("Content");
 

@@ -1,7 +1,5 @@
 using Berry.Spider.Domain;
-using Berry.Spider.Domain.TouTiao;
 using Berry.Spider.EntityFrameworkCore.EntityFrameworkCore;
-using Berry.Spider.EntityFrameworkCore.TouTiao;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
@@ -23,7 +21,7 @@ public class SpiderEntityFrameworkCoreModule : AbpModule
             options.AddDefaultRepositories(includeAllEntities: true);
 
             //自定义仓储
-            options.AddRepository<TouTiaoSpiderContent, TouTiaoSpiderRepository>();
+            options.AddRepository<SpiderContent, SpiderContentRepository>();
         });
 
         Configure<AbpDbContextOptions>(options =>

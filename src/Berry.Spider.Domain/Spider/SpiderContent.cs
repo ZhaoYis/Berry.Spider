@@ -1,18 +1,18 @@
 using Berry.Spider.Domain.Shared;
 using JetBrains.Annotations;
 
-namespace Berry.Spider.Domain.TouTiao;
+namespace Berry.Spider.Domain;
 
 /// <summary>
-/// 今日头条
+/// 爬虫抓取下来的内容
 /// </summary>
-public class TouTiaoSpiderContent : SpiderContentBase
+public class SpiderContent : SpiderContentBase
 {
-    protected TouTiaoSpiderContent() : base()
+    protected SpiderContent()
     {
     }
 
-    public TouTiaoSpiderContent([NotNull] string title,
+    public SpiderContent([NotNull] string title,
         [NotNull] string content, SpiderSourceFrom @from, [CanBeNull] string? pageUrl = "",
         [CanBeNull] string? keywords = "", [CanBeNull] string? tag = "") : base(title, content, @from, pageUrl,
         keywords, tag)

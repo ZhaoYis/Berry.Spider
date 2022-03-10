@@ -1,5 +1,4 @@
 ﻿using Berry.Spider.Core;
-using Berry.Spider.Domain.TouTiao;
 using Berry.Spider.TouTiao;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
@@ -7,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Berry.Spider.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
@@ -22,15 +22,15 @@ public class TouTiaoSpider4QuestionEventHandler : IDistributedEventHandler<TouTi
     private ILogger<TouTiaoSpider4QuestionEventHandler> Logger { get; }
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private ITextAnalysisProvider TextAnalysisProvider { get; }
-    private ITouTiaoSpiderRepository TiaoSpiderRepository { get; }
+    private ISpiderContentRepository SpiderRepository { get; }
 
     public TouTiaoSpider4QuestionEventHandler(ILogger<TouTiaoSpider4QuestionEventHandler> logger,
-        IWebElementLoadProvider provider, IServiceProvider serviceProvider, ITouTiaoSpiderRepository repository)
+        IWebElementLoadProvider provider, IServiceProvider serviceProvider, ISpiderContentRepository repository)
     {
         this.Logger = logger;
         this.WebElementLoadProvider = provider;
         this.TextAnalysisProvider = serviceProvider.GetRequiredService<TouTiaoQuestionTextAnalysisProvider>();
-        this.TiaoSpiderRepository = repository;
+        this.SpiderRepository = repository;
     }
 
     public async Task HandleEventAsync(TouTiaoSpider4QuestionEto eventData)
@@ -99,8 +99,8 @@ public class TouTiaoSpider4QuestionEventHandler : IDistributedEventHandler<TouTi
                 string mainContent = contentItems.BuildMainContent();
                 if (!string.IsNullOrEmpty(mainContent))
                 {
-                    var content = new TouTiaoSpiderContent(eventData.Title, mainContent, eventData.SourceFrom);
-                    await this.TiaoSpiderRepository.InsertAsync(content);
+                    var content = new SpiderContent(eventData.Title, mainContent, eventData.SourceFrom);
+                    await this.SpiderRepository.InsertAsync(content);
                 }
             }
         }

@@ -1,8 +1,8 @@
-using Berry.Spider.Domain.TouTiao;
 using Berry.Spider.TouTiao;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Berry.Spider.Domain;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
 
@@ -14,26 +14,26 @@ namespace Berry.Spider.Consumers;
 public class TouTiaoSpider4InformationEventHandler : IDistributedEventHandler<TouTiaoSpider4InformationEto>,
     ITransientDependency
 {
-    private ITouTiaoSpiderRepository TiaoSpiderRepository { get; }
+    private ISpiderContentRepository SpiderRepository { get; }
 
-    public TouTiaoSpider4InformationEventHandler(ITouTiaoSpiderRepository repository)
+    public TouTiaoSpider4InformationEventHandler(ISpiderContentRepository repository)
     {
-        this.TiaoSpiderRepository = repository;
+        this.SpiderRepository = repository;
     }
 
     public async Task HandleEventAsync(TouTiaoSpider4InformationEto eventData)
     {
-        List<TouTiaoSpiderContent> contents = new List<TouTiaoSpiderContent>();
+        List<SpiderContent> contents = new List<SpiderContent>();
 
         if (eventData.Items.Any())
         {
             foreach (var item in eventData.Items)
             {
                 //TODO:获取具体内容
-                contents.Add(new TouTiaoSpiderContent(item.Title, item.Href, eventData.SourceFrom, item.Href));
+                contents.Add(new SpiderContent(item.Title, item.Href, eventData.SourceFrom, item.Href));
             }
 
-            await this.TiaoSpiderRepository.InsertManyAsync(contents);
+            await this.SpiderRepository.InsertManyAsync(contents);
         }
     }
 }
