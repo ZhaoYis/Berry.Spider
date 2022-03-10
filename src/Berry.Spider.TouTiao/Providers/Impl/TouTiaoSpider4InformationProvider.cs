@@ -52,7 +52,7 @@ public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
 
                     if (resultContent.Count > 0)
                     {
-                        var eto = new TouTiaoSpider4QuestionEto {Keyword = request.Keyword, Title = request.Keyword};
+                        var eto = new TouTiaoSpider4QuestionEto { Keyword = request.Keyword, Title = request.Keyword };
 
                         foreach (IWebElement element in resultContent)
                         {

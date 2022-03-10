@@ -1,4 +1,3 @@
-using Berry.Spider.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Berry.Spider;

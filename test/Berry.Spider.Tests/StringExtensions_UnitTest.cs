@@ -12,10 +12,10 @@ public class StringExtensions_UnitTest
         string source = "这是一段文字條萊垍頭";
 
         string result = source.ReplaceTo('*');
-        
+
         result.ShouldBe("这是一段文字****");
     }
-    
+
     [Fact]
     public void Replace_Source_Null_Test()
     {

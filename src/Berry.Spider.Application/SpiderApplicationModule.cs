@@ -1,5 +1,4 @@
-﻿using Berry.Spider.Contracts;
-using Berry.Spider.Domain;
+﻿using Berry.Spider.Domain;
 using Volo.Abp.Application;
 using Volo.Abp.Modularity;
 

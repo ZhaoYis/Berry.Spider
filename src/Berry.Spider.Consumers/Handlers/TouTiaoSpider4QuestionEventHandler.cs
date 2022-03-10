@@ -1,12 +1,12 @@
 ﻿using Berry.Spider.Core;
 using Berry.Spider.Domain.TouTiao;
+using Berry.Spider.TouTiao;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Berry.Spider.TouTiao;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
 
