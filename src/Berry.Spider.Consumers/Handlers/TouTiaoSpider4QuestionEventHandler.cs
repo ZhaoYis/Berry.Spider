@@ -29,7 +29,7 @@ public class TouTiaoSpider4QuestionEventHandler : IDistributedEventHandler<TouTi
     {
         this.Logger = logger;
         this.WebElementLoadProvider = provider;
-        this.TextAnalysisProvider = serviceProvider.GetRequiredService<TouTiaoTextAnalysisProvider>();
+        this.TextAnalysisProvider = serviceProvider.GetRequiredService<TouTiaoQuestionTextAnalysisProvider>();
         this.TiaoSpiderRepository = repository;
     }
 

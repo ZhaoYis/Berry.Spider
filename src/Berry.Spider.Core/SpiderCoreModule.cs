@@ -1,17 +1,11 @@
 using Berry.Spider.Contracts;
 using Microsoft.Extensions.DependencyInjection;
-using Volo.Abp;
 using Volo.Abp.Modularity;
 
 namespace Berry.Spider.Core;
 
 public class SpiderCoreModule : AbpModule
 {
-    public override Task OnApplicationInitializationAsync(ApplicationInitializationContext context)
-    {
-        return base.OnApplicationInitializationAsync(context);
-    }
-
     public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();
@@ -20,7 +14,8 @@ public class SpiderCoreModule : AbpModule
         context.Services.Configure<WebDriverOptions>(configuration.GetSection(nameof(WebDriverOptions)));
 
         //注入文本解析器
-        context.Services.AddTransient<TouTiaoTextAnalysisProvider>();
+        context.Services.AddTransient<TouTiaoQuestionTextAnalysisProvider>();
+        context.Services.AddTransient<BaiduRelatedSearchTextAnalysisProvider>();
 
         return Task.CompletedTask;
     }

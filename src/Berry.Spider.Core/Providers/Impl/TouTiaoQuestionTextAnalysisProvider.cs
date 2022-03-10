@@ -2,7 +2,10 @@ using System.Text.RegularExpressions;
 
 namespace Berry.Spider.Core;
 
-public class TouTiaoTextAnalysisProvider : ITextAnalysisProvider
+/// <summary>
+/// 头条问答内容解析器
+/// </summary>
+public class TouTiaoQuestionTextAnalysisProvider : ITextAnalysisProvider
 {
     //https://www.jianshu.com/p/a1a9a98c7bd9
     //https://blog.csdn.net/xjp_xujiping/article/details/50210533
