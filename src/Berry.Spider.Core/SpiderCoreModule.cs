@@ -19,6 +19,9 @@ public class SpiderCoreModule : AbpModule
         //配置WebDriverOptions
         context.Services.Configure<WebDriverOptions>(configuration.GetSection(nameof(WebDriverOptions)));
 
+        //注入文本解析器
+        context.Services.AddTransient<TouTiaoTextAnalysisProvider>();
+
         return Task.CompletedTask;
     }
 }

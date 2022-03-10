@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
 
@@ -24,11 +25,11 @@ public class TouTiaoSpider4QuestionEventHandler : IDistributedEventHandler<TouTi
     private ITouTiaoSpiderRepository TiaoSpiderRepository { get; }
 
     public TouTiaoSpider4QuestionEventHandler(ILogger<TouTiaoSpider4QuestionEventHandler> logger,
-        IWebElementLoadProvider provider, ITextAnalysisProvider analysisProvider, ITouTiaoSpiderRepository repository)
+        IWebElementLoadProvider provider, IServiceProvider serviceProvider, ITouTiaoSpiderRepository repository)
     {
         this.Logger = logger;
         this.WebElementLoadProvider = provider;
-        this.TextAnalysisProvider = analysisProvider;
+        this.TextAnalysisProvider = serviceProvider.GetRequiredService<TouTiaoTextAnalysisProvider>();
         this.TiaoSpiderRepository = repository;
     }
 
