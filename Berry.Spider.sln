@@ -49,6 +49,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Baidu.Contract
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Baidu", "src\Berry.Spider.Baidu\Berry.Spider.Baidu.csproj", "{A9267021-7218-4BCA-9486-93727FEAD581}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Tests", "test\Berry.Spider.Tests\Berry.Spider.Tests.csproj", "{228C47BA-251A-4A0D-9380-643DF4D8EFE1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,7 @@ Global
 		{8202E0ED-BECA-48CE-83E7-1EEB4B12A6A3} = {DAC6D741-6163-4917-A926-778D6DAD0EE0}
 		{D2EBF694-0152-4E73-A2CF-E268BE67BAEC} = {8202E0ED-BECA-48CE-83E7-1EEB4B12A6A3}
 		{A9267021-7218-4BCA-9486-93727FEAD581} = {8202E0ED-BECA-48CE-83E7-1EEB4B12A6A3}
+		{228C47BA-251A-4A0D-9380-643DF4D8EFE1} = {EEB6AD93-C862-409B-861A-B122CEE4DCA2}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5CCD2E94-01CF-4F72-99B2-5DF458747F99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -136,5 +139,9 @@ Global
 		{A9267021-7218-4BCA-9486-93727FEAD581}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9267021-7218-4BCA-9486-93727FEAD581}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9267021-7218-4BCA-9486-93727FEAD581}.Release|Any CPU.Build.0 = Release|Any CPU
+		{228C47BA-251A-4A0D-9380-643DF4D8EFE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{228C47BA-251A-4A0D-9380-643DF4D8EFE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{228C47BA-251A-4A0D-9380-643DF4D8EFE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{228C47BA-251A-4A0D-9380-643DF4D8EFE1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

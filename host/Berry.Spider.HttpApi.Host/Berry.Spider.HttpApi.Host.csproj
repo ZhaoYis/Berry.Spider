@@ -26,4 +26,10 @@
       <ProjectReference Include="..\..\src\Berry.Spider.TouTiao\Berry.Spider.TouTiao.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="SensitiveWords\data.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
