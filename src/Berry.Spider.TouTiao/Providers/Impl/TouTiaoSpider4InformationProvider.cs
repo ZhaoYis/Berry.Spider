@@ -62,7 +62,7 @@ public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
                                 string text = a.Text;
                                 string href = a.GetAttribute("href");
 
-                                eto.Items.Add(new SpiderChildPageDataItem
+                                eto.Items.Add(new ChildPageDataItem
                                 {
                                     Title = text,
                                     Href = href

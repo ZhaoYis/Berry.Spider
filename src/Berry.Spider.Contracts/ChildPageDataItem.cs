@@ -3,7 +3,7 @@
 /// <summary>
 /// 二级页面地址信息
 /// </summary>
-public class SpiderChildPageDataItem
+public class ChildPageDataItem
 {
     /// <summary>
     /// 标题

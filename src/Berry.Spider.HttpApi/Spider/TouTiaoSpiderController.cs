@@ -1,5 +1,6 @@
 ﻿using Berry.Spider.TouTiao;
 using Microsoft.AspNetCore.Mvc;
+using Volo.Abp.EventBus.Distributed;
 
 namespace Berry.Spider;
 
@@ -9,20 +10,32 @@ namespace Berry.Spider;
 [Route("api/services/spider/tou-tiao")]
 public class TouTiaoSpiderController : SpiderControllerBase
 {
-    private ITouTiaoSpiderAppService TiaoSpiderService { get; }
+    private IDistributedEventBus DistributedEventBus { get; }
 
-    public TouTiaoSpiderController(ITouTiaoSpiderAppService service)
+
+    public TouTiaoSpiderController(IDistributedEventBus eventBus)
     {
-        this.TiaoSpiderService = service;
+        this.DistributedEventBus = eventBus;
     }
 
+    // /// <summary>
+    // /// 执行爬虫任务
+    // /// </summary>
+    // [HttpPost, Route("execute")]
+    // public async Task ExecuteAsync(TouTiaoSpiderRequest request)
+    // {
+    //     //直接发布事件到MQ，交由Berry.Spider.Consumers消费
+    //     
+    //     await this.TiaoSpiderService.ExecuteAsync(request);
+    // }
+
     /// <summary>
-    /// 执行爬虫任务
+    /// 将待爬取信息PUSH到消息队列中
     /// </summary>
-    [HttpPost, Route("execute")]
-    public async Task ExecuteAsync(TouTiaoSpiderRequest request)
+    [HttpPost, Route("push")]
+    public async Task PushAsync(TouTiaoSpiderPushEto push)
     {
-        //TODO：交给后台任务执行，执行完成后发出通知即可
-        await this.TiaoSpiderService.ExecuteAsync(request);
+        //直接发布事件到MQ，交由Berry.Spider.Consumers消费
+        await this.DistributedEventBus.PublishAsync(push);
     }
 }

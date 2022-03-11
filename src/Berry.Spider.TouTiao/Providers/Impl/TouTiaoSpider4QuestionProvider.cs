@@ -100,7 +100,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
                                     Uri jumpUri = new Uri(HttpUtility.UrlDecode(jumpUrl));
                                     if (jumpUri.Host.Contains("toutiao"))
                                     {
-                                        eto.Items.Add(new SpiderChildPageDataItem
+                                        eto.Items.Add(new ChildPageDataItem
                                         {
                                             Title = text,
                                             Href = jumpUri.ToString()

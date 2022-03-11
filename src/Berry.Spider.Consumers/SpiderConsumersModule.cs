@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using Berry.Spider.Baidu;
+using Berry.Spider.TouTiao;
 using Volo.Abp;
 using Volo.Abp.Autofac;
 using Volo.Abp.EventBus.RabbitMq;
@@ -18,7 +20,11 @@ namespace Berry.Spider.Consumers;
     typeof(AbpEventBusRabbitMqModule),
     typeof(SpiderCoreModule),
     typeof(SpiderProxyModule),
-    typeof(SpiderEntityFrameworkCoreModule)
+    typeof(SpiderEntityFrameworkCoreModule),
+    //今日头条模块
+    typeof(TouTiaoSpiderModule),
+    //百度模块
+    typeof(BaiduSpiderModule)
 )]
 public class SpiderConsumersModule : AbpModule
 {

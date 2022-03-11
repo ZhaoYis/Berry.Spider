@@ -2,9 +2,9 @@ using Berry.Spider.Domain.Shared;
 
 namespace Berry.Spider
 {
-    public class SpiderBaseEto
+    public class SpiderPullBaseEto
     {
-        protected SpiderBaseEto(SpiderSourceFrom @from)
+        protected SpiderPullBaseEto(SpiderSourceFrom @from)
         {
             this.SourceFrom = from;
         }
@@ -22,6 +22,6 @@ namespace Berry.Spider
         /// <summary>
         /// 二级页面地址信息
         /// </summary>
-        public List<SpiderChildPageDataItem> Items { get; set; } = new List<SpiderChildPageDataItem>();
+        public List<ChildPageDataItem> Items { get; set; } = new List<ChildPageDataItem>();
     }
 }
