@@ -1,6 +1,5 @@
 ﻿using Berry.Spider.TouTiao;
 using Microsoft.AspNetCore.Mvc;
-using Volo.Abp.EventBus.Distributed;
 
 namespace Berry.Spider;
 
@@ -10,24 +9,12 @@ namespace Berry.Spider;
 [Route("api/services/spider/tou-tiao")]
 public class TouTiaoSpiderController : SpiderControllerBase
 {
-    private IDistributedEventBus DistributedEventBus { get; }
-
-
-    public TouTiaoSpiderController(IDistributedEventBus eventBus)
+    private ITouTiaoSpiderAppService TouTiaoSpiderAppService { get; }
+    
+    public TouTiaoSpiderController(ITouTiaoSpiderAppService service)
     {
-        this.DistributedEventBus = eventBus;
+        this.TouTiaoSpiderAppService = service;
     }
-
-    // /// <summary>
-    // /// 执行爬虫任务
-    // /// </summary>
-    // [HttpPost, Route("execute")]
-    // public async Task ExecuteAsync(TouTiaoSpiderRequest request)
-    // {
-    //     //直接发布事件到MQ，交由Berry.Spider.Consumers消费
-    //     
-    //     await this.TiaoSpiderService.ExecuteAsync(request);
-    // }
 
     /// <summary>
     /// 将待爬取信息PUSH到消息队列中
@@ -36,6 +23,6 @@ public class TouTiaoSpiderController : SpiderControllerBase
     public async Task PushAsync(TouTiaoSpiderPushEto push)
     {
         //直接发布事件到MQ，交由Berry.Spider.Consumers消费
-        await this.DistributedEventBus.PublishAsync(push);
+        await this.TouTiaoSpiderAppService.PushAsync(push);
     }
 }

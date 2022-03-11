@@ -13,10 +13,10 @@ namespace Berry.Spider.Consumers;
 public class TouTiaoSpider4InformationEventHandler : IDistributedEventHandler<TouTiaoSpider4InformationEto>,
     ITransientDependency
 {
-    private ILogger<TouTiaoSpider4QuestionEventHandler> Logger { get; }
+    private ILogger<TouTiaoSpider4InformationEventHandler> Logger { get; }
     private ITouTiaoSpiderAppService TouTiaoSpiderAppService { get; }
 
-    public TouTiaoSpider4InformationEventHandler(ILogger<TouTiaoSpider4QuestionEventHandler> logger,
+    public TouTiaoSpider4InformationEventHandler(ILogger<TouTiaoSpider4InformationEventHandler> logger,
         ITouTiaoSpiderAppService service)
     {
         this.Logger = logger;

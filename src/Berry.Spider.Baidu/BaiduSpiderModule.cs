@@ -3,7 +3,6 @@ using Berry.Spider.Domain;
 using Berry.Spider.Proxy;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Application;
-using Volo.Abp.EventBus.RabbitMq;
 using Volo.Abp.Modularity;
 
 namespace Berry.Spider.Baidu;
@@ -13,7 +12,6 @@ namespace Berry.Spider.Baidu;
     typeof(SpiderProxyModule),
     typeof(BaiduSpiderContractsModule),
     typeof(SpiderDomainModule),
-    typeof(AbpEventBusRabbitMqModule),
     typeof(AbpDddApplicationModule)
 )]
 public class BaiduSpiderModule : AbpModule

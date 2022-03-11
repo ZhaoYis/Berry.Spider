@@ -47,7 +47,7 @@ public class TouTiaoSpiderSenderHostedService : IHostedService
         string[] list = sources.Split("\n");
         foreach (string s in list)
         {
-            await touTiaoSpiderService.PublishAsync<TouTiaoSpiderRequest>(
+            await touTiaoSpiderService.ExecuteAsync<TouTiaoSpiderRequest>(
                 new TouTiaoSpiderRequest() { Keyword = s, SourceFrom = SpiderSourceFrom.TouTiao_Question });
         }
     }

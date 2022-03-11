@@ -17,12 +17,12 @@ public class BaiduSpiderController : SpiderControllerBase
     }
 
     /// <summary>
-    /// 执行爬虫任务
+    /// 将待爬取信息PUSH到消息队列中
     /// </summary>
-    [HttpPost, Route("execute")]
-    public async Task ExecuteAsync(BaiduSpiderRequest request)
+    [HttpPost, Route("push")]
+    public async Task PushAsync(BaiduSpiderPushEto push)
     {
-        //TODO：交给后台任务执行，执行完成后发出通知即可
-        await this.BaiduSpiderAppService.ExecuteAsync(request);
+        //直接发布事件到MQ，交由Berry.Spider.Consumers消费
+        await this.BaiduSpiderAppService.PushAsync(push);
     }
 }

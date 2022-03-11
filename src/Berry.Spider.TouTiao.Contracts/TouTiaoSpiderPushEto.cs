@@ -2,7 +2,7 @@
 
 namespace Berry.Spider.TouTiao;
 
-[EventName("Berry.TouTiao.Source.Push")]
+[EventName("Berry.TouTiao.Push")]
 public class TouTiaoSpiderPushEto : SpiderPushBaseEto
 {
 }

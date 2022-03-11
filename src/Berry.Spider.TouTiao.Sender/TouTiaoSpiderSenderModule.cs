@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using Berry.Spider.EntityFrameworkCore;
 using Volo.Abp;
 using Volo.Abp.Autofac;
 using Volo.Abp.Modularity;
@@ -11,6 +12,7 @@ namespace Berry.Spider.TouTiao.Sender;
 
 [DependsOn(
     typeof(AbpAutofacModule),
+    typeof(SpiderEntityFrameworkCoreModule),
     //今日头条模块
     typeof(TouTiaoSpiderModule)
 )]

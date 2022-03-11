@@ -29,6 +29,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj" />
       <ProjectReference Include="..\Berry.Spider.TouTiao\Berry.Spider.TouTiao.csproj" />
     </ItemGroup>
 

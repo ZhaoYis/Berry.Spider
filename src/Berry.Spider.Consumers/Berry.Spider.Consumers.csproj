@@ -32,6 +32,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Berry.Spider.Baidu\Berry.Spider.Baidu.csproj" />
+      <ProjectReference Include="..\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj" />
       <ProjectReference Include="..\Berry.Spider.TouTiao.Contracts\Berry.Spider.TouTiao.Contracts.csproj" />
       <ProjectReference Include="..\Berry.Spider.TouTiao\Berry.Spider.TouTiao.csproj" />
     </ItemGroup>

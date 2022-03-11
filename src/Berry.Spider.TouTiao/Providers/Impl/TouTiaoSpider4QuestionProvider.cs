@@ -34,7 +34,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
         this.DistributedEventBus = eventBus;
     }
 
-    public async Task PublishAsync<T>(T request) where T : ISpiderRequest
+    public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest
     {
         #region 用于测试
 

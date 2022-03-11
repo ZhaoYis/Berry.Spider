@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using Berry.Spider.EntityFrameworkCore;
 using Volo.Abp;
 using Volo.Abp.Autofac;
 using Volo.Abp.EventBus.RabbitMq;
@@ -15,6 +16,7 @@ namespace Berry.Spider.Consumers;
 [DependsOn(
     typeof(AbpAutofacModule),
     typeof(AbpEventBusRabbitMqModule),
+    typeof(SpiderEntityFrameworkCoreModule),
     //今日头条模块
     typeof(TouTiaoSpiderModule),
     //百度模块

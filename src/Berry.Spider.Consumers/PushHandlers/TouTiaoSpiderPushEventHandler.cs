@@ -7,7 +7,7 @@ using Volo.Abp.EventBus.Distributed;
 namespace Berry.Spider.Consumers;
 
 /// <summary>
-/// 消费头条爬虫消息
+/// 消费头条源数据推送消息
 /// </summary>
 public class TouTiaoSpiderPushEventHandler : IDistributedEventHandler<TouTiaoSpiderPushEto>, ITransientDependency
 {
@@ -24,7 +24,7 @@ public class TouTiaoSpiderPushEventHandler : IDistributedEventHandler<TouTiaoSpi
         {
             foreach (string keyword in eventData.Keywords)
             {
-                await this.TouTiaoSpiderAppService.PublishAsync(new TouTiaoSpiderRequest
+                await this.TouTiaoSpiderAppService.ExecuteAsync(new TouTiaoSpiderRequest
                 {
                     SourceFrom = eventData.SourceFrom,
                     Keyword = keyword
