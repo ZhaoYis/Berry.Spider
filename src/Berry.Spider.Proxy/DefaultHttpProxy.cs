@@ -18,6 +18,6 @@ public class DefaultHttpProxy : IHttpProxy
             return result.Proxy;
         }
 
-        return default;
+        return string.Empty;
     }
 }
