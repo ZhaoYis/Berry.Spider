@@ -2,7 +2,7 @@
 
 namespace Berry.Spider;
 
-public class SpiderPushBaseEto
+public class SpiderPushBaseEto : ISpiderPushEto
 {
     /// <summary>
     /// 来源

@@ -21,4 +21,15 @@ public class BaiduSpiderAppService : ApplicationService, IBaiduSpiderAppService
 
         await provider.ExecuteAsync(request);
     }
+
+    public async Task HandleEventAsync<T>(T eventData) where T : ISpiderPullEto
+    {
+        IBaiduSpiderProvider? provider = eventData.SourceFrom switch
+        {
+            SpiderSourceFrom.Baidu_RelatedSearch => this.LazyServiceProvider.LazyGetRequiredService<BaiduSpider4RelatedSearchProvider>(),
+            _ => throw new NotImplementedException()
+        };
+
+        await provider.HandleEventAsync(eventData);
+    }
 }

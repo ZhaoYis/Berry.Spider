@@ -11,7 +11,7 @@ public class TouTiaoSpiderAppService : ApplicationService, ITouTiaoSpiderAppServ
     /// <summary>
     /// 执行爬虫
     /// </summary>
-    public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest
+    public async Task PublishAsync<T>(T request) where T : ISpiderRequest
     {
         ITouTiaoSpiderProvider? provider = request.SourceFrom switch
         {
@@ -20,6 +20,18 @@ public class TouTiaoSpiderAppService : ApplicationService, ITouTiaoSpiderAppServ
             _ => throw new NotImplementedException()
         };
 
-        await provider.ExecuteAsync(request);
+        await provider.PublishAsync(request);
+    }
+
+    public async Task HandleEventAsync<T>(T eventData) where T : ISpiderPullEto
+    {
+        ITouTiaoSpiderProvider? provider = eventData.SourceFrom switch
+        {
+            SpiderSourceFrom.TouTiao_Question => this.LazyServiceProvider.LazyGetRequiredService<TouTiaoSpider4QuestionProvider>(),
+            SpiderSourceFrom.TouTiao_Information => this.LazyServiceProvider.LazyGetRequiredService<TouTiaoSpider4InformationProvider>(),
+            _ => throw new NotImplementedException()
+        };
+
+        await provider.HandleEventAsync(eventData);
     }
 }

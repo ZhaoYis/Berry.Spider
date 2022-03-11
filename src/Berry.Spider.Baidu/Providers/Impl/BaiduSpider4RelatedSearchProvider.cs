@@ -13,4 +13,9 @@ public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
 
         throw new NotImplementedException();
     }
+
+    public Task HandleEventAsync<T>(T eventData) where T : ISpiderPullEto
+    {
+        throw new NotImplementedException();
+    }
 }

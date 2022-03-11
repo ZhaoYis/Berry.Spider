@@ -8,9 +8,9 @@ public static class ListExtensions
     /// 构造出统一风格的主内容文本
     /// </summary>
     /// <returns></returns>
-    public static string? BuildMainContent(this List<string> items)
+    public static string BuildMainContent(this List<string> items)
     {
-        if (items.Count == 0) return default;
+        if (items.Count == 0) return string.Empty;
 
         StringBuilder builder = new StringBuilder();
         int index = 0;

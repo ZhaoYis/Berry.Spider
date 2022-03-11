@@ -1,8 +1,7 @@
 using Berry.Spider.TouTiao;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
-using Berry.Spider.Domain;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
 
@@ -14,26 +13,29 @@ namespace Berry.Spider.Consumers;
 public class TouTiaoSpider4InformationEventHandler : IDistributedEventHandler<TouTiaoSpider4InformationEto>,
     ITransientDependency
 {
-    private ISpiderContentRepository SpiderRepository { get; }
+    private ILogger<TouTiaoSpider4QuestionEventHandler> Logger { get; }
+    private ITouTiaoSpiderAppService TouTiaoSpiderAppService { get; }
 
-    public TouTiaoSpider4InformationEventHandler(ISpiderContentRepository repository)
+    public TouTiaoSpider4InformationEventHandler(ILogger<TouTiaoSpider4QuestionEventHandler> logger,
+        ITouTiaoSpiderAppService service)
     {
-        this.SpiderRepository = repository;
+        this.Logger = logger;
+        this.TouTiaoSpiderAppService = service;
     }
 
     public async Task HandleEventAsync(TouTiaoSpider4InformationEto eventData)
     {
-        List<SpiderContent> contents = new List<SpiderContent>();
-
-        if (eventData.Items.Any())
+        try
         {
-            foreach (var item in eventData.Items)
-            {
-                //TODO:获取具体内容
-                contents.Add(new SpiderContent(item.Title, item.Href, eventData.SourceFrom, item.Href));
-            }
-
-            await this.SpiderRepository.InsertManyAsync(contents);
+            await this.TouTiaoSpiderAppService.HandleEventAsync<TouTiaoSpider4InformationEto>(eventData);
+        }
+        catch (Exception exception)
+        {
+            this.Logger.LogException(exception);
+        }
+        finally
+        {
+            //ignore..
         }
     }
 }

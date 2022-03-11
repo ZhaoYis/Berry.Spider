@@ -1,4 +1,6 @@
 ﻿using Berry.Spider.Core;
+using Berry.Spider.Domain;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using System.Web;
@@ -13,20 +15,26 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
 {
     private ILogger<TouTiaoSpider4QuestionProvider> Logger { get; }
     private IWebElementLoadProvider WebElementLoadProvider { get; }
+    private ITextAnalysisProvider TextAnalysisProvider { get; }
+    private ISpiderContentRepository SpiderRepository { get; }
     private IDistributedEventBus DistributedEventBus { get; }
 
     private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=question&dvpf=pc";
 
     public TouTiaoSpider4QuestionProvider(ILogger<TouTiaoSpider4QuestionProvider> logger,
         IWebElementLoadProvider provider,
+        IServiceProvider serviceProvider,
+        ISpiderContentRepository repository,
         IDistributedEventBus eventBus)
     {
         this.Logger = logger;
         this.WebElementLoadProvider = provider;
+        this.TextAnalysisProvider = serviceProvider.GetRequiredService<TouTiaoQuestionTextAnalysisProvider>();
+        this.SpiderRepository = repository;
         this.DistributedEventBus = eventBus;
     }
 
-    public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest
+    public async Task PublishAsync<T>(T request) where T : ISpiderRequest
     {
         #region 用于测试
 
@@ -119,6 +127,87 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
                         }
                     }
                 });
+        }
+        catch (Exception exception)
+        {
+            this.Logger.LogException(exception);
+        }
+        finally
+        {
+            //ignore..
+        }
+    }
+
+    public async Task HandleEventAsync<T>(T eventData) where T : ISpiderPullEto
+    {
+        try
+        {
+            List<string> contentItems = new List<string>();
+
+            if (eventData.Items.Any())
+            {
+                foreach (var item in eventData.Items)
+                {
+                    await this.WebElementLoadProvider.InvokeAsync(
+                        item.Href,
+                        drv =>
+                        {
+                            try
+                            {
+                                return drv.FindElement(By.ClassName("s-container"));
+                            }
+                            catch (Exception e)
+                            {
+                                return null;
+                            }
+                        },
+                        async root =>
+                        {
+                            if (root == null) return;
+
+                            var resultContent = root.FindElements(By.ClassName("list"));
+                            if (resultContent.Count > 0)
+                            {
+                                foreach (IWebElement element in resultContent)
+                                {
+                                    var answerList = element
+                                        .FindElements(By.TagName("div"))
+                                        .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))
+                                        .ToList();
+                                    if (answerList.Any())
+                                    {
+                                        foreach (IWebElement answer in answerList)
+                                        {
+                                            if (answer != null && !string.IsNullOrWhiteSpace(answer.Text))
+                                            {
+                                                //解析内容
+                                                var list = await this.TextAnalysisProvider.InvokeAsync(answer.Text);
+                                                if (list.Count > 0)
+                                                {
+                                                    contentItems.AddRange(list);
+                                                    this.Logger.LogInformation("总共获取到记录：" + list.Count);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    );
+                }
+
+                //去重
+                contentItems = contentItems.Distinct().ToList();
+                //打乱
+                contentItems.RandomSort();
+
+                string mainContent = contentItems.BuildMainContent();
+                if (!string.IsNullOrEmpty(mainContent))
+                {
+                    var content = new SpiderContent(eventData.Title, mainContent, eventData.SourceFrom);
+                    await this.SpiderRepository.InsertAsync(content);
+                }
+            }
         }
         catch (Exception exception)
         {

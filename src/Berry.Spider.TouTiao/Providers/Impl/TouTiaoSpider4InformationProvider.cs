@@ -25,7 +25,7 @@ public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
         this.DistributedEventBus = eventBus;
     }
 
-    public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest
+    public async Task PublishAsync<T>(T request) where T : ISpiderRequest
     {
         try
         {
@@ -88,5 +88,10 @@ public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
         {
             //ignore..
         }
+    }
+
+    public Task HandleEventAsync<T>(T eventData) where T : ISpiderPullEto
+    {
+        throw new NotImplementedException();
     }
 }

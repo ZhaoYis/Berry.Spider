@@ -11,6 +11,7 @@ namespace Berry.Spider.TouTiao.Sender;
 
 [DependsOn(
     typeof(AbpAutofacModule),
+    //今日头条模块
     typeof(TouTiaoSpiderModule)
 )]
 public class TouTiaoSpiderSenderModule : AbpModule

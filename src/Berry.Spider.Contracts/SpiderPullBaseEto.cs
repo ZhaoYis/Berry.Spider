@@ -2,7 +2,7 @@ using Berry.Spider.Domain.Shared;
 
 namespace Berry.Spider
 {
-    public class SpiderPullBaseEto
+    public class SpiderPullBaseEto : ISpiderPullEto
     {
         protected SpiderPullBaseEto(SpiderSourceFrom @from)
         {
@@ -18,6 +18,11 @@ namespace Berry.Spider
         /// 搜索关键字
         /// </summary>
         public string Keyword { get; set; }
+
+        /// <summary>
+        /// 保存这次记录最终的标题
+        /// </summary>
+        public string Title { get; set; }
 
         /// <summary>
         /// 二级页面地址信息
