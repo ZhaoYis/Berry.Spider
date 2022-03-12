@@ -3,6 +3,7 @@ using System;
 using Berry.Spider.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -11,9 +12,10 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Berry.Spider.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(SpiderDbContext))]
-    partial class SpiderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220312075832_Spider_Basic")]
+    partial class Spider_Basic
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

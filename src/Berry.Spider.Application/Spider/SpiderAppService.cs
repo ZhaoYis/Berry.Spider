@@ -1,20 +1,31 @@
-﻿using Volo.Abp.Application.Services;
+﻿using Berry.Spider.Domain;
+using Volo.Abp.Application.Services;
+using Volo.Abp.Domain.Repositories;
 
 namespace Berry.Spider.Application.Spider;
 
 /// <summary>
 /// 爬虫服务
 /// </summary>
-public class SpiderAppService : ApplicationService, ISpiderAppService
+public class SpiderAppService : CrudAppService<
+    SpiderBasic,
+    SpiderDto,
+    int,
+    GetListInput,
+    SpiderCreateInput,
+    SpiderUpdateInput>, ISpiderAppService
 {
-    /// <summary>
-    /// 获取爬虫列表
-    /// </summary>
-    /// <returns></returns>
-    public async Task<List<SpiderDto>> GetListAsync(GetListInput input)
+    public SpiderAppService(IRepository<SpiderBasic, int> repository) : base(repository)
     {
-        //TODO：待实现
+    }
 
-        return await Task.FromResult(new List<SpiderDto>());
+    public override Task<SpiderDto> CreateAsync(SpiderCreateInput input)
+    {
+        return base.CreateAsync(input);
+    }
+
+    protected override Task<IQueryable<SpiderBasic>> CreateFilteredQueryAsync(GetListInput input)
+    {
+        return base.CreateFilteredQueryAsync(input);
     }
 }

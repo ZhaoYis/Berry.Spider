@@ -1,12 +1,9 @@
-﻿using Berry.Spider.Domain.Shared;
+using Berry.Spider.Domain.Shared;
 using Volo.Abp.Application.Dtos;
 
 namespace Berry.Spider;
 
-/// <summary>
-/// 爬虫信息
-/// </summary>
-public class SpiderDto : EntityDto<int>
+public class SpiderUpdateInput : EntityDto<int>
 {
     /// <summary>
     /// 爬虫名称
@@ -22,14 +19,4 @@ public class SpiderDto : EntityDto<int>
     /// 备注
     /// </summary>
     public string Remark { get; set; }
-
-    /// <summary>
-    /// 创建时间
-    /// </summary>
-    public DateTime CreationTime { get; }
-
-    /// <summary>
-    /// 最后一次更新时间
-    /// </summary>
-    public DateTime? LastModificationTime { get; set; }
 }

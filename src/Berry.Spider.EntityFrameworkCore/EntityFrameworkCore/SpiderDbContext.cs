@@ -26,5 +26,13 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
             //Configure the base properties
             b.ConfigureByConvention();
         });
+        
+        builder.Entity<SpiderBasic>(b =>
+        {
+            b.ToTable("SpiderBasic");
+
+            //Configure the base properties
+            b.ConfigureByConvention();
+        });
     }
 }

@@ -22,6 +22,7 @@ public class SpiderEntityFrameworkCoreModule : AbpModule
 
             //自定义仓储
             options.AddRepository<SpiderContent, SpiderContentRepository>();
+            options.AddRepository<SpiderBasic, SpiderBasicRepository>();
         });
 
         Configure<AbpDbContextOptions>(options =>

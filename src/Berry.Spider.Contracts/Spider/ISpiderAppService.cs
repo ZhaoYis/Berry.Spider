@@ -3,7 +3,11 @@ using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider;
 
-public interface ISpiderAppService : IApplicationService, ITransientDependency
+public interface ISpiderAppService : ICrudAppService<
+    SpiderDto,
+    int,
+    GetListInput,
+    SpiderCreateInput,
+    SpiderUpdateInput>, ITransientDependency
 {
-    Task<List<SpiderDto>> GetListAsync(GetListInput input);
 }

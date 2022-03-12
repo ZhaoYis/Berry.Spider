@@ -5,12 +5,19 @@ using Volo.Abp.Auditing;
 namespace Berry.Spider.Domain;
 
 /// <summary>
-/// 爬虫信息
+/// 爬虫基础信息
 /// </summary>
-public class Spider : EntityBase, IHasCreationTime, IHasModificationTime, ISoftDelete
+public class SpiderBasic : EntityBase, IHasCreationTime, IHasModificationTime, ISoftDelete
 {
-    protected Spider()
+    protected SpiderBasic()
     {
+    }
+
+    public SpiderBasic(string name, SpiderSourceFrom @from, string remark)
+    {
+        this.Name = name;
+        this.From = from;
+        this.Remark = remark;
     }
 
     /// <summary>
