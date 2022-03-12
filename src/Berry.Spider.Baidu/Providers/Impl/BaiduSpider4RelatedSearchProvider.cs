@@ -1,6 +1,8 @@
-﻿using Berry.Spider.Core;
+﻿using System.Web;
+using Berry.Spider.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using OpenQA.Selenium;
 using Volo.Abp.EventBus.Distributed;
 
 namespace Berry.Spider.Baidu;
@@ -15,7 +17,7 @@ public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
     private ITextAnalysisProvider TextAnalysisProvider { get; }
     private IDistributedEventBus DistributedEventBus { get; }
 
-    private string HomePage => "";
+    private string HomePage => "https://www.baidu.com/s?wd={0}";
 
     public BaiduSpider4RelatedSearchProvider(ILogger<BaiduSpider4RelatedSearchProvider> logger,
         IWebElementLoadProvider provider,
@@ -33,15 +35,58 @@ public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
     /// </summary>
     public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest
     {
-        //TODO:待实现
-
-        //采集百度相关搜索并拿出标题
-        var eto = new BaiduSpider4RelatedSearchEto {Keyword = request.Keyword, Title = request.Keyword};
-        eto.Items.Add(new ChildPageDataItem {Title = "", Href = ""});
-        if (eto.Items.Any())
+        try
         {
-            await this.DistributedEventBus.PublishAsync(eto);
-            this.Logger.LogInformation("事件发布成功，等待消费...");
+            string targetUrl = string.Format(this.HomePage, request.Keyword);
+            await this.WebElementLoadProvider.InvokeAsync(
+                targetUrl,
+                drv =>
+                {
+                    try
+                    {
+                        return drv.FindElement(By.ClassName("result-molecule  new-pmd"));
+                    }
+                    catch (Exception e)
+                    {
+                        return null;
+                    }
+                },
+                async root =>
+                {
+                    if (root == null) return;
+
+                    var resultContent = root.FindElements(By.Id("rs_new"));
+                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+
+                    if (resultContent.Count > 0)
+                    {
+                        var eto = new BaiduSpider4RelatedSearchEto {Keyword = request.Keyword, Title = request.Keyword};
+
+                        foreach (IWebElement element in resultContent)
+                        {
+                            var a = element.FindElement(By.TagName("a"));
+                            if (a != null)
+                            {
+                                string text = a.Text;
+                                string href = a.GetAttribute("href");
+                            }
+                        }
+
+                        if (eto.Items.Any())
+                        {
+                            await this.DistributedEventBus.PublishAsync(eto);
+                            this.Logger.LogInformation("事件发布成功，等待消费...");
+                        }
+                    }
+                });
+        }
+        catch (Exception exception)
+        {
+            this.Logger.LogException(exception);
+        }
+        finally
+        {
+            //ignore..
         }
     }
 
