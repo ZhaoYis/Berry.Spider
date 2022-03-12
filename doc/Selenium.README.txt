@@ -1,8 +1,28 @@
+安装Java：
+yum install -y java-1.8.0-openjdk.x86_64
+//验证完成安装
+java -version
+
+安装谷歌浏览器：
+sudo yum -y install  redhat-lsb
+sudo yum -y install libvulkan*
+sudo yum -y install libXss*
+sudo yum -y install libappindicator3*
+sudo yum -y install liberation-fonts
+sudo rpm -ivh google-chrome-stable_current_x86_64.rpm
+
+设置webdriver的PATH地址：
+sudo vi /etc/profile
+添加以下代码：
+PATH=$PATH:/usr/local/software/webdriver
+export PATH
+
 启动selenium：
 cd /usr/local/software/selenium
-java -jar selenium-server-4.1.2.jar standalone --port 4445
+java -jar selenium-server-4.1.2.jar standalone --port 4445 --driver-configuration display-name="Chrome (custom capability true)" webdriver-path="/usr/local/software/webdriver" max-sessions=4 stereotype='{"browserName":"chrome","gsg:customcap":true}'
+
 以服务的方式运行：
-nohup java -jar /usr/local/software/selenium/selenium-server-4.1.2.jar standalone  --max-sessions 2 --port 4445 >/usr/local/software/selenium/console.log &
+nohup java -jar /usr/local/software/selenium/selenium-server-4.1.2.jar standalone  --max-sessions 2 --port 4445 --driver-configuration display-name="Chrome (custom capability true)" webdriver-path="/usr/local/software/webdriver" max-sessions=4 stereotype='{"browserName":"chrome","gsg:customcap":true}' >/usr/local/software/selenium/console.log &
 
 查处进程：
 lsof -i:4445
