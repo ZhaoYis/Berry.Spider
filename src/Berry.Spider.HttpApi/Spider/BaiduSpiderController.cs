@@ -20,7 +20,7 @@ public class BaiduSpiderController : SpiderControllerBase
     /// 将待爬取信息PUSH到消息队列中
     /// </summary>
     [HttpPost, Route("push")]
-    public async Task PushAsync(BaiduSpiderPushEto push)
+    public async Task PushAsync([FromBody] BaiduSpiderPushEto push)
     {
         //直接发布事件到MQ，交由Berry.Spider.Consumers消费
         await this.BaiduSpiderAppService.PushAsync(push);
