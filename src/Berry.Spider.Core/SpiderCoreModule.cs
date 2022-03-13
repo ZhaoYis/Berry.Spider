@@ -12,6 +12,8 @@ public class SpiderCoreModule : AbpModule
 
         //配置WebDriverOptions
         context.Services.Configure<WebDriverOptions>(configuration.GetSection(nameof(WebDriverOptions)));
+        //配置ImageResourceOptions
+        context.Services.Configure<ImageResourceOptions>(configuration.GetSection(nameof(ImageResourceOptions)));
 
         //注入文本解析器
         context.Services.AddTransient<TouTiaoQuestionTextAnalysisProvider>();
