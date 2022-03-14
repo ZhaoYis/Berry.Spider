@@ -51,6 +51,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Baidu", "src\B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Tests", "test\Berry.Spider.Tests\Berry.Spider.Tests.csproj", "{228C47BA-251A-4A0D-9380-643DF4D8EFE1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docker", ".docker", "{0B5B28FB-DC56-4BA8-AF99-1408EBB8A01C}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile_Consumers = Dockerfile_Consumers
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
