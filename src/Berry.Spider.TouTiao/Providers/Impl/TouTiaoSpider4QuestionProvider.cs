@@ -16,6 +16,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
     private ILogger<TouTiaoSpider4QuestionProvider> Logger { get; }
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private ITextAnalysisProvider TextAnalysisProvider { get; }
+    private IImageResourceProvider ImageResourceProvider { get; }
     private ISpiderContentRepository SpiderRepository { get; }
     private IDistributedEventBus DistributedEventBus { get; }
 
@@ -24,12 +25,14 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
     public TouTiaoSpider4QuestionProvider(ILogger<TouTiaoSpider4QuestionProvider> logger,
         IWebElementLoadProvider provider,
         IServiceProvider serviceProvider,
+        IImageResourceProvider imageResourceProvider,
         ISpiderContentRepository repository,
         IDistributedEventBus eventBus)
     {
         this.Logger = logger;
         this.WebElementLoadProvider = provider;
         this.TextAnalysisProvider = serviceProvider.GetRequiredService<TouTiaoQuestionTextAnalysisProvider>();
+        this.ImageResourceProvider = imageResourceProvider;
         this.SpiderRepository = repository;
         this.DistributedEventBus = eventBus;
     }
@@ -176,7 +179,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
                 //打乱
                 contentItems.RandomSort();
 
-                string mainContent = contentItems.BuildMainContent();
+                string mainContent = contentItems.BuildMainContent(this.ImageResourceProvider);
                 if (!string.IsNullOrEmpty(mainContent))
                 {
                     var content = new SpiderContent(eventData.Title, mainContent, eventData.SourceFrom);

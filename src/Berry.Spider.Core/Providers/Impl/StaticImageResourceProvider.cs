@@ -20,11 +20,16 @@ public class StaticImageResourceProvider : IImageResourceProvider
 
     public async Task<string> TryGetAsync()
     {
+        throw new NotImplementedException();
+    }
+
+    public string TryGet()
+    {
         Random random = new Random(this.GuidGenerator.Create().GetHashCode());
         int next = random.Next(this.Options.MinId, this.Options.MaxId);
 
         string url = string.Format(this.Options.TemplateUrl, next);
 
-        return await Task.FromResult(url);
+        return url;
     }
 }
