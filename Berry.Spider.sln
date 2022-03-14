@@ -54,6 +54,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docker", ".docker", "{0B5B28FB-DC56-4BA8-AF99-1408EBB8A01C}"
 	ProjectSection(SolutionItems) = preProject
 		Dockerfile_Consumers = Dockerfile_Consumers
+		Dockerfile_ApiHost = Dockerfile_ApiHost
 	EndProjectSection
 EndProject
 Global
