@@ -3,17 +3,17 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj", "src/Berry.Spider.Consumers/"]
-COPY ["src/Berry.Spider.TouTiao.Contracts/Berry.Spider.TouTiao.Contracts.csproj", "src/Berry.Spider.TouTiao.Contracts/"]
-COPY ["src/Berry.Spider.Contracts/Berry.Spider.Contracts.csproj", "src/Berry.Spider.Contracts/"]
-COPY ["src/Berry.Spider.Core/Berry.Spider.Core.csproj", "src/Berry.Spider.Core/"]
-COPY ["src/Berry.Spider.Proxy/Berry.Spider.Proxy.csproj", "src/Berry.Spider.Proxy/"]
-COPY ["src/Berry.Spider.Domain.Shared/Berry.Spider.Domain.Shared.csproj", "src/Berry.Spider.Domain.Shared/"]
-COPY ["src/Berry.Spider.Domain/Berry.Spider.Domain.csproj", "src/Berry.Spider.Domain/"]
-COPY ["src/Berry.Spider.Baidu/Berry.Spider.Baidu.csproj", "src/Berry.Spider.Baidu/"]
-COPY ["src/Berry.Spider.Baidu.Contracts/Berry.Spider.Baidu.Contracts.csproj", "src/Berry.Spider.Baidu.Contracts/"]
-COPY ["src/Berry.Spider.TouTiao/Berry.Spider.TouTiao.csproj", "src/Berry.Spider.TouTiao/"]
-COPY ["src/Berry.Spider.EntityFrameworkCore/Berry.Spider.EntityFrameworkCore.csproj", "src/Berry.Spider.EntityFrameworkCore/"]
+COPY ["src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj", "Berry.Spider.Consumers/"]
+COPY ["src/Berry.Spider.TouTiao.Contracts/Berry.Spider.TouTiao.Contracts.csproj", "Berry.Spider.TouTiao.Contracts/"]
+COPY ["src/Berry.Spider.Contracts/Berry.Spider.Contracts.csproj", "Berry.Spider.Contracts/"]
+COPY ["src/Berry.Spider.Core/Berry.Spider.Core.csproj", "Berry.Spider.Core/"]
+COPY ["src/Berry.Spider.Proxy/Berry.Spider.Proxy.csproj", "Berry.Spider.Proxy/"]
+COPY ["src/Berry.Spider.Domain.Shared/Berry.Spider.Domain.Shared.csproj", "Berry.Spider.Domain.Shared/"]
+COPY ["src/Berry.Spider.Domain/Berry.Spider.Domain.csproj", "Berry.Spider.Domain/"]
+COPY ["src/Berry.Spider.Baidu/Berry.Spider.Baidu.csproj", "Berry.Spider.Baidu/"]
+COPY ["src/Berry.Spider.Baidu.Contracts/Berry.Spider.Baidu.Contracts.csproj", "Berry.Spider.Baidu.Contracts/"]
+COPY ["src/Berry.Spider.TouTiao/Berry.Spider.TouTiao.csproj", "Berry.Spider.TouTiao/"]
+COPY ["src/Berry.Spider.EntityFrameworkCore/Berry.Spider.EntityFrameworkCore.csproj", "Berry.Spider.EntityFrameworkCore/"]
 RUN dotnet restore "src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj"
 COPY . .
 WORKDIR "/src/Berry.Spider.Consumers"
