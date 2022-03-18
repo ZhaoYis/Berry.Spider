@@ -22,6 +22,7 @@ cd /usr/local/software/selenium
 java -jar selenium-server-4.1.2.jar standalone --port 4445 --driver-configuration display-name="Chrome" webdriver-path="/usr/local/software/webdriver" max-sessions=4 stereotype='{"browserName":"chrome","gsg:customcap":true}'
 
 以服务的方式运行：
+cd /usr/local/software/selenium
 nohup java -jar /usr/local/software/selenium/selenium-server-4.1.2.jar standalone --port 4445 --driver-configuration display-name="Chrome" webdriver-path="/usr/local/software/webdriver" max-sessions=4 stereotype='{"browserName":"chrome","gsg:customcap":true}' &
 
 查处进程：
