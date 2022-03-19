@@ -22,7 +22,7 @@ public class BaiduSpiderAppService : ApplicationService, IBaiduSpiderAppService
     /// </summary>
     public async Task PushAsync(BaiduSpiderPushEto push)
     {
-        if (push.Keywords.Any())
+        if (!string.IsNullOrEmpty(push.Keyword))
         {
             await this.DistributedEventBus.PublishAsync(push);
         }

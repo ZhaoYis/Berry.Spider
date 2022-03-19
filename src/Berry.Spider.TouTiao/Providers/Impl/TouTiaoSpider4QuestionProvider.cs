@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using System.Web;
+using Volo.Abp.Domain.Repositories;
 using Volo.Abp.EventBus.Distributed;
 
 namespace Berry.Spider.TouTiao;
@@ -64,7 +65,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
 
                     if (resultContent.Count > 0)
                     {
-                        var eto = new TouTiaoSpider4QuestionEto { Keyword = request.Keyword, Title = request.Keyword };
+                        var eto = new TouTiaoSpider4QuestionEto {Keyword = request.Keyword, Title = request.Keyword};
 
                         foreach (IWebElement element in resultContent)
                         {
@@ -120,71 +121,73 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
     {
         try
         {
+            bool isExisted = await this.SpiderRepository.CountAsync(c => c.Title == eventData.Title && c.Published == 0) > 0;
+            if (isExisted) return;
+
             List<string> contentItems = new List<string>();
 
-            if (eventData.Items.Any())
+            foreach (var item in eventData.Items)
             {
-                foreach (var item in eventData.Items)
-                {
-                    await this.WebElementLoadProvider.InvokeAsync(
-                        item.Href,
-                        drv =>
+                await this.WebElementLoadProvider.InvokeAsync(
+                    item.Href,
+                    drv =>
+                    {
+                        try
                         {
-                            try
-                            {
-                                return drv.FindElement(By.ClassName("s-container"));
-                            }
-                            catch (Exception e)
-                            {
-                                return null;
-                            }
-                        },
-                        async root =>
+                            return drv.FindElement(By.ClassName("s-container"));
+                        }
+                        catch (Exception e)
                         {
-                            if (root == null) return;
+                            return null;
+                        }
+                    },
+                    async root =>
+                    {
+                        if (root == null) return;
 
-                            var resultContent = root.FindElements(By.ClassName("list"));
-                            if (resultContent.Count > 0)
+                        var resultContent = root.FindElements(By.ClassName("list"));
+                        if (resultContent.Count > 0)
+                        {
+                            foreach (IWebElement element in resultContent)
                             {
-                                foreach (IWebElement element in resultContent)
+                                var answerList = element
+                                    .FindElements(By.TagName("div"))
+                                    .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))
+                                    .ToList();
+                                if (answerList.Any())
                                 {
-                                    var answerList = element
-                                        .FindElements(By.TagName("div"))
-                                        .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))
-                                        .ToList();
-                                    if (answerList.Any())
+                                    foreach (IWebElement answer in answerList)
                                     {
-                                        foreach (IWebElement answer in answerList)
+                                        if (answer != null && !string.IsNullOrWhiteSpace(answer.Text))
                                         {
-                                            if (answer != null && !string.IsNullOrWhiteSpace(answer.Text))
+                                            //解析内容
+                                            var list = await this.TextAnalysisProvider.InvokeAsync(answer.Text);
+                                            if (list.Count > 0)
                                             {
-                                                //解析内容
-                                                var list = await this.TextAnalysisProvider.InvokeAsync(answer.Text);
-                                                if (list.Count > 0)
-                                                {
-                                                    contentItems.AddRange(list);
-                                                    this.Logger.LogInformation("总共获取到记录：" + list.Count);
-                                                }
+                                                contentItems.AddRange(list);
+                                                this.Logger.LogInformation("总共获取到记录：" + list.Count);
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                    );
-                }
+                    }
+                );
+            }
 
-                //去重
-                contentItems = contentItems.Distinct().ToList();
-                //打乱
-                contentItems.RandomSort();
+            //去重
+            contentItems = contentItems.Distinct().ToList();
+            //打乱
+            contentItems.RandomSort();
 
-                string mainContent = contentItems.BuildMainContent(this.ImageResourceProvider);
-                if (!string.IsNullOrEmpty(mainContent))
-                {
-                    var content = new SpiderContent(eventData.Title, mainContent, eventData.SourceFrom);
-                    await this.SpiderRepository.InsertAsync(content);
-                }
+            string mainContent = contentItems.BuildMainContent(this.ImageResourceProvider);
+            if (!string.IsNullOrEmpty(mainContent))
+            {
+                var content = new SpiderContent(eventData.Title, mainContent, eventData.SourceFrom);
+                await this.SpiderRepository.InsertAsync(content);
+
+                this.Logger.LogInformation("落库成功，标题：" + eventData.Title + "，共计：" + contentItems.Count + "条记录");
             }
         }
         catch (Exception exception)

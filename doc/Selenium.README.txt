@@ -23,7 +23,8 @@ java -jar selenium-server-4.1.2.jar standalone --port 4445 --driver-configuratio
 
 以服务的方式运行：
 cd /usr/local/software/selenium
-nohup java -jar /usr/local/software/selenium/selenium-server-4.1.2.jar standalone --port 4445 --driver-configuration display-name="Chrome" webdriver-path="/usr/local/software/webdriver" max-sessions=4 stereotype='{"browserName":"chrome","gsg:customcap":true}' &
+nohup java -jar /usr/local/software/selenium/selenium-server-4.1.2.jar standalone --port 4445 --driver-configuration display-name="Chrome" webdriver-path="/usr/local/software/webdriver" max-sessions=4 stereotype='{"browserName":"chrome","gsg:customcap":true}' >/dev/null 2>&1 &
+nohup java -jar selenium-server-4.1.2.jar standalone --port 4445 --driver-configuration display-name="Chrome" webdriver-path="/usr/local/software/webdriver" max-sessions=4 stereotype='{"browserName":"chrome","gsg:customcap":true}' >/dev/null 2>&1 &
 
 查处进程：
 lsof -i:4445

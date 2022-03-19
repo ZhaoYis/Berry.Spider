@@ -12,5 +12,6 @@ public class SpiderPushBaseEto : ISpiderPushEto
     /// <summary>
     /// 关键字
     /// </summary>
-    public List<string> Keywords { get; set; } = new List<string>();
+    public string Keyword { get; set; }
+    // public List<string> Keywords { get; set; } = new List<string>();
 }

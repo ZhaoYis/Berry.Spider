@@ -5,5 +5,6 @@ public interface ISpiderPushEto : ISpiderEto
     /// <summary>
     /// 关键字
     /// </summary>
-    List<string> Keywords { get; set; }
+    string Keyword { get; set; }
+    // List<string> Keywords { get; set; }
 }

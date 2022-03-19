@@ -46,11 +46,16 @@ public class TouTiaoSpiderController : SpiderControllerBase
                 string[] rows = await System.IO.File.ReadAllLinesAsync(filePath);
                 if (rows.Length > 0)
                 {
-                    TouTiaoSpiderPushEto eto = new TouTiaoSpiderPushEto();
-                    eto.SourceFrom = push.SourceFrom;
-                    eto.Keywords.AddRange(rows);
+                    foreach (string row in rows)
+                    {
+                        TouTiaoSpiderPushEto eto = new TouTiaoSpiderPushEto
+                        {
+                            SourceFrom = push.SourceFrom,
+                            Keyword = row
+                        };
 
-                    await this.TouTiaoSpiderAppService.PushAsync(eto);
+                        await this.TouTiaoSpiderAppService.PushAsync(eto);
+                    }
                 }
             }
         }

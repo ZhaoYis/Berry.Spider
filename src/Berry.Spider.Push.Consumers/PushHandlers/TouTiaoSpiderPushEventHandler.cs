@@ -1,5 +1,4 @@
 ﻿using Berry.Spider.TouTiao;
-using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
@@ -20,16 +19,10 @@ public class TouTiaoSpiderPushEventHandler : IDistributedEventHandler<TouTiaoSpi
 
     public async Task HandleEventAsync(TouTiaoSpiderPushEto eventData)
     {
-        if (eventData.Keywords.Any())
+        await this.TouTiaoSpiderAppService.ExecuteAsync(new TouTiaoSpiderRequest
         {
-            foreach (string keyword in eventData.Keywords)
-            {
-                await this.TouTiaoSpiderAppService.ExecuteAsync(new TouTiaoSpiderRequest
-                {
-                    SourceFrom = eventData.SourceFrom,
-                    Keyword = keyword
-                });
-            }
-        }
+            SourceFrom = eventData.SourceFrom,
+            Keyword = eventData.Keyword
+        });
     }
 }

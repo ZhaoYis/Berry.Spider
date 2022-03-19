@@ -22,7 +22,7 @@ public class TouTiaoSpiderAppService : ApplicationService, ITouTiaoSpiderAppServ
     /// </summary>
     public async Task PushAsync(TouTiaoSpiderPushEto push)
     {
-        if (push.Keywords.Any())
+        if (!string.IsNullOrEmpty(push.Keyword))
         {
             await this.DistributedEventBus.PublishAsync(push);
         }

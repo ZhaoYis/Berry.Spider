@@ -20,16 +20,10 @@ public class BaiduSpiderPushEventHandler : IDistributedEventHandler<BaiduSpiderP
 
     public async Task HandleEventAsync(BaiduSpiderPushEto eventData)
     {
-        if (eventData.Keywords.Any())
+        await this.BaiduSpiderAppService.ExecuteAsync(new BaiduSpiderRequest
         {
-            foreach (string keyword in eventData.Keywords)
-            {
-                await this.BaiduSpiderAppService.ExecuteAsync(new BaiduSpiderRequest
-                {
-                    SourceFrom = eventData.SourceFrom,
-                    Keyword = keyword
-                });
-            }
-        }
+            SourceFrom = eventData.SourceFrom,
+            Keyword = eventData.Keyword
+        });
     }
 }
