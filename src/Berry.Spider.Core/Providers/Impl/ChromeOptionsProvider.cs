@@ -22,7 +22,7 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         ChromeOptions options = new ChromeOptions();
 
         options.AddArgument("--no-sandbox"); //Chrome在root权限下跑
-        options.AddArgument("--user-data-dir=~/usr/local/software/chrome/user_data");
+        // options.AddArgument("--user-data-dir=~/usr/local/software/chrome/user_data");
         options.AddArgument("--dns-prefetch-disable");
         options.AddArgument("--lang=en-US");
         options.AddArgument("--disable-setuid-sandbox");
