@@ -62,6 +62,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docker", ".docker", "{0B5B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Pull.Consumers", "src\Berry.Spider.Pull.Consumers\Berry.Spider.Pull.Consumers.csproj", "{C517153B-8B06-486F-87F7-4F2FB3DFF435}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.AspNetCore.Mvc", "Berry.Spider.AspNetCore.Mvc\Berry.Spider.AspNetCore.Mvc.csproj", "{6318DE85-48E2-4975-8A2B-7D7BF9D1EAAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -136,6 +138,10 @@ Global
 		{C517153B-8B06-486F-87F7-4F2FB3DFF435}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C517153B-8B06-486F-87F7-4F2FB3DFF435}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C517153B-8B06-486F-87F7-4F2FB3DFF435}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6318DE85-48E2-4975-8A2B-7D7BF9D1EAAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6318DE85-48E2-4975-8A2B-7D7BF9D1EAAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6318DE85-48E2-4975-8A2B-7D7BF9D1EAAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6318DE85-48E2-4975-8A2B-7D7BF9D1EAAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -162,6 +168,7 @@ Global
 		{A9267021-7218-4BCA-9486-93727FEAD581} = {8202E0ED-BECA-48CE-83E7-1EEB4B12A6A3}
 		{228C47BA-251A-4A0D-9380-643DF4D8EFE1} = {EEB6AD93-C862-409B-861A-B122CEE4DCA2}
 		{C517153B-8B06-486F-87F7-4F2FB3DFF435} = {A62EA0AB-0556-4384-8F50-B4C713DE74EB}
+		{6318DE85-48E2-4975-8A2B-7D7BF9D1EAAA} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}

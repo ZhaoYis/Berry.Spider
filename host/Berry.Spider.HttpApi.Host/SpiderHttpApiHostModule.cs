@@ -1,4 +1,5 @@
 using Berry.Spider.Application;
+using Berry.Spider.AspNetCore.Mvc;
 using Berry.Spider.Baidu;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.TouTiao;
@@ -21,6 +22,7 @@ namespace Berry.Spider.HttpApi.Host;
     typeof(AbpEventBusRabbitMqModule),
     typeof(SpiderHttpApiModule),
     typeof(SpiderEntityFrameworkCoreModule),
+    typeof(SpiderAspNetCoreMvcModule),
     //今日头条模块
     typeof(TouTiaoSpiderModule),
     //百度模块

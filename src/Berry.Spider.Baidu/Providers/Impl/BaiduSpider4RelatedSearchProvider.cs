@@ -1,5 +1,4 @@
-﻿using System.Web;
-using Berry.Spider.Core;
+﻿using Berry.Spider.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
@@ -60,7 +59,7 @@ public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
 
                     if (resultContent.Count > 0)
                     {
-                        var eto = new BaiduSpider4RelatedSearchEto {Keyword = request.Keyword, Title = request.Keyword};
+                        var eto = new BaiduSpider4RelatedSearchEto { Keyword = request.Keyword, Title = request.Keyword };
 
                         foreach (IWebElement element in resultContent)
                         {

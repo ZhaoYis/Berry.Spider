@@ -1,7 +1,7 @@
-using System;
-using System.Threading.Tasks;
 using Berry.Spider.Baidu;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
 

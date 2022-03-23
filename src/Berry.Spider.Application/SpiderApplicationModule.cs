@@ -20,7 +20,7 @@ public class SpiderApplicationModule : AbpModule
         {
             options.AddMaps<SpiderApplicationModule>(validate: true);
         });
-        
+
         return Task.CompletedTask;
     }
 }

@@ -11,12 +11,12 @@ namespace Berry.Spider.Baidu;
 public class BaiduSpiderAppService : ApplicationService, IBaiduSpiderAppService
 {
     private IDistributedEventBus DistributedEventBus { get; }
-    
+
     public BaiduSpiderAppService(IDistributedEventBus eventBus)
     {
         this.DistributedEventBus = eventBus;
     }
-    
+
     /// <summary>
     /// 向队列推送源数据
     /// </summary>

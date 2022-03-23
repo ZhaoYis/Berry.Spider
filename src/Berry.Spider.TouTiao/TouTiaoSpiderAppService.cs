@@ -11,12 +11,12 @@ namespace Berry.Spider.TouTiao;
 public class TouTiaoSpiderAppService : ApplicationService, ITouTiaoSpiderAppService
 {
     private IDistributedEventBus DistributedEventBus { get; }
-    
+
     public TouTiaoSpiderAppService(IDistributedEventBus eventBus)
     {
         this.DistributedEventBus = eventBus;
     }
-    
+
     /// <summary>
     /// 向队列推送源数据
     /// </summary>

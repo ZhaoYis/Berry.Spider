@@ -16,6 +16,6 @@ public class UserController : SpiderControllerBase
     public async Task<UserLoginDto> LoginAsync([FromBody] UserLoginInput input)
     {
         return await Task.FromResult(new UserLoginDto()
-            {Name = "dsx", Avatar = "", Token = this.Clock.Now.ToString("d")});
+        { Name = "dsx", Avatar = "", Token = this.Clock.Now.ToString("d") });
     }
 }

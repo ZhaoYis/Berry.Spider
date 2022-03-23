@@ -9,7 +9,7 @@ public interface ITouTiaoSpiderAppService : IApplicationService
     /// </summary>
     /// <returns></returns>
     Task PushAsync(TouTiaoSpiderPushEto push);
-    
+
     /// <summary>
     /// 执行获取一级页面数据任务
     /// </summary>

@@ -9,7 +9,7 @@ public interface IBaiduSpiderAppService : IApplicationService
     /// </summary>
     /// <returns></returns>
     Task PushAsync(BaiduSpiderPushEto push);
-    
+
     /// <summary>
     /// 执行获取一级页面数据任务
     /// </summary>

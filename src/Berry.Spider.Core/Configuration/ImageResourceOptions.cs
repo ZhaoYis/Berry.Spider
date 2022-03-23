@@ -14,7 +14,7 @@ public class ImageResourceOptions
     /// 资源最大ID
     /// </summary>
     public int MinId { get; set; }
-    
+
     /// <summary>
     /// 资源最大ID
     /// </summary>
