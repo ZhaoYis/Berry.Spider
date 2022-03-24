@@ -23,7 +23,7 @@ namespace Berry.Spider.AspNetCore.Mvc
         /// <summary>
         /// 返回数据
         /// </summary>
-        public T Data { get; set; }
+        public T Result { get; set; }
 
         /// <summary>
         /// 返回消息
@@ -31,17 +31,19 @@ namespace Berry.Spider.AspNetCore.Mvc
         public string? Message { get; set; }
 
         /// <summary>
-        /// 是否成功
+        /// 响应类型。'success' | 'error' | 'warning'
         /// </summary>
-        public bool Success { get; set; }
+        public string Type { get; set; }
 
+        internal ApiResponse(){}
+        
         /// <summary>
         /// 返回不包含结果的未成功api结果
         /// </summary>
         /// <returns></returns>
         public static ApiResponse Failed()
         {
-            return new ApiResponse { Success = false };
+            return new ApiResponse { Type = "error" };
         }
 
         /// <summary>
@@ -52,10 +54,10 @@ namespace Berry.Spider.AspNetCore.Mvc
         {
             return new ApiResponse
             {
-                Success = false,
+                Type = "success",
                 Code = code,
-                Data = data,
-                Message = message ?? code.GetDescription()
+                Result = data,
+                Message = message ?? code.ToString()
             };
         }
 
@@ -65,7 +67,7 @@ namespace Berry.Spider.AspNetCore.Mvc
         /// <returns></returns>
         public static ApiResponse Succeed()
         {
-            return new ApiResponse { Success = true };
+            return new ApiResponse { Type = "success" };
         }
 
         /// <summary>
@@ -76,10 +78,34 @@ namespace Berry.Spider.AspNetCore.Mvc
         {
             return new ApiResponse
             {
-                Success = true,
+                Type = "success",
                 Code = code,
-                Data = data,
-                Message = message ?? code.GetDescription()
+                Result = data,
+                Message = message ?? code.ToString()
+            };
+        }
+        
+        /// <summary>
+        /// 返回不包含结果的警告api结果
+        /// </summary>
+        /// <returns></returns>
+        public static ApiResponse Warning()
+        {
+            return new ApiResponse { Type = "warning" };
+        }
+
+        /// <summary>
+        /// 返回警告的api结果
+        /// </summary>
+        /// <returns></returns>
+        public static ApiResponse Warning(object data, string? message = null, ApiErrorCodes code = ApiErrorCodes.Warning)
+        {
+            return new ApiResponse
+            {
+                Type = "warning",
+                Code = code,
+                Result = data,
+                Message = message ?? code.ToString()
             };
         }
     }
