@@ -22,10 +22,6 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
     private IDistributedEventBus DistributedEventBus { get; }
 
     private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=question&dvpf=pc";
-    /// <summary>
-    /// 落库每条记录最小内容数量
-    /// </summary>
-    private const int MinRecords = 30;
 
     public TouTiaoSpider4QuestionProvider(ILogger<TouTiaoSpider4QuestionProvider> logger,
         IWebElementLoadProvider provider,
@@ -182,16 +178,19 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
 
             //去重
             contentItems = contentItems.Distinct().ToList();
-            //打乱
-            contentItems.RandomSort();
-
-            string mainContent = contentItems.BuildMainContent(this.ImageResourceProvider);
-            if (!string.IsNullOrEmpty(mainContent))
+            if (contentItems.Count >= GlobalConstants.MinRecords)
             {
-                var content = new SpiderContent(eventData.Title, mainContent, eventData.SourceFrom);
-                await this.SpiderRepository.InsertAsync(content);
+                //打乱
+                contentItems.RandomSort();
 
-                this.Logger.LogInformation("落库成功，标题：" + eventData.Title + "，共计：" + contentItems.Count + "条记录");
+                string mainContent = contentItems.BuildMainContent(this.ImageResourceProvider);
+                if (!string.IsNullOrEmpty(mainContent))
+                {
+                    var content = new SpiderContent(eventData.Title, mainContent, eventData.SourceFrom);
+                    await this.SpiderRepository.InsertAsync(content);
+
+                    this.Logger.LogInformation("落库成功，标题：" + eventData.Title + "，共计：" + contentItems.Count + "条记录");
+                }
             }
         }
         catch (Exception exception)
