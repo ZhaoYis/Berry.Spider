@@ -22,6 +22,10 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
     private IDistributedEventBus DistributedEventBus { get; }
 
     private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=question&dvpf=pc";
+    /// <summary>
+    /// 落库每条记录最小内容数量
+    /// </summary>
+    private const int MinRecords = 30;
 
     public TouTiaoSpider4QuestionProvider(ILogger<TouTiaoSpider4QuestionProvider> logger,
         IWebElementLoadProvider provider,
