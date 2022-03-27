@@ -12,7 +12,7 @@ public class TouTiaoQuestionTextAnalysisProvider : ITextAnalysisProvider
 
     private static readonly Regex ReplaceRegex = new Regex(@"^\d+(、|\.|\．|,|，)*");
 
-    public async Task<List<string>> InvokeAsync(string source)
+    public Task<List<string>> InvokeAsync(string source)
     {
         List<string> list = new List<string>();
 
@@ -52,6 +52,6 @@ public class TouTiaoQuestionTextAnalysisProvider : ITextAnalysisProvider
             }
         }
 
-        return await Task.FromResult(list);
+        return Task.FromResult(list);
     }
 }
