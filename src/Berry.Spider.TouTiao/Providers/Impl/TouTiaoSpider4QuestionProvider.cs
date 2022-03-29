@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using System.Web;
+using Berry.Spider.Contracts;
+using Microsoft.Extensions.Options;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.EventBus.Distributed;
 
@@ -20,6 +22,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
     private IImageResourceProvider ImageResourceProvider { get; }
     private ISpiderContentRepository SpiderRepository { get; }
     private IDistributedEventBus DistributedEventBus { get; }
+    private SpiderOptions Options { get; }
 
     private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=question&dvpf=pc";
 
@@ -28,7 +31,8 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
         IServiceProvider serviceProvider,
         IImageResourceProvider imageResourceProvider,
         ISpiderContentRepository repository,
-        IDistributedEventBus eventBus)
+        IDistributedEventBus eventBus,
+        IOptions<SpiderOptions> options)
     {
         this.Logger = logger;
         this.WebElementLoadProvider = provider;
@@ -36,6 +40,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
         this.ImageResourceProvider = imageResourceProvider;
         this.SpiderRepository = repository;
         this.DistributedEventBus = eventBus;
+        this.Options = options.Value;
     }
 
     public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest
@@ -178,7 +183,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
 
             //去重
             contentItems = contentItems.Distinct().ToList();
-            if (contentItems.Count >= GlobalConstants.MinRecords)
+            if (contentItems.Count >= this.Options.MinRecords)
             {
                 //打乱
                 contentItems.RandomSort();

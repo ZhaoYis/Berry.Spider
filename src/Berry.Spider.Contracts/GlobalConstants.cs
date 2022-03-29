@@ -5,5 +5,5 @@ public static class GlobalConstants
     /// <summary>
     /// 落库每条记录最小内容数量
     /// </summary>
-    public const int MinRecords = 30;
+    public const int DefaultMinRecords = 30;
 }
