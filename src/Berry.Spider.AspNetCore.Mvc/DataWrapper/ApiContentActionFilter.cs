@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Volo.Abp.DependencyInjection;
@@ -12,7 +13,7 @@ namespace Berry.Spider.AspNetCore.Mvc
     {
         public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
-            if (!context.ActionDescriptor.IsControllerAction())
+            if (!context.ActionDescriptor.IsControllerAction() || !IsEnableDataWrapper(context))
             {
                 await next();
                 return;
@@ -51,6 +52,18 @@ namespace Berry.Spider.AspNetCore.Mvc
             }
 
             await next();
+        }
+
+        private bool IsEnableDataWrapper(ResultExecutingContext context)
+        {
+            if (context.Controller.GetType().IsDefined(typeof(EnableDataWrapperAttribute)))
+            {
+                return !context.ActionDescriptor.GetMethodInfo().IsDefined(typeof(DisableDataWrapperAttribute));
+            }
+            else
+            {
+                return context.ActionDescriptor.GetMethodInfo().IsDefined(typeof(EnableDataWrapperAttribute));
+            }
         }
     }
 }
