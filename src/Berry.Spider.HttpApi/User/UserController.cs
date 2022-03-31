@@ -67,8 +67,8 @@ public class UserController : SpiderControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet, Route("getPermCode")]
-    public Task GetPermCodeAsync()
+    public Task<List<string>> GetPermCodeAsync()
     {
-        return Task.CompletedTask;
+        return Task.FromResult(new List<string>());
     }
 }

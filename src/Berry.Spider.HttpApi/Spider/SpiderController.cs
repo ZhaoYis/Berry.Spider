@@ -1,5 +1,5 @@
+using Berry.Spider.Core;
 using Microsoft.AspNetCore.Mvc;
-using Volo.Abp.Application.Dtos;
 
 namespace Berry.Spider;
 
@@ -7,7 +7,7 @@ namespace Berry.Spider;
 /// 爬虫服务
 /// </summary>
 [Route("api/services/spider")]
-public class SpiderController : SpiderControllerBase, ISpiderAppService
+public class SpiderController : SpiderControllerBase
 {
     private ISpiderAppService SpiderAppService { get; }
 
@@ -23,9 +23,15 @@ public class SpiderController : SpiderControllerBase, ISpiderAppService
     }
 
     [HttpGet, Route("get-list")]
-    public async Task<PagedResultDto<SpiderDto>> GetListAsync(GetListInput input)
+    public async Task<CustomPagedResultDto<SpiderDto>> GetListAsync(CustomGetListInput input)
     {
         return await this.SpiderAppService.GetListAsync(input);
+    }
+
+    [HttpGet, Route("get-all")]
+    public async Task<CustomPagedResultDto<SpiderDto>> GetAllAsync()
+    {
+        return await this.SpiderAppService.GetAllAsync();
     }
 
     [HttpPost, Route("create")]

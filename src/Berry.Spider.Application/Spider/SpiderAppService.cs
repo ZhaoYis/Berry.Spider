@@ -1,4 +1,6 @@
-﻿using Berry.Spider.Domain;
+﻿using Berry.Spider.Core;
+using Berry.Spider.Domain;
+using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
@@ -19,13 +21,26 @@ public class SpiderAppService : CrudAppService<
     {
     }
 
-    public override Task<SpiderDto> CreateAsync(SpiderCreateInput input)
+    public new async Task<CustomPagedResultDto<SpiderDto>> GetListAsync(CustomGetListInput input)
     {
-        return base.CreateAsync(input);
+        CustomPagedResultDto<SpiderDto> result = new CustomPagedResultDto<SpiderDto>();
+
+        PagedResultDto<SpiderDto> pagedResultDto = await base.GetListAsync(new GetListInput
+            { SkipCount = input.Page, MaxResultCount = input.PageSize });
+        result.Total = pagedResultDto.TotalCount;
+        result.Items = pagedResultDto.Items;
+
+        return result;
     }
 
-    protected override Task<IQueryable<SpiderBasic>> CreateFilteredQueryAsync(GetListInput input)
+    public async Task<CustomPagedResultDto<SpiderDto>> GetAllAsync()
     {
-        return base.CreateFilteredQueryAsync(input);
+        CustomPagedResultDto<SpiderDto> result = new CustomPagedResultDto<SpiderDto>();
+
+        List<SpiderBasic> list = await this.Repository.GetListAsync(c => !c.IsDeleted);
+        result.Total = list.Count;
+        result.Items = this.ObjectMapper.Map<List<SpiderBasic>, List<SpiderDto>>(list);
+
+        return result;
     }
 }
