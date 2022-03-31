@@ -1,6 +1,6 @@
-namespace Berry.Spider.User;
+﻿namespace Berry.Spider.User;
 
-public class UserLoginDto
+public class UserInfoDto
 {
     /// <summary>
     /// 用户ID
@@ -18,6 +18,11 @@ public class UserLoginDto
     public string RealName { get; set; }
 
     /// <summary>
+    /// 头像
+    /// </summary>
+    public string Avatar { get; set; }
+
+    /// <summary>
     /// 描述
     /// </summary>
     public string Desc { get; set; }
@@ -26,6 +31,11 @@ public class UserLoginDto
     /// TOKEN
     /// </summary>
     public string Token { get; set; }
+
+    /// <summary>
+    /// 首页
+    /// </summary>
+    public string HomePath { get; set; }
 
     /// <summary>
     /// 用户角色
