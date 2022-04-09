@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
 using Volo.Abp;
 using Volo.Abp.Modularity;
 
@@ -16,7 +17,10 @@ public class SpiderProxyModule : AbpModule
         var configuration = context.Services.GetConfiguration();
 
         //注册ProxyPoolHttpClient
-        context.Services.AddHttpClient<ProxyPoolHttpClient>();
+        var retryForeverPolicy = Policy<HttpResponseMessage>.Handle<Exception>().WaitAndRetryForeverAsync(
+            sleepDurationProvider:i => TimeSpan.FromSeconds(2 * i)
+        );
+        context.Services.AddHttpClient<ProxyPoolHttpClient>().AddPolicyHandler(retryForeverPolicy);
 
         //配置HttpProxyOptions
         context.Services.Configure<HttpProxyOptions>(configuration.GetSection(nameof(HttpProxyOptions)));
