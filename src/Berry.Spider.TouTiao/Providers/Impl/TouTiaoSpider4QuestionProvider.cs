@@ -47,6 +47,9 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
     {
         try
         {
+            bool isExisted = await this.SpiderRepository.CountAsync(c => c.Title == request.Keyword && c.Published == 0) > 0;
+            if (isExisted) return;
+
             string targetUrl = string.Format(this.HomePage, request.Keyword);
             await this.WebElementLoadProvider.InvokeAsync(
                 targetUrl,
@@ -126,8 +129,8 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
     {
         try
         {
-            bool isExisted = await this.SpiderRepository.CountAsync(c => c.Title == eventData.Title && c.Published == 0) > 0;
-            if (isExisted) return;
+            // bool isExisted = await this.SpiderRepository.CountAsync(c => c.Title == eventData.Title && c.Published == 0) > 0;
+            // if (isExisted) return;
 
             List<string> contentItems = new List<string>();
 
