@@ -10,6 +10,7 @@ namespace Berry.Spider.EntityFrameworkCore.EntityFrameworkCore;
 public class SpiderDbContext : AbpDbContext<SpiderDbContext>
 {
     public DbSet<SpiderContent> SpiderContents { get; set; }
+    public DbSet<SpiderTitleContent> SpiderTitleContents { get; set; }
 
     public SpiderDbContext(DbContextOptions<SpiderDbContext> options) : base(options)
     {
@@ -22,6 +23,14 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
         builder.Entity<SpiderContent>(b =>
         {
             b.ToTable("Content");
+
+            //Configure the base properties
+            b.ConfigureByConvention();
+        });
+        
+        builder.Entity<SpiderTitleContent>(b =>
+        {
+            b.ToTable("TitleContent");
 
             //Configure the base properties
             b.ConfigureByConvention();

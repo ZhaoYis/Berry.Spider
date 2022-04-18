@@ -46,6 +46,8 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                 };
                 wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
 
+                var page = driver.PageSource;
+                
                 IWebElement? webElement = wait.Until(selector);
                 await executor.Invoke(webElement);
             }

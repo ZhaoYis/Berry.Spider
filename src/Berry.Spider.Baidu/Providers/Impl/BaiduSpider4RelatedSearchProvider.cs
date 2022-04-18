@@ -1,4 +1,5 @@
-﻿using Berry.Spider.Core;
+﻿using System.Web;
+using Berry.Spider.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
@@ -43,7 +44,8 @@ public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
                 {
                     try
                     {
-                        return drv.FindElement(By.ClassName("result-molecule  new-pmd"));
+                        // return drv.FindElement(By.CssSelector(".result-molecule"));
+                        return drv.FindElement(By.Id("rs_new"));
                     }
                     catch (Exception e)
                     {
@@ -54,20 +56,31 @@ public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
                 {
                     if (root == null) return;
 
-                    var resultContent = root.FindElements(By.Id("rs_new"));
+                    var resultContent = root.FindElements(By.TagName("a"));
                     this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 
                     if (resultContent.Count > 0)
                     {
-                        var eto = new BaiduSpider4RelatedSearchEto { Keyword = request.Keyword, Title = request.Keyword };
+                        var eto = new BaiduSpider4RelatedSearchEto {Keyword = request.Keyword, Title = request.Keyword};
 
                         foreach (IWebElement element in resultContent)
                         {
-                            var a = element.FindElement(By.TagName("a"));
-                            if (a != null)
+                            string text = element.Text;
+                            string href = element.GetAttribute("href");
+
+                            if (href.StartsWith("http") || href.StartsWith("https"))
                             {
-                                string text = a.Text;
-                                string href = a.GetAttribute("href");
+                                Uri jumpUri = new Uri(HttpUtility.UrlDecode(href));
+                                if (jumpUri.Host.Contains("baidu"))
+                                {
+                                    eto.Items.Add(new ChildPageDataItem
+                                    {
+                                        Title = text,
+                                        Href = jumpUri.ToString()
+                                    });
+
+                                    this.Logger.LogInformation(text + "  ---> " + href);
+                                }
                             }
                         }
 
@@ -94,7 +107,18 @@ public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
     /// </summary>
     public async Task HandleEventAsync<T>(T eventData) where T : ISpiderPullEto
     {
-        //TODO:入库操作
-        await Task.CompletedTask;
+        try
+        {
+            //TODO:入库操作
+            await Task.CompletedTask;
+        }
+        catch (Exception exception)
+        {
+            this.Logger.LogException(exception);
+        }
+        finally
+        {
+            //ignore..
+        }
     }
 }
