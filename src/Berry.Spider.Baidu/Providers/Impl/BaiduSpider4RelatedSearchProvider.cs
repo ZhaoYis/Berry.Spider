@@ -1,8 +1,10 @@
 ﻿using System.Web;
 using Berry.Spider.Core;
+using Berry.Spider.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
+using Volo.Abp.Domain.Repositories;
 using Volo.Abp.EventBus.Distributed;
 
 namespace Berry.Spider.Baidu;
@@ -16,18 +18,21 @@ public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private ITextAnalysisProvider TextAnalysisProvider { get; }
     private IDistributedEventBus DistributedEventBus { get; }
+    private ISpiderTitleContentRepository SpiderRepository { get; }
 
     private string HomePage => "https://www.baidu.com/s?wd={0}";
 
     public BaiduSpider4RelatedSearchProvider(ILogger<BaiduSpider4RelatedSearchProvider> logger,
         IWebElementLoadProvider provider,
         IServiceProvider serviceProvider,
-        IDistributedEventBus eventBus)
+        IDistributedEventBus eventBus,
+        ISpiderTitleContentRepository repository)
     {
         this.Logger = logger;
         this.WebElementLoadProvider = provider;
         this.TextAnalysisProvider = serviceProvider.GetRequiredService<BaiduRelatedSearchTextAnalysisProvider>();
         this.DistributedEventBus = eventBus;
+        this.SpiderRepository = repository;
     }
 
     /// <summary>
@@ -86,8 +91,11 @@ public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
 
                         if (eto.Items.Any())
                         {
-                            await this.DistributedEventBus.PublishAsync(eto);
-                            this.Logger.LogInformation("事件发布成功，等待消费...");
+                            //await this.DistributedEventBus.PublishAsync(eto);
+
+                            //此处不做消息队列发送，直接存储到数据库
+                            await this.HandleEventAsync(eto);
+                            this.Logger.LogInformation("数据保存成功...");
                         }
                     }
                 });
@@ -109,8 +117,17 @@ public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
     {
         try
         {
-            //TODO:入库操作
-            await Task.CompletedTask;
+            bool isExisted = await this.SpiderRepository.CountAsync(c => c.Title == eventData.Title && c.Published == 0) > 0;
+            if (isExisted) return;
+
+            List<SpiderTitleContent> contents = new List<SpiderTitleContent>();
+            foreach (var item in eventData.Items)
+            {
+                var content = new SpiderTitleContent(item.Title, item.Href, eventData.SourceFrom);
+                contents.Add(content);
+            }
+            
+            await this.SpiderRepository.InsertManyAsync(contents);
         }
         catch (Exception exception)
         {

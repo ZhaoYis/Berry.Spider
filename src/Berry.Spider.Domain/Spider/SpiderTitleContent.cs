@@ -42,11 +42,11 @@ public class SpiderTitleContent : EntityBase
     /// </summary>
     public string From { get; set; }
 
-    protected SpiderTitleContent()
+    public SpiderTitleContent()
     {
     }
 
-    protected SpiderTitleContent(
+    public SpiderTitleContent(
         string title,
         string content,
         SpiderSourceFrom from)

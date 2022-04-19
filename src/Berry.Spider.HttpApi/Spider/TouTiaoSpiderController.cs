@@ -6,7 +6,7 @@ namespace Berry.Spider;
 /// <summary>
 /// 今日头条爬虫服务
 /// </summary>
-[Route("api/services/spider/tou-tiao")]
+[Route("api/services/spider/toutiao")]
 public class TouTiaoSpiderController : SpiderControllerBase
 {
     private ITouTiaoSpiderAppService TouTiaoSpiderAppService { get; }
@@ -43,8 +43,11 @@ public class TouTiaoSpiderController : SpiderControllerBase
 
             if (System.IO.File.Exists(filePath))
             {
-                string[] rows = await System.IO.File.ReadAllLinesAsync(filePath);
-                if (rows.Length > 0)
+                List<string> rows = (await System.IO.File.ReadAllLinesAsync(filePath))
+                    .Where(c => !string.IsNullOrWhiteSpace(c.Trim()))
+                    .Distinct()
+                    .ToList();
+                if (rows.Count > 0)
                 {
                     foreach (string row in rows)
                     {
