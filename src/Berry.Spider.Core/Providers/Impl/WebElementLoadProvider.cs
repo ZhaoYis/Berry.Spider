@@ -27,7 +27,13 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                 driver.Navigate().GoToUrl(targetUrl);
 
                 string title = driver.Title;
-                string url = driver.Url;
+                string url = driver.Url;//https://wappass.baidu.com -> 百度安全验证页面地址
+                if (url.Contains("https://wappass.baidu.com"))
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(5));
+                    await Task.CompletedTask;
+                }
+
                 this.Logger.LogInformation("开始执行[{0}]，页面地址：{1}", title, url);
 
                 string current = driver.CurrentWindowHandle;
