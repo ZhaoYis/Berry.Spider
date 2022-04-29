@@ -27,29 +27,37 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                 driver.Navigate().GoToUrl(targetUrl);
 
                 string title = driver.Title;
-                string url = driver.Url;
-                this.Logger.LogInformation("开始执行[{0}]，页面地址：{1}", title, url);
-
-                string current = driver.CurrentWindowHandle;
-                this.Logger.LogInformation("当前窗口句柄：" + current);
-
-                // 隐式等待
-                //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-                // 设置Cookie
-                // driver.Manage().Cookies.AddCookie(new Cookie("key", "value"));
-                // 将窗口移动到主显示器的左上角
-                driver.Manage().Window.Position = new Point(0, 0);
-
-                WebDriverWait wait = new WebDriverWait(driver, timeout: TimeSpan.FromSeconds(30))
+                string url = driver.Url;//https://wappass.baidu.com -> 百度安全验证页面地址
+                if (url.Contains("https://wappass.baidu.com"))
                 {
-                    PollingInterval = TimeSpan.FromSeconds(5),
-                };
-                wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+                    await Task.Delay(TimeSpan.FromSeconds(3));
+                    await Task.CompletedTask;
+                }
+                else
+                {
+                    this.Logger.LogInformation("开始执行[{0}]，页面地址：{1}", title, url);
 
-                var page = driver.PageSource;
+                    string current = driver.CurrentWindowHandle;
+                    this.Logger.LogInformation("当前窗口句柄：" + current);
+
+                    // 隐式等待
+                    //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+                    // 设置Cookie
+                    // driver.Manage().Cookies.AddCookie(new Cookie("key", "value"));
+                    // 将窗口移动到主显示器的左上角
+                    driver.Manage().Window.Position = new Point(0, 0);
+
+                    WebDriverWait wait = new WebDriverWait(driver, timeout: TimeSpan.FromSeconds(30))
+                    {
+                        PollingInterval = TimeSpan.FromSeconds(5),
+                    };
+                    wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+
+                    var page = driver.PageSource;
                 
-                IWebElement? webElement = wait.Until(selector);
-                await executor.Invoke(webElement);
+                    IWebElement? webElement = wait.Until(selector);
+                    await executor.Invoke(webElement);
+                }
             }
             catch (Exception exception)
             {
