@@ -20,18 +20,20 @@ public class TouTiaoSpiderAppService : ApplicationService, ITouTiaoSpiderAppServ
     /// <summary>
     /// 向队列推送源数据
     /// </summary>
-    public async Task PushAsync(TouTiaoSpiderPushEto push)
+    public Task PushAsync(TouTiaoSpiderPushEto push)
     {
         if (!string.IsNullOrEmpty(push.Keyword))
         {
-            await this.DistributedEventBus.PublishAsync(push);
+            return this.DistributedEventBus.PublishAsync(push);
         }
+
+        return Task.CompletedTask;
     }
 
     /// <summary>
     /// 执行获取一级页面数据任务
     /// </summary>
-    public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest
+    public Task ExecuteAsync<T>(T request) where T : ISpiderRequest
     {
         ITouTiaoSpiderProvider? provider = request.SourceFrom switch
         {
@@ -40,13 +42,13 @@ public class TouTiaoSpiderAppService : ApplicationService, ITouTiaoSpiderAppServ
             _ => throw new SpiderBizException("Not Implemented...")
         };
 
-        await provider.ExecuteAsync(request);
+        return provider.ExecuteAsync(request);
     }
 
     /// <summary>
     /// 执行根据一级页面采集到的地址获取二级页面具体目标数据任务
     /// </summary>
-    public async Task HandleEventAsync<T>(T eventData) where T : ISpiderPullEto
+    public Task HandleEventAsync<T>(T eventData) where T : ISpiderPullEto
     {
         ITouTiaoSpiderProvider? provider = eventData.SourceFrom switch
         {
@@ -55,6 +57,6 @@ public class TouTiaoSpiderAppService : ApplicationService, ITouTiaoSpiderAppServ
             _ => throw new SpiderBizException("Not Implemented...")
         };
 
-        await provider.HandleEventAsync(eventData);
+        return provider.HandleEventAsync(eventData);
     }
 }
