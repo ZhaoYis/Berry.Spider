@@ -29,7 +29,7 @@ public class TouTiaoSpiderController : SpiderControllerBase
     /// <summary>
     /// 将待爬取信息PUSH到消息队列中
     /// </summary>
-    [HttpPost, Route("push-from-file")]
+    [HttpPost, Route("push-from-file"), DisableRequestSizeLimit]
     public async Task PushAsync(TouTiaoSpiderPushFromFile push)
     {
         var filePath = Path.GetTempFileName();
