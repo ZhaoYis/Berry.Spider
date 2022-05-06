@@ -30,7 +30,7 @@ public class BaiduSpiderController : SpiderControllerBase
     /// <summary>
     /// 将待爬取信息PUSH到消息队列中
     /// </summary>
-    [HttpPost, Route("push-from-file")]
+    [HttpPost, Route("push-from-file"), DisableRequestSizeLimit]
     public async Task PushAsync(BaiduSpiderPushFromFile push)
     {
         var filePath = Path.GetTempFileName();
