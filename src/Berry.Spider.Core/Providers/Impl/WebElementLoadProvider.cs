@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System.Drawing;
+using Volo.Abp;
 
 namespace Berry.Spider.Core;
 
@@ -26,8 +27,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
         //检查是否处于人机验证资源锁定阶段
         if (await this.InterceptorProvider.IsLockedAsync())
         {
-            this.Logger.LogInformation("人机验证资源锁定中，请稍后再试~");
-            return;
+            throw new BusinessException("人机验证资源锁定中，请稍后再试~");
         }
 
         using (var driver = await this.WebDriverProvider.GetAsync())
