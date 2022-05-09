@@ -9,7 +9,7 @@ namespace Berry.Spider.Core;
 public class HumanMachineVerificationInterceptorProvider : IHumanMachineVerificationInterceptorProvider
 {
     private const string HumanMachineVerificationInterceptorCacheKey = "HumanMachineVerificationInterceptor";
-    
+
     private ILogger<HumanMachineVerificationInterceptorProvider> Logger { get; }
     private IDistributedCache Cache { get; }
     private HumanMachineVerificationOptions Options { get; }
@@ -31,10 +31,12 @@ public class HumanMachineVerificationInterceptorProvider : IHumanMachineVerifica
         {
             this.Logger.LogInformation($"命中了人机验证，只有等一会儿咯~");
             //等一会儿吧~
-            await this.Cache.SetStringAsync(HumanMachineVerificationInterceptorCacheKey, url, new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(this.Options.LockExpiration)
-            });
+            string cacheKey = string.Format("{0}:{1}", HumanMachineVerificationInterceptorCacheKey, Environment.MachineName);
+            await this.Cache.SetStringAsync(cacheKey, url,
+                new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(this.Options.LockExpiration)
+                });
         }
 
         await Task.CompletedTask;
@@ -42,7 +44,8 @@ public class HumanMachineVerificationInterceptorProvider : IHumanMachineVerifica
 
     public async Task<bool> IsLockedAsync()
     {
-        string val = await this.Cache.GetStringAsync(HumanMachineVerificationInterceptorCacheKey);
+        string cacheKey = string.Format("{0}:{1}", HumanMachineVerificationInterceptorCacheKey, Environment.MachineName);
+        string val = await this.Cache.GetStringAsync(cacheKey);
         return !string.IsNullOrEmpty(val);
     }
 }
