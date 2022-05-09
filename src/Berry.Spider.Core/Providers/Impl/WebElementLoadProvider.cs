@@ -9,32 +9,40 @@ public class WebElementLoadProvider : IWebElementLoadProvider
 {
     private ILogger<WebElementLoadProvider> Logger { get; }
     private IWebDriverProvider WebDriverProvider { get; }
+    private IHumanMachineVerificationInterceptorProvider InterceptorProvider { get; }
 
     public WebElementLoadProvider(ILogger<WebElementLoadProvider> logger,
-        IWebDriverProvider webDriverProvider)
+        IWebDriverProvider webDriverProvider,
+        IHumanMachineVerificationInterceptorProvider interceptorProvider)
     {
         this.Logger = logger;
         this.WebDriverProvider = webDriverProvider;
+        this.InterceptorProvider = interceptorProvider;
     }
 
     public async Task InvokeAsync(string targetUrl, Func<IWebDriver, IWebElement?> selector,
         Func<IWebElement?, Task> executor)
     {
+        //检查是否处于人机验证资源锁定阶段
+        if (await this.InterceptorProvider.IsLockedAsync())
+        {
+            this.Logger.LogInformation("人机验证资源锁定中，请稍后再试~");
+            return;
+        }
+
         using (var driver = await this.WebDriverProvider.GetAsync())
         {
             try
             {
                 driver.Navigate().GoToUrl(targetUrl);
 
-                string title = driver.Title;
-                string url = driver.Url;//https://wappass.baidu.com -> 百度安全验证页面地址
-                if (url.Contains("https://wappass.baidu.com"))
+                //人机验证拦截
+                await this.InterceptorProvider.InvokeAsync(driver);
+
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(3));
-                    await Task.CompletedTask;
-                }
-                else
-                {
+                    string title = driver.Title;
+                    string url = driver.Url;
+
                     this.Logger.LogInformation("开始执行[{0}]，页面地址：{1}", title, url);
 
                     string current = driver.CurrentWindowHandle;
@@ -54,7 +62,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                     wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
 
                     var page = driver.PageSource;
-                
+
                     IWebElement? webElement = wait.Until(selector);
                     await executor.Invoke(webElement);
                 }
