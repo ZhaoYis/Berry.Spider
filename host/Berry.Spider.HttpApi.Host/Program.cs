@@ -17,7 +17,7 @@ public class Program
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
             .Enrich.FromLogContext()
-            .WriteTo.Async(c => c.File("Logs/logs.txt"))
+            .WriteTo.Async(c => c.File("Logs/logs-.txt", rollingInterval: RollingInterval.Hour))
 #if DEBUG
             .WriteTo.Async(c => c.Console())
 #endif
@@ -28,6 +28,8 @@ public class Program
             Log.Information("Starting web host.");
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.AddAppSettingsSecretsJson()
+                //集成AgileConfig
+                .UseAgileConfig()
                 .UseAutofac()
                 .UseSerilog();
             await builder.AddApplicationAsync<SpiderHttpApiHostModule>();
