@@ -19,8 +19,10 @@ public class Program
 #endif
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .Enrich.FromLogContext()
-            .WriteTo.Async(c => c.File("Logs/logs.txt"))
+            .WriteTo.Async(c => c.File("Logs/logs-.txt", rollingInterval: RollingInterval.Hour))
+#if DEBUG
             .WriteTo.Async(c => c.Console())
+#endif
             .CreateLogger();
 
         try

@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MySql.Data" Version="8.0.29" />
+      <PackageReference Include="Quartz.Serialization.Json" Version="3.4.0" />
+      <PackageReference Include="Volo.Abp.BackgroundJobs.Quartz" Version="5.1.4" />
+      <PackageReference Include="Volo.Abp.Core" Version="5.1.4" />
+      <PackageReference Include="Volo.Abp.Ddd.Application" Version="5.1.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Berry.Spider.Core\Berry.Spider.Core.csproj" />
+      <ProjectReference Include="..\Berry.Spider.Domain\Berry.Spider.Domain.csproj" />
+      <ProjectReference Include="..\Berry.Spider.Mmonly.Contracts\Berry.Spider.Mmonly.Contracts.csproj" />
+    </ItemGroup>
+
+</Project>

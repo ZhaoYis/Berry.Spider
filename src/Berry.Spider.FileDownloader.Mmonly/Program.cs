@@ -1,11 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
-using System;
-using System.Threading.Tasks;
 
-namespace Berry.Spider.Consumers;
+namespace Berry.Spider.FileDownloader.Mmonly;
 
 public class Program
 {
@@ -32,8 +33,10 @@ public class Program
             await Host.CreateDefaultBuilder(args)
                 .ConfigureServices(services =>
                 {
-                    services.AddHostedService<SpiderConsumersHostedService>();
+                    services.AddHostedService<SpiderDownloaderMmonlyHostedService>();
                 })
+                //集成AgileConfig
+                .UseAgileConfig()
                 .UseSerilog()
                 .RunConsoleAsync();
 

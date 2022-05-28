@@ -39,3 +39,6 @@ ls -lh  $(find / -type f -size +100M)
 
 
 https://www.selenium.dev/zh-cn/documentation/grid/configuration/cli_options/
+
+webdriver下载地址
+https://chromedriver.storage.googleapis.com/index.html
