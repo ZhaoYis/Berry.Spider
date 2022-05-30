@@ -20,17 +20,24 @@ public class WebDriverProvider : IWebDriverProvider
 
     public async Task<IWebDriver> GetAsync()
     {
-        var options = await this.DriverOptionsProvider.BuildAsync();
+        try
+        {
+            var options = await this.DriverOptionsProvider.BuildAsync();
 
-        if (this.DriverOptions.LocalOptions.IsEnable)
-        {
-            IWebDriver driver = new ChromeDriver(this.DriverOptions.LocalOptions.LocalAddress, options);
-            return driver;
+            if (this.DriverOptions.LocalOptions.IsEnable)
+            {
+                IWebDriver driver = new ChromeDriver(this.DriverOptions.LocalOptions.LocalAddress, options);
+                return driver;
+            }
+            else if (this.DriverOptions.RemoteOptions.IsEnable)
+            {
+                IWebDriver driver = new RemoteWebDriver(new Uri(this.DriverOptions.RemoteOptions.RemoteAddress), options);
+                return driver;
+            }
         }
-        else if (this.DriverOptions.RemoteOptions.IsEnable)
+        catch (Exception e)
         {
-            IWebDriver driver = new RemoteWebDriver(new Uri(this.DriverOptions.RemoteOptions.RemoteAddress), options);
-            return driver;
+            throw new SpiderBizException($"创建WebDriver失败，{e.Message}");
         }
 
         throw new SpiderBizException("not no found webdriver...");

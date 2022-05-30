@@ -36,14 +36,22 @@ public class MmonlySpiderAppService : ApplicationService, IMmonlySpiderAppServic
     {
         //从一级页面拿到二级页面地址
         var urls = this.MmonlySourceProvider.GetUrls();
-        await Parallel.ForEachAsync(urls, async (url,cancellationToken) =>
+        urls.ToList().RandomSort();
+        // await Parallel.ForEachAsync(urls, async (url,cancellationToken) =>
+        // {
+        //     this.Logger.LogInformation($"开始爬取{url}");
+        //     
+        //     await this.DownloadImageAsync(url);
+        // });
+
+        foreach (string url in urls)
         {
             this.Logger.LogInformation($"开始爬取{url}");
-            
+
             await this.DownloadImageAsync(url);
-        });
+        }
     }
-    
+
     private async Task DownloadImageAsync(string targetUrl)
     {
         try
@@ -82,9 +90,9 @@ public class MmonlySpiderAppService : ApplicationService, IMmonlySpiderAppServic
                                     new MmonlyFileDownloadArgs
                                     {
                                         TodoDownloadUrl = href
-                                    }
+                                    }, BackgroundJobPriority.High, TimeSpan.FromSeconds(10)
                                 );
-                                
+
                                 this.Logger.LogInformation("获取到二级页面  ---> " + href);
                             }
                         }

@@ -30,15 +30,34 @@ public class MmonlySpiderModule: AbpModule
 
         PreConfigure<AbpQuartzOptions>(options =>
         {
-            options.Properties = new NameValueCollection
+            // options.Properties = new NameValueCollection
+            // {
+            //     ["quartz.jobStore.dataSource"] = "berry_spider_quartz",
+            //     ["quartz.jobStore.type"] = "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
+            //     ["quartz.jobStore.tablePrefix"] = "QRTZ_",
+            //     ["quartz.serializer.type"] = "json",
+            //     ["quartz.dataSource.berry_spider_quartz.connectionString"] = quartzOptions.ConnectionString,
+            //     ["quartz.dataSource.berry_spider_quartz.provider"] = "MySql",
+            //     ["quartz.jobStore.driverDelegateType"] = "Quartz.Impl.AdoJobStore.MySQLDelegate, Quartz",
+            // };
+            
+            options.Configurator = configure =>
             {
-                ["quartz.jobStore.dataSource"] = "berry_spider_quartz",
-                ["quartz.jobStore.type"] = "Quartz.Impl.AdoJobStore.JobStoreTX, Quartz",
-                ["quartz.jobStore.tablePrefix"] = "QRTZ_",
-                ["quartz.serializer.type"] = "json",
-                ["quartz.dataSource.berry_spider_quartz.connectionString"] = quartzOptions.ConnectionString,
-                ["quartz.dataSource.berry_spider_quartz.provider"] = "MySql",
-                ["quartz.jobStore.driverDelegateType"] = "Quartz.Impl.AdoJobStore.MySQLDelegate, Quartz",
+                // configure.UsePersistentStore(storeOptions =>
+                // {
+                //     storeOptions.UseProperties = true;
+                //     storeOptions.UseClustering(c =>
+                //     {
+                //         c.CheckinMisfireThreshold = TimeSpan.FromSeconds(20);
+                //         c.CheckinInterval = TimeSpan.FromSeconds(10);
+                //     });
+                // });
+                configure.UseInMemoryStore();
+                configure.MaxBatchSize = 100;
+                configure.UseDefaultThreadPool(tp =>
+                {
+                    tp.MaxConcurrency = 10;
+                });
             };
         });
     }
@@ -47,8 +66,8 @@ public class MmonlySpiderModule: AbpModule
     {
         Configure<AbpBackgroundJobQuartzOptions>(options =>
         {
-            options.RetryCount = 5;
-            options.RetryIntervalMillisecond = 5 * 1000;
+            options.RetryCount = 1;
+            options.RetryIntervalMillisecond = 1000;
         });
         
         return Task.CompletedTask;

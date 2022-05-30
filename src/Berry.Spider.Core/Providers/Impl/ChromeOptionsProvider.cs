@@ -29,7 +29,6 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         options.AddArgument("--disable-gpu");
         options.AddArgument("--disable-dev-shm-usage");
         options.AddArgument("--headless"); //不用打开图形界面
-        options.AddArgument("--disable-gpu");
         options.AddArgument("ignore-certificate-errors");
         options.AddArgument("blink-settings=imagesEnabled=false");
 
