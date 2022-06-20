@@ -19,18 +19,27 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
 
     public async Task<ChromeOptions> BuildAsync(bool isUsedProxy = true)
     {
+        //https://www.cnblogs.com/gurenyumao/p/14721035.html
         ChromeOptions options = new ChromeOptions();
 
-        options.AddArgument("--no-sandbox"); //Chrome在root权限下跑
+        //Chrome在root权限下跑
+        options.AddArgument("--no-sandbox");
         // options.AddArgument("--user-data-dir=~/usr/local/software/chrome/user_data");
         options.AddArgument("--dns-prefetch-disable");
         options.AddArgument("--lang=en-US");
         options.AddArgument("--disable-setuid-sandbox");
         options.AddArgument("--disable-gpu");
         options.AddArgument("--disable-dev-shm-usage");
-        options.AddArgument("--headless"); //不用打开图形界面
+        //不要拦截弹出框
+        // options.AddArgument("--disable-popup-blocking");
+        //无界面运行(无窗口)，也叫无头浏览器，通常用于远程运行，在本地运行也可以通过该参数提升运行效率
+        options.AddArgument("--headless");
+        //设置浏览器以隐身模式(无痕模式运行)
+        options.AddArgument("--incognito");
         options.AddArgument("ignore-certificate-errors");
         options.AddArgument("blink-settings=imagesEnabled=false");
+        //擦除指纹
+        options.AddArgument("disable-blink-features=AutomationControlled");
 
         if (isUsedProxy)
         {

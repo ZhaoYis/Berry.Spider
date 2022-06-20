@@ -42,3 +42,9 @@ https://www.selenium.dev/zh-cn/documentation/grid/configuration/cli_options/
 
 webdriver下载地址
 https://chromedriver.storage.googleapis.com/index.html
+
+测试工具：
+https://bot.sannysoft.com/
+
+擦出webdriver指纹：
+https://zhuanlan.zhihu.com/p/328768200
