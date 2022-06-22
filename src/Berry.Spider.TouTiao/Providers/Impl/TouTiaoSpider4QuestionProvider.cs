@@ -20,6 +20,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private ITextAnalysisProvider TextAnalysisProvider { get; }
     private IImageResourceProvider ImageResourceProvider { get; }
+    private IFormattingTitleProvider FormattingTitleProvider { get; }
     private ISpiderContentRepository SpiderRepository { get; }
     private IDistributedEventBus DistributedEventBus { get; }
     private SpiderOptions Options { get; }
@@ -30,6 +31,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
         IWebElementLoadProvider provider,
         IServiceProvider serviceProvider,
         IImageResourceProvider imageResourceProvider,
+        IFormattingTitleProvider formattingTitleProvider,
         ISpiderContentRepository repository,
         IDistributedEventBus eventBus,
         IOptions<SpiderOptions> options)
@@ -38,6 +40,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
         this.WebElementLoadProvider = provider;
         this.TextAnalysisProvider = serviceProvider.GetRequiredService<TouTiaoQuestionTextAnalysisProvider>();
         this.ImageResourceProvider = imageResourceProvider;
+        this.FormattingTitleProvider = formattingTitleProvider;
         this.SpiderRepository = repository;
         this.DistributedEventBus = eventBus;
         this.Options = options.Value;
@@ -194,7 +197,11 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
                 string mainContent = contentItems.BuildMainContent(this.ImageResourceProvider);
                 if (!string.IsNullOrEmpty(mainContent))
                 {
-                    var content = new SpiderContent(eventData.Title, mainContent, eventData.SourceFrom);
+                    //重写Title
+                    string title = this.FormattingTitleProvider.Format(eventData.Title, contentItems.Count);
+                    
+                    //组装数据
+                    var content = new SpiderContent(title, mainContent, eventData.SourceFrom);
                     await this.SpiderRepository.InsertAsync(content);
 
                     this.Logger.LogInformation("落库成功，标题：" + eventData.Title + "，共计：" + contentItems.Count + "条记录");
