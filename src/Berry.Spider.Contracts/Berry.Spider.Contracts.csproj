@@ -8,8 +8,8 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-      <PackageReference Include="Volo.Abp.Core" Version="5.1.4" />
-      <PackageReference Include="Volo.Abp.Ddd.Application.Contracts" Version="5.1.4" />
+      <PackageReference Include="Volo.Abp.Core" Version="5.3.0" />
+      <PackageReference Include="Volo.Abp.Ddd.Application.Contracts" Version="5.3.0" />
     </ItemGroup>
 
     <ItemGroup>
