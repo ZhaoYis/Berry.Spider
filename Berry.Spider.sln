@@ -73,6 +73,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Mmonly.Contrac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.FileDownloader.Mmonly", "src\Berry.Spider.FileDownloader.Mmonly\Berry.Spider.FileDownloader.Mmonly.csproj", "{E35B6922-6E69-4756-915D-E25C57546C4F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{523AD30F-FF86-456E-874E-456979B4141F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Tools.TxtFileToDb", "src\Berry.Spider.Tools.TxtFileToDb\Berry.Spider.Tools.TxtFileToDb.csproj", "{29BA1564-E045-43CE-8A7C-32FA9C561D97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -163,6 +167,10 @@ Global
 		{E35B6922-6E69-4756-915D-E25C57546C4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E35B6922-6E69-4756-915D-E25C57546C4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E35B6922-6E69-4756-915D-E25C57546C4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29BA1564-E045-43CE-8A7C-32FA9C561D97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29BA1564-E045-43CE-8A7C-32FA9C561D97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29BA1564-E045-43CE-8A7C-32FA9C561D97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29BA1564-E045-43CE-8A7C-32FA9C561D97}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -194,6 +202,8 @@ Global
 		{DE52DDF6-E91A-453E-89DB-C9B0E02BFB58} = {D6F3C84D-94DF-49E9-85BB-1297B1994306}
 		{C9C17B33-D692-4EC2-8C73-D01CDF1B9764} = {D6F3C84D-94DF-49E9-85BB-1297B1994306}
 		{E35B6922-6E69-4756-915D-E25C57546C4F} = {A62EA0AB-0556-4384-8F50-B4C713DE74EB}
+		{523AD30F-FF86-456E-874E-456979B4141F} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
+		{29BA1564-E045-43CE-8A7C-32FA9C561D97} = {523AD30F-FF86-456E-874E-456979B4141F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}

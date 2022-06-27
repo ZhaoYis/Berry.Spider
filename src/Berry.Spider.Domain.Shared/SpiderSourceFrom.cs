@@ -8,6 +8,11 @@ namespace Berry.Spider.Domain.Shared;
 public enum SpiderSourceFrom
 {
     /// <summary>
+    /// TXT文件导入
+    /// </summary>
+    [Description("TXT文件导入")] TextFile_Import = 10,
+
+    /// <summary>
     /// 头条_资讯
     /// </summary>
     [Description("头条_资讯")] TouTiao_Information = 101,
