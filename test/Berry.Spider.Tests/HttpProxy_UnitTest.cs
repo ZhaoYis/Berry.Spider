@@ -17,7 +17,7 @@ public class HttpProxy_UnitTest
     public async Task GetProxyUri_ShouldReturnResult_WhenRequestSuccessful()
     {
         //arrange
-        var options = new Mock<IOptions<HttpProxyOptions>>();
+        var options = new Mock<IOptionsSnapshot<HttpProxyOptions>>();
         options.Setup(c => c.Value).Returns(new HttpProxyOptions { ProxyPoolApiHost = "http://124.223.62.114:5010" });
 
         var messageHandler = new Mock<HttpMessageHandler>();

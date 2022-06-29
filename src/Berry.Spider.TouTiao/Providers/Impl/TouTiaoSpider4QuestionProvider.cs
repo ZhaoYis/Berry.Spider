@@ -23,7 +23,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
     private IFormattingTitleProvider FormattingTitleProvider { get; }
     private ISpiderContentRepository SpiderRepository { get; }
     private IDistributedEventBus DistributedEventBus { get; }
-    private SpiderOptions Options { get; }
+    private IOptionsSnapshot<SpiderOptions> Options { get; }
 
     private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=question&dvpf=pc";
 
@@ -34,7 +34,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
         IFormattingTitleProvider formattingTitleProvider,
         ISpiderContentRepository repository,
         IDistributedEventBus eventBus,
-        IOptions<SpiderOptions> options)
+        IOptionsSnapshot<SpiderOptions> options)
     {
         this.Logger = logger;
         this.WebElementLoadProvider = provider;
@@ -43,7 +43,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
         this.FormattingTitleProvider = formattingTitleProvider;
         this.SpiderRepository = repository;
         this.DistributedEventBus = eventBus;
-        this.Options = options.Value;
+        this.Options = options;
     }
 
     public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest
@@ -189,7 +189,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
 
             //去重
             contentItems = contentItems.Distinct().ToList();
-            if (contentItems.Count >= this.Options.MinRecords)
+            if (contentItems.Count >= this.Options.Value.MinRecords)
             {
                 //打乱
                 contentItems.RandomSort();
