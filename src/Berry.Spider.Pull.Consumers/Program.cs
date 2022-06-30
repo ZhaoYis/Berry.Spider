@@ -34,6 +34,8 @@ public class Program
                 {
                     services.AddHostedService<SpiderConsumersHostedService>();
                 })
+                //集成AgileConfig
+                .UseAgileConfig()
                 .UseSerilog()
                 .RunConsoleAsync();
 
