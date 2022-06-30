@@ -28,6 +28,8 @@ public class Program
             Log.Information("Starting web host.");
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.AddAppSettingsSecretsJson()
+                //机密配置文件
+                .AddAppSettingsSecretsJson()
                 //集成AgileConfig
                 .UseAgileConfig()
                 .UseAutofac()

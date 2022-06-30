@@ -34,6 +34,8 @@ public class Program
                 {
                     services.AddHostedService<SpiderConsumersHostedService>();
                 })
+                //机密配置文件
+                .AddAppSettingsSecretsJson()
                 //集成AgileConfig
                 .UseAgileConfig()
                 .UseSerilog()
