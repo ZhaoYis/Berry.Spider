@@ -20,9 +20,7 @@ public class Program
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .Enrich.FromLogContext()
             .WriteTo.Async(c => c.File("Logs/logs-.txt", rollingInterval: RollingInterval.Hour))
-#if DEBUG
             .WriteTo.Async(c => c.Console())
-#endif
             .CreateLogger();
 
         try
@@ -30,10 +28,7 @@ public class Program
             Log.Information("Starting console host.");
 
             await Host.CreateDefaultBuilder(args)
-                .ConfigureServices(services =>
-                {
-                    services.AddHostedService<SpiderConsumersHostedService>();
-                })
+                .ConfigureServices(services => { services.AddHostedService<SpiderConsumersHostedService>(); })
                 //机密配置文件
                 .AddAppSettingsSecretsJson()
                 //集成AgileConfig
