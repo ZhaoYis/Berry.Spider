@@ -18,11 +18,6 @@ public class StaticImageResourceProvider : IImageResourceProvider
         this.GuidGenerator = generator;
     }
 
-    public async Task<string> TryGetAsync()
-    {
-        throw new NotImplementedException();
-    }
-
     public string TryGet()
     {
         Random random = new Random(this.GuidGenerator.Create().GetHashCode());

@@ -8,6 +8,7 @@ using Berry.Spider.Contracts;
 using Microsoft.Extensions.Options;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.EventBus.Distributed;
+using Volo.Abp.Timing;
 
 namespace Berry.Spider.TouTiao;
 
@@ -22,6 +23,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
     private IImageResourceProvider ImageResourceProvider { get; }
     private IFormattingTitleProvider FormattingTitleProvider { get; }
     private ISpiderContentRepository SpiderRepository { get; }
+    private IClock Clock { get; }
     private IDistributedEventBus DistributedEventBus { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
 
@@ -33,6 +35,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
         IImageResourceProvider imageResourceProvider,
         IFormattingTitleProvider formattingTitleProvider,
         ISpiderContentRepository repository,
+        IClock clock,
         IDistributedEventBus eventBus,
         IOptionsSnapshot<SpiderOptions> options)
     {
@@ -42,6 +45,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
         this.ImageResourceProvider = imageResourceProvider;
         this.FormattingTitleProvider = formattingTitleProvider;
         this.SpiderRepository = repository;
+        this.Clock = clock;
         this.DistributedEventBus = eventBus;
         this.Options = options;
     }
@@ -50,7 +54,8 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
     {
         try
         {
-            bool isExisted = await this.SpiderRepository.CountAsync(c => c.Title == request.Keyword && c.Published == 0) > 0;
+            bool isExisted =
+                await this.SpiderRepository.CountAsync(c => c.Title == request.Keyword && c.Published == 0) > 0;
             if (isExisted) return;
 
             string targetUrl = string.Format(this.HomePage, request.Keyword);
@@ -76,7 +81,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
 
                     if (resultContent.Count > 0)
                     {
-                        var eto = new TouTiaoSpider4QuestionEto { Keyword = request.Keyword, Title = request.Keyword };
+                        var eto = new TouTiaoSpider4QuestionEto {Keyword = request.Keyword, Title = request.Keyword};
 
                         foreach (IWebElement element in resultContent)
                         {
@@ -132,7 +137,8 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
     {
         try
         {
-            bool isExisted = await this.SpiderRepository.CountAsync(c => c.Title == eventData.Title && c.Published == 0) > 0;
+            bool isExisted =
+                await this.SpiderRepository.CountAsync(c => c.Title == eventData.Title && c.Published == 0) > 0;
             if (isExisted) return;
 
             List<string> contentItems = new List<string>();
@@ -194,12 +200,28 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
                 //打乱
                 contentItems.RandomSort();
 
-                string mainContent = contentItems.BuildMainContent(this.ImageResourceProvider);
+                string mainContent;
+                if (this.Options.Value.IsInsertImage)
+                {
+                    if (this.Options.Value.IsRandomInsertImage)
+                    {
+                        mainContent = this.Clock.Now.Hour % 2 == 0 ? contentItems.BuildMainContent(this.ImageResourceProvider) : contentItems.BuildMainContent();
+                    }
+                    else
+                    {
+                        mainContent = contentItems.BuildMainContent(this.ImageResourceProvider);
+                    }
+                }
+                else
+                {
+                    mainContent = contentItems.BuildMainContent();
+                }
+
                 if (!string.IsNullOrEmpty(mainContent))
                 {
                     //重写Title
                     string title = this.FormattingTitleProvider.Format(eventData.Title, contentItems.Count);
-                    
+
                     //组装数据
                     var content = new SpiderContent(title, mainContent, eventData.SourceFrom);
                     await this.SpiderRepository.InsertAsync(content);

@@ -1,4 +1,6 @@
 using System.Text.RegularExpressions;
+using Berry.Spider.Contracts;
+using Microsoft.Extensions.Options;
 
 namespace Berry.Spider.Core;
 
@@ -11,6 +13,12 @@ public class TouTiaoQuestionTextAnalysisProvider : ITextAnalysisProvider
     //https://blog.csdn.net/xjp_xujiping/article/details/50210533
 
     private static readonly Regex ReplaceRegex = new Regex(@"^\d+(、|\.|\．|,|，)*");
+    private IOptionsSnapshot<SpiderOptions> Options { get; }
+
+    public TouTiaoQuestionTextAnalysisProvider(IOptionsSnapshot<SpiderOptions> options)
+    {
+        this.Options = options;
+    }
 
     public Task<List<string>> InvokeAsync(string source)
     {
@@ -45,7 +53,8 @@ public class TouTiaoQuestionTextAnalysisProvider : ITextAnalysisProvider
                 //处理黑名单词汇，这部分词语直接替换
                 newItem = newItem.ReplaceTo(' ').Replace(" ", "").Trim();
 
-                if (!string.IsNullOrEmpty(newItem))
+                //验证内容最小长度
+                if (!string.IsNullOrWhiteSpace(newItem) && newItem.Length > this.Options.Value.MinContentLength)
                 {
                     list.Add(newItem);
                 }

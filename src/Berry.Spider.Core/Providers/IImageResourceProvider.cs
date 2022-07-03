@@ -7,7 +7,5 @@ namespace Berry.Spider.Core;
 /// </summary>
 public interface IImageResourceProvider : ISingletonDependency
 {
-    Task<string> TryGetAsync();
-
     string TryGet();
 }
