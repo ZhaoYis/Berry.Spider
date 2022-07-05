@@ -31,6 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{093F9BD9-59E
 	ProjectSection(SolutionItems) = preProject
 		doc\Selenium.README.txt = doc\Selenium.README.txt
 		doc\docker-compose.yml = doc\docker-compose.yml
+		doc\HOW.README = doc\HOW.README
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Contracts", "src\Berry.Spider.Contracts\Berry.Spider.Contracts.csproj", "{A0D6AA7D-9654-4185-945E-33B1831F73BD}"
