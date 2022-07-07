@@ -21,6 +21,7 @@ public class Program
             .Enrich.FromLogContext()
             .WriteTo.Async(c => c.File("Logs/logs-.txt", rollingInterval: RollingInterval.Hour))
             .WriteTo.Async(c => c.Console())
+            .WriteTo.Exceptionless(e => e.AddTags("Berry.Spider.Pull.Consumers"))
             .CreateLogger();
 
         try

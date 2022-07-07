@@ -23,6 +23,8 @@ public class SpiderCoreModule : AbpModule
         context.Services.Configure<HumanMachineVerificationOptions>(configuration.GetSection(nameof(HumanMachineVerificationOptions)));
         //配置QuartzOptions
         context.Services.Configure<SpiderQuartzOptions>(configuration.GetSection(nameof(SpiderQuartzOptions)));
+        //配置ExceptionlessOptions
+        context.Services.Configure<ExceptionlessOptions>(configuration.GetSection(nameof(ExceptionlessOptions)));
 
         //注入文本解析器
         context.Services.AddTransient<TouTiaoQuestionTextAnalysisProvider>();
