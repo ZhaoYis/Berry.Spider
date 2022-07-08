@@ -15,15 +15,18 @@ public class SpiderDomainService : DomainService
     private IImageResourceProvider ImageResourceProvider { get; }
     private ITemplateRenderer TemplateRenderer { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
+    private IOptionsSnapshot<TitleTemplateContentOptions> TitleTemplateOptions { get; }
 
     public SpiderDomainService(
         IImageResourceProvider imageResourceProvider,
         ITemplateRenderer templateRenderer,
-        IOptionsSnapshot<SpiderOptions> options)
+        IOptionsSnapshot<SpiderOptions> options,
+        IOptionsSnapshot<TitleTemplateContentOptions> titleTemplateOptions)
     {
         ImageResourceProvider = imageResourceProvider;
         TemplateRenderer = templateRenderer;
         Options = options;
+        TitleTemplateOptions = titleTemplateOptions;
     }
 
     /// <summary>
@@ -58,21 +61,30 @@ public class SpiderDomainService : DomainService
 
             if (!string.IsNullOrEmpty(mainContent))
             {
-                //随机获取一个模版名称
-                string[] names = Enum.GetNames<TitleTemplateNames>();
-                int index = new Random(this.GuidGenerator.Create().GetHashCode()).Next(0, names.Length - 1);
-                string titleTemplateName = names[index];
-
-                //重写Title
-                string title = await this.TemplateRenderer.RenderAsync(titleTemplateName, new
+                if (this.TitleTemplateOptions.Value.IsEnableFormatTitle)
                 {
-                    OriginalTitle = originalTitle,
-                    Total = contentItems.Count,
-                });
+                    //随机获取一个模版名称
+                    string[] names = Enum.GetNames<TitleTemplateNames>();
+                    int index = new Random(this.GuidGenerator.Create().GetHashCode()).Next(0, names.Length - 1);
+                    string titleTemplateName = names[index];
 
-                //组装数据
-                var content = new SpiderContent(title, mainContent, sourceFrom);
-                return content;
+                    //重写Title
+                    string title = await this.TemplateRenderer.RenderAsync(titleTemplateName, new
+                    {
+                        OriginalTitle = originalTitle,
+                        Total = contentItems.Count,
+                    });
+
+                    //组装数据
+                    var content = new SpiderContent(title, mainContent, sourceFrom);
+                    return content;
+                }
+                else
+                {
+                    //组装数据
+                    var content = new SpiderContent(originalTitle, mainContent, sourceFrom);
+                    return content;
+                }
             }
         }
 
