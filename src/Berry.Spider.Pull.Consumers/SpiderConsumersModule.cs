@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using Berry.Spider.Contracts;
+using Exceptionless;
 using Volo.Abp;
 using Volo.Abp.Autofac;
 using Volo.Abp.EventBus.RabbitMq;
@@ -32,6 +34,13 @@ public class SpiderConsumersModule : AbpModule
         var hostEnvironment = context.ServiceProvider.GetRequiredService<IHostEnvironment>();
         logger.LogInformation($"EnvironmentName => {hostEnvironment.EnvironmentName}");
 
+        //集成Exceptionless
+        ExceptionlessOptions options = configuration.GetSection(nameof(ExceptionlessOptions)).Get<ExceptionlessOptions>();
+        if (options.IsEnable && !string.IsNullOrEmpty(options.ApiKey))
+        {
+            ExceptionlessClient.Default.Startup(options.ApiKey);
+        }
+        
         return Task.CompletedTask;
     }
 }

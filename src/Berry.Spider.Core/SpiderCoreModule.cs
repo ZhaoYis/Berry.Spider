@@ -1,4 +1,5 @@
 using Berry.Spider.Contracts;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Caching;
 using Volo.Abp.Modularity;
@@ -23,6 +24,8 @@ public class SpiderCoreModule : AbpModule
         context.Services.Configure<HumanMachineVerificationOptions>(configuration.GetSection(nameof(HumanMachineVerificationOptions)));
         //配置QuartzOptions
         context.Services.Configure<SpiderQuartzOptions>(configuration.GetSection(nameof(SpiderQuartzOptions)));
+        //配置ExceptionlessOptions
+        context.Services.Configure<ExceptionlessOptions>(configuration.GetSection(nameof(ExceptionlessOptions)));
         //配置TitleTemplateContentOptions
         context.Services.Configure<TitleTemplateContentOptions>(configuration.GetSection(nameof(TitleTemplateContentOptions)));
 
