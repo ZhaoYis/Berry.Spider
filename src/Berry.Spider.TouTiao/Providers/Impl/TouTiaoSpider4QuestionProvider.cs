@@ -20,9 +20,8 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
     private ILogger<TouTiaoSpider4QuestionProvider> Logger { get; }
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private ITextAnalysisProvider TextAnalysisProvider { get; }
-    private IImageResourceProvider ImageResourceProvider { get; }
-    private IFormattingTitleProvider FormattingTitleProvider { get; }
     private ISpiderContentRepository SpiderRepository { get; }
+    private SpiderDomainService SpiderDomainService { get; }
     private IClock Clock { get; }
     private IDistributedEventBus DistributedEventBus { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
@@ -32,8 +31,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
     public TouTiaoSpider4QuestionProvider(ILogger<TouTiaoSpider4QuestionProvider> logger,
         IWebElementLoadProvider provider,
         IServiceProvider serviceProvider,
-        IImageResourceProvider imageResourceProvider,
-        IFormattingTitleProvider formattingTitleProvider,
+        SpiderDomainService spiderDomainService,
         ISpiderContentRepository repository,
         IClock clock,
         IDistributedEventBus eventBus,
@@ -42,9 +40,8 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
         this.Logger = logger;
         this.WebElementLoadProvider = provider;
         this.TextAnalysisProvider = serviceProvider.GetRequiredService<TouTiaoQuestionTextAnalysisProvider>();
-        this.ImageResourceProvider = imageResourceProvider;
-        this.FormattingTitleProvider = formattingTitleProvider;
         this.SpiderRepository = repository;
+        this.SpiderDomainService = spiderDomainService;
         this.Clock = clock;
         this.DistributedEventBus = eventBus;
         this.Options = options;
@@ -81,7 +78,7 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
 
                     if (resultContent.Count > 0)
                     {
-                        var eto = new TouTiaoSpider4QuestionEto {Keyword = request.Keyword, Title = request.Keyword};
+                        var eto = new TouTiaoSpider4QuestionEto { Keyword = request.Keyword, Title = request.Keyword };
 
                         foreach (IWebElement element in resultContent)
                         {
@@ -142,7 +139,6 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
             if (isExisted) return;
 
             List<string> contentItems = new List<string>();
-
             foreach (var item in eventData.Items)
             {
                 await this.WebElementLoadProvider.InvokeAsync(
@@ -195,39 +191,11 @@ public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
 
             //去重
             contentItems = contentItems.Distinct().ToList();
-            if (contentItems.Count >= this.Options.Value.MinRecords)
+            SpiderContent? spiderContent = await this.SpiderDomainService.BuildContentAsync(eventData.Title, eventData.SourceFrom, contentItems);
+            if (spiderContent != null)
             {
-                //打乱
-                contentItems.RandomSort();
-
-                string mainContent;
-                if (this.Options.Value.IsInsertImage)
-                {
-                    if (this.Options.Value.IsRandomInsertImage)
-                    {
-                        mainContent = this.Clock.Now.Hour % 2 == 0 ? contentItems.BuildMainContent(this.ImageResourceProvider) : contentItems.BuildMainContent();
-                    }
-                    else
-                    {
-                        mainContent = contentItems.BuildMainContent(this.ImageResourceProvider);
-                    }
-                }
-                else
-                {
-                    mainContent = contentItems.BuildMainContent();
-                }
-
-                if (!string.IsNullOrEmpty(mainContent))
-                {
-                    //重写Title
-                    string title = this.FormattingTitleProvider.Format(eventData.Title, contentItems.Count);
-
-                    //组装数据
-                    var content = new SpiderContent(title, mainContent, eventData.SourceFrom);
-                    await this.SpiderRepository.InsertAsync(content);
-
-                    this.Logger.LogInformation("落库成功，标题：" + eventData.Title + "，共计：" + contentItems.Count + "条记录");
-                }
+                await this.SpiderRepository.InsertAsync(spiderContent);
+                this.Logger.LogInformation("落库成功，标题：" + spiderContent.Title + "，共计：" + contentItems.Count + "条记录");
             }
         }
         catch (Exception exception)

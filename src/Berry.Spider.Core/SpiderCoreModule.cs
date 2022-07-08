@@ -1,12 +1,12 @@
 using Berry.Spider.Contracts;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Caching;
 using Volo.Abp.Modularity;
+using Volo.Abp.TextTemplating.Scriban;
 
 namespace Berry.Spider.Core;
 
-[DependsOn(typeof(AbpCachingModule))]
+[DependsOn(typeof(AbpCachingModule), typeof(AbpTextTemplatingScribanModule))]
 public class SpiderCoreModule : AbpModule
 {
     public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
@@ -23,11 +23,13 @@ public class SpiderCoreModule : AbpModule
         context.Services.Configure<HumanMachineVerificationOptions>(configuration.GetSection(nameof(HumanMachineVerificationOptions)));
         //配置QuartzOptions
         context.Services.Configure<SpiderQuartzOptions>(configuration.GetSection(nameof(SpiderQuartzOptions)));
+        //配置TitleTemplateContentOptions
+        context.Services.Configure<TitleTemplateContentOptions>(configuration.GetSection(nameof(TitleTemplateContentOptions)));
 
         //注入文本解析器
         context.Services.AddTransient<TouTiaoQuestionTextAnalysisProvider>();
         context.Services.AddTransient<BaiduRelatedSearchTextAnalysisProvider>();
-        
+
         //分布式缓存
         Configure<AbpDistributedCacheOptions>(options =>
         {
@@ -35,7 +37,7 @@ public class SpiderCoreModule : AbpModule
             options.GlobalCacheEntryOptions.SlidingExpiration = TimeSpan.FromMinutes(10);
             options.GlobalCacheEntryOptions.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30);
         });
-        
+
         return Task.CompletedTask;
     }
 }
