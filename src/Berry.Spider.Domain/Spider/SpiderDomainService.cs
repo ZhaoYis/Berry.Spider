@@ -33,7 +33,8 @@ public class SpiderDomainService : DomainService
     /// 统一构建落库实体内容
     /// </summary>
     /// <returns></returns>
-    public async Task<SpiderContent?> BuildContentAsync(string originalTitle, SpiderSourceFrom sourceFrom, List<string> contentItems)
+    public async Task<SpiderContent?> BuildContentAsync(string originalTitle, SpiderSourceFrom sourceFrom,
+        List<string> contentItems)
     {
         if (contentItems.Count >= this.Options.Value.MinRecords)
         {
@@ -64,27 +65,26 @@ public class SpiderDomainService : DomainService
                 if (this.TitleTemplateOptions.Value.IsEnableFormatTitle)
                 {
                     //随机获取一个模版名称
-                    string[] names = Enum.GetNames<TitleTemplateNames>();
-                    int index = new Random(this.GuidGenerator.Create().GetHashCode()).Next(0, names.Length - 1);
-                    string titleTemplateName = names[index];
-
-                    //重写Title
-                    string title = await this.TemplateRenderer.RenderAsync(titleTemplateName, new
+                    List<string> names = this.TitleTemplateOptions.Value.Templates.Select(c => c.Name).ToList();
+                    if (names.Count > 0)
                     {
-                        OriginalTitle = originalTitle,
-                        Total = contentItems.Count,
-                    });
+                        int index = new Random(this.GuidGenerator.Create().GetHashCode()).Next(0, names.Count - 1);
+                        string titleTemplateName = names[index];
 
-                    //组装数据
-                    var content = new SpiderContent(title, mainContent, sourceFrom);
-                    return content;
+                        //重写Title
+                        string title = await this.TemplateRenderer.RenderAsync(titleTemplateName, new
+                        {
+                            OriginalTitle = originalTitle,
+                            Total = contentItems.Count,
+                        });
+
+                        originalTitle = title;
+                    }
                 }
-                else
-                {
-                    //组装数据
-                    var content = new SpiderContent(originalTitle, mainContent, sourceFrom);
-                    return content;
-                }
+
+                //组装数据
+                var content = new SpiderContent(originalTitle, mainContent, sourceFrom);
+                return content;
             }
         }
 
