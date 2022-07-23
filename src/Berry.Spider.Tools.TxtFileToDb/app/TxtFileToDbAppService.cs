@@ -1,3 +1,4 @@
+using System.Text;
 using Berry.Spider.Domain;
 using Berry.Spider.Domain.Shared;
 using Microsoft.Extensions.Logging;
@@ -27,14 +28,20 @@ public class TxtFileToDbAppService : ITxtFileToDbAppService
         foreach (string file in files)
         {
             string[] fileContents = File.ReadAllLines(file);
+            StringBuilder builder = new StringBuilder();
             if (fileContents.Length > 2)
             {
                 //第一条为标题
                 string title = fileContents[0];
                 //剩下部分为内容
-                string content = string.Join("\n", fileContents.Skip(1));
+                //string content = string.Join("\n", fileContents.Skip(1));
+                foreach (var s in fileContents.Skip(1))
+                {
+                    builder.AppendFormat("<p>{0}</p>", s);
+                }
+
                 //组装数据
-                var spiderContent = new SpiderContent(title, content, SpiderSourceFrom.TextFile_Import);
+                var spiderContent = new SpiderContent(title, builder.ToString(), SpiderSourceFrom.TextFile_Import);
                 spiderContents.Add(spiderContent);
             }
         }
