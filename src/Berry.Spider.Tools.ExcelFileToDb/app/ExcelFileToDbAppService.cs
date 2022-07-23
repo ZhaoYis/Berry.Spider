@@ -1,18 +1,20 @@
+using System.Data;
+using Berry.Spider.Core.Helpers;
 using Berry.Spider.Domain;
 using Berry.Spider.Domain.Shared;
 using Microsoft.Extensions.Logging;
 
-namespace Berry.Spider.Tools.TxtFileToDb;
+namespace Berry.Spider.Tools.ExcelFileToDb;
 
 /// <summary>
-/// Txt文件数据导入到MySQL
+/// excel文件数据导入到MySQL
 /// </summary>
-public class TxtFileToDbAppService : ITxtFileToDbAppService
+public class ExcelFileToDbAppService : IExcelFileToDbAppService
 {
     private ISpiderContentRepository SpiderRepository { get; }
-    private ILogger<TxtFileToDbAppService> Logger { get; }
+    private ILogger<ExcelFileToDbAppService> Logger { get; }
 
-    public TxtFileToDbAppService(ISpiderContentRepository spiderRepository, ILogger<TxtFileToDbAppService> logger)
+    public ExcelFileToDbAppService(ISpiderContentRepository spiderRepository, ILogger<ExcelFileToDbAppService> logger)
     {
         SpiderRepository = spiderRepository;
         Logger = logger;
@@ -22,20 +24,26 @@ public class TxtFileToDbAppService : ITxtFileToDbAppService
     {
         string filePath = Path.Combine(AppContext.BaseDirectory, "files");
         // 递归获取文件路径下的所有文件
-        var files = Directory.GetFiles(filePath, "*.txt", SearchOption.AllDirectories);
+        var files = Directory.GetFiles(filePath, "*.xlsx", SearchOption.AllDirectories);
         List<SpiderContent> spiderContents = new List<SpiderContent>();
         foreach (string file in files)
         {
-            string[] fileContents = File.ReadAllLines(file);
-            if (fileContents.Length > 2)
+            DataTable? dt = OfficeHelper.ReadExcelToDataTable(file, isFirstRowColumn: false);
+            if (dt != null)
             {
-                //第一条为标题
-                string title = fileContents[0];
-                //剩下部分为内容
-                string content = string.Join("\n", fileContents.Skip(1));
-                //组装数据
-                var spiderContent = new SpiderContent(title, content, SpiderSourceFrom.TextFile_Import);
-                spiderContents.Add(spiderContent);
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    //组装数据
+                    string title = dt.Rows[i][0].ToString();
+                    string content = dt.Rows[i][1].ToString();
+                    string keywords = dt.Rows[i][2].ToString();
+
+                    if (!string.IsNullOrWhiteSpace(title) && !string.IsNullOrWhiteSpace(content))
+                    {
+                        var spiderContent = new SpiderContent(title, content, SpiderSourceFrom.ExcelFile_Import, keywords: keywords, tag: keywords);
+                        spiderContents.Add(spiderContent);
+                    }
+                }
             }
         }
 

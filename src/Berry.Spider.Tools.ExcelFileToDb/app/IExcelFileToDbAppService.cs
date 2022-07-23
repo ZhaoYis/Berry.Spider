@@ -1,11 +1,11 @@
 using Volo.Abp.DependencyInjection;
 
-namespace Berry.Spider.Tools.TxtFileToDb;
+namespace Berry.Spider.Tools.ExcelFileToDb;
 
 /// <summary>
 /// Txt文件数据导入到MySQL
 /// </summary>
-public interface ITxtFileToDbAppService : ITransientDependency
+public interface IExcelFileToDbAppService : ITransientDependency
 {
     Task RunAsync();
 }

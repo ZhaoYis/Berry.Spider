@@ -13,6 +13,11 @@ public enum SpiderSourceFrom
     [Description("TXT文件导入")] TextFile_Import = 10,
 
     /// <summary>
+    /// EXCEL文件导入
+    /// </summary>
+    [Description("EXCEL文件导入")] ExcelFile_Import = 20,
+
+    /// <summary>
     /// 头条_资讯
     /// </summary>
     [Description("头条_资讯")] TouTiao_Information = 101,
