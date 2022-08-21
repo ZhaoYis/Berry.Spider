@@ -1,5 +1,5 @@
+using Berry.Spider.Core;
 using Berry.Spider.Core.Exceptions;
-using Berry.Spider.Domain.Shared;
 using Volo.Abp.Application.Services;
 using Volo.Abp.EventBus.Distributed;
 

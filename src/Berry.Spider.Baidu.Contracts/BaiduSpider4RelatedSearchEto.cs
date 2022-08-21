@@ -1,4 +1,4 @@
-using Berry.Spider.Domain.Shared;
+using Berry.Spider.Core;
 using Volo.Abp.EventBus;
 
 namespace Berry.Spider.Baidu;
@@ -9,7 +9,7 @@ namespace Berry.Spider.Baidu;
 [EventName("Berry.Baidu.RelatedSearch.Pull")]
 public class BaiduSpider4RelatedSearchEto : SpiderPullBaseEto
 {
-    public BaiduSpider4RelatedSearchEto() : base(SpiderSourceFrom.Baidu_RelatedSearch)
+    public BaiduSpider4RelatedSearchEto() : base(SpiderSourceFrom.Baidu_Related_Search)
     {
     }
 }

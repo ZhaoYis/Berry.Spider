@@ -1,4 +1,4 @@
-﻿using Berry.Spider.Domain.Shared;
+﻿using Berry.Spider.Core;
 using Volo.Abp.EventBus;
 
 namespace Berry.Spider.TouTiao;

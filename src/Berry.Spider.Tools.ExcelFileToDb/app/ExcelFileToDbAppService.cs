@@ -1,8 +1,8 @@
-using System.Data;
+using Berry.Spider.Core;
 using Berry.Spider.Core.Helpers;
 using Berry.Spider.Domain;
-using Berry.Spider.Domain.Shared;
 using Microsoft.Extensions.Logging;
+using System.Data;
 
 namespace Berry.Spider.Tools.ExcelFileToDb;
 
@@ -40,7 +40,7 @@ public class ExcelFileToDbAppService : IExcelFileToDbAppService
 
                     if (!string.IsNullOrWhiteSpace(title) && !string.IsNullOrWhiteSpace(content))
                     {
-                        var spiderContent = new SpiderContent(title, content, SpiderSourceFrom.ExcelFile_Import, keywords: keywords, tag: keywords);
+                        var spiderContent = new SpiderContent(title, content, SpiderSourceFrom.Excel_File_Import, keywords: keywords, tag: keywords);
                         spiderContents.Add(spiderContent);
                     }
                 }

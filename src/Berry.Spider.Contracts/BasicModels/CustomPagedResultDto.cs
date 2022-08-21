@@ -12,7 +12,7 @@ public class CustomPagedResultDto<T> : ListResultDto<T>
     /// 总记录数
     /// </summary>
     public long Total { get; set; }
-    
+
     public CustomPagedResultDto()
     {
 

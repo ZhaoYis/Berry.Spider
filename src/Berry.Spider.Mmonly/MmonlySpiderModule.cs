@@ -1,4 +1,3 @@
-using System.Collections.Specialized;
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
@@ -6,7 +5,6 @@ using Berry.Spider.Mmonly.Contracts;
 using Berry.Spider.Proxy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Quartz;
 using Volo.Abp.Application;
 using Volo.Abp.BackgroundJobs.Quartz;
 using Volo.Abp.Modularity;
@@ -22,8 +20,9 @@ namespace Berry.Spider.Mmonly;
     typeof(AbpDddApplicationModule),
     typeof(AbpBackgroundJobsQuartzModule)
 )]
-public class MmonlySpiderModule: AbpModule
-{public override void PreConfigureServices(ServiceConfigurationContext context)
+public class MmonlySpiderModule : AbpModule
+{
+    public override void PreConfigureServices(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();
         SpiderQuartzOptions quartzOptions = configuration.GetSection(nameof(SpiderQuartzOptions)).Get<SpiderQuartzOptions>();
@@ -40,7 +39,7 @@ public class MmonlySpiderModule: AbpModule
             //     ["quartz.dataSource.berry_spider_quartz.provider"] = "MySql",
             //     ["quartz.jobStore.driverDelegateType"] = "Quartz.Impl.AdoJobStore.MySQLDelegate, Quartz",
             // };
-            
+
             options.Configurator = configure =>
             {
                 // configure.UsePersistentStore(storeOptions =>
@@ -61,7 +60,7 @@ public class MmonlySpiderModule: AbpModule
             };
         });
     }
-    
+
     public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
     {
         Configure<AbpBackgroundJobQuartzOptions>(options =>
@@ -69,7 +68,7 @@ public class MmonlySpiderModule: AbpModule
             options.RetryCount = 1;
             options.RetryIntervalMillisecond = 1000;
         });
-        
+
         return Task.CompletedTask;
     }
 }

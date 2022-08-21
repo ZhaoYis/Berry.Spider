@@ -8,7 +8,7 @@ namespace Berry.Spider.Mmonly.Contracts;
     typeof(SpiderDomainSharedModule),
     typeof(AbpDddApplicationContractsModule)
 )]
-public class MmonlySpiderContractsModule: AbpModule
+public class MmonlySpiderContractsModule : AbpModule
 {
     public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
     {

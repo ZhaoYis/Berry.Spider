@@ -26,7 +26,7 @@ public class SpiderAppService : CrudAppService<
         CustomPagedResultDto<SpiderDto> result = new CustomPagedResultDto<SpiderDto>();
 
         PagedResultDto<SpiderDto> pagedResultDto = await base.GetListAsync(new GetListInput
-            { SkipCount = input.Page * input.PageSize, MaxResultCount = input.PageSize });
+        { SkipCount = input.Page * input.PageSize, MaxResultCount = input.PageSize });
         result.Total = pagedResultDto.TotalCount;
         result.Items = pagedResultDto.Items;
 

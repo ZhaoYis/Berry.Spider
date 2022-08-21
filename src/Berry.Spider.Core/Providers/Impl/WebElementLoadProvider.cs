@@ -127,7 +127,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             catch (Exception exception)
             {
                 this.Logger.LogException(exception);
-                
+
                 return await Task.FromResult(default(T));
             }
             finally

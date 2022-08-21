@@ -1,9 +1,9 @@
-﻿using System.Web;
-using Berry.Spider.Core;
+﻿using Berry.Spider.Core;
 using Berry.Spider.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
+using System.Web;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.EventBus.Distributed;
 
@@ -12,6 +12,7 @@ namespace Berry.Spider.Baidu;
 /// <summary>
 /// 百度：相关推荐
 /// </summary>
+[Spider(SpiderSourceFrom.Baidu_Related_Search)]
 public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
 {
     private ILogger<BaiduSpider4RelatedSearchProvider> Logger { get; }
@@ -66,7 +67,7 @@ public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
 
                     if (resultContent.Count > 0)
                     {
-                        var eto = new BaiduSpider4RelatedSearchEto {Keyword = request.Keyword, Title = request.Keyword};
+                        var eto = new BaiduSpider4RelatedSearchEto { Keyword = request.Keyword, Title = request.Keyword };
 
                         foreach (IWebElement element in resultContent)
                         {
@@ -126,7 +127,7 @@ public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
                 var content = new SpiderTitleContent(item.Title, item.Href, eventData.SourceFrom);
                 contents.Add(content);
             }
-            
+
             await this.SpiderRepository.InsertManyAsync(contents);
         }
         catch (Exception exception)

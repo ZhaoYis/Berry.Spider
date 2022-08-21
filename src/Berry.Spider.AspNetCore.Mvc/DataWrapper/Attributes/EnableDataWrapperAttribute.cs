@@ -6,5 +6,5 @@
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class EnableDataWrapperAttribute : Attribute
 {
-    
+
 }

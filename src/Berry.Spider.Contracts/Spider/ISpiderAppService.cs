@@ -16,7 +16,7 @@ public interface ISpiderAppService : ICrudAppService<
     /// </summary>
     /// <returns></returns>
     new Task<CustomPagedResultDto<SpiderDto>> GetListAsync(CustomGetListInput input);
-    
+
     /// <summary>
     /// 获取所有记录
     /// </summary>

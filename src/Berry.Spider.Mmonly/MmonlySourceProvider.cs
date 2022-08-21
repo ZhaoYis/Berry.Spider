@@ -3,7 +3,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.Mmonly;
 
-public class MmonlySourceProvider : IMmonlySourceProvider,ISingletonDependency
+public class MmonlySourceProvider : IMmonlySourceProvider, ISingletonDependency
 {
     public IEnumerable<string> GetUrls()
     {

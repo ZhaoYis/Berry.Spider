@@ -1,6 +1,5 @@
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
-using Berry.Spider.Domain.Shared;
 using Microsoft.Extensions.Options;
 using Volo.Abp.Domain.Services;
 using Volo.Abp.TextTemplating;

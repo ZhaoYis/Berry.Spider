@@ -1,5 +1,5 @@
-﻿using Berry.Spider.Core.Exceptions;
-using Berry.Spider.Domain.Shared;
+﻿using Berry.Spider.Core;
+using Berry.Spider.Core.Exceptions;
 using Volo.Abp.Application.Services;
 using Volo.Abp.EventBus.Distributed;
 
@@ -26,7 +26,7 @@ public class BaiduSpiderAppService : ApplicationService, IBaiduSpiderAppService
         {
             return this.DistributedEventBus.PublishAsync(push);
         }
-        
+
         return Task.CompletedTask;
     }
 
@@ -37,7 +37,7 @@ public class BaiduSpiderAppService : ApplicationService, IBaiduSpiderAppService
     {
         IBaiduSpiderProvider? provider = request.SourceFrom switch
         {
-            SpiderSourceFrom.Baidu_RelatedSearch => this.LazyServiceProvider.LazyGetRequiredService<BaiduSpider4RelatedSearchProvider>(),
+            SpiderSourceFrom.Baidu_Related_Search => this.LazyServiceProvider.LazyGetRequiredService<BaiduSpider4RelatedSearchProvider>(),
             _ => throw new SpiderBizException("Not Implemented...")
         };
 
@@ -51,7 +51,7 @@ public class BaiduSpiderAppService : ApplicationService, IBaiduSpiderAppService
     {
         IBaiduSpiderProvider? provider = eventData.SourceFrom switch
         {
-            SpiderSourceFrom.Baidu_RelatedSearch => this.LazyServiceProvider.LazyGetRequiredService<BaiduSpider4RelatedSearchProvider>(),
+            SpiderSourceFrom.Baidu_Related_Search => this.LazyServiceProvider.LazyGetRequiredService<BaiduSpider4RelatedSearchProvider>(),
             _ => throw new SpiderBizException("Not Implemented...")
         };
 

@@ -1,8 +1,8 @@
-using System.Text.RegularExpressions;
 using Berry.Spider.Core;
 using Berry.Spider.Mmonly.Contracts;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
+using System.Text.RegularExpressions;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.Guids;
@@ -89,11 +89,11 @@ public class MmonlyFileDownloadJob : AsyncBackgroundJob<MmonlyFileDownloadArgs>,
 
                             //从url中获取文件扩展名
                             string fileExtension = Path.GetExtension(src);
-                            if(fileExtension.StartsWith("."))
+                            if (fileExtension.StartsWith("."))
                             {
                                 fileExtension = fileExtension.Substring(1);
                             }
-                            
+
                             string fileName = GuidGenerator.Create().ToString("N");
                             string filePath = $"{basePath}/{fileName}.{fileExtension}";
                             using (var client = new System.Net.WebClient())

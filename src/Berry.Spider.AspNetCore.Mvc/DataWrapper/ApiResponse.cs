@@ -35,8 +35,8 @@ namespace Berry.Spider.AspNetCore.Mvc
         /// </summary>
         public string Type { get; set; }
 
-        internal ApiResponse(){}
-        
+        internal ApiResponse() { }
+
         /// <summary>
         /// 返回不包含结果的未成功api结果
         /// </summary>
@@ -84,7 +84,7 @@ namespace Berry.Spider.AspNetCore.Mvc
                 Message = message ?? code.ToString()
             };
         }
-        
+
         /// <summary>
         /// 返回不包含结果的警告api结果
         /// </summary>

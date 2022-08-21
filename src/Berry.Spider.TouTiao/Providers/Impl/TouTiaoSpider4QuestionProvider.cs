@@ -1,11 +1,11 @@
-﻿using Berry.Spider.Core;
+﻿using Berry.Spider.Contracts;
+using Berry.Spider.Core;
 using Berry.Spider.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
 using System.Web;
-using Berry.Spider.Contracts;
-using Microsoft.Extensions.Options;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.Timing;
@@ -15,6 +15,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：问答
 /// </summary>
+[Spider(SpiderSourceFrom.TouTiao_Question)]
 public class TouTiaoSpider4QuestionProvider : ITouTiaoSpiderProvider
 {
     private ILogger<TouTiaoSpider4QuestionProvider> Logger { get; }

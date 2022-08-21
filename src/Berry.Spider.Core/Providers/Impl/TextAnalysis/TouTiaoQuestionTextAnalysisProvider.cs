@@ -1,6 +1,6 @@
-using System.Text.RegularExpressions;
 using Berry.Spider.Contracts;
 using Microsoft.Extensions.Options;
+using System.Text.RegularExpressions;
 
 namespace Berry.Spider.Core;
 

@@ -10,7 +10,7 @@ namespace Berry.Spider.Core
         /**
          * 错误码0~999为系统预留错误码位，请勿使用。
          */
-        
+
         /// <summary>
         /// 失败
         /// </summary>

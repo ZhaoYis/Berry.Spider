@@ -1,7 +1,7 @@
-using System.Text;
+using Berry.Spider.Core;
 using Berry.Spider.Domain;
-using Berry.Spider.Domain.Shared;
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace Berry.Spider.Tools.TxtFileToDb;
 
@@ -41,7 +41,7 @@ public class TxtFileToDbAppService : ITxtFileToDbAppService
                 }
 
                 //组装数据
-                var spiderContent = new SpiderContent(title, builder.ToString(), SpiderSourceFrom.TextFile_Import);
+                var spiderContent = new SpiderContent(title, builder.ToString(), SpiderSourceFrom.Text_File_Import);
                 spiderContents.Add(spiderContent);
             }
         }

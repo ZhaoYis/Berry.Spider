@@ -1,5 +1,4 @@
 ﻿using Berry.Spider.Baidu;
-using Berry.Spider.TouTiao;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Berry.Spider;
@@ -26,7 +25,7 @@ public class BaiduSpiderController : SpiderControllerBase
         //直接发布事件到MQ，交由Berry.Spider.Consumers消费
         return this.BaiduSpiderAppService.PushAsync(push);
     }
-    
+
     /// <summary>
     /// 将待爬取信息PUSH到消息队列中
     /// </summary>
@@ -52,7 +51,7 @@ public class BaiduSpiderController : SpiderControllerBase
                 {
                     foreach (string row in rows)
                     {
-                        if(string.IsNullOrWhiteSpace(row.Trim())) continue;
+                        if (string.IsNullOrWhiteSpace(row.Trim())) continue;
 
                         BaiduSpiderPushEto eto = new BaiduSpiderPushEto
                         {

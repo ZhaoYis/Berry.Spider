@@ -1,4 +1,4 @@
-using Berry.Spider.Domain.Shared;
+using Berry.Spider.Core;
 using JetBrains.Annotations;
 
 namespace Berry.Spider.Domain;

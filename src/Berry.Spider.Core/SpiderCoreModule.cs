@@ -31,6 +31,7 @@ public class SpiderCoreModule : AbpModule
         //注入文本解析器
         context.Services.AddTransient<TouTiaoQuestionTextAnalysisProvider>();
         context.Services.AddTransient<BaiduRelatedSearchTextAnalysisProvider>();
+        context.Services.AddTransient<SogouRelatedSearchTextAnalysisProvider>();
 
         //分布式缓存
         Configure<AbpDistributedCacheOptions>(options =>

@@ -1,10 +1,10 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Berry.Spider.Mmonly.Contracts;
+﻿using Berry.Spider.Mmonly.Contracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using System.Threading;
+using System.Threading.Tasks;
 using Volo.Abp;
 
 namespace Berry.Spider.FileDownloader.Mmonly;
@@ -34,7 +34,7 @@ public class SpiderDownloaderMmonlyHostedService : IHostedService
         });
 
         await _abpApplication.InitializeAsync();
-        
+
         //启动下载服务
         await _abpApplication.ServiceProvider.GetRequiredService<IMmonlySpiderAppService>().DownloadAsync();
     }

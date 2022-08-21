@@ -1,12 +1,12 @@
-﻿using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using Berry.Spider.Proxy;
+﻿using Berry.Spider.Proxy;
 using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Protected;
 using Shouldly;
+using System.Net;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Berry.Spider.Tests;

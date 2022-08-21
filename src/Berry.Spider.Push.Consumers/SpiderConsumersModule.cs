@@ -1,13 +1,13 @@
 ﻿using Berry.Spider.Baidu;
+using Berry.Spider.Contracts;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.TouTiao;
+using Exceptionless;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
-using Berry.Spider.Contracts;
-using Exceptionless;
 using Volo.Abp;
 using Volo.Abp.Autofac;
 using Volo.Abp.EventBus.RabbitMq;

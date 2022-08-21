@@ -9,6 +9,6 @@ namespace Berry.Spider.Core;
 public interface IHumanMachineVerificationInterceptorProvider : ITransientDependency
 {
     Task InvokeAsync(IWebDriver webDriver);
-    
+
     Task<bool> IsLockedAsync();
 }

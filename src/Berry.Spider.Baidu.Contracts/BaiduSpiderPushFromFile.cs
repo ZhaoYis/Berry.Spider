@@ -1,8 +1,8 @@
-using System.ComponentModel.DataAnnotations;
-using Berry.Spider.Domain.Shared;
+using Berry.Spider.Core;
 using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
-namespace Berry.Spider.TouTiao;
+namespace Berry.Spider.Baidu;
 
 public class BaiduSpiderPushFromFile
 {

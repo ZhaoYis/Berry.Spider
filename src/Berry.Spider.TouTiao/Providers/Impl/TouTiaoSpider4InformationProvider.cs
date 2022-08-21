@@ -8,6 +8,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：资讯
 /// </summary>
+[Spider(SpiderSourceFrom.TouTiao_Information)]
 public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
 {
     private ILogger<TouTiaoSpider4InformationProvider> Logger { get; }

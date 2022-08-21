@@ -18,7 +18,7 @@ public class SpiderProxyModule : AbpModule
 
         //注册ProxyPoolHttpClient
         var retryForeverPolicy = Policy<HttpResponseMessage>.Handle<Exception>().WaitAndRetryForeverAsync(
-            sleepDurationProvider:i => TimeSpan.FromSeconds(2 * i)
+            sleepDurationProvider: i => TimeSpan.FromSeconds(2 * i)
         );
         context.Services.AddHttpClient<ProxyPoolHttpClient>().AddPolicyHandler(retryForeverPolicy);
 

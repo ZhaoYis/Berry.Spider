@@ -1,4 +1,4 @@
-using Berry.Spider.Domain.Shared;
+using Berry.Spider.Core;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;

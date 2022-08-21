@@ -29,9 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Domain.Shared"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{093F9BD9-59EE-49FA-87D2-96AB2995EE26}"
 	ProjectSection(SolutionItems) = preProject
-		doc\Selenium.README.txt = doc\Selenium.README.txt
 		doc\docker-compose.yml = doc\docker-compose.yml
 		doc\HOW.README = doc\HOW.README
+		doc\Selenium.README.txt = doc\Selenium.README.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Contracts", "src\Berry.Spider.Contracts\Berry.Spider.Contracts.csproj", "{A0D6AA7D-9654-4185-945E-33B1831F73BD}"
@@ -62,21 +62,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docker", ".docker", "{0B5B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Pull.Consumers", "src\Berry.Spider.Pull.Consumers\Berry.Spider.Pull.Consumers.csproj", "{C517153B-8B06-486F-87F7-4F2FB3DFF435}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.AspNetCore.Mvc", "src\Berry.Spider.AspNetCore.Mvc\Berry.Spider.AspNetCore.Mvc.csproj", "{4D46BB6D-E501-4404-B235-3874546A63EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.AspNetCore.Mvc", "src\Berry.Spider.AspNetCore.Mvc\Berry.Spider.AspNetCore.Mvc.csproj", "{4D46BB6D-E501-4404-B235-3874546A63EE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mmonly", "mmonly", "{D6F3C84D-94DF-49E9-85BB-1297B1994306}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Mmonly", "src\Berry.Spider.Mmonly\Berry.Spider.Mmonly.csproj", "{DE52DDF6-E91A-453E-89DB-C9B0E02BFB58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Mmonly", "src\Berry.Spider.Mmonly\Berry.Spider.Mmonly.csproj", "{DE52DDF6-E91A-453E-89DB-C9B0E02BFB58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Mmonly.Contracts", "src\Berry.Spider.Mmonly.Contracts\Berry.Spider.Mmonly.Contracts.csproj", "{C9C17B33-D692-4EC2-8C73-D01CDF1B9764}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Mmonly.Contracts", "src\Berry.Spider.Mmonly.Contracts\Berry.Spider.Mmonly.Contracts.csproj", "{C9C17B33-D692-4EC2-8C73-D01CDF1B9764}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.FileDownloader.Mmonly", "src\Berry.Spider.FileDownloader.Mmonly\Berry.Spider.FileDownloader.Mmonly.csproj", "{E35B6922-6E69-4756-915D-E25C57546C4F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.FileDownloader.Mmonly", "src\Berry.Spider.FileDownloader.Mmonly\Berry.Spider.FileDownloader.Mmonly.csproj", "{E35B6922-6E69-4756-915D-E25C57546C4F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{523AD30F-FF86-456E-874E-456979B4141F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Tools.TxtFileToDb", "src\Berry.Spider.Tools.TxtFileToDb\Berry.Spider.Tools.TxtFileToDb.csproj", "{29BA1564-E045-43CE-8A7C-32FA9C561D97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Tools.TxtFileToDb", "src\Berry.Spider.Tools.TxtFileToDb\Berry.Spider.Tools.TxtFileToDb.csproj", "{29BA1564-E045-43CE-8A7C-32FA9C561D97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Tools.ExcelFileToDb", "src\Berry.Spider.Tools.ExcelFileToDb\Berry.Spider.Tools.ExcelFileToDb.csproj", "{D358A27D-38EF-4B19-B2EF-527EFF934C9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Tools.ExcelFileToDb", "src\Berry.Spider.Tools.ExcelFileToDb\Berry.Spider.Tools.ExcelFileToDb.csproj", "{D358A27D-38EF-4B19-B2EF-527EFF934C9B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sogou", "sogou", "{BC85FF4F-E52D-4F2A-B359-0408CCCA8147}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Sogou", "src\Berry.Spider.Sogou\Berry.Spider.Sogou.csproj", "{C606AF59-B748-4FD1-B182-66068FB44D64}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Sogou.Contracts", "src\Berry.Spider.Sogou.Contracts\Berry.Spider.Sogou.Contracts.csproj", "{D50D4020-78F1-481A-98EE-EF8F78C460A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -172,6 +178,14 @@ Global
 		{D358A27D-38EF-4B19-B2EF-527EFF934C9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D358A27D-38EF-4B19-B2EF-527EFF934C9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D358A27D-38EF-4B19-B2EF-527EFF934C9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C606AF59-B748-4FD1-B182-66068FB44D64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C606AF59-B748-4FD1-B182-66068FB44D64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C606AF59-B748-4FD1-B182-66068FB44D64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C606AF59-B748-4FD1-B182-66068FB44D64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D50D4020-78F1-481A-98EE-EF8F78C460A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D50D4020-78F1-481A-98EE-EF8F78C460A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D50D4020-78F1-481A-98EE-EF8F78C460A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D50D4020-78F1-481A-98EE-EF8F78C460A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -205,6 +219,9 @@ Global
 		{523AD30F-FF86-456E-874E-456979B4141F} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 		{29BA1564-E045-43CE-8A7C-32FA9C561D97} = {523AD30F-FF86-456E-874E-456979B4141F}
 		{D358A27D-38EF-4B19-B2EF-527EFF934C9B} = {523AD30F-FF86-456E-874E-456979B4141F}
+		{BC85FF4F-E52D-4F2A-B359-0408CCCA8147} = {DAC6D741-6163-4917-A926-778D6DAD0EE0}
+		{C606AF59-B748-4FD1-B182-66068FB44D64} = {BC85FF4F-E52D-4F2A-B359-0408CCCA8147}
+		{D50D4020-78F1-481A-98EE-EF8F78C460A7} = {BC85FF4F-E52D-4F2A-B359-0408CCCA8147}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}

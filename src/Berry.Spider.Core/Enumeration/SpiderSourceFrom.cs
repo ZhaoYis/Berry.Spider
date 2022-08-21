@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Berry.Spider.Domain.Shared;
+namespace Berry.Spider.Core;
 
 /// <summary>
 /// 爬虫数据来源
@@ -10,12 +10,12 @@ public enum SpiderSourceFrom
     /// <summary>
     /// TXT文件导入
     /// </summary>
-    [Description("TXT文件导入")] TextFile_Import = 10,
+    [Description("TXT文件导入")] Text_File_Import = 10,
 
     /// <summary>
     /// EXCEL文件导入
     /// </summary>
-    [Description("EXCEL文件导入")] ExcelFile_Import = 20,
+    [Description("EXCEL文件导入")] Excel_File_Import = 20,
 
     /// <summary>
     /// 头条_资讯
@@ -30,5 +30,10 @@ public enum SpiderSourceFrom
     /// <summary> 
     /// 百度_相关推荐
     /// </summary>
-    [Description("百度_相关搜索")] Baidu_RelatedSearch = 201
+    [Description("百度_相关搜索")] Baidu_Related_Search = 201,
+
+    /// <summary> 
+    /// 搜狗_相关搜索
+    /// </summary>
+    [Description("搜狗_相关搜索")] Sogou_Related_Search = 301
 }
