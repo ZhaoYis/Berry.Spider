@@ -10,16 +10,16 @@ namespace Berry.Spider.Consumers;
 /// </summary>
 public class SogouSpiderPushEventHandler : IDistributedEventHandler<SogouSpiderPushEto>, ITransientDependency
 {
-    private ISogouSpiderAppService BaiduSpiderAppService { get; }
+    private ISogouSpiderAppService SogouSpiderAppService { get; }
 
     public SogouSpiderPushEventHandler(ISogouSpiderAppService service)
     {
-        this.BaiduSpiderAppService = service;
+        this.SogouSpiderAppService = service;
     }
 
     public async Task HandleEventAsync(SogouSpiderPushEto eventData)
     {
-        await this.BaiduSpiderAppService.ExecuteAsync(new SogouSpiderRequest
+        await this.SogouSpiderAppService.ExecuteAsync(new SogouSpiderRequest
         {
             SourceFrom = eventData.SourceFrom,
             Keyword = eventData.Keyword

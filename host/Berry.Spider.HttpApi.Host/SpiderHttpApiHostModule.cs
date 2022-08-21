@@ -2,6 +2,7 @@ using Berry.Spider.Application;
 using Berry.Spider.AspNetCore.Mvc;
 using Berry.Spider.Baidu;
 using Berry.Spider.EntityFrameworkCore;
+using Berry.Spider.Sogou;
 using Berry.Spider.TouTiao;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.OpenApi.Models;
@@ -27,6 +28,8 @@ namespace Berry.Spider.HttpApi.Host;
     typeof(TouTiaoSpiderModule),
     //百度模块
     typeof(BaiduSpiderModule),
+    //搜狗模块
+    typeof(SogouSpiderModule),
     //爬虫模块
     typeof(SpiderApplicationModule)
 )]
@@ -40,7 +43,7 @@ public class SpiderHttpApiHostModule : AbpModule
         context.Services.AddAbpSwaggerGen(
             options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Spider API", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo {Title = "Spider API", Version = "v1"});
                 options.DocInclusionPredicate((docName, description) => true);
                 options.CustomSchemaIds(type => type.FullName);
             });
