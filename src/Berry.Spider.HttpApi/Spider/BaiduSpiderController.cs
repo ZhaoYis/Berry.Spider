@@ -1,5 +1,8 @@
-﻿using Berry.Spider.Baidu;
+﻿using Berry.Spider.Abstractions;
+using Berry.Spider.Baidu;
+using Berry.Spider.Core;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Berry.Spider;
 
@@ -9,72 +12,45 @@ namespace Berry.Spider;
 [Route("api/services/spider/baidu")]
 public class BaiduSpiderController : SpiderControllerBase
 {
-    private IBaiduSpiderAppService BaiduSpiderAppService { get; }
+    private IServiceProvider Provider { get; }
 
-    public BaiduSpiderController(IBaiduSpiderAppService service)
+    public BaiduSpiderController(IServiceProvider provider)
     {
-        this.BaiduSpiderAppService = service;
+        this.Provider = provider;
     }
 
     /// <summary>
-    /// 将待爬取信息PUSH到消息队列中
+    /// 百度：相关推荐
     /// </summary>
-    [HttpPost, Route("push")]
-    public Task PushAsync([FromBody] BaiduSpiderPushEto push)
+    [HttpPost, Route("push-related-search")]
+    public Task PushAsync([FromBody] BaiduSpider4RelatedSearchPushEto push,
+        [FromServices] BaiduSpider4RelatedSearchProvider provider)
     {
-        //直接发布事件到MQ，交由Berry.Spider.Consumers消费
-        return this.BaiduSpiderAppService.PushAsync(push);
+        return provider.PushAsync(push);
     }
 
     /// <summary>
     /// 将待爬取信息PUSH到消息队列中
     /// </summary>
     [HttpPost, Route("push-from-file"), DisableRequestSizeLimit]
-    public async Task PushAsync(BaiduSpiderPushFromFile push)
+    public Task PushAsync(BaiduSpiderPushFromFile push)
     {
-        var filePath = Path.GetTempFileName();
-
-        try
+        FileHelper fileHelper = new FileHelper(push.File, row =>
         {
-            await using (var stream = System.IO.File.Create(filePath))
+            if (push.SourceFrom == SpiderSourceFrom.Baidu_Related_Search)
             {
-                await push.File.CopyToAsync(stream);
-            }
-
-            if (System.IO.File.Exists(filePath))
-            {
-                List<string> rows = (await System.IO.File.ReadAllLinesAsync(filePath))
-                    .Where(c => !string.IsNullOrWhiteSpace(c.Trim()))
-                    .Distinct()
-                    .ToList();
-                if (rows.Count > 0)
+                BaiduSpider4RelatedSearchPushEto eto = new BaiduSpider4RelatedSearchPushEto
                 {
-                    foreach (string row in rows)
-                    {
-                        if (string.IsNullOrWhiteSpace(row.Trim())) continue;
+                    SourceFrom = push.SourceFrom,
+                    Keyword = row
+                };
 
-                        BaiduSpiderPushEto eto = new BaiduSpiderPushEto
-                        {
-                            SourceFrom = push.SourceFrom,
-                            Keyword = row
-                        };
+                ISpiderProvider provider = this.Provider.GetRequiredService<BaiduSpider4RelatedSearchProvider>();
+                return provider.PushAsync(eto);
+            }
 
-                        await this.BaiduSpiderAppService.PushAsync(eto);
-                    }
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            //ignore..
-        }
-        finally
-        {
-            //删除临时文件
-            if (System.IO.File.Exists(filePath))
-            {
-                System.IO.File.Delete(filePath);
-            }
-        }
+            throw new NotImplementedException("未实现的爬虫来源");
+        });
+        return fileHelper.InvokeAsync();
     }
 }

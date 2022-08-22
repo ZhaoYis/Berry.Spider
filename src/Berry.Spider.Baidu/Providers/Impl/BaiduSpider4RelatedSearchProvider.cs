@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using System.Web;
+using Berry.Spider.Abstractions;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.EventBus.Distributed;
 
@@ -13,7 +14,7 @@ namespace Berry.Spider.Baidu;
 /// 百度：相关推荐
 /// </summary>
 [Spider(SpiderSourceFrom.Baidu_Related_Search)]
-public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
+public class BaiduSpider4RelatedSearchProvider : ISpiderProvider
 {
     private ILogger<BaiduSpider4RelatedSearchProvider> Logger { get; }
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -37,9 +38,18 @@ public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
     }
 
     /// <summary>
+    /// 向队列推送源数据
+    /// </summary>
+    /// <returns></returns>
+    public Task PushAsync<T>(T push) where T : class, ISpiderPushEto
+    {
+        return this.DistributedEventBus.PublishAsync(push);
+    }
+
+    /// <summary>
     /// 执行获取一级页面数据任务
     /// </summary>
-    public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest
+    public async Task ExecuteAsync<T>(T request) where T : class, ISpiderRequest
     {
         try
         {
@@ -67,7 +77,7 @@ public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
 
                     if (resultContent.Count > 0)
                     {
-                        var eto = new BaiduSpider4RelatedSearchEto { Keyword = request.Keyword, Title = request.Keyword };
+                        var eto = new BaiduSpider4RelatedSearchPullEto {Keyword = request.Keyword, Title = request.Keyword};
 
                         foreach (IWebElement element in resultContent)
                         {
@@ -114,11 +124,12 @@ public class BaiduSpider4RelatedSearchProvider : IBaiduSpiderProvider
     /// <summary>
     /// 执行根据一级页面采集到的地址获取二级页面具体目标数据任务
     /// </summary>
-    public async Task HandleEventAsync<T>(T eventData) where T : ISpiderPullEto
+    public async Task HandleEventAsync<T>(T eventData) where T : class, ISpiderPullEto
     {
         try
         {
-            bool isExisted = await this.SpiderRepository.CountAsync(c => c.Title == eventData.Title && c.Published == 0) > 0;
+            bool isExisted =
+                await this.SpiderRepository.CountAsync(c => c.Title == eventData.Title && c.Published == 0) > 0;
             if (isExisted) return;
 
             List<SpiderTitleContent> contents = new List<SpiderTitleContent>();

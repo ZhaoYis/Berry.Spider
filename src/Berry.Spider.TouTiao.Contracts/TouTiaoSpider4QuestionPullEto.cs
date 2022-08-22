@@ -7,9 +7,9 @@ namespace Berry.Spider.TouTiao;
 /// 头条：问答
 /// </summary>
 [EventName("Berry.TouTiao.Question.Pull")]
-public class TouTiaoSpider4QuestionEto : SpiderPullBaseEto
+public class TouTiaoSpider4QuestionPullEto : SpiderPullBaseEto
 {
-    public TouTiaoSpider4QuestionEto() : base(SpiderSourceFrom.TouTiao_Question)
+    public TouTiaoSpider4QuestionPullEto() : base(SpiderSourceFrom.TouTiao_Question)
     {
     }
 }

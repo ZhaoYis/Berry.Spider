@@ -1,4 +1,5 @@
-﻿using Berry.Spider.Core;
+﻿using Berry.Spider.Abstractions;
+using Berry.Spider.Core;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using Volo.Abp.EventBus.Distributed;
@@ -9,7 +10,7 @@ namespace Berry.Spider.TouTiao;
 /// 今日头条：资讯
 /// </summary>
 [Spider(SpiderSourceFrom.TouTiao_Information)]
-public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
+public class TouTiaoSpider4InformationProvider : ISpiderProvider
 {
     private ILogger<TouTiaoSpider4InformationProvider> Logger { get; }
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -26,7 +27,20 @@ public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
         this.DistributedEventBus = eventBus;
     }
 
-    public async Task ExecuteAsync<T>(T request) where T : ISpiderRequest
+    /// <summary>
+    /// 向队列推送源数据
+    /// </summary>
+    /// <returns></returns>
+    public Task PushAsync<T>(T push) where T : class, ISpiderPushEto
+    {
+        return this.DistributedEventBus.PublishAsync(push);
+    }
+
+    /// <summary>
+    /// 执行获取一级页面数据任务
+    /// </summary>
+    /// <returns></returns>
+    public async Task ExecuteAsync<T>(T request) where T : class, ISpiderRequest
     {
         try
         {
@@ -53,7 +67,7 @@ public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
 
                     if (resultContent.Count > 0)
                     {
-                        var eto = new TouTiaoSpider4QuestionEto { Keyword = request.Keyword, Title = request.Keyword };
+                        var eto = new TouTiaoSpider4QuestionPullEto {Keyword = request.Keyword, Title = request.Keyword};
 
                         foreach (IWebElement element in resultContent)
                         {
@@ -91,7 +105,11 @@ public class TouTiaoSpider4InformationProvider : ITouTiaoSpiderProvider
         }
     }
 
-    public Task HandleEventAsync<T>(T eventData) where T : ISpiderPullEto
+    /// <summary>
+    /// 执行根据一级页面采集到的地址获取二级页面具体目标数据任务
+    /// </summary>
+    /// <returns></returns>
+    public Task HandleEventAsync<T>(T eventData) where T : class, ISpiderPullEto
     {
         throw new NotImplementedException();
     }

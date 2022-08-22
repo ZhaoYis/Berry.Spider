@@ -1,6 +1,9 @@
-﻿using Berry.Spider.Sogou;
+﻿using Berry.Spider.Abstractions;
+using Berry.Spider.Core;
+using Berry.Spider.Sogou;
 using Berry.Spider.Sogou.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Berry.Spider;
 
@@ -10,70 +13,45 @@ namespace Berry.Spider;
 [Route("api/services/spider/sogou")]
 public class SogouSpiderController : SpiderControllerBase
 {
-    private ISogouSpiderAppService SogouSpiderAppService { get; }
+    private IServiceProvider Provider { get; }
 
-    public SogouSpiderController(ISogouSpiderAppService service)
+    public SogouSpiderController(IServiceProvider provider)
     {
-        this.SogouSpiderAppService = service;
+        this.Provider = provider;
     }
 
     /// <summary>
-    /// 将待爬取信息PUSH到消息队列中
+    /// 搜狗：相关推荐
     /// </summary>
-    [HttpPost, Route("push")]
-    public Task PushAsync([FromBody] SogouSpiderPushEto push)
+    [HttpPost, Route("push-related-search")]
+    public Task PushAsync([FromBody] SogouSpider4RelatedSearchPushEto push,
+        [FromServices] SogouSpider4RelatedSearchProvider provider)
     {
-        //直接发布事件到MQ，交由Berry.Spider.Consumers消费
-        return this.SogouSpiderAppService.PushAsync(push);
+        return provider.PushAsync(push);
     }
 
     /// <summary>
     /// 将待爬取信息PUSH到消息队列中
     /// </summary>
     [HttpPost, Route("push-from-file"), DisableRequestSizeLimit]
-    public async Task PushAsync(SogouSpiderPushFromFile push)
+    public Task PushAsync(SogouSpiderPushFromFile push)
     {
-        var filePath = Path.GetTempFileName();
-
-        try
+        FileHelper fileHelper = new FileHelper(push.File, row =>
         {
-            await using (var stream = System.IO.File.Create(filePath))
+            if (push.SourceFrom == SpiderSourceFrom.Sogou_Related_Search)
             {
-                await push.File.CopyToAsync(stream);
-            }
-
-            if (System.IO.File.Exists(filePath))
-            {
-                List<string> rows = (await System.IO.File.ReadAllLinesAsync(filePath))
-                    .Where(c => !string.IsNullOrWhiteSpace(c.Trim()))
-                    .Distinct()
-                    .ToList();
-                if (rows.Count > 0)
+                SogouSpider4RelatedSearchPushEto eto = new SogouSpider4RelatedSearchPushEto
                 {
-                    foreach (string row in rows)
-                    {
-                        SogouSpiderPushEto eto = new SogouSpiderPushEto
-                        {
-                            SourceFrom = push.SourceFrom,
-                            Keyword = row
-                        };
+                    SourceFrom = push.SourceFrom,
+                    Keyword = row
+                };
 
-                        await this.SogouSpiderAppService.PushAsync(eto);
-                    }
-                }
+                ISpiderProvider provider = this.Provider.GetRequiredService<SogouSpider4RelatedSearchProvider>();
+                return provider.PushAsync(eto);
             }
-        }
-        catch (Exception e)
-        {
-            //ignore..
-        }
-        finally
-        {
-            //删除临时文件
-            if (System.IO.File.Exists(filePath))
-            {
-                System.IO.File.Delete(filePath);
-            }
-        }
+
+            throw new NotImplementedException("未实现的爬虫来源");
+        });
+        return fileHelper.InvokeAsync();
     }
 }

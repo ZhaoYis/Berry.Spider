@@ -1,3 +1,4 @@
+using Berry.Spider.Abstractions;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
 using Berry.Spider.Proxy;
@@ -8,11 +9,12 @@ using Volo.Abp.Modularity;
 namespace Berry.Spider.TouTiao;
 
 [DependsOn(
+    typeof(AbpDddApplicationModule),
     typeof(SpiderCoreModule),
     typeof(SpiderProxyModule),
-    typeof(TouTiaoSpiderContractsModule),
     typeof(SpiderDomainModule),
-    typeof(AbpDddApplicationModule)
+    typeof(SpiderAbstractionsModule),
+    typeof(TouTiaoSpiderContractsModule)
 )]
 public class TouTiaoSpiderModule : AbpModule
 {
