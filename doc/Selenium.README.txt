@@ -48,3 +48,6 @@ https://bot.sannysoft.com/
 
 擦出webdriver指纹：
 https://zhuanlan.zhihu.com/p/328768200
+
+清除mysql缓存
+mysqladmin -u root -p flush-host

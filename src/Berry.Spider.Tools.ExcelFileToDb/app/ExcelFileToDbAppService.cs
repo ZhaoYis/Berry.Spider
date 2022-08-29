@@ -3,6 +3,7 @@ using Berry.Spider.Core;
 using Berry.Spider.Core.Helpers;
 using Berry.Spider.Domain;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Berry.Spider.Tools.ExcelFileToDb;
 
@@ -28,7 +29,7 @@ public class ExcelFileToDbAppService : IExcelFileToDbAppService
         List<SpiderContent> spiderContents = new List<SpiderContent>();
         foreach (string file in files)
         {
-            DataTable? dt = OfficeHelper.ReadExcelToDataTable(file, isFirstRowColumn: false);
+            DataTable? dt = OfficeHelper.ReadExcelToDataTable(file, isFirstRowColumn: true);
             if (dt != null)
             {
                 for (int i = 0; i < dt.Rows.Count; i++)
@@ -49,13 +50,30 @@ public class ExcelFileToDbAppService : IExcelFileToDbAppService
 
         if (spiderContents.Count == 0) return Task.CompletedTask;
 
+        //清理相似度比较高的记录
+        List<SpiderContent> currentList = JsonConvert.DeserializeObject<List<SpiderContent>>(JsonConvert.SerializeObject(spiderContents));
+        foreach (SpiderContent content in spiderContents)
+        {
+            for (int i = currentList.Count - 1; i >= 0; i--)
+            {
+                SpiderContent current = currentList[i];
+
+                var sim = StringHelper.Sim(content.Title, current.Title);
+                if (sim >= 0.8 && sim - 1 != 0)
+                {
+                    Console.WriteLine($"标题1：{content.Title}，标题2：{current.Title}，相似度：{sim * 100:F}%");
+                    currentList.RemoveAt(i);
+                }
+            }
+        }
+
         int pageSize = 100;
         int pageIndex = 0;
-        int totalCount = spiderContents.Count;
+        int totalCount = currentList.Count;
         int pageCount = (totalCount / pageSize) + (totalCount % pageSize > 0 ? 1 : 0);
         while (pageIndex < pageCount)
         {
-            var spiderContentsPage = spiderContents.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            var spiderContentsPage = currentList.Skip(pageIndex * pageSize).Take(pageSize).ToList();
             try
             {
                 this.SpiderRepository.InsertManyAsync(spiderContentsPage, true);
