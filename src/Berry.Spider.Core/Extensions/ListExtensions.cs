@@ -62,7 +62,7 @@ public static class ListExtensions
     public static void RandomSort<T>(this List<T> sources)
     {
         Random rd = new Random(new Guid().GetHashCode());
-        for (int i = 0; i < sources.Count; i++)
+        for (int i = 0; i < sources.Count - 1; i++)
         {
             var index = rd.Next(0, sources.Count - 1);
             if (index != i)

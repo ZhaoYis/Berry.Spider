@@ -11,26 +11,37 @@ namespace Berry.Spider.Core;
 /// </summary>
 public class CustomTemplateContentProvider : ITemplateContentContributor, ITransientDependency
 {
-    private IOptionsSnapshot<TitleTemplateContentOptions> Options { get; }
+    private IOptionsSnapshot<TitleTemplateContentOptions> TitleTemplateContentOptions { get; }
+    private IOptionsSnapshot<AbstractTemplateOptions> AbstractTemplateOptions { get; }
 
-    public CustomTemplateContentProvider(IOptionsSnapshot<TitleTemplateContentOptions> options)
+    public CustomTemplateContentProvider(IOptionsSnapshot<TitleTemplateContentOptions> titleTemplateContentOptions,
+        IOptionsSnapshot<AbstractTemplateOptions> abstractTemplateOptions)
     {
-        this.Options = options;
+        this.TitleTemplateContentOptions = titleTemplateContentOptions;
+        this.AbstractTemplateOptions = abstractTemplateOptions;
     }
 
     public Task<string> GetOrNullAsync(TemplateContentContributorContext context)
     {
         var templateName = context.TemplateDefinition.Name;
 
-        if (this.Options.Value.Templates.Count > 0)
+        List<NameValue> templates = new List<NameValue>();
+
+        //标题模版
+        if (this.TitleTemplateContentOptions.Value is {IsEnableFormatTitle: true} &&
+            this.TitleTemplateContentOptions.Value.Templates.Count > 0)
         {
-            NameValue? nameValue = this.Options.Value.Templates.FirstOrDefault(c => c != null && c.Name.Equals(templateName));
-            if (nameValue != null)
-            {
-                return Task.FromResult(nameValue.Value);
-            }
+            templates.AddRange(this.TitleTemplateContentOptions.Value.Templates);
         }
 
-        return Task.FromResult<string>("{{model.original_title}}");
+        //摘要模版
+        if (this.AbstractTemplateOptions.Value is {IsEnableAbstract: true} &&
+            this.AbstractTemplateOptions.Value.Templates.Count > 0)
+        {
+            templates.AddRange(this.AbstractTemplateOptions.Value.Templates);
+        }
+
+        NameValue nameValue = templates.First(c => c.Name.Equals(templateName));
+        return Task.FromResult(nameValue.Value);
     }
 }

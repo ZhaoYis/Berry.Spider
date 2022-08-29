@@ -10,19 +10,40 @@ namespace Berry.Spider.Core;
 /// </summary>
 public class CustomTemplateDefinitionProvider : TemplateDefinitionProvider
 {
-    private IOptionsSnapshot<TitleTemplateContentOptions> Options { get; }
+    private IOptionsSnapshot<TitleTemplateContentOptions> TitleTemplateContentOptions { get; }
+    private IOptionsSnapshot<AbstractTemplateOptions> AbstractTemplateOptions { get; }
 
-    public CustomTemplateDefinitionProvider(IOptionsSnapshot<TitleTemplateContentOptions> options)
+    public CustomTemplateDefinitionProvider(IOptionsSnapshot<TitleTemplateContentOptions> titleTemplateContentOptions,
+        IOptionsSnapshot<AbstractTemplateOptions> abstractTemplateOptions)
     {
-        this.Options = options;
+        this.TitleTemplateContentOptions = titleTemplateContentOptions;
+        this.AbstractTemplateOptions = abstractTemplateOptions;
     }
 
     public override void Define(ITemplateDefinitionContext context)
     {
-        List<string> names = this.Options.Value.Templates.Select(c => c.Name).ToList();
-        foreach (string name in names)
+        //标题模版
+        if (this.TitleTemplateContentOptions.Value is {IsEnableFormatTitle: true} &&
+            this.TitleTemplateContentOptions.Value.Templates.Count > 0)
         {
-            context.Add(new TemplateDefinition(name).WithScribanEngine());
+            List<string> titleTemplateNames =
+                this.TitleTemplateContentOptions.Value.Templates.Select(c => c.Name).ToList();
+            foreach (string name in titleTemplateNames)
+            {
+                context.Add(new TemplateDefinition(name).WithScribanEngine());
+            }
+        }
+
+        //摘要模版
+        if (this.AbstractTemplateOptions.Value is {IsEnableAbstract: true} &&
+            this.AbstractTemplateOptions.Value.Templates.Count > 0)
+        {
+            List<string> abstractTemplateNames =
+                this.AbstractTemplateOptions.Value.Templates.Select(c => c.Name).ToList();
+            foreach (string name in abstractTemplateNames)
+            {
+                context.Add(new TemplateDefinition(name).WithScribanEngine());
+            }
         }
     }
 }

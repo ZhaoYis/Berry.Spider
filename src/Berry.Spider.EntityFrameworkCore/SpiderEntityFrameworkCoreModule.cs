@@ -1,6 +1,7 @@
 using Berry.Spider.Domain;
 using Berry.Spider.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Volo.Abp.Dapper;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.Modularity;
 
@@ -8,7 +9,7 @@ namespace Berry.Spider.EntityFrameworkCore;
 
 [DependsOn(
     typeof(SpiderDomainModule),
-    typeof(AbpEntityFrameworkCoreModule))]
+    typeof(AbpEntityFrameworkCoreModule), typeof(AbpDapperModule))]
 public class SpiderEntityFrameworkCoreModule : AbpModule
 {
     public override Task ConfigureServicesAsync(ServiceConfigurationContext context)

@@ -3,14 +3,14 @@ using Volo.Abp;
 namespace Berry.Spider.Contracts;
 
 /// <summary>
-/// 文章标题模版选项
+/// 摘要模版选项
 /// </summary>
-public class TitleTemplateContentOptions
+public class AbstractTemplateOptions
 {
     /// <summary>
-    /// 是否启用格式化标题
+    /// 是否启用摘要
     /// </summary>
-    public bool IsEnableFormatTitle { get; set; }
+    public bool IsEnableAbstract { get; set; }
 
     /// <summary>
     /// 标题模版
