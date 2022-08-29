@@ -118,7 +118,7 @@ public class BuildSMDataAppService : IBuildSMDataAppService
             }
 
             //内容前加入加粗标题
-            builder.Insert(0, $"<p><b>{newTitle}</b></p>");
+            builder.Insert(0, $"<p><b>{smWord}{fixedWord}</b></p>");
 
             //组装摘要
             if (this.AbstractTemplateOptions.Value.IsEnableAbstract)
