@@ -21,7 +21,7 @@ public class ExcelFileToDbAppService : IExcelFileToDbAppService
         Logger = logger;
     }
 
-    public virtual Task RunAsync()
+    public virtual async Task RunAsync()
     {
         string filePath = Path.Combine(AppContext.BaseDirectory, "files");
         // 递归获取文件路径下的所有文件
@@ -48,35 +48,36 @@ public class ExcelFileToDbAppService : IExcelFileToDbAppService
             }
         }
 
-        if (spiderContents.Count == 0) return Task.CompletedTask;
+        if (spiderContents.Count == 0) return;
 
-        //清理相似度比较高的记录
-        List<SpiderContent> currentList = JsonConvert.DeserializeObject<List<SpiderContent>>(JsonConvert.SerializeObject(spiderContents));
-        foreach (SpiderContent content in spiderContents)
-        {
-            for (int i = currentList.Count - 1; i >= 0; i--)
-            {
-                SpiderContent current = currentList[i];
-
-                var sim = StringHelper.Sim(content.Title, current.Title);
-                if (sim >= 0.8 && sim - 1 != 0)
-                {
-                    Console.WriteLine($"标题1：{content.Title}，标题2：{current.Title}，相似度：{sim * 100:F}%");
-                    currentList.RemoveAt(i);
-                }
-            }
-        }
+        // //清理相似度比较高的记录
+        // List<SpiderContent> currentList = JsonConvert.DeserializeObject<List<SpiderContent>>(JsonConvert.SerializeObject(spiderContents));
+        // foreach (SpiderContent content in spiderContents)
+        // {
+        //     for (int i = currentList.Count - 1; i >= 0; i--)
+        //     {
+        //         SpiderContent current = currentList[i];
+        //
+        //         var sim = StringHelper.Sim(content.Title, current.Title);
+        //         if (sim >= 0.8 && sim - 1 != 0)
+        //         {
+        //             Console.WriteLine($"标题1：{content.Title}，标题2：{current.Title}，相似度：{sim * 100:F}%");
+        //             currentList.RemoveAt(i);
+        //         }
+        //     }
+        // }
 
         int pageSize = 100;
         int pageIndex = 0;
-        int totalCount = currentList.Count;
+        int totalCount = spiderContents.Count;
         int pageCount = (totalCount / pageSize) + (totalCount % pageSize > 0 ? 1 : 0);
         while (pageIndex < pageCount)
         {
-            var spiderContentsPage = currentList.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            var spiderContentsPage = spiderContents.Skip(pageIndex * pageSize).Take(pageSize).ToList();
             try
             {
-                this.SpiderRepository.InsertManyAsync(spiderContentsPage, true);
+                await this.SpiderRepository.InsertManyAsync(spiderContentsPage, true);
+                await Task.Delay(2);
             }
             catch (Exception e)
             {
@@ -85,7 +86,5 @@ public class ExcelFileToDbAppService : IExcelFileToDbAppService
 
             pageIndex++;
         }
-
-        return Task.CompletedTask;
     }
 }

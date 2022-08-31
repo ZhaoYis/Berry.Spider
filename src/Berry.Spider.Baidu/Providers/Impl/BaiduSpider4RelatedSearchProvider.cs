@@ -129,7 +129,7 @@ public class BaiduSpider4RelatedSearchProvider : ISpiderProvider
         try
         {
             bool isExisted =
-                await this.SpiderRepository.CountAsync(c => c.Title == eventData.Title && c.Published == 0) > 0;
+                await this.SpiderRepository.MyCountAsync(c => c.Title == eventData.Title && c.Published == 0) > 0;
             if (isExisted) return;
 
             List<SpiderTitleContent> contents = new List<SpiderTitleContent>();

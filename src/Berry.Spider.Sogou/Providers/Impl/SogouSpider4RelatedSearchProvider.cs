@@ -21,7 +21,8 @@ public class SogouSpider4RelatedSearchProvider : ISpiderProvider
     private IDistributedEventBus DistributedEventBus { get; }
     private ISpiderTitleContentRepository SpiderRepository { get; }
 
-    private string HomePage => "https://sogou.com/web?query={0}";
+    //private string HomePage => "https://sogou.com/web?query={0}";
+    private string HomePage => "https://sogou.com/web?query={0}&_asf=www.sogou.com&_ast=&w=01019900&p=40040100&ie=utf8&from=index-nologin&s_from=index&sut=383&sst0=1661865164915&lkt=0%2C0%2C0&sugsuv=008BC68EDED45858630E0B0ED06D0678&sugtime=1661865164915";
 
     public SogouSpider4RelatedSearchProvider(ILogger<SogouSpider4RelatedSearchProvider> logger,
         IWebElementLoadProvider provider,
@@ -52,6 +53,10 @@ public class SogouSpider4RelatedSearchProvider : ISpiderProvider
     {
         try
         {
+            bool isExisted =
+                await this.SpiderRepository.MyCountAsync(c => c.Title == request.Keyword && c.Published == 0) > 0;
+            if (isExisted) return;
+
             string targetUrl = string.Format(this.HomePage, request.Keyword);
             await this.WebElementLoadProvider.InvokeAsync(
                 targetUrl,
@@ -76,7 +81,7 @@ public class SogouSpider4RelatedSearchProvider : ISpiderProvider
 
                     if (resultContent.Count > 0)
                     {
-                        var eto = new SogouSpider4RelatedSearchPullEto {Keyword = request.Keyword, Title = request.Keyword};
+                        var eto = new SogouSpider4RelatedSearchPullEto { Keyword = request.Keyword, Title = request.Keyword };
 
                         foreach (IWebElement element in resultContent)
                         {
@@ -116,14 +121,10 @@ public class SogouSpider4RelatedSearchProvider : ISpiderProvider
     /// <summary>
     /// 执行根据一级页面采集到的地址获取二级页面具体目标数据任务
     /// </summary>
-    public async Task HandleEventAsync<T>(T eventData) where T : class, ISpiderPullEto
+    public Task HandleEventAsync<T>(T eventData) where T : class, ISpiderPullEto
     {
         try
         {
-            bool isExisted =
-                await this.SpiderRepository.CountAsync(c => c.Title == eventData.Title && c.Published == 0) > 0;
-            if (isExisted) return;
-
             List<SpiderTitleContent> contents = new List<SpiderTitleContent>();
             foreach (var item in eventData.Items)
             {
@@ -131,7 +132,7 @@ public class SogouSpider4RelatedSearchProvider : ISpiderProvider
                 contents.Add(content);
             }
 
-            this.SpiderRepository.InsertManyAsync(contents);
+            return this.SpiderRepository.InsertManyAsync(contents);
         }
         catch (Exception exception)
         {
@@ -141,5 +142,7 @@ public class SogouSpider4RelatedSearchProvider : ISpiderProvider
         {
             //ignore..
         }
+
+        return Task.CompletedTask;
     }
 }

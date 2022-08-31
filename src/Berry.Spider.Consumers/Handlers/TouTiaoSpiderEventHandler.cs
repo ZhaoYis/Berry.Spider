@@ -2,7 +2,6 @@
 using Berry.Spider.TouTiao;
 using System.Threading.Tasks;
 using Berry.Spider.Abstractions;
-using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
 
@@ -19,13 +18,6 @@ public class TouTiaoSpiderEventHandler :
 {
     public IAbpLazyServiceProvider LazyServiceProvider { get; set; }
 
-    protected IServiceProvider ServiceProvider { get; set; }
-
-    public TouTiaoSpiderEventHandler(IServiceProvider serviceProvider)
-    {
-        ServiceProvider = serviceProvider;
-    }
-
     /// <summary>
     /// 执行获取一级页面数据任务
     /// </summary>
@@ -35,8 +27,7 @@ public class TouTiaoSpiderEventHandler :
         ISpiderProvider provider =
             this.LazyServiceProvider.LazyGetRequiredService<TouTiaoSpider4QuestionProvider>();
 
-        ISpiderProvider spiderProvider = ServiceProvider.GetRequiredService<TouTiaoSpider4QuestionProvider>();
-        await spiderProvider.ExecuteAsync(new TouTiaoSpiderRequest
+        await provider.ExecuteAsync(new TouTiaoSpiderRequest
         {
             SourceFrom = eventData.SourceFrom,
             Keyword = eventData.Keyword
