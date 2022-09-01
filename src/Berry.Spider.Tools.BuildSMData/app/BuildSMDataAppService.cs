@@ -17,8 +17,6 @@ namespace Berry.Spider.Tools.BuildSMData;
 /// </summary>
 public class BuildSMDataAppService : IBuildSMDataAppService
 {
-    // private ISpiderContentRepository SpiderRepository { get; }
-    // private SpiderContentDapperRepository SpiderContentDapperRepository { get; }
     private IServiceScopeFactory ServiceScopeFactory { get; }
 
     private ITextAnalysisProvider TextAnalysisProvider { get; }
@@ -33,13 +31,11 @@ public class BuildSMDataAppService : IBuildSMDataAppService
         IOptionsSnapshot<AbstractTemplateOptions> abstractTemplateOptions,
         ILogger<BuildSMDataAppService> logger)
     {
-        // SpiderRepository = spiderRepository;
-        // SpiderContentDapperRepository = dapperRepository;
         this.ServiceScopeFactory = serviceScopeFactory;
-        TextAnalysisProvider = serviceProvider.GetRequiredService<NormalTextAnalysisProvider>();
+        this.TextAnalysisProvider = serviceProvider.GetRequiredService<NormalTextAnalysisProvider>();
         this.TemplateRenderer = templateRenderer;
         this.AbstractTemplateOptions = abstractTemplateOptions;
-        Logger = logger;
+        this.Logger = logger;
     }
 
     [UnitOfWork]
@@ -50,8 +46,6 @@ public class BuildSMDataAppService : IBuildSMDataAppService
 
         using (var scop = this.ServiceScopeFactory.CreateScope())
         {
-            ITextAnalysisProvider textAnalysisProvider =
-                scop.ServiceProvider.GetRequiredService<NormalTextAnalysisProvider>();
             //取出历史数据
             SpiderContentDapperRepository spiderContentDapperRepository =
                 scop.ServiceProvider.GetRequiredService<SpiderContentDapperRepository>();
@@ -99,7 +93,7 @@ public class BuildSMDataAppService : IBuildSMDataAppService
             List<string> todoSaveItems = listHelper.GetList();
             if (todoSaveItems.Count == 0) break;
 
-            string todoItem = todoSaveItems.OrderBy(c => Guid.NewGuid()).FirstOrDefault();
+            string todoItem = "";
             while (string.IsNullOrEmpty(todoItem))
             {
                 todoItem = todoSaveItems.OrderBy(c => Guid.NewGuid()).FirstOrDefault();
