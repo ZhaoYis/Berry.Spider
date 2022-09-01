@@ -85,7 +85,7 @@ public class BuildSMDataAppService : IBuildSMDataAppService
 
         //保存
         List<SpiderContent> spiderContents = new List<SpiderContent>();
-        for (int i = 0; i < smWords.Length - 1; i++)
+        for (int i = 50000; i < smWords.Length - 1; i++)
         {
             StringBuilder builder = new StringBuilder();
             int currentIndex = 1;
