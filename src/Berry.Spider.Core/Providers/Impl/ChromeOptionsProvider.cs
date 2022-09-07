@@ -40,7 +40,10 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         options.AddArgument("blink-settings=imagesEnabled=false");
         //擦除指纹
         options.AddArgument("disable-blink-features=AutomationControlled");
+        //设置user-agent
+        options.AddArgument($"user-agent={UserAgentPoolHelper.RandomGetOne()}");
 
+        //设置代理
         if (isUsedProxy)
         {
             var proxy = await this.SeleniumProxyProvider.GetProxyAsync();

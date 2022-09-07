@@ -4,7 +4,6 @@ using Berry.Spider.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
-using Volo.Abp.Domain.Repositories;
 using Volo.Abp.EventBus.Distributed;
 
 namespace Berry.Spider.Sogou;
@@ -21,8 +20,9 @@ public class SogouSpider4RelatedSearchProvider : ISpiderProvider
     private IDistributedEventBus DistributedEventBus { get; }
     private ISpiderTitleContentRepository SpiderRepository { get; }
 
-    //private string HomePage => "https://sogou.com/web?query={0}";
-    private string HomePage => "https://sogou.com/web?query={0}&_asf=www.sogou.com&_ast=&w=01019900&p=40040100&ie=utf8&from=index-nologin&s_from=index&sut=383&sst0=1661865164915&lkt=0%2C0%2C0&sugsuv=008BC68EDED45858630E0B0ED06D0678&sugtime=1661865164915";
+    private BloomFilterHelper<string> bloomFilterHelper;
+
+    private string HomePage => "https://sogou.com";
 
     public SogouSpider4RelatedSearchProvider(ILogger<SogouSpider4RelatedSearchProvider> logger,
         IWebElementLoadProvider provider,
@@ -35,6 +35,8 @@ public class SogouSpider4RelatedSearchProvider : ISpiderProvider
         this.TextAnalysisProvider = serviceProvider.GetRequiredService<SogouRelatedSearchTextAnalysisProvider>();
         this.DistributedEventBus = eventBus;
         this.SpiderRepository = repository;
+
+        this.bloomFilterHelper = new BloomFilterHelper<string>(999999);
     }
 
     /// <summary>
@@ -53,18 +55,31 @@ public class SogouSpider4RelatedSearchProvider : ISpiderProvider
     {
         try
         {
-            bool isExisted =
-                await this.SpiderRepository.MyCountAsync(c => c.Title == request.Keyword && c.Published == 0) > 0;
-            if (isExisted) return;
+            // bool isExisted =
+            //     await this.SpiderRepository.MyCountAsync(c => c.Title == request.Keyword && c.Published == 0) > 0;
+            // if (isExisted) return;
 
-            string targetUrl = string.Format(this.HomePage, request.Keyword);
+            if (bloomFilterHelper.Contains(request.Keyword))
+            {
+                return;
+            }
+            else
+            {
+                bloomFilterHelper.Add(request.Keyword);
+            }
+
+            //获取url地址
+            string realUrl = await this.WebElementLoadProvider.AutoClickAsync(this.HomePage, request.Keyword,
+                By.Id("query"),
+                By.Id("stb"));
+            if (string.IsNullOrWhiteSpace(realUrl)) return;
+
             await this.WebElementLoadProvider.InvokeAsync(
-                targetUrl,
+                realUrl,
                 drv =>
                 {
                     try
                     {
-                        // return drv.FindElement(By.CssSelector(".result-molecule"));
                         return drv.FindElement(By.Id("hint_container"));
                     }
                     catch (Exception e)
@@ -81,7 +96,8 @@ public class SogouSpider4RelatedSearchProvider : ISpiderProvider
 
                     if (resultContent.Count > 0)
                     {
-                        var eto = new SogouSpider4RelatedSearchPullEto { Keyword = request.Keyword, Title = request.Keyword };
+                        var eto = new SogouSpider4RelatedSearchPullEto
+                            {Keyword = request.Keyword, Title = request.Keyword};
 
                         foreach (IWebElement element in resultContent)
                         {
@@ -91,7 +107,7 @@ public class SogouSpider4RelatedSearchProvider : ISpiderProvider
                             eto.Items.Add(new ChildPageDataItem
                             {
                                 Title = text,
-                                Href = "https://sogou.com/web" + href
+                                Href = href
                             });
 
                             this.Logger.LogInformation(text + "  ---> " + href);
@@ -99,8 +115,6 @@ public class SogouSpider4RelatedSearchProvider : ISpiderProvider
 
                         if (eto.Items.Any())
                         {
-                            //await this.DistributedEventBus.PublishAsync(eto);
-
                             //此处不做消息队列发送，直接存储到数据库
                             await this.HandleEventAsync(eto);
                             this.Logger.LogInformation("数据保存成功...");
