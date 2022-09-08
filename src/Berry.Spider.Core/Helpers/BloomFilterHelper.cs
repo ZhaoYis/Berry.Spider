@@ -166,7 +166,7 @@ public class BloomFilterHelper<T>
     /// </summary>
     public double Truthiness
     {
-        get { return (double) this.TrueBits() / this._hashBits.Count; }
+        get { return (double)this.TrueBits() / this._hashBits.Count; }
     }
 
     #endregion Public Properties
@@ -244,14 +244,14 @@ public class BloomFilterHelper<T>
     /// </returns>
     private static float BestErrorRate(int capacity)
     {
-        var c = (float) (1.0 / capacity);
+        var c = (float)(1.0 / capacity);
         if (Math.Abs(c) > 0)
         {
             return c;
         }
 
-        double y = int.MaxValue / (double) capacity;
-        return (float) Math.Pow(0.6185, y);
+        double y = int.MaxValue / (double)capacity;
+        return (float)Math.Pow(0.6185, y);
     }
 
     /// <summary>
@@ -268,7 +268,7 @@ public class BloomFilterHelper<T>
     /// </returns>
     private static int BestK(int capacity, float errorRate)
     {
-        return (int) Math.Round(Math.Log(2.0) * BestM(capacity, errorRate) / capacity);
+        return (int)Math.Round(Math.Log(2.0) * BestM(capacity, errorRate) / capacity);
     }
 
     /// <summary>
@@ -285,7 +285,7 @@ public class BloomFilterHelper<T>
     /// </returns>
     private static int BestM(int capacity, float errorRate)
     {
-        return (int) Math.Ceiling(capacity * Math.Log(errorRate, 1.0 / Math.Pow(2, Math.Log(2.0))));
+        return (int)Math.Ceiling(capacity * Math.Log(errorRate, 1.0 / Math.Pow(2, Math.Log(2.0))));
     }
 
     /// <summary>
@@ -309,7 +309,7 @@ public class BloomFilterHelper<T>
             x = x * 2057;
             x = x ^ (x >> 16);
 
-            return (int) x;
+            return (int)x;
         }
     }
 

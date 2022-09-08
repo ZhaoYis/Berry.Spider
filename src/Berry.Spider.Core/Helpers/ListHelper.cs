@@ -11,7 +11,7 @@ public class ListHelper
     {
         this._items = items;
         this._pageSize = pageSize;
-        this._totalPage = (int) Math.Round(items.Count * 1.0 / pageSize);
+        this._totalPage = (int)Math.Round(items.Count * 1.0 / pageSize);
     }
 
     public List<string> GetList()

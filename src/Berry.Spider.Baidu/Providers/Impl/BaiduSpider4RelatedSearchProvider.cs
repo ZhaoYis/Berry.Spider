@@ -1,11 +1,10 @@
-﻿using Berry.Spider.Core;
+﻿using Berry.Spider.Abstractions;
+using Berry.Spider.Core;
 using Berry.Spider.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using System.Web;
-using Berry.Spider.Abstractions;
-using Volo.Abp.Domain.Repositories;
 using Volo.Abp.EventBus.Distributed;
 
 namespace Berry.Spider.Baidu;
@@ -77,7 +76,7 @@ public class BaiduSpider4RelatedSearchProvider : ISpiderProvider
 
                     if (resultContent.Count > 0)
                     {
-                        var eto = new BaiduSpider4RelatedSearchPullEto {Keyword = request.Keyword, Title = request.Keyword};
+                        var eto = new BaiduSpider4RelatedSearchPullEto { Keyword = request.Keyword, Title = request.Keyword };
 
                         foreach (IWebElement element in resultContent)
                         {

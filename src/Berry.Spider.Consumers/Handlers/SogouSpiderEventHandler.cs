@@ -1,6 +1,6 @@
+using Berry.Spider.Abstractions;
 using Berry.Spider.Sogou;
 using System.Threading.Tasks;
-using Berry.Spider.Abstractions;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EventBus.Distributed;
 

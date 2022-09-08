@@ -1,7 +1,7 @@
-using System.Linq.Expressions;
 using Berry.Spider.Domain;
 using Berry.Spider.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -16,7 +16,7 @@ public class SpiderContentRepository : EfCoreRepository<SpiderDbContext, SpiderC
     public async Task<int> MyCountAsync(Expression<Func<SpiderContent, bool>> predicate)
     {
         var db = await this.GetDbContextAsync();
-        
+
         return await db.SpiderContents.Where(predicate).CountAsync();
     }
 }

@@ -1,9 +1,8 @@
-using System.Data;
 using Berry.Spider.Core;
 using Berry.Spider.Core.Helpers;
 using Berry.Spider.Domain;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using System.Data;
 
 namespace Berry.Spider.Tools.ExcelFileToDb;
 

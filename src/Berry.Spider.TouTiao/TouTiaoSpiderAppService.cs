@@ -1,7 +1,4 @@
-using Berry.Spider.Core;
-using Berry.Spider.Core.Exceptions;
 using Volo.Abp.Application.Services;
-using Volo.Abp.EventBus.Distributed;
 
 namespace Berry.Spider.TouTiao;
 

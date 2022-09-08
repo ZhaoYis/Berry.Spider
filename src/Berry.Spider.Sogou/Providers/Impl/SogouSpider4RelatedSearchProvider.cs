@@ -97,7 +97,7 @@ public class SogouSpider4RelatedSearchProvider : ISpiderProvider
                     if (resultContent.Count > 0)
                     {
                         var eto = new SogouSpider4RelatedSearchPullEto
-                            {Keyword = request.Keyword, Title = request.Keyword};
+                        { Keyword = request.Keyword, Title = request.Keyword };
 
                         foreach (IWebElement element in resultContent)
                         {

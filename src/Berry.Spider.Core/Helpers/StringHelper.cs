@@ -22,7 +22,7 @@ public static class StringHelper
             https://img-blog.csdn.net/20131111190818687
          * 
          */
-        
+
         List<char> sl1 = txt1.ToCharArray().ToList();
         List<char> sl2 = txt2.ToCharArray().ToList();
         //去重
@@ -46,7 +46,7 @@ public static class StringHelper
         {
             //分子
             num += arrA[i] * arrB[i];
-            
+
             //分母
             numA += Math.Pow(arrA[i], 2);
             numB += Math.Pow(arrB[i], 2);

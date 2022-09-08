@@ -67,7 +67,7 @@ public class TouTiaoSpider4InformationProvider : ISpiderProvider
 
                     if (resultContent.Count > 0)
                     {
-                        var eto = new TouTiaoSpider4QuestionPullEto {Keyword = request.Keyword, Title = request.Keyword};
+                        var eto = new TouTiaoSpider4QuestionPullEto { Keyword = request.Keyword, Title = request.Keyword };
 
                         foreach (IWebElement element in resultContent)
                         {

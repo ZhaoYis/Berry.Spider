@@ -1,7 +1,7 @@
-using System.Text;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace Berry.Spider.Tools.TxtFileToDb;
 

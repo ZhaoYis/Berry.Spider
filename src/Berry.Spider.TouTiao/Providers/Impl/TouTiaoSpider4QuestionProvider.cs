@@ -1,4 +1,5 @@
-﻿using Berry.Spider.Contracts;
+﻿using Berry.Spider.Abstractions;
+using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,8 +7,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
 using System.Web;
-using Berry.Spider.Abstractions;
-using Volo.Abp.Domain.Repositories;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.Timing;
 
@@ -94,7 +93,7 @@ public class TouTiaoSpider4QuestionProvider : ISpiderProvider
                     if (resultContent.Count > 0)
                     {
                         var eto = new TouTiaoSpider4QuestionPullEto
-                            {Keyword = request.Keyword, Title = request.Keyword};
+                        { Keyword = request.Keyword, Title = request.Keyword };
 
                         foreach (IWebElement element in resultContent)
                         {

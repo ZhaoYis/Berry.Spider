@@ -1,5 +1,3 @@
-using System.Text;
-using System.Text.RegularExpressions;
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
@@ -7,6 +5,8 @@ using Berry.Spider.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Text;
+using System.Text.RegularExpressions;
 using Volo.Abp.TextTemplating;
 using Volo.Abp.Uow;
 

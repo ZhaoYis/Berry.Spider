@@ -28,14 +28,14 @@ public class CustomTemplateContentProvider : ITemplateContentContributor, ITrans
         List<NameValue> templates = new List<NameValue>();
 
         //标题模版
-        if (this.TitleTemplateContentOptions.Value is {IsEnableFormatTitle: true} &&
+        if (this.TitleTemplateContentOptions.Value is { IsEnableFormatTitle: true } &&
             this.TitleTemplateContentOptions.Value.Templates.Count > 0)
         {
             templates.AddRange(this.TitleTemplateContentOptions.Value.Templates);
         }
 
         //摘要模版
-        if (this.AbstractTemplateOptions.Value is {IsEnableAbstract: true} &&
+        if (this.AbstractTemplateOptions.Value is { IsEnableAbstract: true } &&
             this.AbstractTemplateOptions.Value.Templates.Count > 0)
         {
             templates.AddRange(this.AbstractTemplateOptions.Value.Templates);

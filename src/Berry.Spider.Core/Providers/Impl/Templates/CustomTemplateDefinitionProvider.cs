@@ -23,7 +23,7 @@ public class CustomTemplateDefinitionProvider : TemplateDefinitionProvider
     public override void Define(ITemplateDefinitionContext context)
     {
         //标题模版
-        if (this.TitleTemplateContentOptions.Value is {IsEnableFormatTitle: true} &&
+        if (this.TitleTemplateContentOptions.Value is { IsEnableFormatTitle: true } &&
             this.TitleTemplateContentOptions.Value.Templates.Count > 0)
         {
             List<string> titleTemplateNames =
@@ -35,7 +35,7 @@ public class CustomTemplateDefinitionProvider : TemplateDefinitionProvider
         }
 
         //摘要模版
-        if (this.AbstractTemplateOptions.Value is {IsEnableAbstract: true} &&
+        if (this.AbstractTemplateOptions.Value is { IsEnableAbstract: true } &&
             this.AbstractTemplateOptions.Value.Templates.Count > 0)
         {
             List<string> abstractTemplateNames =
