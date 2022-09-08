@@ -1,7 +1,6 @@
 using Berry.Spider.Abstractions;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
-using Berry.Spider.Proxy;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Application;
 using Volo.Abp.Modularity;
@@ -11,7 +10,6 @@ namespace Berry.Spider.TouTiao;
 [DependsOn(
     typeof(AbpDddApplicationModule),
     typeof(SpiderCoreModule),
-    typeof(SpiderProxyModule),
     typeof(SpiderDomainModule),
     typeof(SpiderAbstractionsModule),
     typeof(TouTiaoSpiderContractsModule)

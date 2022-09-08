@@ -1,17 +1,16 @@
+using Berry.Spider.Proxy.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
-using Volo.Abp;
 using Volo.Abp.Modularity;
 
 namespace Berry.Spider.Proxy;
 
-public class SpiderProxyModule : AbpModule
+/// <summary>
+/// proxy pool开源项目ip代理池
+/// </summary>
+[DependsOn(typeof(SpiderProxyAbstractionsModule))]
+public class SpiderDefaultProxyModule : AbpModule
 {
-    public override Task OnApplicationInitializationAsync(ApplicationInitializationContext context)
-    {
-        return base.OnApplicationInitializationAsync(context);
-    }
-
     public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();

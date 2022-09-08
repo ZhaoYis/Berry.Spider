@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Berry.Spider.Proxy\Berry.Spider.Proxy.csproj" />
+      <ProjectReference Include="..\Berry.Spider.Proxy.Local\Berry.Spider.Proxy.Local.csproj" />
     </ItemGroup>
 
 </Project>

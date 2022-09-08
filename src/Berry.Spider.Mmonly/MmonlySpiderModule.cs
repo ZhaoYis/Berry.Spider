@@ -2,7 +2,6 @@ using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
 using Berry.Spider.Mmonly.Contracts;
-using Berry.Spider.Proxy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Application;
@@ -14,7 +13,6 @@ namespace Berry.Spider.Mmonly;
 
 [DependsOn(
     typeof(SpiderCoreModule),
-    typeof(SpiderProxyModule),
     typeof(MmonlySpiderContractsModule),
     typeof(SpiderDomainModule),
     typeof(AbpDddApplicationModule),

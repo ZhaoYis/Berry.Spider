@@ -4,12 +4,17 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>Berry.Spider.Proxy</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
       <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="6.0.8" />
       <PackageReference Include="Volo.Abp.Core" Version="5.3.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Berry.Spider.Proxy.Abstractions\Berry.Spider.Proxy.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>
