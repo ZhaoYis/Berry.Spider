@@ -44,14 +44,14 @@ public class BuildSMDataAppService : IBuildSMDataAppService
         List<string> temp = new List<string>();
         IEnumerable<SpiderContent> contents = new List<SpiderContent>();
 
-        using (var scop = this.ServiceScopeFactory.CreateScope())
-        {
-            //取出历史数据
-            SpiderContentDapperRepository spiderContentDapperRepository =
-                scop.ServiceProvider.GetRequiredService<SpiderContentDapperRepository>();
-
-            contents = await spiderContentDapperRepository.GetAllAsync();
-        }
+        // using (var scop = this.ServiceScopeFactory.CreateScope())
+        // {
+        //     //取出历史数据
+        //     SpiderContentDapperRepository spiderContentDapperRepository =
+        //         scop.ServiceProvider.GetRequiredService<SpiderContentDapperRepository>();
+        //
+        //     contents = await spiderContentDapperRepository.GetAllAsync();
+        // }
 
         await Parallel.ForEachAsync(contents, new ParallelOptions
         {
@@ -69,9 +69,22 @@ public class BuildSMDataAppService : IBuildSMDataAppService
 
         string filePath = Path.Combine(AppContext.BaseDirectory, "files");
         //获取神马词库
-        string[] smWords = await File.ReadAllLinesAsync(Path.Combine(filePath, "神马词库.txt"));
+        List<string> smWords = new List<string>();
+        string[] smFiles = Directory.GetFiles(Path.Combine(filePath, "sm_words"));
+        foreach (string file in smFiles)
+        {
+            string[] words = await File.ReadAllLinesAsync(file);
+            smWords.AddRange(words);
+        }
+
         //获取固定词
-        string[] fixedWords = await File.ReadAllLinesAsync(Path.Combine(filePath, "固定词库.txt"));
+        List<string> fixedWords = new List<string>();
+        string[] fixedFiles = Directory.GetFiles(Path.Combine(filePath, "fixed_words"));
+        foreach (string file in fixedFiles)
+        {
+            string[] words = await File.ReadAllLinesAsync(file);
+            fixedWords.AddRange(words);
+        }
 
         //获取内容
         temp = temp.Where(c => !string.IsNullOrWhiteSpace(c)).OrderBy(c => Guid.NewGuid()).ToList();
@@ -79,7 +92,7 @@ public class BuildSMDataAppService : IBuildSMDataAppService
 
         //保存
         List<SpiderContent> spiderContents = new List<SpiderContent>();
-        for (int i = 50000; i < smWords.Length - 1; i++)
+        for (int i = 0; i < smWords.Count - 1; i++)
         {
             StringBuilder builder = new StringBuilder();
             int currentIndex = 1;
@@ -87,7 +100,7 @@ public class BuildSMDataAppService : IBuildSMDataAppService
             string smWord = smWords[i];
             //随机获取一个获取固定词
             Random fixedRandom = new Random();
-            string fixedWord = fixedWords[fixedRandom.Next(0, fixedWords.Length - 1)];
+            string fixedWord = fixedWords[fixedRandom.Next(0, fixedWords.Count - 1)];
 
             //组装新的标题
             List<string> todoSaveItems = listHelper.GetList();
