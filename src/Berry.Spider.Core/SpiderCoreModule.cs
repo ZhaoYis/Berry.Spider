@@ -24,15 +24,13 @@ public class SpiderCoreModule : AbpModule
         //配置SpiderOptions
         context.Services.Configure<SpiderOptions>(configuration.GetSection(nameof(SpiderOptions)));
         //配置HumanMachineVerificationOptions
-        context.Services.Configure<HumanMachineVerificationOptions>(
-            configuration.GetSection(nameof(HumanMachineVerificationOptions)));
+        context.Services.Configure<HumanMachineVerificationOptions>(configuration.GetSection(nameof(HumanMachineVerificationOptions)));
         //配置QuartzOptions
         context.Services.Configure<SpiderQuartzOptions>(configuration.GetSection(nameof(SpiderQuartzOptions)));
         //配置ExceptionlessOptions
         context.Services.Configure<ExceptionlessOptions>(configuration.GetSection(nameof(ExceptionlessOptions)));
         //配置TitleTemplateContentOptions
-        context.Services.Configure<TitleTemplateContentOptions>(
-            configuration.GetSection(nameof(TitleTemplateContentOptions)));
+        context.Services.Configure<TitleTemplateContentOptions>(configuration.GetSection(nameof(TitleTemplateContentOptions)));
         //配置AbstractTemplateOptions
         context.Services.Configure<AbstractTemplateOptions>(configuration.GetSection(nameof(AbstractTemplateOptions)));
 

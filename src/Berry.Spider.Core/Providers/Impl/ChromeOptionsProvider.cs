@@ -42,6 +42,8 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         options.AddArgument("disable-blink-features=AutomationControlled");
         //设置user-agent
         options.AddArgument($"user-agent={UserAgentPoolHelper.RandomGetOne()}");
+        //使用代理
+        //options.AddArgument($"--proxy-server=110.87.248.46:24394");
 
         //设置代理
         if (isUsedProxy)
