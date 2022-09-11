@@ -44,14 +44,14 @@ public class BuildSMDataAppService : IBuildSMDataAppService
         List<string> temp = new List<string>();
         IEnumerable<SpiderContent> contents = new List<SpiderContent>();
 
-        // using (var scop = this.ServiceScopeFactory.CreateScope())
-        // {
-        //     //取出历史数据
-        //     SpiderContentDapperRepository spiderContentDapperRepository =
-        //         scop.ServiceProvider.GetRequiredService<SpiderContentDapperRepository>();
-        //
-        //     contents = await spiderContentDapperRepository.GetAllAsync();
-        // }
+        using (var scop = this.ServiceScopeFactory.CreateScope())
+        {
+            //取出历史数据
+            SpiderContentDapperRepository spiderContentDapperRepository =
+                scop.ServiceProvider.GetRequiredService<SpiderContentDapperRepository>();
+
+            contents = await spiderContentDapperRepository.GetAllAsync();
+        }
 
         await Parallel.ForEachAsync(contents, new ParallelOptions
         {
