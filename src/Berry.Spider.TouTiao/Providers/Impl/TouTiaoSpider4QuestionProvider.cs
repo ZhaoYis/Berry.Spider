@@ -153,10 +153,6 @@ public class TouTiaoSpider4QuestionProvider : ISpiderProvider
     {
         try
         {
-            bool isExisted =
-                await this.SpiderRepository.MyCountAsync(c => c.Title == eventData.Title && c.Published == 0) > 0;
-            if (isExisted) return;
-
             List<string> contentItems = new List<string>();
             foreach (var item in eventData.Items)
             {

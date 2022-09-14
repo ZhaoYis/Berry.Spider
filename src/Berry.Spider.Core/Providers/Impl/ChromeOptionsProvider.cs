@@ -59,7 +59,7 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
             if (proxy != null)
             {
                 //使用指定的代理服务器，覆盖系统设置。此交换机仅影响HTTP和HTTPS请求
-                //options.AddArgument($"--proxy-server=http://{proxy.HttpProxy}");
+                //options.AddArgument($"--proxy-server={proxy.HttpProxy}");
                 options.Proxy = proxy;
             }
         }
