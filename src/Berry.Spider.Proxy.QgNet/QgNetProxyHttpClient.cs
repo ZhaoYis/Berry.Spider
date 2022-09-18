@@ -49,4 +49,28 @@ public class QgNetProxyHttpClient
 
         return default;
     }
+
+    /// <summary>
+    /// 查询可用通道数
+    /// </summary>
+    /// <returns></returns>
+    public async Task<QgNetProxyQuotaResult?> GetQuotaResultAsync()
+    {
+        try
+        {
+            var result =
+                await this.Client.GetFromJsonAsync<QgNetProxyQuotaResult>(
+                    $"/info/quota?Key={this.Options.Value.AuthKey}");
+            if (result is {IsSuccess: true})
+            {
+                return result;
+            }
+        }
+        catch (Exception e)
+        {
+            return default;
+        }
+
+        return default;
+    }
 }

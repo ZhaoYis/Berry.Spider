@@ -1,28 +1,46 @@
+using Microsoft.Extensions.Caching.Distributed;
+using Volo.Abp.Caching;
+
 namespace Berry.Spider.Proxy.QgNet;
 
-internal static class QgNetProxyPoolContext
+public class QgNetProxyPoolContext
 {
-    private static readonly AsyncLocal<QgNetProxyResult?> AsyncLocalContext;
+    private const string CacheKey = "QgNetProxyResultCacheKey";
 
-    static QgNetProxyPoolContext()
+    private QgNetProxyHttpClient QgNetProxyHttpClient { get; }
+    private IDistributedCache<QgNetProxyResult> Cache { get; }
+
+    public QgNetProxyPoolContext(QgNetProxyHttpClient httpClient, IDistributedCache<QgNetProxyResult> cache)
     {
-        AsyncLocalContext = new AsyncLocal<QgNetProxyResult?>();
+        this.QgNetProxyHttpClient = httpClient;
+        this.Cache = cache;
     }
 
-    public static void Set(QgNetProxyResult? result)
+    public async Task<QgNetProxyResult?> GetAsync()
     {
-        AsyncLocalContext.Value = result;
-    }
+        QgNetProxyResult? result = await this.Cache.GetAsync(CacheKey);
 
-    public static QgNetProxyResult? Get()
-    {
-        QgNetProxyResult? result = AsyncLocalContext.Value;
-        //检查当前IP是否有效
+        //检查当前IP是否有效，无效则重新获取一个
         if (result is {IsInvalid: true})
         {
             return result;
         }
+        else
+        {
+            result = await this.QgNetProxyHttpClient.GetOneAsync();
+            await this.SetProxyResultAsync(result);
 
-        return default;
+            return result;
+        }
+    }
+
+    private async Task SetProxyResultAsync(QgNetProxyResult? result)
+    {
+        if (result == null) return;
+
+        await this.Cache.SetAsync(CacheKey, result, new DistributedCacheEntryOptions
+        {
+            AbsoluteExpiration = DateTime.Parse(result.Deadline)
+        });
     }
 }

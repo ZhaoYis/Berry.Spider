@@ -45,5 +45,5 @@ public class QgNetProxyResult
     /// <summary>
     /// 是否有效
     /// </summary>
-    public bool IsInvalid => (DateTime.Parse(this.Deadline) - DateTime.Now.AddSeconds(-5)).TotalSeconds > 0;
+    public bool IsInvalid => (DateTime.Parse(this.Deadline) - DateTime.Now).TotalSeconds > 0;
 }

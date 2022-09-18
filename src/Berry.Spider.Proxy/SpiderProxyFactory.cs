@@ -9,10 +9,16 @@ public class SpiderProxyFactory : ISpiderProxyFactory
         this.HttpProxies = proxies;
     }
 
-    public Task<IHttpProxy> GetProxyAsync()
+    public async Task<IHttpProxy> GetProxyAsync()
     {
-        IHttpProxy httpProxy = this.HttpProxies.Reverse().First();
+        foreach (IHttpProxy proxy in this.HttpProxies.Reverse())
+        {
+            if (await proxy.IsInvalid())
+            {
+                return proxy;
+            }
+        }
 
-        return Task.FromResult<IHttpProxy>(httpProxy);
+        return default;
     }
 }

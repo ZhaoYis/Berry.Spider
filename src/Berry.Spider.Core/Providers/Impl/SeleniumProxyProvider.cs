@@ -8,29 +8,28 @@ namespace Berry.Spider.Core;
 /// </summary>
 public class SeleniumProxyProvider : ISeleniumProxyProvider
 {
-    private IHttpProxy HttpProxy { get; }
-    private ISpiderProxyFactory _spiderProxyFactory;
+    private ISpiderProxyFactory SpiderProxyFactory { get; }
 
-    public SeleniumProxyProvider(IHttpProxy httpProxy, ISpiderProxyFactory spiderProxyFactory)
+    public SeleniumProxyProvider(ISpiderProxyFactory spiderProxyFactory)
     {
-        this.HttpProxy = httpProxy;
-        this._spiderProxyFactory = spiderProxyFactory;
+        this.SpiderProxyFactory = spiderProxyFactory;
     }
 
     public async Task<OpenQA.Selenium.Proxy?> GetProxyAsync()
     {
-        await _spiderProxyFactory.GetProxyAsync();
-        
-        OpenQA.Selenium.Proxy? proxy = new OpenQA.Selenium.Proxy();
-
-        proxy.Kind = ProxyKind.Manual;
-        proxy.IsAutoDetect = false;
-
-        string host = await this.HttpProxy.GetProxyUriAsync();
-        if (!string.IsNullOrEmpty(host))
+        IHttpProxy httpProxy = await this.SpiderProxyFactory.GetProxyAsync();
+        if (httpProxy != null)
         {
-            proxy.HttpProxy = host;
-            return proxy;
+            string host = await httpProxy.GetProxyUriAsync();
+            if (!string.IsNullOrEmpty(host))
+            {
+                OpenQA.Selenium.Proxy? proxy = new OpenQA.Selenium.Proxy();
+                proxy.Kind = ProxyKind.Manual;
+                proxy.IsAutoDetect = false;
+                proxy.HttpProxy = host;
+
+                return proxy;
+            }
         }
 
         return default;

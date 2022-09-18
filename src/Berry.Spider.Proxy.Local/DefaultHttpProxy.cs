@@ -9,6 +9,14 @@ public class DefaultHttpProxy : IHttpProxy
         this.PoolHttpClient = httpClient;
     }
 
+    /// <summary>
+    /// 是否有效
+    /// </summary>
+    public Task<bool> IsInvalid()
+    {
+        return Task.FromResult<bool>(true);
+    }
+
     public async Task<string> GetProxyUriAsync()
     {
         ProxyPoolResult? result = await this.PoolHttpClient.GetOneAsync();
