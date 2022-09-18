@@ -28,7 +28,7 @@ public class QgNetProxyResult
     /// 失效日期
     /// </summary>
     [JsonPropertyName("deadline")]
-    public DateTime Deadline { get; set; }
+    public string Deadline { get; set; }
 
     /// <summary>
     /// IP:Port
@@ -41,4 +41,9 @@ public class QgNetProxyResult
     /// </summary>
     [JsonPropertyName("region")]
     public string Region { get; set; }
+
+    /// <summary>
+    /// 是否有效
+    /// </summary>
+    public bool IsInvalid => (DateTime.Parse(this.Deadline) - DateTime.Now.AddSeconds(-5)).TotalSeconds > 0;
 }

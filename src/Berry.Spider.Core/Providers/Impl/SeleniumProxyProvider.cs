@@ -9,14 +9,18 @@ namespace Berry.Spider.Core;
 public class SeleniumProxyProvider : ISeleniumProxyProvider
 {
     private IHttpProxy HttpProxy { get; }
+    private ISpiderProxyFactory _spiderProxyFactory;
 
-    public SeleniumProxyProvider(IHttpProxy httpProxy)
+    public SeleniumProxyProvider(IHttpProxy httpProxy, ISpiderProxyFactory spiderProxyFactory)
     {
         this.HttpProxy = httpProxy;
+        this._spiderProxyFactory = spiderProxyFactory;
     }
 
     public async Task<OpenQA.Selenium.Proxy?> GetProxyAsync()
     {
+        await _spiderProxyFactory.GetProxyAsync();
+        
         OpenQA.Selenium.Proxy? proxy = new OpenQA.Selenium.Proxy();
 
         proxy.Kind = ProxyKind.Manual;

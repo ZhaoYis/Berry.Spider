@@ -1,8 +1,6 @@
-using Volo.Abp.DependencyInjection;
-
 namespace Berry.Spider.Proxy;
 
-public interface IHttpProxy : ITransientDependency
+public interface IHttpProxy
 {
     /// <summary>
     /// 获取代理地址，格式：<HOST:PORT>

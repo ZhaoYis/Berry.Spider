@@ -12,8 +12,8 @@ public class QgNetProxyHttpClient
     {
         this.Options = options;
 
-        httpClient.BaseAddress = new Uri(this.Options.Value.ProxyPoolApiHost);
         this.Client = httpClient;
+        this.Client.BaseAddress = new Uri(this.Options.Value.ProxyPoolApiHost);
     }
 
     /// <summary>
@@ -31,10 +31,22 @@ public class QgNetProxyHttpClient
         // Detail	    否	        Integer	    详情0(关闭) 1(开启) ，默认为 0
         // Distinct	    否	        Integer	    去重0(关闭) 1(开启) ，默认为 0
 
-        var result =
-            await this.Client.GetFromJsonAsync<QgNetProxyResult>(
-                $"/allocate?Key={this.Options.Value.AuthKey}&Detail=1&Distinct=1");
+        try
+        {
+            var result =
+                await this.Client.GetFromJsonAsync<QgNetResult<List<QgNetProxyResult>>>(
+                    $"/allocate?Key={this.Options.Value.AuthKey}&Detail=1&Distinct=1&Num=1");
+            if (result is {IsSuccess: true})
+            {
+                List<QgNetProxyResult> data = result.Data;
+                return data.First();
+            }
+        }
+        catch (Exception e)
+        {
+            return default;
+        }
 
-        return result;
+        return default;
     }
 }

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Volo.Abp.Core" Version="5.3.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Berry.Spider.Proxy.Local\Berry.Spider.Proxy.Local.csproj" />
+      <ProjectReference Include="..\Berry.Spider.Proxy.QgNet\Berry.Spider.Proxy.QgNet.csproj" />
+    </ItemGroup>
+
+</Project>

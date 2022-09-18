@@ -23,7 +23,7 @@ select A.标题 as Title,
        A.内容 as Content
 from Content as A
 where A.已发 = 1 order by 时间 asc
-limit 100000,50000;",
+limit 20000;",
             transaction: this.DbTransaction, commandTimeout: 1000);
 
         return result;

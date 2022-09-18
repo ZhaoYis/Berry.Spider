@@ -23,7 +23,8 @@ public class SpiderQgNetProxyModule : AbpModule
 
         //配置QgNetProxyOptions
         context.Services.Configure<QgNetProxyOptions>(configuration.GetSection(nameof(QgNetProxyOptions)));
-
+        context.Services.AddScoped<IHttpProxy, QgNetHttpProxy>();
+        
         return Task.CompletedTask;
     }
 }
