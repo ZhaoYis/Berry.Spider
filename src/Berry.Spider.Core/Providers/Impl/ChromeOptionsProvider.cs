@@ -24,26 +24,33 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
 
         //Chrome在root权限下跑
         options.AddArgument("--no-sandbox");
-        // options.AddArgument("--user-data-dir=~/usr/local/software/chrome/user_data");
+        //停用DNS预读
         options.AddArgument("--dns-prefetch-disable");
+        //使用指定的语言
         options.AddArgument("--lang=en-US");
+        //禁用setuid沙箱（仅限Linux）
         options.AddArgument("--disable-setuid-sandbox");
+        //禁用GPU硬件加速。如果软件渲染器不到位，则GPU进程将无法启动
         options.AddArgument("--disable-gpu");
-        options.AddArgument("--disable-dev-shm-usage");
-        //不要拦截弹出框
-        // options.AddArgument("--disable-popup-blocking");
+        //禁用弹出拦截
+        options.AddArgument("--disable-popup-blocking");
         //无界面运行(无窗口)，也叫无头浏览器，通常用于远程运行，在本地运行也可以通过该参数提升运行效率
+        //在无头模式下运行，即没有UI或显示服务器依赖性。
         options.AddArgument("--headless");
         //设置浏览器以隐身模式(无痕模式运行)
         options.AddArgument("--incognito");
-        options.AddArgument("ignore-certificate-errors");
-        options.AddArgument("blink-settings=imagesEnabled=false");
+        //不发送 Http-Referer 头
+        options.AddArgument("--no-referrers");
+        //忽略与证书相关的错误
+        options.AddArgument("--ignore-certificate-errors");
+        //设置闪烁设置（imagesEnabled=不加载图片）
+        options.AddArgument("--blink-settings=imagesEnabled=false");
         //擦除指纹
-        options.AddArgument("disable-blink-features=AutomationControlled");
+        options.AddArgument("--disable-blink-features=AutomationControlled");
+        //防止信息栏出现（去掉提示：Chrome正收到自动测试软件的控制）
+        options.AddArgument("--disable-infobars");
         //设置user-agent
-        options.AddArgument($"user-agent={UserAgentPoolHelper.RandomGetOne()}");
-        //使用代理
-        //options.AddArgument($"--proxy-server=110.87.248.46:24394");
+        options.AddArgument($"--user-agent={UserAgentPoolHelper.RandomGetOne()}");
 
         //设置代理
         if (isUsedProxy)
@@ -51,6 +58,8 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
             var proxy = await this.SeleniumProxyProvider.GetProxyAsync();
             if (proxy != null)
             {
+                //使用指定的代理服务器，覆盖系统设置。此交换机仅影响HTTP和HTTPS请求
+                //options.AddArgument($"--proxy-server={proxy.HttpProxy}");
                 options.Proxy = proxy;
             }
         }

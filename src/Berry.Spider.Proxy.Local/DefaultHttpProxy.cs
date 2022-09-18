@@ -1,11 +1,15 @@
+using Microsoft.Extensions.Logging;
+
 namespace Berry.Spider.Proxy;
 
 public class DefaultHttpProxy : IHttpProxy
 {
+    private ILogger<DefaultHttpProxy> Logger { get; }
     private ProxyPoolHttpClient PoolHttpClient { get; }
 
-    public DefaultHttpProxy(ProxyPoolHttpClient httpClient)
+    public DefaultHttpProxy(ILogger<DefaultHttpProxy> logger, ProxyPoolHttpClient httpClient)
     {
+        this.Logger = logger;
         this.PoolHttpClient = httpClient;
     }
 
@@ -23,6 +27,7 @@ public class DefaultHttpProxy : IHttpProxy
 
         if (result != null)
         {
+            this.Logger.LogInformation($"获取到代理IP信息：{result.Proxy}");
             return result.Proxy;
         }
 
