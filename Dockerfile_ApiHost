@@ -1,11 +1,10 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["host/Berry.Spider.HttpApi.Host/Berry.Spider.HttpApi.Host.csproj", "Berry.Spider.HttpApi.Host/"]
+COPY  . .
 RUN dotnet restore "host/Berry.Spider.HttpApi.Host/Berry.Spider.HttpApi.Host.csproj"
 COPY . .
 WORKDIR "/src/Berry.Spider.HttpApi.Host"
