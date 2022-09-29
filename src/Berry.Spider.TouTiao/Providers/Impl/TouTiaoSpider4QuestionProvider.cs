@@ -16,7 +16,7 @@ namespace Berry.Spider.TouTiao;
 /// 今日头条：问答
 /// </summary>
 [Spider(SpiderSourceFrom.TouTiao_Question)]
-public class TouTiaoSpider4QuestionProvider : ISpiderProvider
+public class TouTiaoSpider4QuestionProvider : ProviderBase, ISpiderProvider
 {
     private ILogger<TouTiaoSpider4QuestionProvider> Logger { get; }
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -63,86 +63,85 @@ public class TouTiaoSpider4QuestionProvider : ISpiderProvider
     /// <returns></returns>
     public async Task ExecuteAsync<T>(T request) where T : class, ISpiderRequest
     {
-        try
+        await this.BloomCheckAsync(request.Keyword, async () =>
         {
-            bool isExisted =
-                await this.SpiderRepository.MyCountAsync(c => c.Title == request.Keyword && c.Published == 0) > 0;
-            if (isExisted) return;
-
-            string targetUrl = string.Format(this.HomePage, request.Keyword);
-            await this.WebElementLoadProvider.InvokeAsync(
-                targetUrl,
-                drv =>
-                {
-                    try
+            try
+            {
+                string targetUrl = string.Format(this.HomePage, request.Keyword);
+                await this.WebElementLoadProvider.InvokeAsync(
+                    targetUrl,
+                    drv =>
                     {
-                        return drv.FindElement(By.ClassName("s-result-list"));
-                    }
-                    catch (Exception e)
-                    {
-                        return null;
-                    }
-                },
-                async root =>
-                {
-                    if (root == null) return;
-
-                    var resultContent = root.FindElements(By.ClassName("result-content"));
-                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
-
-                    if (resultContent.Count > 0)
-                    {
-                        var eto = new TouTiaoSpider4QuestionPullEto
-                        { Keyword = request.Keyword, Title = request.Keyword };
-
-                        foreach (IWebElement element in resultContent)
+                        try
                         {
-                            //TODO:只取 大家都在问 的部分
+                            return drv.FindElement(By.ClassName("s-result-list"));
+                        }
+                        catch (Exception e)
+                        {
+                            return null;
+                        }
+                    },
+                    async root =>
+                    {
+                        if (root == null) return;
 
-                            //https://so.toutiao.com/search/jump?url=https://so.toutiao.com/s/search_wenda_pc/list/?qid=6959168672381092127&enter_answer_id=6959174410759323942&enter_from=search_result&aid=4916&jtoken=c47d820935b56f1e45ae0f2b729ffa52df0fa9ae4d13f409a370b005eb0492689aeea6f8881750a45f53aaca866c7950849eb3e24f7d4db160483899ca0389bd
-                            var a = element.FindElement(By.TagName("a"));
-                            if (a != null)
+                        var resultContent = root.FindElements(By.ClassName("result-content"));
+                        this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+
+                        if (resultContent.Count > 0)
+                        {
+                            var eto = new TouTiaoSpider4QuestionPullEto
+                                { Keyword = request.Keyword, Title = request.Keyword };
+
+                            foreach (IWebElement element in resultContent)
                             {
-                                string text = a.Text;
-                                string href = a.GetAttribute("href");
+                                //TODO:只取 大家都在问 的部分
 
-                                //去获取so.toutiao.com、tsearch.toutiaoapi.com的记录
-                                Uri sourceUri = new Uri(href);
-                                //?url=https://so.toutiao.com/s/search_wenda_pc/list/?qid=6959168672381092127&enter_answer_id=6959174410759323942&enter_from=search_result&aid=4916&jtoken=c47d820935b56f1e45ae0f2b729ffa52df0fa9ae4d13f409a370b005eb0492689aeea6f8881750a45f53aaca866c7950849eb3e24f7d4db160483899ca0389bd
-                                string jumpUrl = sourceUri.Query.Substring(5);
-                                if (jumpUrl.StartsWith("http") || jumpUrl.StartsWith("https"))
+                                //https://so.toutiao.com/search/jump?url=https://so.toutiao.com/s/search_wenda_pc/list/?qid=6959168672381092127&enter_answer_id=6959174410759323942&enter_from=search_result&aid=4916&jtoken=c47d820935b56f1e45ae0f2b729ffa52df0fa9ae4d13f409a370b005eb0492689aeea6f8881750a45f53aaca866c7950849eb3e24f7d4db160483899ca0389bd
+                                var a = element.FindElement(By.TagName("a"));
+                                if (a != null)
                                 {
-                                    Uri jumpUri = new Uri(HttpUtility.UrlDecode(jumpUrl));
-                                    if (jumpUri.Host.Contains("toutiao"))
-                                    {
-                                        eto.Items.Add(new ChildPageDataItem
-                                        {
-                                            Title = text,
-                                            Href = jumpUri.ToString()
-                                        });
+                                    string text = a.Text;
+                                    string href = a.GetAttribute("href");
 
-                                        this.Logger.LogInformation(text + "  ---> " + href);
+                                    //去获取so.toutiao.com、tsearch.toutiaoapi.com的记录
+                                    Uri sourceUri = new Uri(href);
+                                    //?url=https://so.toutiao.com/s/search_wenda_pc/list/?qid=6959168672381092127&enter_answer_id=6959174410759323942&enter_from=search_result&aid=4916&jtoken=c47d820935b56f1e45ae0f2b729ffa52df0fa9ae4d13f409a370b005eb0492689aeea6f8881750a45f53aaca866c7950849eb3e24f7d4db160483899ca0389bd
+                                    string jumpUrl = sourceUri.Query.Substring(5);
+                                    if (jumpUrl.StartsWith("http") || jumpUrl.StartsWith("https"))
+                                    {
+                                        Uri jumpUri = new Uri(HttpUtility.UrlDecode(jumpUrl));
+                                        if (jumpUri.Host.Contains("toutiao"))
+                                        {
+                                            eto.Items.Add(new ChildPageDataItem
+                                            {
+                                                Title = text,
+                                                Href = jumpUri.ToString()
+                                            });
+
+                                            this.Logger.LogInformation(text + "  ---> " + href);
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        if (eto.Items.Any())
-                        {
-                            await this.DistributedEventBus.PublishAsync(eto);
-                            this.Logger.LogInformation("事件发布成功，等待消费...");
+                            if (eto.Items.Any())
+                            {
+                                await this.DistributedEventBus.PublishAsync(eto);
+                                this.Logger.LogInformation("事件发布成功，等待消费...");
+                            }
                         }
-                    }
-                });
-        }
-        catch (Exception exception)
-        {
-            this.Logger.LogException(exception);
-        }
-        finally
-        {
-            //ignore..
-        }
+                    });
+            }
+            catch (Exception exception)
+            {
+                this.Logger.LogException(exception);
+            }
+            finally
+            {
+                //ignore..
+            }
+        });
     }
 
     /// <summary>

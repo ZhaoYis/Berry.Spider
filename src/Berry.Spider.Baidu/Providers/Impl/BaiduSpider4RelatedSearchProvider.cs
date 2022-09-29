@@ -13,7 +13,7 @@ namespace Berry.Spider.Baidu;
 /// 百度：相关推荐
 /// </summary>
 [Spider(SpiderSourceFrom.Baidu_Related_Search)]
-public class BaiduSpider4RelatedSearchProvider : ISpiderProvider
+public class BaiduSpider4RelatedSearchProvider : ProviderBase, ISpiderProvider
 {
     private ILogger<BaiduSpider4RelatedSearchProvider> Logger { get; }
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -50,74 +50,77 @@ public class BaiduSpider4RelatedSearchProvider : ISpiderProvider
     /// </summary>
     public async Task ExecuteAsync<T>(T request) where T : class, ISpiderRequest
     {
-        try
+        await this.BloomCheckAsync(request.Keyword, async () =>
         {
-            string targetUrl = string.Format(this.HomePage, request.Keyword);
-            await this.WebElementLoadProvider.InvokeAsync(
-                targetUrl,
-                drv =>
-                {
-                    try
+            try
+            {
+                string targetUrl = string.Format(this.HomePage, request.Keyword);
+                await this.WebElementLoadProvider.InvokeAsync(
+                    targetUrl,
+                    drv =>
                     {
-                        // return drv.FindElement(By.CssSelector(".result-molecule"));
-                        return drv.FindElement(By.Id("rs_new"));
-                    }
-                    catch (Exception e)
-                    {
-                        return null;
-                    }
-                },
-                async root =>
-                {
-                    if (root == null) return;
-
-                    var resultContent = root.FindElements(By.TagName("a"));
-                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
-
-                    if (resultContent.Count > 0)
-                    {
-                        var eto = new BaiduSpider4RelatedSearchPullEto { Keyword = request.Keyword, Title = request.Keyword };
-
-                        foreach (IWebElement element in resultContent)
+                        try
                         {
-                            string text = element.Text;
-                            string href = element.GetAttribute("href");
+                            // return drv.FindElement(By.CssSelector(".result-molecule"));
+                            return drv.FindElement(By.Id("rs_new"));
+                        }
+                        catch (Exception e)
+                        {
+                            return null;
+                        }
+                    },
+                    async root =>
+                    {
+                        if (root == null) return;
 
-                            if (href.StartsWith("http") || href.StartsWith("https"))
+                        var resultContent = root.FindElements(By.TagName("a"));
+                        this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+
+                        if (resultContent.Count > 0)
+                        {
+                            var eto = new BaiduSpider4RelatedSearchPullEto { Keyword = request.Keyword, Title = request.Keyword };
+
+                            foreach (IWebElement element in resultContent)
                             {
-                                Uri jumpUri = new Uri(HttpUtility.UrlDecode(href));
-                                if (jumpUri.Host.Contains("baidu"))
-                                {
-                                    eto.Items.Add(new ChildPageDataItem
-                                    {
-                                        Title = text,
-                                        Href = jumpUri.ToString()
-                                    });
+                                string text = element.Text;
+                                string href = element.GetAttribute("href");
 
-                                    this.Logger.LogInformation(text + "  ---> " + href);
+                                if (href.StartsWith("http") || href.StartsWith("https"))
+                                {
+                                    Uri jumpUri = new Uri(HttpUtility.UrlDecode(href));
+                                    if (jumpUri.Host.Contains("baidu"))
+                                    {
+                                        eto.Items.Add(new ChildPageDataItem
+                                        {
+                                            Title = text,
+                                            Href = jumpUri.ToString()
+                                        });
+
+                                        this.Logger.LogInformation(text + "  ---> " + href);
+                                    }
                                 }
                             }
-                        }
 
-                        if (eto.Items.Any())
-                        {
-                            //await this.DistributedEventBus.PublishAsync(eto);
+                            if (eto.Items.Any())
+                            {
+                                //await this.DistributedEventBus.PublishAsync(eto);
 
-                            //此处不做消息队列发送，直接存储到数据库
-                            await this.HandleEventAsync(eto);
-                            this.Logger.LogInformation("数据保存成功...");
+                                //此处不做消息队列发送，直接存储到数据库
+                                await this.HandleEventAsync(eto);
+                                this.Logger.LogInformation("数据保存成功...");
+                            }
                         }
-                    }
-                });
-        }
-        catch (Exception exception)
-        {
-            this.Logger.LogException(exception);
-        }
-        finally
-        {
-            //ignore..
-        }
+                    });
+            }
+            catch (Exception exception)
+            {
+                this.Logger.LogException(exception);
+            }
+            finally
+            {
+                //ignore..
+            }
+        });
     }
 
     /// <summary>
@@ -127,10 +130,6 @@ public class BaiduSpider4RelatedSearchProvider : ISpiderProvider
     {
         try
         {
-            bool isExisted =
-                await this.SpiderRepository.MyCountAsync(c => c.Title == eventData.Title && c.Published == 0) > 0;
-            if (isExisted) return;
-
             List<SpiderTitleContent> contents = new List<SpiderTitleContent>();
             foreach (var item in eventData.Items)
             {
