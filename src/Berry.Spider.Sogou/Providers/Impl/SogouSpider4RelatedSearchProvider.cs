@@ -12,9 +12,8 @@ namespace Berry.Spider.Sogou;
 /// 搜狗：相关推荐
 /// </summary>
 [Spider(SpiderSourceFrom.Sogou_Related_Search)]
-public class SogouSpider4RelatedSearchProvider : ProviderBase, ISpiderProvider
+public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4RelatedSearchProvider>, ISpiderProvider
 {
-    private ILogger<SogouSpider4RelatedSearchProvider> Logger { get; }
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private ITextAnalysisProvider TextAnalysisProvider { get; }
     private IDistributedEventBus DistributedEventBus { get; }
@@ -26,9 +25,8 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase, ISpiderProvider
         IWebElementLoadProvider provider,
         IServiceProvider serviceProvider,
         IDistributedEventBus eventBus,
-        ISpiderTitleContentRepository repository)
+        ISpiderTitleContentRepository repository) : base(logger)
     {
-        this.Logger = logger;
         this.WebElementLoadProvider = provider;
         this.TextAnalysisProvider = serviceProvider.GetRequiredService<SogouRelatedSearchTextAnalysisProvider>();
         this.DistributedEventBus = eventBus;

@@ -10,9 +10,8 @@ namespace Berry.Spider.TouTiao;
 /// 今日头条：资讯
 /// </summary>
 [Spider(SpiderSourceFrom.TouTiao_Information)]
-public class TouTiaoSpider4InformationProvider : ProviderBase, ISpiderProvider
+public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4InformationProvider>, ISpiderProvider
 {
-    private ILogger<TouTiaoSpider4InformationProvider> Logger { get; }
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private IDistributedEventBus DistributedEventBus { get; }
 
@@ -20,9 +19,8 @@ public class TouTiaoSpider4InformationProvider : ProviderBase, ISpiderProvider
 
     public TouTiaoSpider4InformationProvider(ILogger<TouTiaoSpider4InformationProvider> logger,
         IWebElementLoadProvider provider,
-        IDistributedEventBus eventBus)
+        IDistributedEventBus eventBus) : base(logger)
     {
-        this.Logger = logger;
         this.WebElementLoadProvider = provider;
         this.DistributedEventBus = eventBus;
     }

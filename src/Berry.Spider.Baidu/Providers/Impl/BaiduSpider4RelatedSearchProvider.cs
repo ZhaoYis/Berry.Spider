@@ -13,9 +13,8 @@ namespace Berry.Spider.Baidu;
 /// 百度：相关推荐
 /// </summary>
 [Spider(SpiderSourceFrom.Baidu_Related_Search)]
-public class BaiduSpider4RelatedSearchProvider : ProviderBase, ISpiderProvider
+public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4RelatedSearchProvider>, ISpiderProvider
 {
-    private ILogger<BaiduSpider4RelatedSearchProvider> Logger { get; }
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private ITextAnalysisProvider TextAnalysisProvider { get; }
     private IDistributedEventBus DistributedEventBus { get; }
@@ -27,9 +26,8 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase, ISpiderProvider
         IWebElementLoadProvider provider,
         IServiceProvider serviceProvider,
         IDistributedEventBus eventBus,
-        ISpiderTitleContentRepository repository)
+        ISpiderTitleContentRepository repository) : base(logger)
     {
-        this.Logger = logger;
         this.WebElementLoadProvider = provider;
         this.TextAnalysisProvider = serviceProvider.GetRequiredService<BaiduRelatedSearchTextAnalysisProvider>();
         this.DistributedEventBus = eventBus;

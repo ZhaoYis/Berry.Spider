@@ -1,13 +1,16 @@
 using Berry.Spider.Core;
+using Microsoft.Extensions.Logging;
 
 namespace Berry.Spider.Abstractions;
 
-public abstract class ProviderBase
+public abstract class ProviderBase<T>
 {
+    protected ILogger<T> Logger { get; }
     private readonly BloomFilterHelper<string> _bloomFilterHelper;
 
-    protected ProviderBase()
+    protected ProviderBase(ILogger<T> logger)
     {
+        this.Logger = logger;
         this._bloomFilterHelper = new BloomFilterHelper<string>(999999);
     }
 
@@ -22,10 +25,12 @@ public abstract class ProviderBase
         }
         else
         {
+            _bloomFilterHelper.Add(keyword);
+
+            //TODO：二次重复性校验
+
             //执行回调函数
             await checkSuccessCallback.Invoke();
-
-            _bloomFilterHelper.Add(keyword);
         }
     }
 }

@@ -16,9 +16,8 @@ namespace Berry.Spider.TouTiao;
 /// 今日头条：问答
 /// </summary>
 [Spider(SpiderSourceFrom.TouTiao_Question)]
-public class TouTiaoSpider4QuestionProvider : ProviderBase, ISpiderProvider
+public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4QuestionProvider>, ISpiderProvider
 {
-    private ILogger<TouTiaoSpider4QuestionProvider> Logger { get; }
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private ITextAnalysisProvider TextAnalysisProvider { get; }
     private ISpiderContentRepository SpiderRepository { get; }
@@ -36,9 +35,8 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase, ISpiderProvider
         ISpiderContentRepository repository,
         IClock clock,
         IDistributedEventBus eventBus,
-        IOptionsSnapshot<SpiderOptions> options)
+        IOptionsSnapshot<SpiderOptions> options) : base(logger)
     {
-        this.Logger = logger;
         this.WebElementLoadProvider = provider;
         this.TextAnalysisProvider = serviceProvider.GetRequiredService<TouTiaoQuestionTextAnalysisProvider>();
         this.SpiderRepository = repository;
