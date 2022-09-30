@@ -38,9 +38,9 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public Task PushAsync<T>(T push) where T : class, ISpiderPushEto
+    public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
-        return this.DistributedEventBus.PublishAsync(push);
+        await this.BloomCheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); });
     }
 
     /// <summary>
@@ -48,77 +48,75 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     /// </summary>
     public async Task ExecuteAsync<T>(T request) where T : class, ISpiderRequest
     {
-        await this.BloomCheckAsync(request.Keyword, async () =>
+        try
         {
-            try
-            {
-                string targetUrl = string.Format(this.HomePage, request.Keyword);
-                await this.WebElementLoadProvider.InvokeAsync(
-                    targetUrl,
-                    drv =>
+            string targetUrl = string.Format(this.HomePage, request.Keyword);
+            await this.WebElementLoadProvider.InvokeAsync(
+                targetUrl,
+                drv =>
+                {
+                    try
                     {
-                        try
-                        {
-                            // return drv.FindElement(By.CssSelector(".result-molecule"));
-                            return drv.FindElement(By.Id("rs_new"));
-                        }
-                        catch (Exception e)
-                        {
-                            return null;
-                        }
-                    },
-                    async root =>
+                        // return drv.FindElement(By.CssSelector(".result-molecule"));
+                        return drv.FindElement(By.Id("rs_new"));
+                    }
+                    catch (Exception e)
                     {
-                        if (root == null) return;
+                        return null;
+                    }
+                },
+                async root =>
+                {
+                    if (root == null) return;
 
-                        var resultContent = root.FindElements(By.TagName("a"));
-                        this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+                    var resultContent = root.FindElements(By.TagName("a"));
+                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 
-                        if (resultContent.Count > 0)
+                    if (resultContent.Count > 0)
+                    {
+                        var eto = new BaiduSpider4RelatedSearchPullEto
+                            {Keyword = request.Keyword, Title = request.Keyword};
+
+                        foreach (IWebElement element in resultContent)
                         {
-                            var eto = new BaiduSpider4RelatedSearchPullEto { Keyword = request.Keyword, Title = request.Keyword };
+                            string text = element.Text;
+                            string href = element.GetAttribute("href");
 
-                            foreach (IWebElement element in resultContent)
+                            if (href.StartsWith("http") || href.StartsWith("https"))
                             {
-                                string text = element.Text;
-                                string href = element.GetAttribute("href");
-
-                                if (href.StartsWith("http") || href.StartsWith("https"))
+                                Uri jumpUri = new Uri(HttpUtility.UrlDecode(href));
+                                if (jumpUri.Host.Contains("baidu"))
                                 {
-                                    Uri jumpUri = new Uri(HttpUtility.UrlDecode(href));
-                                    if (jumpUri.Host.Contains("baidu"))
+                                    eto.Items.Add(new ChildPageDataItem
                                     {
-                                        eto.Items.Add(new ChildPageDataItem
-                                        {
-                                            Title = text,
-                                            Href = jumpUri.ToString()
-                                        });
+                                        Title = text,
+                                        Href = jumpUri.ToString()
+                                    });
 
-                                        this.Logger.LogInformation(text + "  ---> " + href);
-                                    }
+                                    this.Logger.LogInformation(text + "  ---> " + href);
                                 }
                             }
-
-                            if (eto.Items.Any())
-                            {
-                                //await this.DistributedEventBus.PublishAsync(eto);
-
-                                //此处不做消息队列发送，直接存储到数据库
-                                await this.HandleEventAsync(eto);
-                                this.Logger.LogInformation("数据保存成功...");
-                            }
                         }
-                    });
-            }
-            catch (Exception exception)
-            {
-                this.Logger.LogException(exception);
-            }
-            finally
-            {
-                //ignore..
-            }
-        });
+
+                        if (eto.Items.Any())
+                        {
+                            //await this.DistributedEventBus.PublishAsync(eto);
+
+                            //此处不做消息队列发送，直接存储到数据库
+                            await this.HandleEventAsync(eto);
+                            this.Logger.LogInformation("数据保存成功...");
+                        }
+                    }
+                });
+        }
+        catch (Exception exception)
+        {
+            this.Logger.LogException(exception);
+        }
+        finally
+        {
+            //ignore..
+        }
     }
 
     /// <summary>

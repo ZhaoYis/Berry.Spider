@@ -29,9 +29,9 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public Task PushAsync<T>(T push) where T : class, ISpiderPushEto
+    public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
-        return this.DistributedEventBus.PublishAsync(push);
+        await this.BloomCheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); });
     }
 
     /// <summary>
@@ -40,70 +40,68 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     /// <returns></returns>
     public async Task ExecuteAsync<T>(T request) where T : class, ISpiderRequest
     {
-        await this.BloomCheckAsync(request.Keyword, async () =>
+        try
         {
-            try
-            {
-                string targetUrl = string.Format(this.HomePage, request.Keyword);
-                await this.WebElementLoadProvider.InvokeAsync(
-                    targetUrl,
-                    drv =>
+            string targetUrl = string.Format(this.HomePage, request.Keyword);
+            await this.WebElementLoadProvider.InvokeAsync(
+                targetUrl,
+                drv =>
+                {
+                    try
                     {
-                        try
-                        {
-                            return drv.FindElement(By.ClassName("s-result-list"));
-                        }
-                        catch (Exception e)
-                        {
-                            return null;
-                        }
-                    },
-                    async root =>
+                        return drv.FindElement(By.ClassName("s-result-list"));
+                    }
+                    catch (Exception e)
                     {
-                        if (root == null) return;
+                        return null;
+                    }
+                },
+                async root =>
+                {
+                    if (root == null) return;
 
-                        var resultContent = root.FindElements(By.ClassName("result-content"));
-                        this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+                    var resultContent = root.FindElements(By.ClassName("result-content"));
+                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 
-                        if (resultContent.Count > 0)
+                    if (resultContent.Count > 0)
+                    {
+                        var eto = new TouTiaoSpider4QuestionPullEto
+                            {Keyword = request.Keyword, Title = request.Keyword};
+
+                        foreach (IWebElement element in resultContent)
                         {
-                            var eto = new TouTiaoSpider4QuestionPullEto { Keyword = request.Keyword, Title = request.Keyword };
-
-                            foreach (IWebElement element in resultContent)
+                            var a = element.FindElement(By.TagName("a"));
+                            if (a != null)
                             {
-                                var a = element.FindElement(By.TagName("a"));
-                                if (a != null)
+                                string text = a.Text;
+                                string href = a.GetAttribute("href");
+
+                                eto.Items.Add(new ChildPageDataItem
                                 {
-                                    string text = a.Text;
-                                    string href = a.GetAttribute("href");
+                                    Title = text,
+                                    Href = href
+                                });
 
-                                    eto.Items.Add(new ChildPageDataItem
-                                    {
-                                        Title = text,
-                                        Href = href
-                                    });
-
-                                    this.Logger.LogInformation(text + "  ---> " + href);
-                                }
-                            }
-
-                            if (eto.Items.Any())
-                            {
-                                await this.DistributedEventBus.PublishAsync(eto);
-                                this.Logger.LogInformation("事件发布成功，等待消费...");
+                                this.Logger.LogInformation(text + "  ---> " + href);
                             }
                         }
-                    });
-            }
-            catch (Exception exception)
-            {
-                this.Logger.LogException(exception);
-            }
-            finally
-            {
-                //ignore..
-            }
-        });
+
+                        if (eto.Items.Any())
+                        {
+                            await this.DistributedEventBus.PublishAsync(eto);
+                            this.Logger.LogInformation("事件发布成功，等待消费...");
+                        }
+                    }
+                });
+        }
+        catch (Exception exception)
+        {
+            this.Logger.LogException(exception);
+        }
+        finally
+        {
+            //ignore..
+        }
     }
 
     /// <summary>

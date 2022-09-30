@@ -25,12 +25,24 @@ public abstract class ProviderBase<T>
         }
         else
         {
+            //添加到bloom过滤器
             _bloomFilterHelper.Add(keyword);
-
-            //TODO：二次重复性校验
-
-            //执行回调函数
-            await checkSuccessCallback.Invoke();
+            //二次重复性校验
+            bool checkSucc = await this.DuplicateCheckAsync(keyword);
+            if (checkSucc)
+            {
+                //执行回调函数
+                await checkSuccessCallback.Invoke();
+            }
         }
+    }
+
+    /// <summary>
+    /// 二次重复性校验
+    /// </summary>
+    /// <returns></returns>
+    protected virtual Task<bool> DuplicateCheckAsync(string keyword)
+    {
+        return Task.FromResult(true);
     }
 }
