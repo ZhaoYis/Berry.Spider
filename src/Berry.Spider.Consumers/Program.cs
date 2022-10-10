@@ -19,8 +19,34 @@ public class Program
 #endif
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .Enrich.FromLogContext()
-            .WriteTo.Async(c => c.File("Logs/logs-.txt", rollingInterval: RollingInterval.Hour))
+            .Enrich.With<ThreadIdEnricher>()
+            //Debug
+            .WriteTo.Logger(l => l.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Debug)
+                .WriteTo.Async(c => c.File(
+                    path: "Logs/logs-Debug-.log",
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} DEBUG [berry-spider-consumers] [] [] [] [] [{ThreadId}] --- {Message:lj}{NewLine}{Exception}",
+                    rollingInterval: RollingInterval.Day)))
+            //Info
+            .WriteTo.Logger(l => l.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Information)
+                .WriteTo.Async(c => c.File(
+                    path: "Logs/logs-Info-.log",
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} INFO [berry-spider-consumers] [] [] [] [] [{ThreadId}] --- {Message:lj}{NewLine}{Exception}",
+                    rollingInterval: RollingInterval.Day)))
+            //Warn
+            .WriteTo.Logger(l => l.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Warning)
+                .WriteTo.Async(c => c.File(
+                    path: "Logs/logs-Warn-.log",
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} WARN [berry-spider-consumers] [] [] [] [] [{ThreadId}] --- {Message:lj}{NewLine}{Exception}",
+                    rollingInterval: RollingInterval.Day)))
+            //Error
+            .WriteTo.Logger(l => l.Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Error)
+                .WriteTo.Async(c => c.File(
+                    path: "Logs/logs-Error-.log",
+                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} ERROR [berry-spider-consumers] [] [] [] [] [{ThreadId}] --- {Message:lj}{NewLine}{Exception}",
+                    rollingInterval: RollingInterval.Day)))
+#if DEBUG
             .WriteTo.Async(c => c.Console())
+#endif
             .WriteTo.Exceptionless(e => e.AddTags("Berry.Spider.Consumers"))
             .CreateLogger();
 
