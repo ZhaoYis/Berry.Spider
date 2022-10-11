@@ -25,4 +25,11 @@ public class RedisService : IRedisService
 
         return result > 0;
     }
+
+    public async Task<bool> SetAsync(string key, object[] source)
+    {
+        long result = await _redisClient.SAddAsync(key, source);
+
+        return result > 0;
+    }
 }

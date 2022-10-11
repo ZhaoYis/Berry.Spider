@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Berry.Spider.Tools._SyncToRedis</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Berry.Spider.Contracts\Berry.Spider.Contracts.csproj" />
+      <ProjectReference Include="..\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AgileConfig.Client" Version="1.6.9" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+      <PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.1" />
+      <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
+      <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
+      <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+      <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+      <PackageReference Include="Volo.Abp.Autofac" Version="5.3.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="appsettings.json">
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="files\祝福\**" />
+      <Compile Remove="files\寄语\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="files\祝福\**" />
+      <EmbeddedResource Remove="files\寄语\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="files\祝福\**" />
+      <None Remove="files\寄语\**" />
+    </ItemGroup>
+
+</Project>
