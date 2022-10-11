@@ -11,6 +11,7 @@
       <ProjectReference Include="..\Berry.Spider.Abstractions\Berry.Spider.Abstractions.csproj" />
       <ProjectReference Include="..\Berry.Spider.Core\Berry.Spider.Core.csproj" />
       <ProjectReference Include="..\Berry.Spider.Domain\Berry.Spider.Domain.csproj" />
+      <ProjectReference Include="..\Berry.Spider.FreeRedis\Berry.Spider.FreeRedis.csproj" />
       <ProjectReference Include="..\Berry.Spider.Proxy.Local\Berry.Spider.Proxy.Local.csproj" />
       <ProjectReference Include="..\Berry.Spider.TouTiao.Contracts\Berry.Spider.TouTiao.Contracts.csproj" />
     </ItemGroup>

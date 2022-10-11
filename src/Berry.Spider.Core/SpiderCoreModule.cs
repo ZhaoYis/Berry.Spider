@@ -1,5 +1,6 @@
 using System.Reflection;
 using Berry.Spider.Contracts;
+using Berry.Spider.FreeRedis;
 using Berry.Spider.Proxy;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,8 @@ namespace Berry.Spider.Core;
 [DependsOn(typeof(AbpCachingModule),
     typeof(AbpCachingStackExchangeRedisModule),
     typeof(AbpTextTemplatingScribanModule),
+    //FreeRedis
+    typeof(SpiderFreeRedisModule),
     //IP代理
     typeof(SpiderProxyModule))]
 public class SpiderCoreModule : AbpModule
@@ -52,10 +55,7 @@ public class SpiderCoreModule : AbpModule
             options.GlobalCacheEntryOptions.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30);
         });
         //分布式缓存Redis
-        Configure<RedisCacheOptions>(options =>
-        {
-            options.InstanceName = Assembly.GetExecutingAssembly().FullName;
-        });
+        Configure<RedisCacheOptions>(options => { options.InstanceName = Assembly.GetExecutingAssembly().FullName; });
 
         return Task.CompletedTask;
     }

@@ -1,5 +1,6 @@
 ﻿using Berry.Spider.Abstractions;
 using Berry.Spider.Core;
+using Berry.Spider.FreeRedis;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using Volo.Abp.EventBus.Distributed;
@@ -13,15 +14,18 @@ namespace Berry.Spider.TouTiao;
 public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4InformationProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
+    private IRedisService RedisService { get; }
     private IDistributedEventBus DistributedEventBus { get; }
 
     private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=information&dvpf=pc";
 
     public TouTiaoSpider4InformationProvider(ILogger<TouTiaoSpider4InformationProvider> logger,
         IWebElementLoadProvider provider,
+        IRedisService redisService,
         IDistributedEventBus eventBus) : base(logger)
     {
         this.WebElementLoadProvider = provider;
+        this.RedisService = redisService;
         this.DistributedEventBus = eventBus;
     }
 
@@ -32,6 +36,16 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
         await this.BloomCheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); });
+    }
+
+    /// <summary>
+    /// 二次重复性校验
+    /// </summary>
+    /// <returns></returns>
+    protected override async Task<bool> DuplicateCheckAsync(string keyword)
+    {
+        bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY, keyword);
+        return result;
     }
 
     /// <summary>
@@ -66,7 +80,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                     if (resultContent.Count > 0)
                     {
                         var eto = new TouTiaoSpider4QuestionPullEto
-                            {Keyword = request.Keyword, Title = request.Keyword};
+                            { Keyword = request.Keyword, Title = request.Keyword };
 
                         foreach (IWebElement element in resultContent)
                         {

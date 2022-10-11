@@ -28,7 +28,6 @@ public class FileHelper
             {
                 List<string> rows = (await System.IO.File.ReadAllLinesAsync(filePath))
                     .Where(c => !string.IsNullOrWhiteSpace(c.Trim()))
-                    .Distinct()
                     .ToList();
                 if (rows.Count > 0)
                 {

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
 using System.Web;
+using Berry.Spider.FreeRedis;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.Timing;
 
@@ -24,6 +25,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     private SpiderDomainService SpiderDomainService { get; }
     private IClock Clock { get; }
     private IDistributedEventBus DistributedEventBus { get; }
+    private IRedisService RedisService { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
 
     private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=question&dvpf=pc";
@@ -35,6 +37,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
         ISpiderContentRepository repository,
         IClock clock,
         IDistributedEventBus eventBus,
+        IRedisService redisService,
         IOptionsSnapshot<SpiderOptions> options) : base(logger)
     {
         this.WebElementLoadProvider = provider;
@@ -43,6 +46,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
         this.SpiderDomainService = spiderDomainService;
         this.Clock = clock;
         this.DistributedEventBus = eventBus;
+        this.RedisService = redisService;
         this.Options = options;
     }
 
@@ -59,9 +63,10 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     /// 二次重复性校验
     /// </summary>
     /// <returns></returns>
-    protected override Task<bool> DuplicateCheckAsync(string keyword)
+    protected override async Task<bool> DuplicateCheckAsync(string keyword)
     {
-        return Task.FromResult(true);
+        bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY, keyword);
+        return result;
     }
 
     /// <summary>
@@ -96,7 +101,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                     if (resultContent.Count > 0)
                     {
                         var eto = new TouTiaoSpider4QuestionPullEto
-                            {Keyword = request.Keyword, Title = request.Keyword};
+                            { Keyword = request.Keyword, Title = request.Keyword };
 
                         foreach (IWebElement element in resultContent)
                         {

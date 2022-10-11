@@ -92,6 +92,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Proxy.QgNet", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Proxy", "src\Berry.Spider.Proxy\Berry.Spider.Proxy.csproj", "{D3D9DFEE-0067-4E6D-A78D-EEFB0B3D830F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.FreeRedis", "src\Berry.Spider.FreeRedis\Berry.Spider.FreeRedis.csproj", "{54074E2E-F272-447A-8D20-CD1DBF2355EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -210,6 +212,10 @@ Global
 		{D3D9DFEE-0067-4E6D-A78D-EEFB0B3D830F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3D9DFEE-0067-4E6D-A78D-EEFB0B3D830F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3D9DFEE-0067-4E6D-A78D-EEFB0B3D830F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54074E2E-F272-447A-8D20-CD1DBF2355EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54074E2E-F272-447A-8D20-CD1DBF2355EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54074E2E-F272-447A-8D20-CD1DBF2355EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54074E2E-F272-447A-8D20-CD1DBF2355EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -250,6 +256,7 @@ Global
 		{33563F6C-5BD0-4CC3-A4F2-41497940A8E8} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 		{F8C6D9E4-E087-4C85-859B-53C1649BB867} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 		{D3D9DFEE-0067-4E6D-A78D-EEFB0B3D830F} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
+		{54074E2E-F272-447A-8D20-CD1DBF2355EB} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}

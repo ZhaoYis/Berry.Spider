@@ -1,6 +1,7 @@
 ﻿using Berry.Spider.Abstractions;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
+using Berry.Spider.FreeRedis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
@@ -17,6 +18,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private ITextAnalysisProvider TextAnalysisProvider { get; }
     private IDistributedEventBus DistributedEventBus { get; }
+    private IRedisService RedisService { get; }
     private ISpiderTitleContentRepository SpiderRepository { get; }
 
     private string HomePage => "https://sogou.com";
@@ -25,11 +27,13 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
         IWebElementLoadProvider provider,
         IServiceProvider serviceProvider,
         IDistributedEventBus eventBus,
+        IRedisService redisService,
         ISpiderTitleContentRepository repository) : base(logger)
     {
         this.WebElementLoadProvider = provider;
         this.TextAnalysisProvider = serviceProvider.GetRequiredService<SogouRelatedSearchTextAnalysisProvider>();
         this.DistributedEventBus = eventBus;
+        this.RedisService = redisService;
         this.SpiderRepository = repository;
     }
 
@@ -40,6 +44,16 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
         await this.BloomCheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); });
+    }
+
+    /// <summary>
+    /// 二次重复性校验
+    /// </summary>
+    /// <returns></returns>
+    protected override async Task<bool> DuplicateCheckAsync(string keyword)
+    {
+        bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY, keyword);
+        return result;
     }
 
     /// <summary>
@@ -78,7 +92,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
                     if (resultContent.Count > 0)
                     {
                         var eto = new SogouSpider4RelatedSearchPullEto
-                            {Keyword = request.Keyword, Title = request.Keyword};
+                            { Keyword = request.Keyword, Title = request.Keyword };
 
                         foreach (IWebElement element in resultContent)
                         {

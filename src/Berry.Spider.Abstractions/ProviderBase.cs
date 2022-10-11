@@ -5,13 +5,13 @@ namespace Berry.Spider.Abstractions;
 
 public abstract class ProviderBase<T>
 {
+    private static readonly BloomFilterHelper<string> BloomFilterHelper = new(999999);
+
     protected ILogger<T> Logger { get; }
-    private readonly BloomFilterHelper<string> _bloomFilterHelper;
 
     protected ProviderBase(ILogger<T> logger)
     {
         this.Logger = logger;
-        this._bloomFilterHelper = new BloomFilterHelper<string>(999999);
     }
 
     /// <summary>
@@ -19,14 +19,14 @@ public abstract class ProviderBase<T>
     /// </summary>
     protected async Task BloomCheckAsync(string keyword, Func<Task> checkSuccessCallback)
     {
-        if (_bloomFilterHelper.Contains(keyword))
+        if (BloomFilterHelper.Contains(keyword))
         {
             return;
         }
         else
         {
             //添加到bloom过滤器
-            _bloomFilterHelper.Add(keyword);
+            BloomFilterHelper.Add(keyword);
             //二次重复性校验
             bool checkSucc = await this.DuplicateCheckAsync(keyword);
             if (checkSucc)

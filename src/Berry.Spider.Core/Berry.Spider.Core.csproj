@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Berry.Spider.FreeRedis\Berry.Spider.FreeRedis.csproj" />
       <ProjectReference Include="..\Berry.Spider.Proxy\Berry.Spider.Proxy.csproj" />
     </ItemGroup>
 
