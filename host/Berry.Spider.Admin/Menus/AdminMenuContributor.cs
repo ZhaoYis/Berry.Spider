@@ -32,6 +32,20 @@ public class AdminMenuContributor : IMenuContributor
             )
         );
 
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                AdminMenus.Tools.Main,
+                l["Menu:Tools:Main"],
+                icon: "fa fa-book"
+            ).AddItem(
+                new ApplicationMenuItem(
+                    AdminMenus.Tools.Sub.DataDistribution,
+                    l["Menu:Tools:Sub:DataDistribution"],
+                    url: "/Tools/DataDistribution"
+                )
+            )
+        );
+
         if (AdminModule.IsMultiTenant)
         {
             administration.SetSubItemOrder(TenantManagementMenuNames.GroupName, 1);

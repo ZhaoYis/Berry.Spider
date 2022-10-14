@@ -1,0 +1,36 @@
+@page
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Berry.Spider.Admin.Localization
+@inject IHtmlLocalizer<AdminResource> L
+@model Berry.Spider.Admin.Pages.Tools.DataDistribution.IndexModel
+
+@section styles {
+    <abp-style src="/Pages/Tools/DataDistribution/Index.cshtml.css"/>
+}
+
+@section scripts {
+    <abp-script src="/Pages/Tools/DataDistribution/Index.cshtml.js"/>
+    <abp-script src="/libs/jquery/jquery.js"/>
+}
+
+<abp-container>
+    <!-- //step begin -->
+    <ul class="nav nav-pills nav-justified step step-progress" data-step="1" id="step-cluster">
+        <li>
+            <a>步骤 1 部署模式选择<span class="caret"></span></a>
+        </li>
+        <li>
+            <a>步骤 2 主机设置<span class="caret"></span></a>
+        </li>
+        <li>
+            <a>步骤 3 密钥安装<span class="caret"></span></a>
+        </li>
+        <li>
+            <a>步骤 4 网络配置<span class="caret"></span></a>
+        </li>
+        <li>
+            <a>步骤 5 集群配置<span class="caret"></span></a>
+        </li>
+    </ul>
+    <!-- step end // -->
+</abp-container>
