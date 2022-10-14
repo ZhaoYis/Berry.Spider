@@ -20,7 +20,7 @@ public class SpiderDbContextFactory : IDesignTimeDbContextFactory<SpiderDbContex
     private static IConfigurationRoot BuildConfiguration()
     {
         var builder = new ConfigurationBuilder()
-            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../Berry.Spider.Pull.Consumers/"))
+            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../host/Berry.Spider.HttpApi.Host"))
             .AddJsonFile("appsettings.json", optional: false);
 
         return builder.Build();

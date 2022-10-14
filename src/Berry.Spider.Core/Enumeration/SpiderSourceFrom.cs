@@ -23,9 +23,14 @@ public enum SpiderSourceFrom
     [Description("头条_资讯")] TouTiao_Information = 101,
 
     /// <summary>
+    /// 头条_资讯_作文板块
+    /// </summary>
+    [Description("头条_资讯_作文板块")] TouTiao_Information_Composition = 102,
+
+    /// <summary>
     /// 头条_问答
     /// </summary>
-    [Description("头条_问答")] TouTiao_Question = 102,
+    [Description("头条_问答")] TouTiao_Question = 110,
 
     /// <summary> 
     /// 百度_相关推荐
