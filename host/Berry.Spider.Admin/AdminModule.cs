@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Models;
 using Berry.Spider.Admin.Data;
 using Berry.Spider.Admin.Localization;
 using Berry.Spider.Admin.Menus;
+using Berry.Spider.HttpApi.StaticClient;
 using OpenIddict.Validation.AspNetCore;
 using Volo.Abp;
 using Volo.Abp.Uow;
@@ -99,12 +100,15 @@ namespace Berry.Spider.Admin;
     typeof(AbpSettingManagementApplicationModule),
     typeof(AbpSettingManagementEntityFrameworkCoreModule),
     typeof(AbpSettingManagementHttpApiModule),
-    typeof(AbpSettingManagementWebModule)
+    typeof(AbpSettingManagementWebModule),
+
+    //业务模块
+    typeof(SpiderHttpApiStaticClientModule)
 )]
 public class AdminModule : AbpModule
 {
     /* Single point to enable/disable multi-tenancy */
-    public const bool IsMultiTenant = true;
+    public const bool IsMultiTenant = false;
 
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
@@ -115,15 +119,15 @@ public class AdminModule : AbpModule
             );
         });
 
-		PreConfigure<OpenIddictBuilder>(builder =>
-		{
-			builder.AddValidation(options =>
-			{
-				options.AddAudiences("Admin");
-				options.UseLocalServer();
-				options.UseAspNetCore();
-			});
-		});
+        PreConfigure<OpenIddictBuilder>(builder =>
+        {
+            builder.AddValidation(options =>
+            {
+                options.AddAudiences("Admin");
+                options.UseLocalServer();
+                options.UseAspNetCore();
+            });
+        });
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
@@ -156,19 +160,12 @@ public class AdminModule : AbpModule
 
     private void ConfigureMultiTenancy()
     {
-        Configure<AbpMultiTenancyOptions>(options =>
-        {
-            options.IsEnabled = IsMultiTenant;
-        });
+        Configure<AbpMultiTenancyOptions>(options => { options.IsEnabled = IsMultiTenant; });
     }
-
-
+    
     private void ConfigureUrls(IConfiguration configuration)
     {
-        Configure<AppUrlOptions>(options =>
-        {
-            options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"];
-        });
+        Configure<AppUrlOptions>(options => { options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"]; });
     }
 
     private void ConfigureBundles()
@@ -177,10 +174,7 @@ public class AdminModule : AbpModule
         {
             options.StyleBundles.Configure(
                 LeptonXLiteThemeBundles.Styles.Global,
-                bundle =>
-                {
-                    bundle.AddFiles("/global-styles.css");
-                }
+                bundle => { bundle.AddFiles("/global-styles.css"); }
             );
         });
     }
@@ -200,10 +194,7 @@ public class AdminModule : AbpModule
             options.Languages.Add(new LanguageInfo("zh-Hans", "zh-Hans", "简体中文"));
         });
 
-        Configure<AbpExceptionLocalizationOptions>(options =>
-        {
-            options.MapCodeNamespace("Admin", typeof(AdminResource));
-        });
+        Configure<AbpExceptionLocalizationOptions>(options => { options.MapCodeNamespace("Admin", typeof(AdminResource)); });
     }
 
     private void ConfigureVirtualFiles(IWebHostEnvironment hostingEnvironment)
@@ -221,18 +212,12 @@ public class AdminModule : AbpModule
 
     private void ConfigureNavigationServices()
     {
-        Configure<AbpNavigationOptions>(options =>
-        {
-            options.MenuContributors.Add(new AdminMenuContributor());
-        });
+        Configure<AbpNavigationOptions>(options => { options.MenuContributors.Add(new AdminMenuContributor()); });
     }
 
     private void ConfigureAutoApiControllers()
     {
-        Configure<AbpAspNetCoreMvcOptions>(options =>
-        {
-            options.ConventionalControllers.Create(typeof(AdminModule).Assembly);
-        });
+        Configure<AbpAspNetCoreMvcOptions>(options => { options.ConventionalControllers.Create(typeof(AdminModule).Assembly); });
     }
 
     private void ConfigureSwagger(IServiceCollection services)
@@ -256,7 +241,7 @@ public class AdminModule : AbpModule
              * See AutoMapper's documentation to learn what it is:
              * https://docs.automapper.org/en/stable/Configuration-validation.html
              */
-            options.AddMaps<AdminModule>(/* validate: true */);
+            options.AddMaps<AdminModule>( /* validate: true */);
         });
     }
 
@@ -271,14 +256,7 @@ public class AdminModule : AbpModule
             options.AddDefaultRepositories(includeAllEntities: true);
         });
 
-        Configure<AbpDbContextOptions>(options =>
-        {
-            options.Configure(configurationContext =>
-            {
-                configurationContext.UseMySQL();
-            });
-        });
-
+        Configure<AbpDbContextOptions>(options => { options.Configure(configurationContext => { configurationContext.UseMySQL(); }); });
     }
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
@@ -313,10 +291,7 @@ public class AdminModule : AbpModule
         app.UseAuthorization();
 
         app.UseSwagger();
-        app.UseAbpSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Admin API");
-        });
+        app.UseAbpSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "Admin API"); });
 
         app.UseAuditing();
         app.UseAbpSerilogEnrichers();

@@ -104,4 +104,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Berry.Spider.HttpApi.StaticClient\Berry.Spider.HttpApi.StaticClient.csproj" />
+  </ItemGroup>
+
 </Project>

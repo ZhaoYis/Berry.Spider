@@ -1,0 +1,684 @@
+{
+  "modules": {
+    "app": {
+      "rootPath": "app",
+      "remoteServiceName": "Default",
+      "controllers": {
+        "Berry.Spider.BaiduSpiderController": {
+          "controllerName": "BaiduSpider",
+          "controllerGroupName": null,
+          "isRemoteService": false,
+          "apiVersion": null,
+          "type": "Berry.Spider.BaiduSpiderController",
+          "interfaces": [],
+          "actions": {
+            "PushAsyncByPushAndProvider": {
+              "uniqueName": "PushAsyncByPushAndProvider",
+              "name": "PushAsync",
+              "httpMethod": "POST",
+              "url": "api/services/spider/baidu/push-related-search",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "push",
+                  "typeAsString": "Berry.Spider.Baidu.BaiduSpider4RelatedSearchPushEto, Berry.Spider.Baidu.Contracts",
+                  "type": "Berry.Spider.Baidu.BaiduSpider4RelatedSearchPushEto",
+                  "typeSimple": "Berry.Spider.Baidu.BaiduSpider4RelatedSearchPushEto",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "provider",
+                  "typeAsString": "Berry.Spider.Baidu.BaiduSpider4RelatedSearchProvider, Berry.Spider.Baidu",
+                  "type": "Berry.Spider.Baidu.BaiduSpider4RelatedSearchProvider",
+                  "typeSimple": "Berry.Spider.Baidu.BaiduSpider4RelatedSearchProvider",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "push",
+                  "name": "push",
+                  "jsonName": null,
+                  "type": "Berry.Spider.Baidu.BaiduSpider4RelatedSearchPushEto",
+                  "typeSimple": "Berry.Spider.Baidu.BaiduSpider4RelatedSearchPushEto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.BaiduSpiderController"
+            },
+            "PushAsyncByPush": {
+              "uniqueName": "PushAsyncByPush",
+              "name": "PushAsync",
+              "httpMethod": "POST",
+              "url": "api/services/spider/baidu/push-from-file",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "push",
+                  "typeAsString": "Berry.Spider.Baidu.BaiduSpiderPushFromFile, Berry.Spider.Baidu.Contracts",
+                  "type": "Berry.Spider.Baidu.BaiduSpiderPushFromFile",
+                  "typeSimple": "Berry.Spider.Baidu.BaiduSpiderPushFromFile",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "push",
+                  "name": "SourceFrom",
+                  "jsonName": null,
+                  "type": "Berry.Spider.Core.SpiderSourceFrom",
+                  "typeSimple": "Berry.Spider.Core.SpiderSourceFrom",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "push"
+                },
+                {
+                  "nameOnMethod": "push",
+                  "name": "File",
+                  "jsonName": null,
+                  "type": "Microsoft.AspNetCore.Http.IFormFile",
+                  "typeSimple": "Microsoft.AspNetCore.Http.IFormFile",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "FormFile",
+                  "descriptorName": "push"
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.BaiduSpiderController"
+            }
+          }
+        },
+        "Berry.Spider.CommonController": {
+          "controllerName": "Common",
+          "controllerGroupName": null,
+          "isRemoteService": false,
+          "apiVersion": null,
+          "type": "Berry.Spider.CommonController",
+          "interfaces": [],
+          "actions": {
+            "TxtDeDuplicationAsyncByPush": {
+              "uniqueName": "TxtDeDuplicationAsyncByPush",
+              "name": "TxtDeDuplicationAsync",
+              "httpMethod": "POST",
+              "url": "api/services/common/de-duplication",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "push",
+                  "typeAsString": "Berry.Spider.Common.DeDuplicationTxtFile, Berry.Spider.Contracts",
+                  "type": "Berry.Spider.Common.DeDuplicationTxtFile",
+                  "typeSimple": "Berry.Spider.Common.DeDuplicationTxtFile",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "push",
+                  "name": "File",
+                  "jsonName": null,
+                  "type": "Microsoft.AspNetCore.Http.IFormFile",
+                  "typeSimple": "Microsoft.AspNetCore.Http.IFormFile",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "FormFile",
+                  "descriptorName": "push"
+                }
+              ],
+              "returnValue": {
+                "type": "Microsoft.AspNetCore.Mvc.FileContentResult",
+                "typeSimple": "Microsoft.AspNetCore.Mvc.FileContentResult"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.CommonController"
+            }
+          }
+        },
+        "Berry.Spider.SogouSpiderController": {
+          "controllerName": "SogouSpider",
+          "controllerGroupName": null,
+          "isRemoteService": false,
+          "apiVersion": null,
+          "type": "Berry.Spider.SogouSpiderController",
+          "interfaces": [],
+          "actions": {
+            "PushAsyncByPushAndProvider": {
+              "uniqueName": "PushAsyncByPushAndProvider",
+              "name": "PushAsync",
+              "httpMethod": "POST",
+              "url": "api/services/spider/sogou/push-related-search",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "push",
+                  "typeAsString": "Berry.Spider.Sogou.SogouSpider4RelatedSearchPushEto, Berry.Spider.Sogou.Contracts",
+                  "type": "Berry.Spider.Sogou.SogouSpider4RelatedSearchPushEto",
+                  "typeSimple": "Berry.Spider.Sogou.SogouSpider4RelatedSearchPushEto",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "provider",
+                  "typeAsString": "Berry.Spider.Sogou.SogouSpider4RelatedSearchProvider, Berry.Spider.Sogou",
+                  "type": "Berry.Spider.Sogou.SogouSpider4RelatedSearchProvider",
+                  "typeSimple": "Berry.Spider.Sogou.SogouSpider4RelatedSearchProvider",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "push",
+                  "name": "push",
+                  "jsonName": null,
+                  "type": "Berry.Spider.Sogou.SogouSpider4RelatedSearchPushEto",
+                  "typeSimple": "Berry.Spider.Sogou.SogouSpider4RelatedSearchPushEto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.SogouSpiderController"
+            },
+            "PushAsyncByPush": {
+              "uniqueName": "PushAsyncByPush",
+              "name": "PushAsync",
+              "httpMethod": "POST",
+              "url": "api/services/spider/sogou/push-from-file",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "push",
+                  "typeAsString": "Berry.Spider.Sogou.Contracts.SogouSpiderPushFromFile, Berry.Spider.Sogou.Contracts",
+                  "type": "Berry.Spider.Sogou.Contracts.SogouSpiderPushFromFile",
+                  "typeSimple": "Berry.Spider.Sogou.Contracts.SogouSpiderPushFromFile",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "push",
+                  "name": "SourceFrom",
+                  "jsonName": null,
+                  "type": "Berry.Spider.Core.SpiderSourceFrom",
+                  "typeSimple": "Berry.Spider.Core.SpiderSourceFrom",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "push"
+                },
+                {
+                  "nameOnMethod": "push",
+                  "name": "File",
+                  "jsonName": null,
+                  "type": "Microsoft.AspNetCore.Http.IFormFile",
+                  "typeSimple": "Microsoft.AspNetCore.Http.IFormFile",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "FormFile",
+                  "descriptorName": "push"
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.SogouSpiderController"
+            }
+          }
+        },
+        "Berry.Spider.SpiderController": {
+          "controllerName": "Spider",
+          "controllerGroupName": null,
+          "isRemoteService": false,
+          "apiVersion": null,
+          "type": "Berry.Spider.SpiderController",
+          "interfaces": [],
+          "actions": {
+            "GetAsyncById": {
+              "uniqueName": "GetAsyncById",
+              "name": "GetAsync",
+              "httpMethod": "GET",
+              "url": "api/services/spider/get",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Berry.Spider.SpiderDto",
+                "typeSimple": "Berry.Spider.SpiderDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.SpiderController"
+            },
+            "GetListAsyncByInput": {
+              "uniqueName": "GetListAsyncByInput",
+              "name": "GetListAsync",
+              "httpMethod": "GET",
+              "url": "api/services/spider/get-list",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Berry.Spider.CustomGetListInput, Berry.Spider.Contracts",
+                  "type": "Berry.Spider.CustomGetListInput",
+                  "typeSimple": "Berry.Spider.CustomGetListInput",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "Keyword",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "Page",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "PageSize",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                }
+              ],
+              "returnValue": {
+                "type": "Berry.Spider.Core.CustomPagedResultDto<Berry.Spider.SpiderDto>",
+                "typeSimple": "Berry.Spider.Core.CustomPagedResultDto<Berry.Spider.SpiderDto>"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.SpiderController"
+            },
+            "GetAllAsync": {
+              "uniqueName": "GetAllAsync",
+              "name": "GetAllAsync",
+              "httpMethod": "GET",
+              "url": "api/services/spider/get-all",
+              "supportedVersions": [],
+              "parametersOnMethod": [],
+              "parameters": [],
+              "returnValue": {
+                "type": "Berry.Spider.Core.CustomPagedResultDto<Berry.Spider.SpiderDto>",
+                "typeSimple": "Berry.Spider.Core.CustomPagedResultDto<Berry.Spider.SpiderDto>"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.SpiderController"
+            },
+            "CreateAsyncByInput": {
+              "uniqueName": "CreateAsyncByInput",
+              "name": "CreateAsync",
+              "httpMethod": "POST",
+              "url": "api/services/spider/create",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Berry.Spider.SpiderCreateInput, Berry.Spider.Contracts",
+                  "type": "Berry.Spider.SpiderCreateInput",
+                  "typeSimple": "Berry.Spider.SpiderCreateInput",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "Name",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "From",
+                  "jsonName": null,
+                  "type": "Berry.Spider.Core.SpiderSourceFrom",
+                  "typeSimple": "Berry.Spider.Core.SpiderSourceFrom",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "Remark",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                }
+              ],
+              "returnValue": {
+                "type": "Berry.Spider.SpiderDto",
+                "typeSimple": "Berry.Spider.SpiderDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.SpiderController"
+            },
+            "UpdateAsyncByIdAndInput": {
+              "uniqueName": "UpdateAsyncByIdAndInput",
+              "name": "UpdateAsync",
+              "httpMethod": "PUT",
+              "url": "api/services/spider/update",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "input",
+                  "typeAsString": "Berry.Spider.SpiderUpdateInput, Berry.Spider.Contracts",
+                  "type": "Berry.Spider.SpiderUpdateInput",
+                  "typeSimple": "Berry.Spider.SpiderUpdateInput",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "Name",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "From",
+                  "jsonName": null,
+                  "type": "Berry.Spider.Core.SpiderSourceFrom",
+                  "typeSimple": "Berry.Spider.Core.SpiderSourceFrom",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "Remark",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "Id",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                }
+              ],
+              "returnValue": {
+                "type": "Berry.Spider.SpiderDto",
+                "typeSimple": "Berry.Spider.SpiderDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.SpiderController"
+            },
+            "DeleteAsyncById": {
+              "uniqueName": "DeleteAsyncById",
+              "name": "DeleteAsync",
+              "httpMethod": "DELETE",
+              "url": "api/services/spider/delete",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.SpiderController"
+            }
+          }
+        },
+        "Berry.Spider.TouTiaoSpiderController": {
+          "controllerName": "TouTiaoSpider",
+          "controllerGroupName": null,
+          "isRemoteService": false,
+          "apiVersion": null,
+          "type": "Berry.Spider.TouTiaoSpiderController",
+          "interfaces": [],
+          "actions": {
+            "PushAsyncByPushAndProvider": {
+              "uniqueName": "PushAsyncByPushAndProvider",
+              "name": "PushAsync",
+              "httpMethod": "POST",
+              "url": "api/services/spider/toutiao/push-question",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "push",
+                  "typeAsString": "Berry.Spider.TouTiao.TouTiaoSpider4QuestionPushEto, Berry.Spider.TouTiao.Contracts",
+                  "type": "Berry.Spider.TouTiao.TouTiaoSpider4QuestionPushEto",
+                  "typeSimple": "Berry.Spider.TouTiao.TouTiaoSpider4QuestionPushEto",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "provider",
+                  "typeAsString": "Berry.Spider.TouTiao.TouTiaoSpider4QuestionProvider, Berry.Spider.TouTiao",
+                  "type": "Berry.Spider.TouTiao.TouTiaoSpider4QuestionProvider",
+                  "typeSimple": "Berry.Spider.TouTiao.TouTiaoSpider4QuestionProvider",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "push",
+                  "name": "push",
+                  "jsonName": null,
+                  "type": "Berry.Spider.TouTiao.TouTiaoSpider4QuestionPushEto",
+                  "typeSimple": "Berry.Spider.TouTiao.TouTiaoSpider4QuestionPushEto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.TouTiaoSpiderController"
+            },
+            "PushAsyncByPush": {
+              "uniqueName": "PushAsyncByPush",
+              "name": "PushAsync",
+              "httpMethod": "POST",
+              "url": "api/services/spider/toutiao/push-from-file",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "push",
+                  "typeAsString": "Berry.Spider.TouTiao.TouTiaoSpiderPushFromFile, Berry.Spider.TouTiao.Contracts",
+                  "type": "Berry.Spider.TouTiao.TouTiaoSpiderPushFromFile",
+                  "typeSimple": "Berry.Spider.TouTiao.TouTiaoSpiderPushFromFile",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "push",
+                  "name": "SourceFrom",
+                  "jsonName": null,
+                  "type": "Berry.Spider.Core.SpiderSourceFrom",
+                  "typeSimple": "Berry.Spider.Core.SpiderSourceFrom",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "push"
+                },
+                {
+                  "nameOnMethod": "push",
+                  "name": "File",
+                  "jsonName": null,
+                  "type": "Microsoft.AspNetCore.Http.IFormFile",
+                  "typeSimple": "Microsoft.AspNetCore.Http.IFormFile",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "FormFile",
+                  "descriptorName": "push"
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.TouTiaoSpiderController"
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {}
+}
