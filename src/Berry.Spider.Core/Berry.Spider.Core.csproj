@@ -8,12 +8,12 @@
 
     <ItemGroup>
       <PackageReference Include="DotNetCore.NPOI" Version="1.2.3" />
-      <PackageReference Include="Selenium.WebDriver" Version="4.5.0" />
+      <PackageReference Include="Selenium.WebDriver" Version="4.5.1" />
       <PackageReference Include="ToolGood.Words" Version="3.0.3.1" />
-      <PackageReference Include="Volo.Abp.Caching.StackExchangeRedis" Version="5.3.4" />
-      <PackageReference Include="Volo.Abp.Core" Version="5.3.4" />
-      <PackageReference Include="Volo.Abp.Guids" Version="5.3.4" />
-      <PackageReference Include="Volo.Abp.TextTemplating" Version="5.3.4" />
+      <PackageReference Include="Volo.Abp.Caching.StackExchangeRedis" Version="6.0.0" />
+      <PackageReference Include="Volo.Abp.Core" Version="6.0.0" />
+      <PackageReference Include="Volo.Abp.Guids" Version="6.0.0" />
+      <PackageReference Include="Volo.Abp.TextTemplating" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>
