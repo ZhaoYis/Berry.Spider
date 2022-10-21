@@ -19,7 +19,7 @@ public class TxtFileToDbAppService : ITxtFileToDbAppService
         Logger = logger;
     }
 
-    public virtual Task RunAsync()
+    public virtual async Task RunAsync()
     {
         string filePath = Path.Combine(AppContext.BaseDirectory, "files");
         // 递归获取文件路径下的所有文件
@@ -46,7 +46,7 @@ public class TxtFileToDbAppService : ITxtFileToDbAppService
             }
         }
 
-        if (spiderContents.Count == 0) return Task.CompletedTask;
+        if (spiderContents.Count == 0) return;
 
         int pageSize = 100;
         int pageIndex = 0;
@@ -57,7 +57,7 @@ public class TxtFileToDbAppService : ITxtFileToDbAppService
             var spiderContentsPage = spiderContents.Skip(pageIndex * pageSize).Take(pageSize).ToList();
             try
             {
-                this.SpiderRepository.InsertManyAsync(spiderContentsPage, true);
+                await this.SpiderRepository.InsertManyAsync(spiderContentsPage, true);
             }
             catch (Exception e)
             {
@@ -66,7 +66,5 @@ public class TxtFileToDbAppService : ITxtFileToDbAppService
 
             pageIndex++;
         }
-
-        return Task.CompletedTask;
     }
 }
