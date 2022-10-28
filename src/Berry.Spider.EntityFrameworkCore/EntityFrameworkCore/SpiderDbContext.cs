@@ -23,7 +23,8 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
 
         builder.Entity<SpiderContent>(b =>
         {
-            b.ToTable("Content");
+            b.ToTable("Content_Composition");
+            //b.ToTable("Content_Composition");
 
             //Configure the base properties
             b.ConfigureByConvention();

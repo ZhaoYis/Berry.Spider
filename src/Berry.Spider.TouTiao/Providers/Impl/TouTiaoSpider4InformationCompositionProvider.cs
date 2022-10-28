@@ -1,4 +1,5 @@
-﻿using Berry.Spider.Abstractions;
+﻿using System.Web;
+using Berry.Spider.Abstractions;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
 using Berry.Spider.FreeRedis;
@@ -13,7 +14,8 @@ namespace Berry.Spider.TouTiao;
 /// 今日头条：头条_资讯_作文板块
 /// </summary>
 [Spider(SpiderSourceFrom.TouTiao_Information_Composition)]
-public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiaoSpider4InformationCompositionProvider>, ISpiderProvider
+public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiaoSpider4InformationCompositionProvider>,
+    ISpiderProvider
 {
     private IGuidGenerator GuidGenerator { get; }
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -46,7 +48,10 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     /// <returns></returns>
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
-        await this.BloomCheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); });
+        await this.BloomCheckAsync(push.Keyword, async () =>
+        {
+            await this.DistributedEventBus.PublishAsync(push);
+        });
     }
 
     /// <summary>
@@ -91,7 +96,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                     if (resultContent.Count > 0)
                     {
                         var eto = new TouTiaoSpider4InformationCompositionPullEto
-                            { Keyword = request.Keyword, Title = request.Keyword };
+                            {Keyword = request.Keyword, Title = request.Keyword};
 
                         foreach (IWebElement element in resultContent)
                         {
@@ -101,13 +106,24 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                                 string text = a.Text;
                                 string href = a.GetAttribute("href");
 
-                                eto.Items.Add(new ChildPageDataItem
+                                //去获取so.toutiao.com、tsearch.toutiaoapi.com的记录
+                                Uri sourceUri = new Uri(href);
+                                //?url=https://so.toutiao.com/s/search_wenda_pc/list/?qid=6959168672381092127&enter_answer_id=6959174410759323942&enter_from=search_result&aid=4916&jtoken=c47d820935b56f1e45ae0f2b729ffa52df0fa9ae4d13f409a370b005eb0492689aeea6f8881750a45f53aaca866c7950849eb3e24f7d4db160483899ca0389bd
+                                string jumpUrl = sourceUri.Query.Substring(5);
+                                if (jumpUrl.StartsWith("http") || jumpUrl.StartsWith("https"))
                                 {
-                                    Title = text,
-                                    Href = href
-                                });
+                                    Uri jumpUri = new Uri(HttpUtility.UrlDecode(jumpUrl));
+                                    if (jumpUri.Host.Contains("toutiao"))
+                                    {
+                                        eto.Items.Add(new ChildPageDataItem
+                                        {
+                                            Title = text,
+                                            Href = jumpUri.ToString()
+                                        });
 
-                                this.Logger.LogInformation(text + "  ---> " + href);
+                                        this.Logger.LogInformation(text + "  ---> " + href);
+                                    }
+                                }
                             }
                         }
 
@@ -165,7 +181,8 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                             string content = resultContent.Text;
                             if (!string.IsNullOrEmpty(content))
                             {
-                                SpiderContent spiderContent = new SpiderContent(item.Title, content, groupId, eventData.SourceFrom);
+                                SpiderContent spiderContent =
+                                    new SpiderContent(item.Title, content, groupId, eventData.SourceFrom);
                                 contentItems.Add(spiderContent);
                             }
                         }
