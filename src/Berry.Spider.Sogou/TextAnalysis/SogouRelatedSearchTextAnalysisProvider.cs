@@ -1,4 +1,6 @@
-﻿namespace Berry.Spider.Core
+﻿using Berry.Spider.Core;
+
+namespace Berry.Spider.Sogou
 {
     /// <summary>
     /// 搜狗相关推荐文本解析器

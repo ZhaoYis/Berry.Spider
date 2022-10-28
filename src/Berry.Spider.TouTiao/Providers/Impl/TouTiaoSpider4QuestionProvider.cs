@@ -88,17 +88,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
             string targetUrl = string.Format(this.HomePage, request.Keyword);
             await this.WebElementLoadProvider.InvokeAsync(
                 targetUrl,
-                drv =>
-                {
-                    try
-                    {
-                        return drv.FindElement(By.ClassName("s-result-list"));
-                    }
-                    catch (Exception e)
-                    {
-                        return null;
-                    }
-                },
+                drv => drv.FindElement(By.ClassName("s-result-list")),
                 async root =>
                 {
                     if (root == null) return;
@@ -109,13 +99,18 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                     if (resultContent.Count > 0)
                     {
                         var eto = new TouTiaoSpider4QuestionPullEto
-                            {Keyword = request.Keyword, Title = request.Keyword};
+                        {
+                            Keyword = request.Keyword,
+                            Title = request.Keyword
+                        };
 
-                        foreach (IWebElement element in resultContent)
+                        await Parallel.ForEachAsync(resultContent, new ParallelOptions
+                        {
+                            MaxDegreeOfParallelism = 10
+                        }, async (element, token) =>
                         {
                             //TODO:只取 大家都在问 的部分
 
-                            //https://so.toutiao.com/search/jump?url=https://so.toutiao.com/s/search_wenda_pc/list/?qid=6959168672381092127&enter_answer_id=6959174410759323942&enter_from=search_result&aid=4916&jtoken=c47d820935b56f1e45ae0f2b729ffa52df0fa9ae4d13f409a370b005eb0492689aeea6f8881750a45f53aaca866c7950849eb3e24f7d4db160483899ca0389bd
                             var a = element.FindElement(By.TagName("a"));
                             if (a != null)
                             {
@@ -124,7 +119,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
 
                                 //去获取so.toutiao.com、tsearch.toutiaoapi.com的记录
                                 Uri sourceUri = new Uri(href);
-                                //?url=https://so.toutiao.com/s/search_wenda_pc/list/?qid=6959168672381092127&enter_answer_id=6959174410759323942&enter_from=search_result&aid=4916&jtoken=c47d820935b56f1e45ae0f2b729ffa52df0fa9ae4d13f409a370b005eb0492689aeea6f8881750a45f53aaca866c7950849eb3e24f7d4db160483899ca0389bd
+                                //?url=https://so.toutiao.com/xxx
                                 string jumpUrl = sourceUri.Query.Substring(5);
                                 if (jumpUrl.StartsWith("http") || jumpUrl.StartsWith("https"))
                                 {
@@ -141,7 +136,9 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                                     }
                                 }
                             }
-                        }
+
+                            await Task.CompletedTask;
+                        });
 
                         if (eto.Items.Any())
                         {
@@ -174,17 +171,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
             {
                 await this.WebElementLoadProvider.InvokeAsync(
                     item.Href,
-                    drv =>
-                    {
-                        try
-                        {
-                            return drv.FindElement(By.ClassName("s-container"));
-                        }
-                        catch (Exception e)
-                        {
-                            return null;
-                        }
-                    },
+                    drv => drv.FindElement(By.ClassName("s-container")),
                     async root =>
                     {
                         if (root == null) return;
@@ -192,7 +179,10 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                         var resultContent = root.FindElements(By.ClassName("list"));
                         if (resultContent.Count > 0)
                         {
-                            foreach (IWebElement element in resultContent)
+                            await Parallel.ForEachAsync(resultContent, new ParallelOptions
+                            {
+                                MaxDegreeOfParallelism = 10
+                            }, async (element, token) =>
                             {
                                 var answerList = element
                                     .FindElements(By.TagName("div"))
@@ -214,7 +204,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                                         }
                                     }
                                 }
-                            }
+                            });
                         }
                     }
                 );

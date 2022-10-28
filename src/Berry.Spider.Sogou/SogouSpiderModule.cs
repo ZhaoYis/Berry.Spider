@@ -19,6 +19,9 @@ public class SogouSpiderModule : AbpModule
         //注入搜狗爬虫提供者
         context.Services.AddTransient<SogouSpider4RelatedSearchProvider>();
 
+        //注入文本解析器
+        context.Services.AddTransient<SogouRelatedSearchTextAnalysisProvider>();
+
         return Task.CompletedTask;
     }
 }

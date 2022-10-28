@@ -1,8 +1,9 @@
-using Berry.Spider.Contracts;
-using Microsoft.Extensions.Options;
 using System.Text.RegularExpressions;
+using Berry.Spider.Contracts;
+using Berry.Spider.Core;
+using Microsoft.Extensions.Options;
 
-namespace Berry.Spider.Core;
+namespace Berry.Spider.TouTiao;
 
 /// <summary>
 /// 头条问答内容解析器

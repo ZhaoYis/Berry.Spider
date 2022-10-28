@@ -19,6 +19,9 @@ public class BaiduSpiderModule : AbpModule
         //注入百度爬虫提供者
         context.Services.AddTransient<BaiduSpider4RelatedSearchProvider>();
 
+        //注入文本解析器
+        context.Services.AddTransient<BaiduRelatedSearchTextAnalysisProvider>();
+
         return Task.CompletedTask;
     }
 }

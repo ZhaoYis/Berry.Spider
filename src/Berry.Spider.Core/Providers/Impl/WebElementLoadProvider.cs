@@ -63,8 +63,16 @@ public class WebElementLoadProvider : IWebElementLoadProvider
 
                 var page = driver.PageSource;
 
-                IWebElement? webElement = wait.Until(selector);
-                await executor.Invoke(webElement);
+                try
+                {
+                    IWebElement? webElement = wait.Until(selector);
+                    await executor.Invoke(webElement);
+                }
+                catch (Exception exception)
+                {
+                    this.Logger.LogException(exception);
+                    await executor.Invoke(null);
+                }
             }
             catch (Exception exception)
             {

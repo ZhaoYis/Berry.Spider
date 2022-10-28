@@ -72,17 +72,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
             string targetUrl = string.Format(this.HomePage, request.Keyword);
             await this.WebElementLoadProvider.InvokeAsync(
                 targetUrl,
-                drv =>
-                {
-                    try
-                    {
-                        return drv.FindElement(By.ClassName("s-result-list"));
-                    }
-                    catch (Exception e)
-                    {
-                        return null;
-                    }
-                },
+                drv => drv.FindElement(By.ClassName("s-result-list")),
                 async root =>
                 {
                     if (root == null) return;
@@ -93,25 +83,34 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                     if (resultContent.Count > 0)
                     {
                         var eto = new TouTiaoSpider4QuestionPullEto
-                            {Keyword = request.Keyword, Title = request.Keyword};
-
-                        foreach (IWebElement element in resultContent)
                         {
-                            var a = element.FindElement(By.TagName("a"));
-                            if (a != null)
+                            Keyword = request.Keyword,
+                            Title = request.Keyword
+                        };
+
+                        await Parallel.ForEachAsync(resultContent, new ParallelOptions
                             {
-                                string text = a.Text;
-                                string href = a.GetAttribute("href");
-
-                                eto.Items.Add(new ChildPageDataItem
+                                MaxDegreeOfParallelism = 10
+                            },
+                            async (element, token) =>
+                            {
+                                var a = element.FindElement(By.TagName("a"));
+                                if (a != null)
                                 {
-                                    Title = text,
-                                    Href = href
-                                });
+                                    string text = a.Text;
+                                    string href = a.GetAttribute("href");
 
-                                this.Logger.LogInformation(text + "  ---> " + href);
-                            }
-                        }
+                                    eto.Items.Add(new ChildPageDataItem
+                                    {
+                                        Title = text,
+                                        Href = href
+                                    });
+
+                                    this.Logger.LogInformation(text + "  ---> " + href);
+                                }
+
+                                await Task.CompletedTask;
+                            });
 
                         if (eto.Items.Any())
                         {

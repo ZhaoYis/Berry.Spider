@@ -84,17 +84,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
 
             await this.WebElementLoadProvider.InvokeAsync(
                 realUrl,
-                drv =>
-                {
-                    try
-                    {
-                        return drv.FindElement(By.Id("hint_container"));
-                    }
-                    catch (Exception e)
-                    {
-                        return null;
-                    }
-                },
+                drv => drv.FindElement(By.Id("hint_container")),
                 async root =>
                 {
                     if (root == null) return;
@@ -105,21 +95,29 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
                     if (resultContent.Count > 0)
                     {
                         var eto = new SogouSpider4RelatedSearchPullEto
-                            {Keyword = request.Keyword, Title = request.Keyword};
-
-                        foreach (IWebElement element in resultContent)
                         {
-                            string text = element.Text;
-                            string href = element.GetAttribute("href");
+                            Keyword = request.Keyword,
+                            Title = request.Keyword
+                        };
 
-                            eto.Items.Add(new ChildPageDataItem
+                        await Parallel.ForEachAsync(resultContent, new ParallelOptions
                             {
-                                Title = text,
-                                Href = href
-                            });
+                                MaxDegreeOfParallelism = 10
+                            },
+                            async (element, token) =>
+                            {
+                                string text = element.Text;
+                                string href = element.GetAttribute("href");
 
-                            this.Logger.LogInformation(text + "  ---> " + href);
-                        }
+                                eto.Items.Add(new ChildPageDataItem
+                                {
+                                    Title = text,
+                                    Href = href
+                                });
+
+                                this.Logger.LogInformation(text + "  ---> " + href);
+                                await Task.CompletedTask;
+                            });
 
                         if (eto.Items.Any())
                         {

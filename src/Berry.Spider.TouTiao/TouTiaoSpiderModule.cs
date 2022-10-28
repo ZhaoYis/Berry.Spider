@@ -18,9 +18,13 @@ public class TouTiaoSpiderModule : AbpModule
 {
     public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
     {
+        //注入头条爬虫提供者
         context.Services.AddTransient<TouTiaoSpider4QuestionProvider>();
         context.Services.AddTransient<TouTiaoSpider4InformationProvider>();
         context.Services.AddTransient<TouTiaoSpider4InformationCompositionProvider>();
+
+        //注入文本解析器
+        context.Services.AddTransient<TouTiaoQuestionTextAnalysisProvider>();
 
         return Task.CompletedTask;
     }

@@ -1,4 +1,6 @@
-﻿namespace Berry.Spider.Core;
+﻿using Berry.Spider.Core;
+
+namespace Berry.Spider.Baidu;
 
 /// <summary>
 /// 百度相关推荐文本解析器

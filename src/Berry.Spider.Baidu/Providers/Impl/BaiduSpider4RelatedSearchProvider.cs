@@ -80,18 +80,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
             string targetUrl = string.Format(this.HomePage, request.Keyword);
             await this.WebElementLoadProvider.InvokeAsync(
                 targetUrl,
-                drv =>
-                {
-                    try
-                    {
-                        // return drv.FindElement(By.CssSelector(".result-molecule"));
-                        return drv.FindElement(By.Id("rs_new"));
-                    }
-                    catch (Exception e)
-                    {
-                        return null;
-                    }
-                },
+                drv => drv.FindElement(By.Id("rs_new")),
                 async root =>
                 {
                     if (root == null) return;
@@ -102,9 +91,15 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                     if (resultContent.Count > 0)
                     {
                         var eto = new BaiduSpider4RelatedSearchPullEto
-                            {Keyword = request.Keyword, Title = request.Keyword};
+                        {
+                            Keyword = request.Keyword,
+                            Title = request.Keyword
+                        };
 
-                        foreach (IWebElement element in resultContent)
+                        await Parallel.ForEachAsync(resultContent, new ParallelOptions
+                        {
+                            MaxDegreeOfParallelism = 10
+                        }, async (element, token) =>
                         {
                             string text = element.Text;
                             string href = element.GetAttribute("href");
@@ -123,7 +118,9 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                                     this.Logger.LogInformation(text + "  ---> " + href);
                                 }
                             }
-                        }
+
+                            await Task.CompletedTask;
+                        });
 
                         if (eto.Items.Any())
                         {
