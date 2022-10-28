@@ -2,6 +2,7 @@
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.FreeRedis;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
@@ -16,6 +17,7 @@ namespace Berry.Spider.TouTiao;
 public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4InformationProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
+    private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
     private IRedisService RedisService { get; }
     private IDistributedEventBus DistributedEventBus { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
@@ -24,11 +26,13 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
 
     public TouTiaoSpider4InformationProvider(ILogger<TouTiaoSpider4InformationProvider> logger,
         IWebElementLoadProvider provider,
+        IServiceProvider serviceProvider,
         IRedisService redisService,
         IDistributedEventBus eventBus,
         IOptionsSnapshot<SpiderOptions> options) : base(logger)
     {
         this.WebElementLoadProvider = provider;
+        this.ResolveJumpUrlProvider = serviceProvider.GetRequiredService<TouTiaoResolveJumpUrlProvider>();
         this.RedisService = redisService;
         this.DistributedEventBus = eventBus;
         this.Options = options;
@@ -100,13 +104,17 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                                     string text = a.Text;
                                     string href = a.GetAttribute("href");
 
-                                    eto.Items.Add(new ChildPageDataItem
+                                    string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
+                                    if (!string.IsNullOrEmpty(realHref))
                                     {
-                                        Title = text,
-                                        Href = href
-                                    });
+                                        eto.Items.Add(new ChildPageDataItem
+                                        {
+                                            Title = text,
+                                            Href = realHref
+                                        });
 
-                                    this.Logger.LogInformation(text + "  ---> " + href);
+                                        this.Logger.LogInformation(text + "  ---> " + href);
+                                    }
                                 }
 
                                 await Task.CompletedTask;

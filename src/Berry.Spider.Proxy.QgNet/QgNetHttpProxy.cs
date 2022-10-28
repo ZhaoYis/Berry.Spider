@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Options;
 using Volo.Abp.Caching;
 
 namespace Berry.Spider.Proxy.QgNet;
@@ -10,15 +11,18 @@ public class QgNetHttpProxy : IHttpProxy
     private QgNetProxyHttpClient QgNetProxyHttpClient { get; }
     private QgNetProxyPoolContext QgNetProxyPoolContext { get; }
     private IDistributedCache<QgNetProxyQuotaResult> Cache { get; }
+    private IOptionsSnapshot<QgNetProxyOptions> Options { get; }
 
     public QgNetHttpProxy(
         QgNetProxyHttpClient httpClient,
         QgNetProxyPoolContext context,
-        IDistributedCache<QgNetProxyQuotaResult> cache)
+        IDistributedCache<QgNetProxyQuotaResult> cache,
+        IOptionsSnapshot<QgNetProxyOptions> options)
     {
         this.QgNetProxyHttpClient = httpClient;
         this.QgNetProxyPoolContext = context;
         this.Cache = cache;
+        this.Options = options;
     }
 
     /// <summary>
@@ -26,22 +30,25 @@ public class QgNetHttpProxy : IHttpProxy
     /// </summary>
     public async Task<bool> IsInvalid()
     {
-        QgNetProxyQuotaResult? quotaResult = await this.Cache.GetAsync(CacheKey);
-        if (quotaResult != null)
+        if (this.Options.Value.IsEnable)
         {
-            return quotaResult.Available > 0;
-        }
-        else
-        {
-            quotaResult = await this.QgNetProxyHttpClient.GetQuotaResultAsync();
+            QgNetProxyQuotaResult? quotaResult = await this.Cache.GetAsync(CacheKey);
             if (quotaResult != null)
             {
-                await this.Cache.SetAsync(CacheKey, quotaResult, new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10)
-                });
-
                 return quotaResult.Available > 0;
+            }
+            else
+            {
+                quotaResult = await this.QgNetProxyHttpClient.GetQuotaResultAsync();
+                if (quotaResult != null)
+                {
+                    await this.Cache.SetAsync(CacheKey, quotaResult, new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10)
+                    });
+
+                    return quotaResult.Available > 0;
+                }
             }
         }
 

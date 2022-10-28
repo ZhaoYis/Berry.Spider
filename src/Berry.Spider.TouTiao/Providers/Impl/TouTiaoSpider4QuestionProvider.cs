@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
-using System.Web;
 using Berry.Spider.FreeRedis;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.Timing;
@@ -21,6 +20,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private ITextAnalysisProvider TextAnalysisProvider { get; }
+    private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
     private ISpiderContentRepository SpiderRepository { get; }
     private SpiderDomainService SpiderDomainService { get; }
     private IClock Clock { get; }
@@ -42,6 +42,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     {
         this.WebElementLoadProvider = provider;
         this.TextAnalysisProvider = serviceProvider.GetRequiredService<TouTiaoQuestionTextAnalysisProvider>();
+        this.ResolveJumpUrlProvider = serviceProvider.GetRequiredService<TouTiaoResolveJumpUrlProvider>();
         this.SpiderRepository = repository;
         this.SpiderDomainService = spiderDomainService;
         this.Clock = clock;
@@ -117,23 +118,16 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                                 string text = a.Text;
                                 string href = a.GetAttribute("href");
 
-                                //去获取so.toutiao.com、tsearch.toutiaoapi.com的记录
-                                Uri sourceUri = new Uri(href);
-                                //?url=https://so.toutiao.com/xxx
-                                string jumpUrl = sourceUri.Query.Substring(5);
-                                if (jumpUrl.StartsWith("http") || jumpUrl.StartsWith("https"))
+                                string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
+                                if (!string.IsNullOrEmpty(realHref))
                                 {
-                                    Uri jumpUri = new Uri(HttpUtility.UrlDecode(jumpUrl));
-                                    if (jumpUri.Host.Contains("toutiao"))
+                                    eto.Items.Add(new ChildPageDataItem
                                     {
-                                        eto.Items.Add(new ChildPageDataItem
-                                        {
-                                            Title = text,
-                                            Href = jumpUri.ToString()
-                                        });
+                                        Title = text,
+                                        Href = realHref
+                                    });
 
-                                        this.Logger.LogInformation(text + "  ---> " + href);
-                                    }
+                                    this.Logger.LogInformation(text + "  ---> " + href);
                                 }
                             }
 

@@ -26,6 +26,9 @@ public class TouTiaoSpiderModule : AbpModule
         //注入文本解析器
         context.Services.AddTransient<TouTiaoQuestionTextAnalysisProvider>();
 
+        //注册解析真实跳转的Url地址解析器
+        context.Services.AddSingleton<TouTiaoResolveJumpUrlProvider>();
+
         return Task.CompletedTask;
     }
 }

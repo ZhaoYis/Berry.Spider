@@ -19,7 +19,7 @@ public class HttpProxy_UnitTest
     {
         //arrange
         var options = new Mock<IOptionsSnapshot<HttpProxyOptions>>();
-        options.Setup(c => c.Value).Returns(new HttpProxyOptions { ProxyPoolApiHost = "http://124.223.62.114:5010" });
+        options.Setup(c => c.Value).Returns(new HttpProxyOptions {ProxyPoolApiHost = "http://124.223.62.114:5010"});
 
         var messageHandler = new Mock<HttpMessageHandler>();
         messageHandler.Protected()
@@ -38,7 +38,8 @@ public class HttpProxy_UnitTest
 
         var proxyPoolHttpClient = new ProxyPoolHttpClient(options.Object, httpClientFactory.Object.CreateClient());
         var logger = new Mock<ILogger<DefaultHttpProxy>>();
-        var defaultProxy = new DefaultHttpProxy(logger.Object, proxyPoolHttpClient);
+
+        var defaultProxy = new DefaultHttpProxy(logger.Object, proxyPoolHttpClient, options.Object);
 
         //act
         var uri = await defaultProxy.GetProxyUriAsync();

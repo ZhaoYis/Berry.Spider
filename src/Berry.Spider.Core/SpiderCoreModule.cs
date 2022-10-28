@@ -44,6 +44,9 @@ public class SpiderCoreModule : AbpModule
         //注入文本解析器
         context.Services.AddTransient<NormalTextAnalysisProvider>();
 
+        //注册解析真实跳转的Url地址解析器
+        context.Services.AddSingleton<NormalResolveJumpUrlProvider>();
+
         //分布式缓存
         Configure<AbpDistributedCacheOptions>(options =>
         {
