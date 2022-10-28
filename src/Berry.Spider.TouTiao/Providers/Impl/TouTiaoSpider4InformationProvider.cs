@@ -1,7 +1,9 @@
 ﻿using Berry.Spider.Abstractions;
+using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.FreeRedis;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
 using Volo.Abp.EventBus.Distributed;
 
@@ -16,17 +18,20 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private IRedisService RedisService { get; }
     private IDistributedEventBus DistributedEventBus { get; }
+    private IOptionsSnapshot<SpiderOptions> Options { get; }
 
     private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=information&dvpf=pc";
 
     public TouTiaoSpider4InformationProvider(ILogger<TouTiaoSpider4InformationProvider> logger,
         IWebElementLoadProvider provider,
         IRedisService redisService,
-        IDistributedEventBus eventBus) : base(logger)
+        IDistributedEventBus eventBus,
+        IOptionsSnapshot<SpiderOptions> options) : base(logger)
     {
         this.WebElementLoadProvider = provider;
         this.RedisService = redisService;
         this.DistributedEventBus = eventBus;
+        this.Options = options;
     }
 
     /// <summary>
@@ -35,7 +40,9 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     /// <returns></returns>
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
-        await this.BloomCheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); });
+        await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); },
+            bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
+            duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
 
     /// <summary>
@@ -44,7 +51,13 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     /// <returns></returns>
     protected override async Task<bool> DuplicateCheckAsync(string keyword)
     {
-        bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY, keyword);
+        string key = GlobalConstants.SPIDER_KEYWORDS_KEY;
+        if (this.Options.Value.KeywordCheckOptions.OnlyCurrentCategory)
+        {
+            key += $":{SpiderSourceFrom.TouTiao_Information}";
+        }
+
+        bool result = await this.RedisService.SetAsync(key, keyword);
         return result;
     }
 
@@ -80,7 +93,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                     if (resultContent.Count > 0)
                     {
                         var eto = new TouTiaoSpider4QuestionPullEto
-                            { Keyword = request.Keyword, Title = request.Keyword };
+                            {Keyword = request.Keyword, Title = request.Keyword};
 
                         foreach (IWebElement element in resultContent)
                         {

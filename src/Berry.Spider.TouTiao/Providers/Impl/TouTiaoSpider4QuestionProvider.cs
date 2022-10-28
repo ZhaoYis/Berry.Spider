@@ -56,7 +56,9 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     /// <returns></returns>
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
-        await this.BloomCheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); });
+        await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); },
+            bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
+            duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
 
     /// <summary>
@@ -65,7 +67,13 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     /// <returns></returns>
     protected override async Task<bool> DuplicateCheckAsync(string keyword)
     {
-        bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY, keyword);
+        string key = GlobalConstants.SPIDER_KEYWORDS_KEY;
+        if (this.Options.Value.KeywordCheckOptions.OnlyCurrentCategory)
+        {
+            key += $":{SpiderSourceFrom.TouTiao_Question}";
+        }
+
+        bool result = await this.RedisService.SetAsync(key, keyword);
         return result;
     }
 
@@ -101,7 +109,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                     if (resultContent.Count > 0)
                     {
                         var eto = new TouTiaoSpider4QuestionPullEto
-                            { Keyword = request.Keyword, Title = request.Keyword };
+                            {Keyword = request.Keyword, Title = request.Keyword};
 
                         foreach (IWebElement element in resultContent)
                         {

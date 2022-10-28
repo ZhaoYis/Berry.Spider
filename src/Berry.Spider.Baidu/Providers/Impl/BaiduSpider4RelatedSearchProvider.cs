@@ -5,7 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using System.Web;
+using Berry.Spider.Contracts;
 using Berry.Spider.FreeRedis;
+using Microsoft.Extensions.Options;
 using Volo.Abp.EventBus.Distributed;
 
 namespace Berry.Spider.Baidu;
@@ -21,6 +23,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     private IDistributedEventBus DistributedEventBus { get; }
     private IRedisService RedisService { get; }
     private ISpiderTitleContentRepository SpiderRepository { get; }
+    private IOptionsSnapshot<SpiderOptions> Options { get; }
 
     private string HomePage => "https://www.baidu.com/s?wd={0}";
 
@@ -29,13 +32,15 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
         IServiceProvider serviceProvider,
         IDistributedEventBus eventBus,
         IRedisService redisService,
-        ISpiderTitleContentRepository repository) : base(logger)
+        ISpiderTitleContentRepository repository,
+        IOptionsSnapshot<SpiderOptions> options) : base(logger)
     {
         this.WebElementLoadProvider = provider;
         this.TextAnalysisProvider = serviceProvider.GetRequiredService<BaiduRelatedSearchTextAnalysisProvider>();
         this.DistributedEventBus = eventBus;
         this.RedisService = redisService;
         this.SpiderRepository = repository;
+        this.Options = options;
     }
 
     /// <summary>
@@ -44,7 +49,9 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     /// <returns></returns>
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
-        await this.BloomCheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); });
+        await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); },
+            bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
+            duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
 
     /// <summary>
@@ -53,7 +60,13 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     /// <returns></returns>
     protected override async Task<bool> DuplicateCheckAsync(string keyword)
     {
-        bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY, keyword);
+        string key = GlobalConstants.SPIDER_KEYWORDS_KEY;
+        if (this.Options.Value.KeywordCheckOptions.OnlyCurrentCategory)
+        {
+            key += $":{SpiderSourceFrom.Baidu_Related_Search}";
+        }
+
+        bool result = await this.RedisService.SetAsync(key, keyword);
         return result;
     }
 
@@ -89,7 +102,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                     if (resultContent.Count > 0)
                     {
                         var eto = new BaiduSpider4RelatedSearchPullEto
-                            { Keyword = request.Keyword, Title = request.Keyword };
+                            {Keyword = request.Keyword, Title = request.Keyword};
 
                         foreach (IWebElement element in resultContent)
                         {

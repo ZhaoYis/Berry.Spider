@@ -24,4 +24,9 @@ public class SpiderOptions
     /// 落库时是否随机插入图片
     /// </summary>
     public bool IsRandomInsertImage { get; set; }
+
+    /// <summary>
+    /// 关键字校验选项
+    /// </summary>
+    public KeywordCheckOptions KeywordCheckOptions { get; set; } = new();
 }

@@ -1,9 +1,11 @@
 ﻿using System.Web;
 using Berry.Spider.Abstractions;
+using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
 using Berry.Spider.FreeRedis;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
 using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.Guids;
@@ -23,6 +25,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     private IDistributedEventBus DistributedEventBus { get; }
     private ISpiderContentRepository SpiderRepository { get; }
     private SpiderDomainService SpiderDomainService { get; }
+    private IOptionsSnapshot<SpiderOptions> Options { get; }
 
     private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=information&dvpf=pc";
 
@@ -32,7 +35,8 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
         IRedisService redisService,
         IDistributedEventBus eventBus,
         ISpiderContentRepository spiderRepository,
-        SpiderDomainService spiderDomainService) : base(logger)
+        SpiderDomainService spiderDomainService,
+        IOptionsSnapshot<SpiderOptions> options) : base(logger)
     {
         this.GuidGenerator = guidGenerator;
         this.WebElementLoadProvider = provider;
@@ -40,6 +44,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
         this.DistributedEventBus = eventBus;
         this.SpiderRepository = spiderRepository;
         this.SpiderDomainService = spiderDomainService;
+        this.Options = options;
     }
 
     /// <summary>
@@ -48,10 +53,9 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     /// <returns></returns>
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
-        await this.BloomCheckAsync(push.Keyword, async () =>
-        {
-            await this.DistributedEventBus.PublishAsync(push);
-        });
+        await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); },
+            bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
+            duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
 
     /// <summary>
@@ -60,9 +64,13 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     /// <returns></returns>
     protected override async Task<bool> DuplicateCheckAsync(string keyword)
     {
-        //TODO:二次重复性校验是否调整为某一类数据下唯一，这样其他类下面还是可以跑
-        
-        bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY, keyword);
+        string key = GlobalConstants.SPIDER_KEYWORDS_KEY;
+        if (this.Options.Value.KeywordCheckOptions.OnlyCurrentCategory)
+        {
+            key += $":{SpiderSourceFrom.TouTiao_Information_Composition}";
+        }
+
+        bool result = await this.RedisService.SetAsync(key, keyword);
         return result;
     }
 

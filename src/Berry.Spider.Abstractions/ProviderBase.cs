@@ -15,7 +15,56 @@ public abstract class ProviderBase<T>
     }
 
     /// <summary>
-    /// 对待采集关键字进行一次重复性校验
+    /// 对待采集关键字逻辑校验
+    /// </summary>
+    protected async Task CheckAsync(string keyword, Func<Task> checkSuccessCallback, bool bloomCheck = false,
+        bool duplicateCheck = false)
+    {
+        if (bloomCheck)
+        {
+            if (BloomFilterHelper.Contains(keyword))
+            {
+                return;
+            }
+            else
+            {
+                //添加到bloom过滤器
+                BloomFilterHelper.Add(keyword);
+
+                //二次重复性校验
+                if (duplicateCheck)
+                {
+                    bool checkSucc = await this.DuplicateCheckAsync(keyword);
+                    if (checkSucc)
+                    {
+                        //执行回调函数
+                        await checkSuccessCallback.Invoke();
+                    }
+                }
+                else
+                {
+                    //执行回调函数
+                    await checkSuccessCallback.Invoke();
+                }
+            }
+        }
+        else
+        {
+            if (duplicateCheck)
+            {
+                //二次重复性校验
+                bool checkSucc = await this.DuplicateCheckAsync(keyword);
+                if (checkSucc)
+                {
+                    //执行回调函数
+                    await checkSuccessCallback.Invoke();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Bloom过滤器重复性校验
     /// </summary>
     protected async Task BloomCheckAsync(string keyword, Func<Task> checkSuccessCallback)
     {
