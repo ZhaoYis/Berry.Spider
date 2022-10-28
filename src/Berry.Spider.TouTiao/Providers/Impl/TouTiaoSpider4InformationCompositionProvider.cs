@@ -60,6 +60,8 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     /// <returns></returns>
     protected override async Task<bool> DuplicateCheckAsync(string keyword)
     {
+        //TODO:二次重复性校验是否调整为某一类数据下唯一，这样其他类下面还是可以跑
+        
         bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY, keyword);
         return result;
     }
