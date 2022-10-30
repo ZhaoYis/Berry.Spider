@@ -2,7 +2,6 @@ using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System.Drawing;
-using Volo.Abp;
 
 namespace Berry.Spider.Core;
 
@@ -25,10 +24,10 @@ public class WebElementLoadProvider : IWebElementLoadProvider
         Func<IWebElement?, Task> executor)
     {
         //检查是否处于人机验证资源锁定阶段
-        if (await this.InterceptorProvider.IsLockedAsync())
-        {
-            throw new BusinessException("人机验证资源锁定中，请稍后再试~");
-        }
+        // if (await this.InterceptorProvider.IsLockedAsync())
+        // {
+        //     throw new BusinessException("人机验证资源锁定中，请稍后再试~");
+        // }
 
         using (var driver = await this.WebDriverProvider.GetAsync())
         {
@@ -37,7 +36,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                 driver.Navigate().GoToUrl(targetUrl);
 
                 //人机验证拦截
-                await this.InterceptorProvider.InvokeAsync(driver);
+                //await this.InterceptorProvider.InvokeAsync(driver);
 
                 //获取跳转后url
                 string title = driver.Title;
@@ -88,11 +87,11 @@ public class WebElementLoadProvider : IWebElementLoadProvider
     public async Task<T?> InvokeAsync<T>(string targetUrl, Func<IWebDriver, IWebElement?> selector,
         Func<IWebElement?, Task<T>> executor)
     {
-        //检查是否处于人机验证资源锁定阶段
-        if (await this.InterceptorProvider.IsLockedAsync())
-        {
-            throw new BusinessException("人机验证资源锁定中，请稍后再试~");
-        }
+        // //检查是否处于人机验证资源锁定阶段
+        // if (await this.InterceptorProvider.IsLockedAsync())
+        // {
+        //     throw new BusinessException("人机验证资源锁定中，请稍后再试~");
+        // }
 
         using (var driver = await this.WebDriverProvider.GetAsync())
         {
@@ -101,7 +100,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                 driver.Navigate().GoToUrl(targetUrl);
 
                 //人机验证拦截
-                await this.InterceptorProvider.InvokeAsync(driver);
+                //await this.InterceptorProvider.InvokeAsync(driver);
 
                 //获取跳转后url
                 string title = driver.Title;

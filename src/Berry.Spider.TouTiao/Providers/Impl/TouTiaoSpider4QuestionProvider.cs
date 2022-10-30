@@ -57,7 +57,8 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     /// <returns></returns>
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
-        await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); },
+        await this.CheckAsync(push.Keyword,
+            checkSuccessCallback: async () => { await this.DistributedEventBus.PublishAsync(push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -112,26 +113,31 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                         {
                             //TODO:只取 大家都在问 的部分
 
-                            var a = element.FindElement(By.TagName("a"));
-                            if (a != null)
+                            try
                             {
-                                string text = a.Text;
-                                string href = a.GetAttribute("href");
-
-                                string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
-                                if (!string.IsNullOrEmpty(realHref))
+                                var a = element.FindElement(By.TagName("a"));
+                                if (a != null)
                                 {
-                                    eto.Items.Add(new ChildPageDataItem
-                                    {
-                                        Title = text,
-                                        Href = realHref
-                                    });
+                                    string text = a.Text;
+                                    string href = a.GetAttribute("href");
 
-                                    this.Logger.LogInformation(text + "  ---> " + href);
+                                    string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
+                                    if (!string.IsNullOrEmpty(realHref))
+                                    {
+                                        eto.Items.Add(new ChildPageDataItem
+                                        {
+                                            Title = text,
+                                            Href = realHref
+                                        });
+
+                                        this.Logger.LogInformation(text + "  ---> " + href);
+                                    }
                                 }
                             }
-
-                            await Task.CompletedTask;
+                            catch (Exception)
+                            {
+                                //ignore...
+                            }
                         });
 
                         if (eto.Items.Any())
@@ -145,10 +151,6 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
         catch (Exception exception)
         {
             this.Logger.LogException(exception);
-        }
-        finally
-        {
-            //ignore..
         }
     }
 
@@ -178,25 +180,35 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                                 MaxDegreeOfParallelism = 10
                             }, async (element, token) =>
                             {
-                                var answerList = element
-                                    .FindElements(By.TagName("div"))
-                                    .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))
-                                    .ToList();
-                                if (answerList.Any())
+                                try
                                 {
-                                    foreach (IWebElement answer in answerList)
+                                    var answerList = element
+                                        .FindElements(By.TagName("div"))
+                                        .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))
+                                        .ToList();
+                                    if (answerList.Any())
                                     {
-                                        if (answer != null && !string.IsNullOrWhiteSpace(answer.Text))
+                                        await Parallel.ForEachAsync(answerList, new ParallelOptions
                                         {
-                                            //解析内容
-                                            var list = await this.TextAnalysisProvider.InvokeAsync(answer.Text);
-                                            if (list.Count > 0)
+                                            MaxDegreeOfParallelism = 10
+                                        }, async (answer, token) =>
+                                        {
+                                            if (answer != null && !string.IsNullOrWhiteSpace(answer.Text))
                                             {
-                                                contentItems.AddRange(list);
-                                                this.Logger.LogInformation("总共获取到记录：" + list.Count);
+                                                //解析内容
+                                                var list = await this.TextAnalysisProvider.InvokeAsync(answer.Text);
+                                                if (list.Count > 0)
+                                                {
+                                                    contentItems.AddRange(list);
+                                                    this.Logger.LogInformation("总共获取到记录：" + list.Count);
+                                                }
                                             }
-                                        }
+                                        });
                                     }
+                                }
+                                catch (Exception)
+                                {
+                                    //ignore...
                                 }
                             });
                         }
@@ -217,10 +229,6 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
         catch (Exception exception)
         {
             this.Logger.LogException(exception);
-        }
-        finally
-        {
-            //ignore..
         }
     }
 }

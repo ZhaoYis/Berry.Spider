@@ -98,26 +98,31 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                             },
                             async (element, token) =>
                             {
-                                var a = element.FindElement(By.TagName("a"));
-                                if (a != null)
+                                try
                                 {
-                                    string text = a.Text;
-                                    string href = a.GetAttribute("href");
-
-                                    string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
-                                    if (!string.IsNullOrEmpty(realHref))
+                                    var a = element.FindElement(By.TagName("a"));
+                                    if (a != null)
                                     {
-                                        eto.Items.Add(new ChildPageDataItem
-                                        {
-                                            Title = text,
-                                            Href = realHref
-                                        });
+                                        string text = a.Text;
+                                        string href = a.GetAttribute("href");
 
-                                        this.Logger.LogInformation(text + "  ---> " + href);
+                                        string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
+                                        if (!string.IsNullOrEmpty(realHref))
+                                        {
+                                            eto.Items.Add(new ChildPageDataItem
+                                            {
+                                                Title = text,
+                                                Href = realHref
+                                            });
+
+                                            this.Logger.LogInformation(text + "  ---> " + href);
+                                        }
                                     }
                                 }
-
-                                await Task.CompletedTask;
+                                catch (Exception)
+                                {
+                                    //ignore...
+                                }
                             });
 
                         if (eto.Items.Any())
@@ -131,10 +136,6 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
         catch (Exception exception)
         {
             this.Logger.LogException(exception);
-        }
-        finally
-        {
-            //ignore..
         }
     }
 

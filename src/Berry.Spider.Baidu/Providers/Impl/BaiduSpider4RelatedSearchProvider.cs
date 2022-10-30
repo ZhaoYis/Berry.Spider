@@ -137,10 +137,6 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
         {
             this.Logger.LogException(exception);
         }
-        finally
-        {
-            //ignore..
-        }
     }
 
     /// <summary>
@@ -162,10 +158,6 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
         catch (Exception exception)
         {
             this.Logger.LogException(exception);
-        }
-        finally
-        {
-            //ignore..
         }
     }
 }

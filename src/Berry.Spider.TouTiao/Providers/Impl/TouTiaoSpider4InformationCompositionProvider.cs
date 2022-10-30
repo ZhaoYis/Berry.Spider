@@ -110,26 +110,31 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                             MaxDegreeOfParallelism = 10
                         }, async (element, token) =>
                         {
-                            var a = element.FindElement(By.TagName("a"));
-                            if (a != null)
+                            try
                             {
-                                string text = a.Text;
-                                string href = a.GetAttribute("href");
-                                
-                                string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
-                                if (!string.IsNullOrEmpty(realHref))
+                                var a = element.FindElement(By.TagName("a"));
+                                if (a != null)
                                 {
-                                    eto.Items.Add(new ChildPageDataItem
-                                    {
-                                        Title = text,
-                                        Href = realHref
-                                    });
+                                    string text = a.Text;
+                                    string href = a.GetAttribute("href");
 
-                                    this.Logger.LogInformation(text + "  ---> " + href);
+                                    string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
+                                    if (!string.IsNullOrEmpty(realHref))
+                                    {
+                                        eto.Items.Add(new ChildPageDataItem
+                                        {
+                                            Title = text,
+                                            Href = realHref
+                                        });
+
+                                        this.Logger.LogInformation(text + "  ---> " + href);
+                                    }
                                 }
                             }
-
-                            await Task.CompletedTask;
+                            catch (Exception)
+                            {
+                                //ignore...
+                            }
                         });
 
                         if (eto.Items.Any())
@@ -143,10 +148,6 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
         catch (Exception exception)
         {
             this.Logger.LogException(exception);
-        }
-        finally
-        {
-            //ignore..
         }
     }
 
@@ -169,20 +170,26 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                     async root =>
                     {
                         if (root == null) return;
-
-                        var resultContent = root.FindElement(By.TagName("article"));
-                        if (resultContent != null)
+                        try
                         {
-                            string content = resultContent.Text;
-                            if (!string.IsNullOrEmpty(content))
+                            var resultContent = root.FindElement(By.TagName("article"));
+                            if (resultContent != null)
                             {
-                                SpiderContent spiderContent =
-                                    new SpiderContent(item.Title, content, groupId, eventData.SourceFrom);
-                                contentItems.Add(spiderContent);
+                                string content = resultContent.Text;
+                                if (!string.IsNullOrEmpty(content))
+                                {
+                                    SpiderContent spiderContent =
+                                        new SpiderContent(item.Title, content, groupId, eventData.SourceFrom);
+                                    contentItems.Add(spiderContent);
+                                }
                             }
-                        }
 
-                        await Task.Delay(1);
+                            await Task.Delay(1);
+                        }
+                        catch (Exception)
+                        {
+                            //ignore...
+                        }
                     }
                 );
             }
@@ -192,10 +199,6 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
         catch (Exception exception)
         {
             this.Logger.LogException(exception);
-        }
-        finally
-        {
-            //ignore..
         }
     }
 }

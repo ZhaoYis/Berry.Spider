@@ -132,10 +132,6 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
         {
             this.Logger.LogException(exception);
         }
-        finally
-        {
-            //ignore..
-        }
     }
 
     /// <summary>
@@ -157,10 +153,6 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
         catch (Exception exception)
         {
             this.Logger.LogException(exception);
-        }
-        finally
-        {
-            //ignore..
         }
 
         return Task.CompletedTask;
