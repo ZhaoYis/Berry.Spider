@@ -22,6 +22,9 @@ public class BaiduSpiderModule : AbpModule
         //注入文本解析器
         context.Services.AddTransient<BaiduRelatedSearchTextAnalysisProvider>();
 
+        //注册解析真实跳转的Url地址解析器
+        context.Services.AddSingleton<BaiduResolveJumpUrlProvider>();
+
         return Task.CompletedTask;
     }
 }

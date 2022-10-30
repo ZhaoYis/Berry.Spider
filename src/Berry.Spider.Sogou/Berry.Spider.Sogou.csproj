@@ -19,4 +19,8 @@
       <ProjectReference Include="..\Berry.Spider.Sogou.Contracts\Berry.Spider.Sogou.Contracts.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Resolver" />
+    </ItemGroup>
+
 </Project>

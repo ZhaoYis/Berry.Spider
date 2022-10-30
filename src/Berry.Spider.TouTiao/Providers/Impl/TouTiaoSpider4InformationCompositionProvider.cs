@@ -1,5 +1,4 @@
-﻿using System.Web;
-using Berry.Spider.Abstractions;
+﻿using Berry.Spider.Abstractions;
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;

@@ -4,7 +4,6 @@ using Berry.Spider.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
-using System.Web;
 using Berry.Spider.Contracts;
 using Berry.Spider.FreeRedis;
 using Microsoft.Extensions.Options;
@@ -20,6 +19,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private ITextAnalysisProvider TextAnalysisProvider { get; }
+    private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
     private IDistributedEventBus DistributedEventBus { get; }
     private IRedisService RedisService { get; }
     private ISpiderTitleContentRepository SpiderRepository { get; }
@@ -37,6 +37,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     {
         this.WebElementLoadProvider = provider;
         this.TextAnalysisProvider = serviceProvider.GetRequiredService<BaiduRelatedSearchTextAnalysisProvider>();
+        this.ResolveJumpUrlProvider = serviceProvider.GetRequiredService<BaiduResolveJumpUrlProvider>();
         this.DistributedEventBus = eventBus;
         this.RedisService = redisService;
         this.SpiderRepository = repository;
@@ -102,22 +103,17 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                         string text = element.Text;
                         string href = element.GetAttribute("href");
 
-                        if (href.StartsWith("http") || href.StartsWith("https"))
+                        string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
+                        if (!string.IsNullOrEmpty(realHref))
                         {
-                            Uri jumpUri = new Uri(HttpUtility.UrlDecode(href));
-                            if (jumpUri.Host.Contains("baidu"))
+                            eto.Items.Add(new ChildPageDataItem
                             {
-                                eto.Items.Add(new ChildPageDataItem
-                                {
-                                    Title = text,
-                                    Href = jumpUri.ToString()
-                                });
+                                Title = text,
+                                Href = realHref
+                            });
 
-                                this.Logger.LogInformation(text + "  ---> " + href);
-                            }
+                            this.Logger.LogInformation(text + "  ---> " + href);
                         }
-
-                        await Task.CompletedTask;
                     });
 
                     if (eto.Items.Any())

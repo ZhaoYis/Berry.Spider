@@ -7,6 +7,8 @@ public class TouTiaoResolveJumpUrlProvider : IResolveJumpUrlProvider
 {
     public Task<string> ResolveAsync(string sourceUrl)
     {
+        if (string.IsNullOrWhiteSpace(sourceUrl)) return Task.FromResult("");
+
         //去获取so.toutiao.com、tsearch.toutiaoapi.com的记录
         Uri sourceUri = new Uri(sourceUrl);
         //?url=https://so.toutiao.com/xxx
