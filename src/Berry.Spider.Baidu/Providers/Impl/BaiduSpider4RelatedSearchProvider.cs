@@ -75,68 +75,61 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     /// </summary>
     public async Task ExecuteAsync<T>(T request) where T : class, ISpiderRequest
     {
-        try
-        {
-            string targetUrl = string.Format(this.HomePage, request.Keyword);
-            await this.WebElementLoadProvider.InvokeAsync(
-                targetUrl,
-                drv => drv.FindElement(By.Id("rs_new")),
-                async root =>
+        string targetUrl = string.Format(this.HomePage, request.Keyword);
+        await this.WebElementLoadProvider.InvokeAsync(
+            targetUrl,
+            drv => drv.FindElement(By.Id("rs_new")),
+            async root =>
+            {
+                if (root == null) return;
+
+                var resultContent = root.TryFindElements(By.TagName("a"));
+                if (resultContent is {Count: > 0})
                 {
-                    if (root == null) return;
+                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 
-                    var resultContent = root.TryFindElements(By.TagName("a"));
-                    if (resultContent is {Count: > 0})
+                    var eto = new BaiduSpider4RelatedSearchPullEto
                     {
-                        this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+                        Keyword = request.Keyword,
+                        Title = request.Keyword
+                    };
 
-                        var eto = new BaiduSpider4RelatedSearchPullEto
-                        {
-                            Keyword = request.Keyword,
-                            Title = request.Keyword
-                        };
+                    await Parallel.ForEachAsync(resultContent, new ParallelOptions
+                    {
+                        MaxDegreeOfParallelism = 10
+                    }, async (element, token) =>
+                    {
+                        string text = element.Text;
+                        string href = element.GetAttribute("href");
 
-                        await Parallel.ForEachAsync(resultContent, new ParallelOptions
+                        if (href.StartsWith("http") || href.StartsWith("https"))
                         {
-                            MaxDegreeOfParallelism = 10
-                        }, async (element, token) =>
-                        {
-                            string text = element.Text;
-                            string href = element.GetAttribute("href");
-
-                            if (href.StartsWith("http") || href.StartsWith("https"))
+                            Uri jumpUri = new Uri(HttpUtility.UrlDecode(href));
+                            if (jumpUri.Host.Contains("baidu"))
                             {
-                                Uri jumpUri = new Uri(HttpUtility.UrlDecode(href));
-                                if (jumpUri.Host.Contains("baidu"))
+                                eto.Items.Add(new ChildPageDataItem
                                 {
-                                    eto.Items.Add(new ChildPageDataItem
-                                    {
-                                        Title = text,
-                                        Href = jumpUri.ToString()
-                                    });
+                                    Title = text,
+                                    Href = jumpUri.ToString()
+                                });
 
-                                    this.Logger.LogInformation(text + "  ---> " + href);
-                                }
+                                this.Logger.LogInformation(text + "  ---> " + href);
                             }
-
-                            await Task.CompletedTask;
-                        });
-
-                        if (eto.Items.Any())
-                        {
-                            //await this.DistributedEventBus.PublishAsync(eto);
-
-                            //此处不做消息队列发送，直接存储到数据库
-                            await this.HandleEventAsync(eto);
-                            this.Logger.LogInformation("数据保存成功...");
                         }
+
+                        await Task.CompletedTask;
+                    });
+
+                    if (eto.Items.Any())
+                    {
+                        //await this.DistributedEventBus.PublishAsync(eto);
+
+                        //此处不做消息队列发送，直接存储到数据库
+                        await this.HandleEventAsync(eto);
+                        this.Logger.LogInformation("数据保存成功...");
                     }
-                });
-        }
-        catch (Exception exception)
-        {
-            this.Logger.LogException(exception);
-        }
+                }
+            });
     }
 
     /// <summary>

@@ -71,65 +71,58 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     /// <returns></returns>
     public async Task ExecuteAsync<T>(T request) where T : class, ISpiderRequest
     {
-        try
-        {
-            string targetUrl = string.Format(this.HomePage, request.Keyword);
-            await this.WebElementLoadProvider.InvokeAsync(
-                targetUrl,
-                drv => drv.FindElement(By.ClassName("s-result-list")),
-                async root =>
+        string targetUrl = string.Format(this.HomePage, request.Keyword);
+        await this.WebElementLoadProvider.InvokeAsync(
+            targetUrl,
+            drv => drv.FindElement(By.ClassName("s-result-list")),
+            async root =>
+            {
+                if (root == null) return;
+
+                var resultContent = root.TryFindElements(By.ClassName("result-content"));
+                if (resultContent is {Count: > 0})
                 {
-                    if (root == null) return;
+                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 
-                    var resultContent = root.TryFindElements(By.ClassName("result-content"));
-                    if (resultContent is {Count: > 0})
+                    var eto = new TouTiaoSpider4QuestionPullEto
                     {
-                        this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+                        Keyword = request.Keyword,
+                        Title = request.Keyword
+                    };
 
-                        var eto = new TouTiaoSpider4QuestionPullEto
+                    await Parallel.ForEachAsync(resultContent, new ParallelOptions
                         {
-                            Keyword = request.Keyword,
-                            Title = request.Keyword
-                        };
+                            MaxDegreeOfParallelism = 10
+                        },
+                        async (element, token) =>
+                        {
+                            var a = element.TryFindElement(By.TagName("a"));
+                            if (a != null)
+                            {
+                                string text = a.Text;
+                                string href = a.GetAttribute("href");
 
-                        await Parallel.ForEachAsync(resultContent, new ParallelOptions
-                            {
-                                MaxDegreeOfParallelism = 10
-                            },
-                            async (element, token) =>
-                            {
-                                var a = element.TryFindElement(By.TagName("a"));
-                                if (a != null)
+                                string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
+                                if (!string.IsNullOrEmpty(realHref))
                                 {
-                                    string text = a.Text;
-                                    string href = a.GetAttribute("href");
-
-                                    string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
-                                    if (!string.IsNullOrEmpty(realHref))
+                                    eto.Items.Add(new ChildPageDataItem
                                     {
-                                        eto.Items.Add(new ChildPageDataItem
-                                        {
-                                            Title = text,
-                                            Href = realHref
-                                        });
+                                        Title = text,
+                                        Href = realHref
+                                    });
 
-                                        this.Logger.LogInformation(text + "  ---> " + href);
-                                    }
+                                    this.Logger.LogInformation(text + "  ---> " + href);
                                 }
-                            });
+                            }
+                        });
 
-                        if (eto.Items.Any())
-                        {
-                            await this.DistributedEventBus.PublishAsync(eto);
-                            this.Logger.LogInformation("事件发布成功，等待消费...");
-                        }
+                    if (eto.Items.Any())
+                    {
+                        await this.DistributedEventBus.PublishAsync(eto);
+                        this.Logger.LogInformation("事件发布成功，等待消费...");
                     }
-                });
-        }
-        catch (Exception exception)
-        {
-            this.Logger.LogException(exception);
-        }
+                }
+            });
     }
 
     /// <summary>

@@ -74,64 +74,57 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
     /// </summary>
     public async Task ExecuteAsync<T>(T request) where T : class, ISpiderRequest
     {
-        try
-        {
-            //获取url地址
-            string realUrl = await this.WebElementLoadProvider.AutoClickAsync(this.HomePage, request.Keyword,
-                By.Id("query"),
-                By.Id("stb"));
-            if (string.IsNullOrWhiteSpace(realUrl)) return;
+        //获取url地址
+        string realUrl = await this.WebElementLoadProvider.AutoClickAsync(this.HomePage, request.Keyword,
+            By.Id("query"),
+            By.Id("stb"));
+        if (string.IsNullOrWhiteSpace(realUrl)) return;
 
-            await this.WebElementLoadProvider.InvokeAsync(
-                realUrl,
-                drv => drv.FindElement(By.Id("hint_container")),
-                async root =>
+        await this.WebElementLoadProvider.InvokeAsync(
+            realUrl,
+            drv => drv.FindElement(By.Id("hint_container")),
+            async root =>
+            {
+                if (root == null) return;
+
+                var resultContent = root.TryFindElements(By.TagName("a"));
+                if (resultContent is {Count: > 0})
                 {
-                    if (root == null) return;
+                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 
-                    var resultContent = root.TryFindElements(By.TagName("a"));
-                    if (resultContent is {Count: > 0})
+                    var eto = new SogouSpider4RelatedSearchPullEto
                     {
-                        this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+                        Keyword = request.Keyword,
+                        Title = request.Keyword
+                    };
 
-                        var eto = new SogouSpider4RelatedSearchPullEto
+                    await Parallel.ForEachAsync(resultContent, new ParallelOptions
                         {
-                            Keyword = request.Keyword,
-                            Title = request.Keyword
-                        };
+                            MaxDegreeOfParallelism = 10
+                        },
+                        async (element, token) =>
+                        {
+                            string text = element.Text;
+                            string href = element.GetAttribute("href");
 
-                        await Parallel.ForEachAsync(resultContent, new ParallelOptions
+                            eto.Items.Add(new ChildPageDataItem
                             {
-                                MaxDegreeOfParallelism = 10
-                            },
-                            async (element, token) =>
-                            {
-                                string text = element.Text;
-                                string href = element.GetAttribute("href");
-
-                                eto.Items.Add(new ChildPageDataItem
-                                {
-                                    Title = text,
-                                    Href = href
-                                });
-
-                                this.Logger.LogInformation(text + "  ---> " + href);
-                                await Task.CompletedTask;
+                                Title = text,
+                                Href = href
                             });
 
-                        if (eto.Items.Any())
-                        {
-                            //此处不做消息队列发送，直接存储到数据库
-                            await this.HandleEventAsync(eto);
-                            this.Logger.LogInformation("数据保存成功...");
-                        }
+                            this.Logger.LogInformation(text + "  ---> " + href);
+                            await Task.CompletedTask;
+                        });
+
+                    if (eto.Items.Any())
+                    {
+                        //此处不做消息队列发送，直接存储到数据库
+                        await this.HandleEventAsync(eto);
+                        this.Logger.LogInformation("数据保存成功...");
                     }
-                });
-        }
-        catch (Exception exception)
-        {
-            this.Logger.LogException(exception);
-        }
+                }
+            });
     }
 
     /// <summary>
