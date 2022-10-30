@@ -92,7 +92,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
 
                     await Parallel.ForEachAsync(resultContent, new ParallelOptions
                         {
-                            MaxDegreeOfParallelism = 10
+                            MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
                         },
                         async (element, token) =>
                         {

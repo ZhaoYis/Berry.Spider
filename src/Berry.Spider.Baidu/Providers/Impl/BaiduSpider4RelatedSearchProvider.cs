@@ -97,7 +97,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
 
                     await Parallel.ForEachAsync(resultContent, new ParallelOptions
                     {
-                        MaxDegreeOfParallelism = 10
+                        MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
                     }, async (element, token) =>
                     {
                         string text = element.Text;

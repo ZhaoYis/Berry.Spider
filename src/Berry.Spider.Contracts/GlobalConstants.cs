@@ -3,9 +3,9 @@
 public static class GlobalConstants
 {
     /// <summary>
-    /// 落库每条记录最小内容数量
+    /// Parallel最大并行数
     /// </summary>
-    public const int DefaultMinRecords = 30;
+    public const int ParallelMaxDegreeOfParallelism = 10;
 
     /// <summary>
     /// 用于判重的Redis的key

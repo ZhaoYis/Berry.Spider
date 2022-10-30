@@ -106,7 +106,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
 
                     await Parallel.ForEachAsync(resultContent, new ParallelOptions
                     {
-                        MaxDegreeOfParallelism = 10
+                        MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
                     }, async (element, token) =>
                     {
                         //TODO:只取 大家都在问 的部分
@@ -163,23 +163,24 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                         {
                             await Parallel.ForEachAsync(resultContent, new ParallelOptions
                             {
-                                MaxDegreeOfParallelism = 10
+                                MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
                             }, async (element, token) =>
                             {
-                                try
+                                var answerList = element.TryFindElements(By.TagName("div"));
+                                if (answerList is {Count: > 0})
                                 {
-                                    var answerList = element
-                                        .FindElements(By.TagName("div"))
+                                    var realAnswerList = answerList
                                         .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))
                                         .ToList();
-                                    if (answerList.Any())
+
+                                    if (realAnswerList.Any())
                                     {
-                                        await Parallel.ForEachAsync(answerList, new ParallelOptions
+                                        await Parallel.ForEachAsync(realAnswerList, new ParallelOptions
                                         {
-                                            MaxDegreeOfParallelism = 10
-                                        }, async (answer, token) =>
+                                            MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
+                                        }, async (answer, cancellationToken) =>
                                         {
-                                            if (answer != null && !string.IsNullOrWhiteSpace(answer.Text))
+                                            if (!string.IsNullOrWhiteSpace(answer.Text))
                                             {
                                                 //解析内容
                                                 var list = await this.TextAnalysisProvider.InvokeAsync(answer.Text);
@@ -191,10 +192,6 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                                             }
                                         });
                                     }
-                                }
-                                catch (Exception)
-                                {
-                                    //ignore...
                                 }
                             });
                         }

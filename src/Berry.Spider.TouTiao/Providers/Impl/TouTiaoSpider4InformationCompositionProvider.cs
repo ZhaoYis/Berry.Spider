@@ -104,7 +104,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
 
                     await Parallel.ForEachAsync(resultContent, new ParallelOptions
                     {
-                        MaxDegreeOfParallelism = 10
+                        MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
                     }, async (element, token) =>
                     {
                         var a = element.TryFindElement(By.TagName("a"));
