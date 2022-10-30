@@ -81,11 +81,11 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                 {
                     if (root == null) return;
 
-                    var resultContent = root.FindElements(By.ClassName("result-content"));
-                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
-
-                    if (resultContent.Count > 0)
+                    var resultContent = root.TryFindElements(By.ClassName("result-content"));
+                    if (resultContent is {Count: > 0})
                     {
+                        this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+
                         var eto = new TouTiaoSpider4QuestionPullEto
                         {
                             Keyword = request.Keyword,
@@ -98,30 +98,23 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                             },
                             async (element, token) =>
                             {
-                                try
+                                var a = element.TryFindElement(By.TagName("a"));
+                                if (a != null)
                                 {
-                                    var a = element.FindElement(By.TagName("a"));
-                                    if (a != null)
+                                    string text = a.Text;
+                                    string href = a.GetAttribute("href");
+
+                                    string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
+                                    if (!string.IsNullOrEmpty(realHref))
                                     {
-                                        string text = a.Text;
-                                        string href = a.GetAttribute("href");
-
-                                        string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
-                                        if (!string.IsNullOrEmpty(realHref))
+                                        eto.Items.Add(new ChildPageDataItem
                                         {
-                                            eto.Items.Add(new ChildPageDataItem
-                                            {
-                                                Title = text,
-                                                Href = realHref
-                                            });
+                                            Title = text,
+                                            Href = realHref
+                                        });
 
-                                            this.Logger.LogInformation(text + "  ---> " + href);
-                                        }
+                                        this.Logger.LogInformation(text + "  ---> " + href);
                                     }
-                                }
-                                catch (Exception)
-                                {
-                                    //ignore...
                                 }
                             });
 

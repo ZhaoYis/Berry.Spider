@@ -89,11 +89,11 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
                 {
                     if (root == null) return;
 
-                    var resultContent = root.FindElements(By.TagName("a"));
-                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
-
-                    if (resultContent.Count > 0)
+                    var resultContent = root.TryFindElements(By.TagName("a"));
+                    if (resultContent is {Count: > 0})
                     {
+                        this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+
                         var eto = new SogouSpider4RelatedSearchPullEto
                         {
                             Keyword = request.Keyword,

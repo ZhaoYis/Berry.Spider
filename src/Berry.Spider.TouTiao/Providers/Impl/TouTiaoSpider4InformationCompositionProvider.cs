@@ -94,11 +94,11 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                 {
                     if (root == null) return;
 
-                    var resultContent = root.FindElements(By.ClassName("result-content"));
-                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
-
-                    if (resultContent.Count > 0)
+                    var resultContent = root.TryFindElements(By.ClassName("result-content"));
+                    if (resultContent is {Count: > 0})
                     {
+                        this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+
                         var eto = new TouTiaoSpider4InformationCompositionPullEto
                         {
                             Keyword = request.Keyword,
@@ -110,30 +110,23 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                             MaxDegreeOfParallelism = 10
                         }, async (element, token) =>
                         {
-                            try
+                            var a = element.TryFindElement(By.TagName("a"));
+                            if (a != null)
                             {
-                                var a = element.FindElement(By.TagName("a"));
-                                if (a != null)
+                                string text = a.Text;
+                                string href = a.GetAttribute("href");
+
+                                string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
+                                if (!string.IsNullOrEmpty(realHref))
                                 {
-                                    string text = a.Text;
-                                    string href = a.GetAttribute("href");
-
-                                    string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
-                                    if (!string.IsNullOrEmpty(realHref))
+                                    eto.Items.Add(new ChildPageDataItem
                                     {
-                                        eto.Items.Add(new ChildPageDataItem
-                                        {
-                                            Title = text,
-                                            Href = realHref
-                                        });
+                                        Title = text,
+                                        Href = realHref
+                                    });
 
-                                        this.Logger.LogInformation(text + "  ---> " + href);
-                                    }
+                                    this.Logger.LogInformation(text + "  ---> " + href);
                                 }
-                            }
-                            catch (Exception)
-                            {
-                                //ignore...
                             }
                         });
 
@@ -170,26 +163,20 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                     async root =>
                     {
                         if (root == null) return;
-                        try
-                        {
-                            var resultContent = root.FindElement(By.TagName("article"));
-                            if (resultContent != null)
-                            {
-                                string content = resultContent.Text;
-                                if (!string.IsNullOrEmpty(content))
-                                {
-                                    SpiderContent spiderContent =
-                                        new SpiderContent(item.Title, content, groupId, eventData.SourceFrom);
-                                    contentItems.Add(spiderContent);
-                                }
-                            }
 
-                            await Task.Delay(1);
-                        }
-                        catch (Exception)
+                        var resultContent = root.TryFindElement(By.TagName("article"));
+                        if (resultContent != null)
                         {
-                            //ignore...
+                            string content = resultContent.Text;
+                            if (!string.IsNullOrEmpty(content))
+                            {
+                                SpiderContent spiderContent =
+                                    new SpiderContent(item.Title, content, groupId, eventData.SourceFrom);
+                                contentItems.Add(spiderContent);
+                            }
                         }
+
+                        await Task.Delay(1);
                     }
                 );
             }
