@@ -44,9 +44,7 @@ public class Program
                     path: "Logs/logs-Error-.log",
                     outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} ERROR [berry-spider-consumers] [] [] [] [] [{ThreadId}] --- {Message:lj}{NewLine}{Exception}",
                     rollingInterval: RollingInterval.Day)))
-#if DEBUG
             .WriteTo.Async(c => c.Console())
-#endif
             .WriteTo.Exceptionless(e => e.AddTags("Berry.Spider.Consumers"))
             .CreateLogger();
 
