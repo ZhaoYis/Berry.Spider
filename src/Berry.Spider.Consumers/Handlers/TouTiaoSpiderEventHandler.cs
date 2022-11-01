@@ -1,22 +1,15 @@
 ﻿using Berry.Spider.Abstractions;
 using Berry.Spider.TouTiao;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.EventBus.Distributed;
 
 namespace Berry.Spider.Consumers;
 
 /// <summary>
 /// 今日头条分布式事件处理器
 /// </summary>
-public class TouTiaoSpiderEventHandler :
-    IDistributedEventHandler<TouTiaoSpider4QuestionPushEto>,
-    IDistributedEventHandler<TouTiaoSpider4InformationPushEto>,
-    IDistributedEventHandler<TouTiaoSpider4InformationCompositionPushEto>,
-    IDistributedEventHandler<TouTiaoSpider4QuestionPullEto>,
-    IDistributedEventHandler<TouTiaoSpider4InformationPullEto>,
-    IDistributedEventHandler<TouTiaoSpider4InformationCompositionPullEto>,
-    ITransientDependency
+public class TouTiaoSpiderEventHandler : ICapSubscribe
 {
     public IAbpLazyServiceProvider LazyServiceProvider { get; set; }
 
@@ -24,6 +17,7 @@ public class TouTiaoSpiderEventHandler :
     /// 执行获取一级页面数据任务
     /// </summary>
     /// <param name="eventData"></param>
+    [CapSubscribe(TouTiaoSpider4QuestionPushEto.EventNameString)]
     public async Task HandleEventAsync(TouTiaoSpider4QuestionPushEto eventData)
     {
         ISpiderProvider provider =
@@ -73,6 +67,7 @@ public class TouTiaoSpiderEventHandler :
     /// </summary>
     /// <param name="eventData"></param>
     /// <returns></returns>
+    [CapSubscribe(TouTiaoSpider4QuestionPullEto.EventNameString)]
     public Task HandleEventAsync(TouTiaoSpider4QuestionPullEto eventData)
     {
         ISpiderProvider provider =

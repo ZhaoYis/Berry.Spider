@@ -2,7 +2,8 @@
 
 namespace Berry.Spider.TouTiao;
 
-[EventName("Berry.TouTiao.Question.Push")]
+[EventName(EventNameString)]
 public class TouTiaoSpider4QuestionPushEto : SpiderPushBaseEto
 {
+    public const string EventNameString = "Berry.TouTiao.Question.Push";
 }

@@ -9,17 +9,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using Berry.Spider.EventBus.RabbitMq;
 using Volo.Abp;
 using Volo.Abp.Autofac;
-using Volo.Abp.EventBus.RabbitMq;
 using Volo.Abp.Modularity;
 
 namespace Berry.Spider.Consumers;
 
 [DependsOn(
     typeof(AbpAutofacModule),
-    typeof(AbpEventBusRabbitMqModule),
     typeof(SpiderEntityFrameworkCoreModule),
+    typeof(SpiderEventBusRabbitMqModule),
     //今日头条模块
     typeof(TouTiaoSpiderModule),
     //搜狗模块
@@ -45,5 +45,10 @@ public class SpiderConsumersModule : AbpModule
         }
 
         return Task.CompletedTask;
+    }
+
+    public override void ConfigureServices(ServiceConfigurationContext context)
+    {
+        context.Services.AddTransient<TouTiaoSpiderEventHandler>();
     }
 }

@@ -2,6 +2,7 @@ using Berry.Spider.Application;
 using Berry.Spider.AspNetCore.Mvc;
 using Berry.Spider.Baidu;
 using Berry.Spider.EntityFrameworkCore;
+using Berry.Spider.EventBus.RabbitMq;
 using Berry.Spider.Sogou;
 using Berry.Spider.TouTiao;
 using Microsoft.AspNetCore.Cors;
@@ -10,7 +11,6 @@ using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc.AntiForgery;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
-using Volo.Abp.EventBus.RabbitMq;
 using Volo.Abp.Modularity;
 using Volo.Abp.Swashbuckle;
 
@@ -20,10 +20,10 @@ namespace Berry.Spider.HttpApi.Host;
     typeof(AbpAutofacModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule),
-    typeof(AbpEventBusRabbitMqModule),
     typeof(SpiderHttpApiModule),
     typeof(SpiderEntityFrameworkCoreModule),
     typeof(SpiderAspNetCoreMvcModule),
+    typeof(SpiderEventBusRabbitMqModule),
     //今日头条模块
     typeof(TouTiaoSpiderModule),
     //百度模块

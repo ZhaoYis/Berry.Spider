@@ -2,6 +2,7 @@
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
+using Berry.Spider.EventBus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -24,7 +25,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     private ISpiderContentRepository SpiderRepository { get; }
     private SpiderDomainService SpiderDomainService { get; }
     private IClock Clock { get; }
-    private IDistributedEventBus DistributedEventBus { get; }
+    private IEventBusPublisher EventBusPublisher { get; }
     private IRedisService RedisService { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
 
@@ -36,7 +37,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
         SpiderDomainService spiderDomainService,
         ISpiderContentRepository repository,
         IClock clock,
-        IDistributedEventBus eventBus,
+        IEventBusPublisher eventBus,
         IRedisService redisService,
         IOptionsSnapshot<SpiderOptions> options) : base(logger)
     {
@@ -46,7 +47,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
         this.SpiderRepository = repository;
         this.SpiderDomainService = spiderDomainService;
         this.Clock = clock;
-        this.DistributedEventBus = eventBus;
+        this.EventBusPublisher = eventBus;
         this.RedisService = redisService;
         this.Options = options;
     }
@@ -58,7 +59,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
         await this.CheckAsync(push.Keyword,
-            checkSuccessCallback: async () => { await this.DistributedEventBus.PublishAsync(push); },
+            checkSuccessCallback: async () => { await this.EventBusPublisher.PublishAsync(push.TryGetEventName(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -94,7 +95,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.ClassName("result-content"));
-                if (resultContent is {Count: > 0})
+                if (resultContent is { Count: > 0 })
                 {
                     this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 
@@ -133,7 +134,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
 
                     if (eto.Items.Any())
                     {
-                        await this.DistributedEventBus.PublishAsync(eto);
+                        await this.EventBusPublisher.PublishAsync(eto.TryGetEventName(), eto);
                         this.Logger.LogInformation("事件发布成功，等待消费...");
                     }
                 }
@@ -159,7 +160,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                         if (root == null) return;
 
                         var resultContent = root.TryFindElements(By.ClassName("list"));
-                        if (resultContent is {Count: > 0})
+                        if (resultContent is { Count: > 0 })
                         {
                             await Parallel.ForEachAsync(resultContent, new ParallelOptions
                             {
@@ -167,7 +168,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                             }, async (element, token) =>
                             {
                                 var answerList = element.TryFindElements(By.TagName("div"));
-                                if (answerList is {Count: > 0})
+                                if (answerList is { Count: > 0 })
                                 {
                                     var realAnswerList = answerList
                                         .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))
