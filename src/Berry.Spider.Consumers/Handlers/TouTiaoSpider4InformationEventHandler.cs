@@ -16,7 +16,7 @@ public class TouTiaoSpider4InformationEventHandler : ICapSubscribe
     /// <summary>
     /// 执行获取一级页面数据任务
     /// </summary>
-    [CapSubscribe(TouTiaoSpider4InformationPushEto.EventNameString)]
+    [CapSubscribe(TouTiaoSpider4InformationPushEto.RoutingKeyString, Group = TouTiaoSpider4InformationPushEto.QueueNameString)]
     public Task HandleEventAsync(TouTiaoSpider4InformationPushEto eventData)
     {
         ISpiderProvider provider =
@@ -33,7 +33,7 @@ public class TouTiaoSpider4InformationEventHandler : ICapSubscribe
     /// 执行根据一级页面采集到的地址获取二级页面具体目标数据任务
     /// </summary>
     /// <returns></returns>
-    [CapSubscribe(TouTiaoSpider4InformationPullEto.EventNameString)]
+    [CapSubscribe(TouTiaoSpider4InformationPullEto.RoutingKeyString, Group = TouTiaoSpider4InformationPullEto.QueueNameString)]
     public Task HandleEventAsync(TouTiaoSpider4InformationPullEto eventData)
     {
         ISpiderProvider provider =

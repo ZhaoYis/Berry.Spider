@@ -16,7 +16,7 @@ public class SogouSpider4RelatedSearchEventHandler : ICapSubscribe
     /// <summary>
     /// 执行获取一级页面数据任务
     /// </summary>
-    [CapSubscribe(SogouSpider4RelatedSearchPushEto.EventNameString)]
+    [CapSubscribe(SogouSpider4RelatedSearchPushEto.RoutingKeyString, Group = SogouSpider4RelatedSearchPushEto.QueueNameString)]
     public async Task HandleEventAsync(SogouSpider4RelatedSearchPushEto eventData)
     {
         ISpiderProvider provider =
@@ -32,7 +32,7 @@ public class SogouSpider4RelatedSearchEventHandler : ICapSubscribe
     /// <summary>
     /// 执行根据一级页面采集到的地址获取二级页面具体目标数据任务
     /// </summary>
-    [CapSubscribe(SogouSpider4RelatedSearchPullEto.EventNameString)]
+    [CapSubscribe(SogouSpider4RelatedSearchPullEto.RoutingKeyString, Group = SogouSpider4RelatedSearchPullEto.QueueNameString)]
     public Task HandleEventAsync(SogouSpider4RelatedSearchPullEto eventData)
     {
         ISpiderProvider provider =

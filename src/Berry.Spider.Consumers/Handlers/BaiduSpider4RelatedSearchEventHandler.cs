@@ -16,7 +16,7 @@ public class BaiduSpider4RelatedSearchEventHandler : ICapSubscribe
     /// <summary>
     /// 执行获取一级页面数据任务
     /// </summary>
-    [CapSubscribe(BaiduSpider4RelatedSearchPushEto.EventNameString)]
+    [CapSubscribe(BaiduSpider4RelatedSearchPushEto.RoutingKeyString, Group = BaiduSpider4RelatedSearchPushEto.QueueNameString)]
     public async Task HandleEventAsync(BaiduSpider4RelatedSearchPushEto eventData)
     {
         ISpiderProvider provider =
@@ -32,7 +32,7 @@ public class BaiduSpider4RelatedSearchEventHandler : ICapSubscribe
     /// <summary>
     /// 执行根据一级页面采集到的地址获取二级页面具体目标数据任务
     /// </summary>
-    [CapSubscribe(BaiduSpider4RelatedSearchPullEto.EventNameString)]
+    [CapSubscribe(BaiduSpider4RelatedSearchPullEto.RoutingKeyString, Group = BaiduSpider4RelatedSearchPullEto.QueueNameString)]
     public Task HandleEventAsync(BaiduSpider4RelatedSearchPullEto eventData)
     {
         ISpiderProvider provider =

@@ -2,8 +2,9 @@ using Volo.Abp.EventBus;
 
 namespace Berry.Spider.Sogou;
 
-[EventName(EventNameString)]
+[EventName(RoutingKeyString)]
 public class SogouSpider4RelatedSearchPushEto : SpiderPushBaseEto
 {
-    public const string EventNameString = "Berry.Sogou.RelatedSearch.Push";
+    public const string RoutingKeyString = "Berry.Sogou.RelatedSearch.Push";
+    public const string QueueNameString = "Sogou.RelatedSearch.Push";
 }
