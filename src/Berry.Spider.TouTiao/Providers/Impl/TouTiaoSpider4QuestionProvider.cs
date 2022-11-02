@@ -58,7 +58,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
         await this.CheckAsync(push.Keyword,
-            checkSuccessCallback: async () => { await this.DistributedEventBus.PublishAsync(push.TryGetEventName(), push); },
+            checkSuccessCallback: async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -133,7 +133,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
 
                     if (eto.Items.Any())
                     {
-                        await this.DistributedEventBus.PublishAsync(eto.TryGetEventName(), eto);
+                        await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
                         this.Logger.LogInformation("事件发布成功，等待消费...");
                     }
                 }

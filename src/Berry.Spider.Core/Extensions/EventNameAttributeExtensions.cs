@@ -8,7 +8,7 @@ public static class EventNameAttributeExtensions
 {
     private static readonly ConcurrentDictionary<Type, EventNameAttribute?> Cache = new();
 
-    public static string TryGetEventName<T>(this T t)
+    public static string TryGetRoutingKey<T>(this T t)
     {
         EventNameAttribute? attribute = GetAttribute(t);
         if (attribute == null)

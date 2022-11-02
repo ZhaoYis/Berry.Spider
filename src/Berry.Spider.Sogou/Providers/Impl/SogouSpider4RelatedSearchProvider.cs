@@ -48,7 +48,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
     /// <returns></returns>
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
-        await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetEventName(), push); },
+        await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
