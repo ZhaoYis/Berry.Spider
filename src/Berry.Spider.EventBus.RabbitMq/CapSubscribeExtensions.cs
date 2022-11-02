@@ -1,5 +1,5 @@
-using System.Reflection;
 using DotNetCore.CAP;
+using System.Reflection;
 
 namespace Berry.Spider.EventBus.RabbitMq;
 

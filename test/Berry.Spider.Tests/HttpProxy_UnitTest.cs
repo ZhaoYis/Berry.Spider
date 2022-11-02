@@ -1,4 +1,5 @@
 ﻿using Berry.Spider.Proxy;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Protected;
@@ -7,7 +8,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace Berry.Spider.Tests;
@@ -19,7 +19,7 @@ public class HttpProxy_UnitTest
     {
         //arrange
         var options = new Mock<IOptionsSnapshot<HttpProxyOptions>>();
-        options.Setup(c => c.Value).Returns(new HttpProxyOptions {ProxyPoolApiHost = "http://124.223.62.114:5010"});
+        options.Setup(c => c.Value).Returns(new HttpProxyOptions { ProxyPoolApiHost = "http://124.223.62.114:5010" });
 
         var messageHandler = new Mock<HttpMessageHandler>();
         messageHandler.Protected()

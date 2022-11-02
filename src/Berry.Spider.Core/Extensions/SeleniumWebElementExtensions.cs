@@ -1,5 +1,5 @@
-using System.Collections.ObjectModel;
 using OpenQA.Selenium;
+using System.Collections.ObjectModel;
 
 namespace Berry.Spider.Core;
 

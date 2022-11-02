@@ -11,7 +11,7 @@ public class TouTiaoSpider4QuestionPullEto : SpiderPullBaseEto
 {
     public const string RoutingKeyString = "Berry.TouTiao.Question.Pull";
     public const string QueueNameString = "TouTiao.Question.Pull";
-    
+
     public TouTiaoSpider4QuestionPullEto() : base(SpiderSourceFrom.TouTiao_Question)
     {
     }

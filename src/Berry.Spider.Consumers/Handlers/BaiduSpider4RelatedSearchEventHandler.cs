@@ -1,7 +1,7 @@
-using System.Threading.Tasks;
 using Berry.Spider.Abstractions;
 using Berry.Spider.Baidu;
 using DotNetCore.CAP;
+using System.Threading.Tasks;
 using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.Consumers;

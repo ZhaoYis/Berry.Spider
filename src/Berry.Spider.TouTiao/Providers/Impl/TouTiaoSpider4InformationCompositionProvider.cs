@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
-using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.Guids;
 
 namespace Berry.Spider.TouTiao;

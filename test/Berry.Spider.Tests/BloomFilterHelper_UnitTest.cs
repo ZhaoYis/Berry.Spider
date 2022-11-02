@@ -1,6 +1,5 @@
-using System;
-using System.Threading.Tasks;
 using Berry.Spider.Core;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Berry.Spider.Tests;
@@ -15,7 +14,7 @@ public class BloomFilterHelper_UnitTest
         bloomFilterHelper.Add("大哥大");
 
         double truthiness = bloomFilterHelper.Truthiness;
-        
+
         Assert.True(bloomFilterHelper.Contains("大师兄"));
     }
 }

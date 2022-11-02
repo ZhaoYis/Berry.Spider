@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using DotNetCore.CAP.Internal;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System.Threading;
 using System.Threading.Tasks;
-using DotNetCore.CAP.Internal;
 using Volo.Abp;
 
 namespace Berry.Spider.Consumers;
@@ -33,7 +33,7 @@ public class SpiderConsumersHostedService : IHostedService
             options.Services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog());
         });
         await _abpApplication.InitializeAsync();
-        
+
         //初始化
         IBootstrapper bootstrapper = _abpApplication.ServiceProvider.GetService<IBootstrapper>();
         await bootstrapper.BootstrapAsync();

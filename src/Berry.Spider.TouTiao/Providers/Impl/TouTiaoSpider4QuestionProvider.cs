@@ -3,11 +3,11 @@ using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
 using Berry.Spider.EventBus;
+using Berry.Spider.FreeRedis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
-using Berry.Spider.FreeRedis;
 using Volo.Abp.Timing;
 
 namespace Berry.Spider.TouTiao;

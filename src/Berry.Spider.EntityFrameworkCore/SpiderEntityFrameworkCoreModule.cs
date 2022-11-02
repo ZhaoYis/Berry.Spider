@@ -1,5 +1,4 @@
 using Berry.Spider.Domain;
-using Berry.Spider.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Dapper;
 using Volo.Abp.EntityFrameworkCore;

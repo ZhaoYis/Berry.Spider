@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
-using Volo.Abp.EventBus.Distributed;
 
 namespace Berry.Spider.Sogou;
 
@@ -100,9 +99,9 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
                     };
 
                     await Parallel.ForEachAsync(resultContent, new ParallelOptions
-                        {
-                            MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
-                        },
+                    {
+                        MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
+                    },
                         async (element, token) =>
                         {
                             string text = element.Text;

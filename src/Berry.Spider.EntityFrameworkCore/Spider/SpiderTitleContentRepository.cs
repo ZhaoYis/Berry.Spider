@@ -1,5 +1,4 @@
 using Berry.Spider.Domain;
-using Berry.Spider.EntityFrameworkCore.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;

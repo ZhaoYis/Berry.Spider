@@ -1,14 +1,13 @@
 ﻿using Berry.Spider.Abstractions;
+using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using OpenQA.Selenium;
-using Berry.Spider.Contracts;
 using Berry.Spider.EventBus;
 using Berry.Spider.FreeRedis;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Volo.Abp.EventBus.Distributed;
+using OpenQA.Selenium;
 
 namespace Berry.Spider.Baidu;
 

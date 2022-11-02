@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
-using Volo.Abp.EventBus.Distributed;
 
 namespace Berry.Spider.TouTiao;
 
@@ -92,9 +91,9 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                     };
 
                     await Parallel.ForEachAsync(resultContent, new ParallelOptions
-                        {
-                            MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
-                        },
+                    {
+                        MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
+                    },
                         async (element, token) =>
                         {
                             var a = element.TryFindElement(By.TagName("a"));
