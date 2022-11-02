@@ -29,7 +29,7 @@ namespace Berry.Spider.Consumers;
 )]
 public class SpiderConsumersModule : AbpModule
 {
-    public override Task OnApplicationInitializationAsync(ApplicationInitializationContext context)
+    public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
         var logger = context.ServiceProvider.GetRequiredService<ILogger<SpiderConsumersModule>>();
         var configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
@@ -43,12 +43,19 @@ public class SpiderConsumersModule : AbpModule
         {
             ExceptionlessClient.Default.Startup(options.ApiKey);
         }
-
-        return Task.CompletedTask;
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddTransient<TouTiaoSpiderEventHandler>();
+        //今日头条
+        context.Services.AddTransient<TouTiaoSpider4QuestionEventHandler>();
+        context.Services.AddTransient<TouTiaoSpider4InformationEventHandler>();
+        context.Services.AddTransient<TouTiaoSpider4InformationCompositionEventHandler>();
+
+        //搜狗
+        context.Services.AddTransient<SogouSpider4RelatedSearchEventHandler>();
+
+        //百度
+        context.Services.AddTransient<BaiduSpider4RelatedSearchEventHandler>();
     }
 }

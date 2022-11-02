@@ -20,6 +20,6 @@ public class RabbitMqEventBusPublisher : IEventBusPublisher
     {
         Check.NotNull(topicName, nameof(topicName));
 
-        await this.Publisher.PublishAsync(topicName, body, cancellationToken: cancellationToken);
+        await this.Publisher.PublishAsync<T>(topicName, body, cancellationToken: cancellationToken);
     }
 }

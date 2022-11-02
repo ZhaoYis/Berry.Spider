@@ -2,6 +2,7 @@
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
+using Berry.Spider.EventBus;
 using Berry.Spider.FreeRedis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,7 +24,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
     private IRedisService RedisService { get; }
-    private IDistributedEventBus DistributedEventBus { get; }
+    private IEventBusPublisher DistributedEventBus { get; }
     private ISpiderContentRepository SpiderRepository { get; }
     private SpiderDomainService SpiderDomainService { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
@@ -35,7 +36,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
         IServiceProvider serviceProvider,
         IWebElementLoadProvider provider,
         IRedisService redisService,
-        IDistributedEventBus eventBus,
+        IEventBusPublisher eventBus,
         ISpiderContentRepository spiderRepository,
         SpiderDomainService spiderDomainService,
         IOptionsSnapshot<SpiderOptions> options) : base(logger)
@@ -56,7 +57,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     /// <returns></returns>
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
-        await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); },
+        await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetEventName(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -92,7 +93,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.ClassName("result-content"));
-                if (resultContent is {Count: > 0})
+                if (resultContent is { Count: > 0 })
                 {
                     this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 
@@ -129,7 +130,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
 
                     if (eto.Items.Any())
                     {
-                        await this.DistributedEventBus.PublishAsync(eto);
+                        await this.DistributedEventBus.PublishAsync(eto.TryGetEventName(), eto);
                         this.Logger.LogInformation("事件发布成功，等待消费...");
                     }
                 }

@@ -4,7 +4,7 @@ using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 
-namespace Berry.Spider.EntityFrameworkCore.EntityFrameworkCore;
+namespace Berry.Spider.EntityFrameworkCore;
 
 [ConnectionStringName("Default")]
 public class SpiderDbContext : AbpDbContext<SpiderDbContext>

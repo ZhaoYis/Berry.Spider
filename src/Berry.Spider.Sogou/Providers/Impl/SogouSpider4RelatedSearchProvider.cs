@@ -2,6 +2,7 @@
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
+using Berry.Spider.EventBus;
 using Berry.Spider.FreeRedis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -19,7 +20,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private ITextAnalysisProvider TextAnalysisProvider { get; }
-    private IDistributedEventBus DistributedEventBus { get; }
+    private IEventBusPublisher DistributedEventBus { get; }
     private IRedisService RedisService { get; }
     private ISpiderTitleContentRepository SpiderRepository { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
@@ -29,7 +30,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
     public SogouSpider4RelatedSearchProvider(ILogger<SogouSpider4RelatedSearchProvider> logger,
         IWebElementLoadProvider provider,
         IServiceProvider serviceProvider,
-        IDistributedEventBus eventBus,
+        IEventBusPublisher eventBus,
         IRedisService redisService,
         ISpiderTitleContentRepository repository,
         IOptionsSnapshot<SpiderOptions> options) : base(logger)
@@ -48,7 +49,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
     /// <returns></returns>
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
-        await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); },
+        await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetEventName(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -88,7 +89,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.TagName("a"));
-                if (resultContent is {Count: > 0})
+                if (resultContent is { Count: > 0 })
                 {
                     this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 

@@ -1,3 +1,4 @@
+using Berry.Spider.EntityFrameworkCore;
 using DotNetCore.CAP.Internal;
 using DotNetCore.CAP.Messages;
 using Microsoft.Extensions.Configuration;
@@ -16,8 +17,7 @@ public class SpiderEventBusRabbitMqModule : AbpModule
         EventBusRabbitMqOptions options = configuration.GetSection("RabbitMQ:Connections:Default").Get<EventBusRabbitMqOptions>();
         context.Services.AddCap(opt =>
         {
-            //TODO：内存队列
-            opt.UseInMemoryStorage();
+            opt.UseEntityFramework<SpiderDbContext>();
             opt.UseDashboard();
 
             opt.UseRabbitMQ(o =>
@@ -30,11 +30,11 @@ public class SpiderEventBusRabbitMqModule : AbpModule
 
                 o.CustomHeaders = e => new List<KeyValuePair<string, string>>
                 {
-                    new KeyValuePair<string, string>(Headers.MessageId, SnowflakeId.Default().NextId().ToString()),
-                    new KeyValuePair<string, string>(Headers.MessageName, e.RoutingKey),
+                    new(Headers.MessageId, SnowflakeId.Default().NextId().ToString()),
+                    new(Headers.MessageName, e.RoutingKey)
                 };
             });
-        });
+        }).AddSubscribeFilter<CustomSubscribeFilter>();
 
         //注册RabbitMq消息发布器
         context.Services.AddTransient<IEventBusPublisher, RabbitMqEventBusPublisher>();

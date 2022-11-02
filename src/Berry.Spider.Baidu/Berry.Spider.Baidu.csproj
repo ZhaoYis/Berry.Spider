@@ -16,6 +16,7 @@
       <ProjectReference Include="..\Berry.Spider.Baidu.Contracts\Berry.Spider.Baidu.Contracts.csproj" />
       <ProjectReference Include="..\Berry.Spider.Core\Berry.Spider.Core.csproj" />
       <ProjectReference Include="..\Berry.Spider.Domain\Berry.Spider.Domain.csproj" />
+      <ProjectReference Include="..\Berry.Spider.EventBus\Berry.Spider.EventBus.csproj" />
       <ProjectReference Include="..\Berry.Spider.Proxy.Local\Berry.Spider.Proxy.Local.csproj" />
     </ItemGroup>
 

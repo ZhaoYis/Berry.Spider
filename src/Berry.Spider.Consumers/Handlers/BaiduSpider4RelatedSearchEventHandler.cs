@@ -1,20 +1,22 @@
+using System.Threading.Tasks;
 using Berry.Spider.Abstractions;
 using Berry.Spider.Baidu;
-using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.EventBus.Distributed;
 
 namespace Berry.Spider.Consumers;
 
 /// <summary>
-/// 百度分布式事件处理器
+/// 百度：相关搜索
 /// </summary>
-public class BaiduSpiderEventHandler :
-    IDistributedEventHandler<BaiduSpider4RelatedSearchPushEto>,
-    IDistributedEventHandler<BaiduSpider4RelatedSearchPullEto>, ITransientDependency
+public class BaiduSpider4RelatedSearchEventHandler : ICapSubscribe
 {
     public IAbpLazyServiceProvider LazyServiceProvider { get; set; }
 
+    /// <summary>
+    /// 执行获取一级页面数据任务
+    /// </summary>
+    [CapSubscribe(BaiduSpider4RelatedSearchPushEto.EventNameString)]
     public async Task HandleEventAsync(BaiduSpider4RelatedSearchPushEto eventData)
     {
         ISpiderProvider provider =
@@ -27,6 +29,10 @@ public class BaiduSpiderEventHandler :
         });
     }
 
+    /// <summary>
+    /// 执行根据一级页面采集到的地址获取二级页面具体目标数据任务
+    /// </summary>
+    [CapSubscribe(BaiduSpider4RelatedSearchPullEto.EventNameString)]
     public Task HandleEventAsync(BaiduSpider4RelatedSearchPullEto eventData)
     {
         ISpiderProvider provider =

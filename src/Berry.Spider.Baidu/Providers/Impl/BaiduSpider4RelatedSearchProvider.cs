@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using Berry.Spider.Contracts;
+using Berry.Spider.EventBus;
 using Berry.Spider.FreeRedis;
 using Microsoft.Extensions.Options;
 using Volo.Abp.EventBus.Distributed;
@@ -20,7 +21,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private ITextAnalysisProvider TextAnalysisProvider { get; }
     private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
-    private IDistributedEventBus DistributedEventBus { get; }
+    private IEventBusPublisher DistributedEventBus { get; }
     private IRedisService RedisService { get; }
     private ISpiderTitleContentRepository SpiderRepository { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
@@ -30,7 +31,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     public BaiduSpider4RelatedSearchProvider(ILogger<BaiduSpider4RelatedSearchProvider> logger,
         IWebElementLoadProvider provider,
         IServiceProvider serviceProvider,
-        IDistributedEventBus eventBus,
+        IEventBusPublisher eventBus,
         IRedisService redisService,
         ISpiderTitleContentRepository repository,
         IOptionsSnapshot<SpiderOptions> options) : base(logger)
@@ -50,7 +51,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     /// <returns></returns>
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
-        await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); },
+        await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetEventName(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -85,7 +86,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.TagName("a"));
-                if (resultContent is {Count: > 0})
+                if (resultContent is { Count: > 0 })
                 {
                     this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 

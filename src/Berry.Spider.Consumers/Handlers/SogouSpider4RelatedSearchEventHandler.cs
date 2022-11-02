@@ -1,20 +1,22 @@
+using System.Threading.Tasks;
 using Berry.Spider.Abstractions;
 using Berry.Spider.Sogou;
-using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Volo.Abp.DependencyInjection;
-using Volo.Abp.EventBus.Distributed;
 
 namespace Berry.Spider.Consumers;
 
 /// <summary>
-/// 搜狗分布式事件处理器
+/// 搜狗：相关搜索
 /// </summary>
-public class SogouSpiderEventHandler :
-    IDistributedEventHandler<SogouSpider4RelatedSearchPushEto>,
-    IDistributedEventHandler<SogouSpider4RelatedSearchPullEto>, ITransientDependency
+public class SogouSpider4RelatedSearchEventHandler : ICapSubscribe
 {
     public IAbpLazyServiceProvider LazyServiceProvider { get; set; }
 
+    /// <summary>
+    /// 执行获取一级页面数据任务
+    /// </summary>
+    [CapSubscribe(SogouSpider4RelatedSearchPushEto.EventNameString)]
     public async Task HandleEventAsync(SogouSpider4RelatedSearchPushEto eventData)
     {
         ISpiderProvider provider =
@@ -27,6 +29,10 @@ public class SogouSpiderEventHandler :
         });
     }
 
+    /// <summary>
+    /// 执行根据一级页面采集到的地址获取二级页面具体目标数据任务
+    /// </summary>
+    [CapSubscribe(SogouSpider4RelatedSearchPullEto.EventNameString)]
     public Task HandleEventAsync(SogouSpider4RelatedSearchPullEto eventData)
     {
         ISpiderProvider provider =

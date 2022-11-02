@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
 using Berry.Spider.FreeRedis;
-using Volo.Abp.EventBus.Distributed;
 using Volo.Abp.Timing;
 
 namespace Berry.Spider.TouTiao;
@@ -25,7 +24,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     private ISpiderContentRepository SpiderRepository { get; }
     private SpiderDomainService SpiderDomainService { get; }
     private IClock Clock { get; }
-    private IEventBusPublisher EventBusPublisher { get; }
+    private IEventBusPublisher DistributedEventBus { get; }
     private IRedisService RedisService { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
 
@@ -47,7 +46,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
         this.SpiderRepository = repository;
         this.SpiderDomainService = spiderDomainService;
         this.Clock = clock;
-        this.EventBusPublisher = eventBus;
+        this.DistributedEventBus = eventBus;
         this.RedisService = redisService;
         this.Options = options;
     }
@@ -59,7 +58,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
         await this.CheckAsync(push.Keyword,
-            checkSuccessCallback: async () => { await this.EventBusPublisher.PublishAsync(push.TryGetEventName(), push); },
+            checkSuccessCallback: async () => { await this.DistributedEventBus.PublishAsync(push.TryGetEventName(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -134,7 +133,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
 
                     if (eto.Items.Any())
                     {
-                        await this.EventBusPublisher.PublishAsync(eto.TryGetEventName(), eto);
+                        await this.DistributedEventBus.PublishAsync(eto.TryGetEventName(), eto);
                         this.Logger.LogInformation("事件发布成功，等待消费...");
                     }
                 }
