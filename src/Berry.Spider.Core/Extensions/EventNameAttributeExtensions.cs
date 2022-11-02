@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Reflection;
 using Volo.Abp.EventBus;
 
@@ -5,6 +6,8 @@ namespace Berry.Spider.Core;
 
 public static class EventNameAttributeExtensions
 {
+    private static readonly ConcurrentDictionary<Type, EventNameAttribute?> Cache = new();
+
     public static string TryGetEventName<T>(this T t)
     {
         EventNameAttribute? attribute = GetAttribute(t);
@@ -23,12 +26,15 @@ public static class EventNameAttributeExtensions
         if (t == null) throw new ArgumentNullException(nameof(t));
 
         Type type = t.GetType();
-        EventNameAttribute? attribute = type.GetCustomAttribute<EventNameAttribute>();
-        if (attribute != null)
+        return Cache.GetOrAdd(type, t =>
         {
-            return attribute;
-        }
+            EventNameAttribute? attribute = t.GetCustomAttribute<EventNameAttribute>();
+            if (attribute != null)
+            {
+                return attribute;
+            }
 
-        return default;
+            return default;
+        });
     }
 }
