@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Berry.Spider.Abstractions;
 using Berry.Spider.TouTiao;
@@ -16,12 +17,12 @@ public class TouTiaoSpider4QuestionEventHandler : ICapSubscribe
     /// <summary>
     /// 执行获取一级页面数据任务
     /// </summary>
-    [CapSubscribe(TouTiaoSpider4QuestionPushEto.EventNameString)]
+    [CapSubscribe(TouTiaoSpider4QuestionPushEto.RoutingKeyString, Group = TouTiaoSpider4QuestionPushEto.QueueNameString)]
     public async Task HandleEventAsync(TouTiaoSpider4QuestionPushEto eventData)
     {
         ISpiderProvider provider =
             this.LazyServiceProvider.LazyGetRequiredService<TouTiaoSpider4QuestionProvider>();
-
+        
         await provider.ExecuteAsync(new TouTiaoSpiderRequest
         {
             SourceFrom = eventData.SourceFrom,
@@ -33,12 +34,12 @@ public class TouTiaoSpider4QuestionEventHandler : ICapSubscribe
     /// 执行根据一级页面采集到的地址获取二级页面具体目标数据任务
     /// </summary>
     /// <returns></returns>
-    [CapSubscribe(TouTiaoSpider4QuestionPullEto.EventNameString)]
-    public Task HandleEventAsync(TouTiaoSpider4QuestionPullEto eventData)
+    [CapSubscribe(TouTiaoSpider4QuestionPullEto.RoutingKeyString, Group = TouTiaoSpider4QuestionPullEto.QueueNameString)]
+    public async Task HandleEventAsync(TouTiaoSpider4QuestionPullEto eventData)
     {
         ISpiderProvider provider =
             this.LazyServiceProvider.LazyGetRequiredService<TouTiaoSpider4QuestionProvider>();
 
-        return provider.HandleEventAsync(eventData);
+        await provider.HandleEventAsync(eventData);
     }
 }
