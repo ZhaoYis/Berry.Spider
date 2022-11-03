@@ -18,15 +18,15 @@ public class TouTiaoSpiderModule : AbpModule
 {
     public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
     {
-        //×¢ÈëÍ·ÌõÅÀ³æÌá¹©Õß
+        //æ³¨å…¥å¤´æ¡çˆ¬è™«æä¾›è€…
         context.Services.AddTransient<TouTiaoSpider4QuestionProvider>();
         context.Services.AddTransient<TouTiaoSpider4InformationProvider>();
         context.Services.AddTransient<TouTiaoSpider4InformationCompositionProvider>();
 
-        //×¢ÈëÎÄ±¾½âÎöÆ÷
+        //æ³¨å…¥æ–‡æœ¬è§£æå™¨
         context.Services.AddTransient<TouTiaoQuestionTextAnalysisProvider>();
 
-        //×¢²á½âÎöÕæÊµÌø×ªµÄUrlµØÖ·½âÎöÆ÷
+        //æ³¨å†Œè§£æçœŸå®è·³è½¬çš„Urlåœ°å€è§£æå™¨
         context.Services.AddSingleton<TouTiaoResolveJumpUrlProvider>();
 
         return Task.CompletedTask;
