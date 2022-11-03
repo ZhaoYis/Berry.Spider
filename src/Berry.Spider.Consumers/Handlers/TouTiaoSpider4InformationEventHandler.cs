@@ -1,8 +1,6 @@
-using Berry.Spider.Abstractions;
 using Berry.Spider.TouTiao;
 using DotNetCore.CAP;
 using System.Threading.Tasks;
-using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.Consumers;
 
@@ -11,22 +9,20 @@ namespace Berry.Spider.Consumers;
 /// </summary>
 public class TouTiaoSpider4InformationEventHandler : ICapSubscribe
 {
-    public IAbpLazyServiceProvider LazyServiceProvider { get; set; }
+    private TouTiaoSpider4InformationProvider Provider { get; }
+
+    public TouTiaoSpider4InformationEventHandler(TouTiaoSpider4InformationProvider provider)
+    {
+        this.Provider = provider;
+    }
 
     /// <summary>
     /// 执行获取一级页面数据任务
     /// </summary>
     [CapSubscribe(TouTiaoSpider4InformationPushEto.RoutingKeyString, Group = TouTiaoSpider4InformationPushEto.QueueNameString)]
-    public Task HandleEventAsync(TouTiaoSpider4InformationPushEto eventData)
+    public async Task HandleEventAsync(TouTiaoSpider4InformationPushEto eventData)
     {
-        ISpiderProvider provider =
-            this.LazyServiceProvider.LazyGetRequiredService<TouTiaoSpider4InformationProvider>();
-
-        return provider.ExecuteAsync(new TouTiaoSpiderRequest
-        {
-            SourceFrom = eventData.SourceFrom,
-            Keyword = eventData.Keyword
-        });
+        await this.Provider.HandlePushEventAsync(eventData);
     }
 
     /// <summary>
@@ -34,11 +30,8 @@ public class TouTiaoSpider4InformationEventHandler : ICapSubscribe
     /// </summary>
     /// <returns></returns>
     [CapSubscribe(TouTiaoSpider4InformationPullEto.RoutingKeyString, Group = TouTiaoSpider4InformationPullEto.QueueNameString)]
-    public Task HandleEventAsync(TouTiaoSpider4InformationPullEto eventData)
+    public async Task HandleEventAsync(TouTiaoSpider4InformationPullEto eventData)
     {
-        ISpiderProvider provider =
-            this.LazyServiceProvider.LazyGetRequiredService<TouTiaoSpider4InformationProvider>();
-
-        return provider.HandleEventAsync(eventData);
+        await this.Provider.HandlePullEventAsync(eventData);
     }
 }

@@ -58,7 +58,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
         string key = GlobalConstants.SPIDER_KEYWORDS_KEY;
         if (this.Options.Value.KeywordCheckOptions.OnlyCurrentCategory)
         {
-            key += $":{SpiderSourceFrom.TouTiao_Information}";
+            key += $":{SpiderSourceFrom.TouTiao_Information.ToString()}";
         }
 
         bool result = await this.RedisService.SetAsync(key, keyword);
@@ -69,9 +69,9 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     /// 执行获取一级页面数据任务
     /// </summary>
     /// <returns></returns>
-    public async Task ExecuteAsync<T>(T request) where T : class, ISpiderRequest
+    public async Task HandlePushEventAsync<T>(T eventData) where T : class, ISpiderPushEto
     {
-        string targetUrl = string.Format(this.HomePage, request.Keyword);
+        string targetUrl = string.Format(this.HomePage, eventData.Keyword);
         await this.WebElementLoadProvider.InvokeAsync(
             targetUrl,
             drv => drv.FindElement(By.ClassName("s-result-list")),
@@ -86,8 +86,8 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
 
                     var eto = new TouTiaoSpider4QuestionPullEto
                     {
-                        Keyword = request.Keyword,
-                        Title = request.Keyword
+                        Keyword = eventData.Keyword,
+                        Title = eventData.Keyword
                     };
 
                     await Parallel.ForEachAsync(resultContent, new ParallelOptions
@@ -129,7 +129,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     /// 执行根据一级页面采集到的地址获取二级页面具体目标数据任务
     /// </summary>
     /// <returns></returns>
-    public Task HandleEventAsync<T>(T eventData) where T : class, ISpiderPullEto
+    public Task HandlePullEventAsync<T>(T eventData) where T : class, ISpiderPullEto
     {
         throw new NotImplementedException();
     }

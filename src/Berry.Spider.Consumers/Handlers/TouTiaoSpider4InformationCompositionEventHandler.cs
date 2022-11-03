@@ -1,8 +1,6 @@
-using Berry.Spider.Abstractions;
 using Berry.Spider.TouTiao;
 using DotNetCore.CAP;
 using System.Threading.Tasks;
-using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.Consumers;
 
@@ -11,33 +9,28 @@ namespace Berry.Spider.Consumers;
 /// </summary>
 public class TouTiaoSpider4InformationCompositionEventHandler : ICapSubscribe
 {
-    public IAbpLazyServiceProvider LazyServiceProvider { get; set; }
+    private TouTiaoSpider4InformationCompositionProvider Provider { get; }
+
+    public TouTiaoSpider4InformationCompositionEventHandler(TouTiaoSpider4InformationCompositionProvider provider)
+    {
+        this.Provider = provider;
+    }
 
     /// <summary>
     /// 执行获取一级页面数据任务
     /// </summary>
     [CapSubscribe(TouTiaoSpider4InformationCompositionPushEto.RoutingKeyString, Group = TouTiaoSpider4InformationCompositionPushEto.QueueNameString)]
-    public Task HandleEventAsync(TouTiaoSpider4InformationCompositionPushEto eventData)
+    public async Task HandleEventAsync(TouTiaoSpider4InformationCompositionPushEto eventData)
     {
-        ISpiderProvider provider =
-            this.LazyServiceProvider.LazyGetRequiredService<TouTiaoSpider4InformationCompositionProvider>();
-
-        return provider.ExecuteAsync(new TouTiaoSpiderRequest
-        {
-            SourceFrom = eventData.SourceFrom,
-            Keyword = eventData.Keyword
-        });
+        await this.Provider.HandlePushEventAsync(eventData);
     }
 
     /// <summary>
     /// 执行根据一级页面采集到的地址获取二级页面具体目标数据任务
     /// </summary>
     [CapSubscribe(TouTiaoSpider4InformationCompositionPullEto.RoutingKeyString, Group = TouTiaoSpider4InformationCompositionPullEto.QueueNameString)]
-    public Task HandleEventAsync(TouTiaoSpider4InformationCompositionPullEto eventData)
+    public async Task HandleEventAsync(TouTiaoSpider4InformationCompositionPullEto eventData)
     {
-        ISpiderProvider provider =
-            this.LazyServiceProvider.LazyGetRequiredService<TouTiaoSpider4InformationCompositionProvider>();
-
-        return provider.HandleEventAsync(eventData);
+        await this.Provider.HandlePullEventAsync(eventData);
     }
 }

@@ -1,8 +1,6 @@
-using Berry.Spider.Abstractions;
 using Berry.Spider.TouTiao;
 using DotNetCore.CAP;
 using System.Threading.Tasks;
-using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.Consumers;
 
@@ -11,7 +9,12 @@ namespace Berry.Spider.Consumers;
 /// </summary>
 public class TouTiaoSpider4QuestionEventHandler : ICapSubscribe
 {
-    public IAbpLazyServiceProvider LazyServiceProvider { get; set; }
+    private TouTiaoSpider4QuestionProvider Provider { get; }
+
+    public TouTiaoSpider4QuestionEventHandler(TouTiaoSpider4QuestionProvider provider)
+    {
+        this.Provider = provider;
+    }
 
     /// <summary>
     /// 执行获取一级页面数据任务
@@ -19,14 +22,7 @@ public class TouTiaoSpider4QuestionEventHandler : ICapSubscribe
     [CapSubscribe(TouTiaoSpider4QuestionPushEto.RoutingKeyString, Group = TouTiaoSpider4QuestionPushEto.QueueNameString)]
     public async Task HandleEventAsync(TouTiaoSpider4QuestionPushEto eventData)
     {
-        ISpiderProvider provider =
-            this.LazyServiceProvider.LazyGetRequiredService<TouTiaoSpider4QuestionProvider>();
-
-        await provider.ExecuteAsync(new TouTiaoSpiderRequest
-        {
-            SourceFrom = eventData.SourceFrom,
-            Keyword = eventData.Keyword
-        });
+        await this.Provider.HandlePushEventAsync(eventData);
     }
 
     /// <summary>
@@ -36,9 +32,6 @@ public class TouTiaoSpider4QuestionEventHandler : ICapSubscribe
     [CapSubscribe(TouTiaoSpider4QuestionPullEto.RoutingKeyString, Group = TouTiaoSpider4QuestionPullEto.QueueNameString)]
     public async Task HandleEventAsync(TouTiaoSpider4QuestionPullEto eventData)
     {
-        ISpiderProvider provider =
-            this.LazyServiceProvider.LazyGetRequiredService<TouTiaoSpider4QuestionProvider>();
-
-        await provider.HandleEventAsync(eventData);
+        await this.Provider.HandlePullEventAsync(eventData);
     }
 }

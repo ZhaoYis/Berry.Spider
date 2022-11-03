@@ -1,8 +1,6 @@
-using Berry.Spider.Abstractions;
 using Berry.Spider.Sogou;
 using DotNetCore.CAP;
 using System.Threading.Tasks;
-using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.Consumers;
 
@@ -11,7 +9,12 @@ namespace Berry.Spider.Consumers;
 /// </summary>
 public class SogouSpider4RelatedSearchEventHandler : ICapSubscribe
 {
-    public IAbpLazyServiceProvider LazyServiceProvider { get; set; }
+    private SogouSpider4RelatedSearchProvider Provider { get; }
+
+    public SogouSpider4RelatedSearchEventHandler(SogouSpider4RelatedSearchProvider provider)
+    {
+        this.Provider = provider;
+    }
 
     /// <summary>
     /// 执行获取一级页面数据任务
@@ -19,25 +22,15 @@ public class SogouSpider4RelatedSearchEventHandler : ICapSubscribe
     [CapSubscribe(SogouSpider4RelatedSearchPushEto.RoutingKeyString, Group = SogouSpider4RelatedSearchPushEto.QueueNameString)]
     public async Task HandleEventAsync(SogouSpider4RelatedSearchPushEto eventData)
     {
-        ISpiderProvider provider =
-            this.LazyServiceProvider.LazyGetRequiredService<SogouSpider4RelatedSearchProvider>();
-
-        await provider.ExecuteAsync(new SogouSpiderRequest
-        {
-            SourceFrom = eventData.SourceFrom,
-            Keyword = eventData.Keyword
-        });
+        await this.Provider.HandlePushEventAsync(eventData);
     }
 
     /// <summary>
     /// 执行根据一级页面采集到的地址获取二级页面具体目标数据任务
     /// </summary>
     [CapSubscribe(SogouSpider4RelatedSearchPullEto.RoutingKeyString, Group = SogouSpider4RelatedSearchPullEto.QueueNameString)]
-    public Task HandleEventAsync(SogouSpider4RelatedSearchPullEto eventData)
+    public async Task HandleEventAsync(SogouSpider4RelatedSearchPullEto eventData)
     {
-        ISpiderProvider provider =
-            this.LazyServiceProvider.LazyGetRequiredService<SogouSpider4RelatedSearchProvider>();
-
-        return provider.HandleEventAsync(eventData);
+        await this.Provider.HandlePullEventAsync(eventData);
     }
 }
