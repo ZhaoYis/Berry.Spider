@@ -2,6 +2,7 @@
 using Berry.Spider.Contracts;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.EventBus.RabbitMq;
+using Berry.Spider.Segmenter.JiebaNet;
 using Berry.Spider.Sogou;
 using Berry.Spider.TouTiao;
 using Exceptionless;
@@ -19,6 +20,7 @@ namespace Berry.Spider.Consumers;
     typeof(AbpAutofacModule),
     typeof(SpiderEntityFrameworkCoreModule),
     typeof(SpiderEventBusRabbitMqModule),
+    typeof(SpiderSegmenterJiebaNetModule),
     //今日头条模块
     typeof(TouTiaoSpiderModule),
     //搜狗模块

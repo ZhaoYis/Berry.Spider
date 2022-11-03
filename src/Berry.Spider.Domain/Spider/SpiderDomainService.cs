@@ -1,5 +1,6 @@
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
+using Berry.Spider.Segmenter;
 using Microsoft.Extensions.Options;
 using Volo.Abp.Domain.Services;
 using Volo.Abp.TextTemplating;
@@ -13,17 +14,20 @@ public class SpiderDomainService : DomainService
 {
     private IImageResourceProvider ImageResourceProvider { get; }
     private ITemplateRenderer TemplateRenderer { get; }
+    private ISegmenterProvider SegmenterProvider { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
     private IOptionsSnapshot<TitleTemplateContentOptions> TitleTemplateOptions { get; }
 
     public SpiderDomainService(
         IImageResourceProvider imageResourceProvider,
         ITemplateRenderer templateRenderer,
+        ISegmenterProvider segmenterProvider,
         IOptionsSnapshot<SpiderOptions> options,
         IOptionsSnapshot<TitleTemplateContentOptions> titleTemplateOptions)
     {
         ImageResourceProvider = imageResourceProvider;
         TemplateRenderer = templateRenderer;
+        SegmenterProvider = segmenterProvider;
         Options = options;
         TitleTemplateOptions = titleTemplateOptions;
     }
@@ -83,6 +87,13 @@ public class SpiderDomainService : DomainService
 
                 //组装数据
                 var content = new SpiderContent(originalTitle, mainContent, sourceFrom);
+                //对标题进行分词操作
+                var segments = await this.SegmenterProvider.CutForSearchAsync(originalTitle);
+                if (segments is { Count: > 0 })
+                {
+                    content.Keywords = string.Join(" ", segments);
+                }
+
                 return content;
             }
         }
