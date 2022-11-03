@@ -87,6 +87,9 @@ public class SpiderDomainService : DomainService
 
                 //组装数据
                 var content = new SpiderContent(originalTitle, mainContent, sourceFrom);
+                
+                //TODO：根据配置决定是否需要进行分词操作
+                //TODO：或许可以重构成服务，其他使用的地方无需关注这些逻辑
                 //对标题进行分词操作
                 var segments = await this.SegmenterProvider.CutForSearchAsync(originalTitle);
                 if (segments is { Count: > 0 })
