@@ -20,6 +20,7 @@ public class TouTiaoSpiderModule : AbpModule
     {
         //注入头条爬虫提供者
         context.Services.AddTransient<TouTiaoSpider4QuestionProvider>();
+        context.Services.AddTransient<TouTiaoSpider4HighQualityQuestionProvider>();
         context.Services.AddTransient<TouTiaoSpider4InformationProvider>();
         context.Services.AddTransient<TouTiaoSpider4InformationCompositionProvider>();
 

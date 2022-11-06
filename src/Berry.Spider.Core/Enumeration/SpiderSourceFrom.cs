@@ -32,6 +32,11 @@ public enum SpiderSourceFrom
     /// </summary>
     [Description("头条_问答")] TouTiao_Question = 110,
 
+    /// <summary>
+    /// 头条_优质_问答
+    /// </summary>
+    [Description("头条_优质_问答")] TouTiao_HighQuality_Question = 111,
+
     /// <summary> 
     /// 百度_相关推荐
     /// </summary>

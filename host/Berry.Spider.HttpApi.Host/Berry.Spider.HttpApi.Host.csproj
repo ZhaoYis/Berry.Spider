@@ -27,6 +27,7 @@
       <ProjectReference Include="..\..\src\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.EventBus.RabbitMq\Berry.Spider.EventBus.RabbitMq.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.HttpApi\Berry.Spider.HttpApi.csproj" />
+      <ProjectReference Include="..\..\src\Berry.Spider.Segmenter.JiebaNet\Berry.Spider.Segmenter.JiebaNet.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.Sogou\Berry.Spider.Sogou.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.TouTiao\Berry.Spider.TouTiao.csproj" />
     </ItemGroup>

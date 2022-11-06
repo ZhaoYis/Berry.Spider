@@ -28,6 +28,16 @@ public class TouTiaoSpiderController : SpiderControllerBase
     {
         return provider.PushAsync(push);
     }
+    
+    /// <summary>
+    /// 头条：优质_问答
+    /// </summary>
+    [HttpPost, Route("push-highQuality-question")]
+    public Task PushAsync([FromBody] TouTiaoSpider4HighQualityQuestionPushEto push,
+        [FromServices] TouTiaoSpider4HighQualityQuestionProvider provider)
+    {
+        return provider.PushAsync(push);
+    }
 
     /// <summary>
     /// 头条：资讯
@@ -67,6 +77,17 @@ public class TouTiaoSpiderController : SpiderControllerBase
                 };
 
                 ISpiderProvider provider = this.Provider.GetRequiredService<TouTiaoSpider4QuestionProvider>();
+                return provider.PushAsync(eto);
+            }
+            else if (push.SourceFrom == SpiderSourceFrom.TouTiao_HighQuality_Question)
+            {
+                TouTiaoSpider4HighQualityQuestionPushEto eto = new TouTiaoSpider4HighQualityQuestionPushEto
+                {
+                    SourceFrom = push.SourceFrom,
+                    Keyword = row
+                };
+
+                ISpiderProvider provider = this.Provider.GetRequiredService<TouTiaoSpider4HighQualityQuestionProvider>();
                 return provider.PushAsync(eto);
             }
             else if (push.SourceFrom == SpiderSourceFrom.TouTiao_Information)

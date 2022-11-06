@@ -1,3 +1,4 @@
+using System.Text;
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Segmenter;
@@ -87,7 +88,7 @@ public class SpiderDomainService : DomainService
 
                 //组装数据
                 var content = new SpiderContent(originalTitle, mainContent, sourceFrom);
-                
+
                 //TODO：根据配置决定是否需要进行分词操作
                 //TODO：或许可以重构成服务，其他使用的地方无需关注这些逻辑
                 // //对标题进行分词操作
@@ -102,5 +103,33 @@ public class SpiderDomainService : DomainService
         }
 
         return default;
+    }
+
+
+    /// <summary>
+    /// 统一构建落库实体内容（优质问答）
+    /// </summary>
+    /// <returns></returns>
+    public Task<SpiderContent> BuildHighQualityContentAsync(string originalTitle, SpiderSourceFrom sourceFrom,
+        List<string> contentItems)
+    {
+        //打乱
+        contentItems.RandomSort();
+
+        StringBuilder mainContent = new StringBuilder();
+        int _index = 0;
+        foreach (string item in contentItems)
+        {
+            _index++;
+            mainContent.AppendFormat("<p><strong>优质答案（{0}）</strong></p>", _index);
+            mainContent.AppendFormat("<p>{0}</p>", item);
+        }
+
+        //格式化标题
+        originalTitle = $"问题精选：{originalTitle}";
+
+        //组装数据
+        var content = new SpiderContent(originalTitle, mainContent.ToString(), sourceFrom);
+        return Task.FromResult(content);
     }
 }

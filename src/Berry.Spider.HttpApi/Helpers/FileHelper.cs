@@ -38,7 +38,7 @@ public class FileHelper
                 }
             }
         }
-        catch (Exception)
+        catch (Exception e)
         {
             //ignore..
         }

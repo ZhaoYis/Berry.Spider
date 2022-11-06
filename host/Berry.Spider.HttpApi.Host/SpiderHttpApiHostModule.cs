@@ -3,6 +3,7 @@ using Berry.Spider.AspNetCore.Mvc;
 using Berry.Spider.Baidu;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.EventBus.RabbitMq;
+using Berry.Spider.Segmenter.JiebaNet;
 using Berry.Spider.Sogou;
 using Berry.Spider.TouTiao;
 using Microsoft.AspNetCore.Cors;
@@ -24,6 +25,7 @@ namespace Berry.Spider.HttpApi.Host;
     typeof(SpiderEntityFrameworkCoreModule),
     typeof(SpiderAspNetCoreMvcModule),
     typeof(SpiderEventBusRabbitMqModule),
+    typeof(SpiderSegmenterJiebaNetModule),
     //今日头条模块
     typeof(TouTiaoSpiderModule),
     //百度模块
