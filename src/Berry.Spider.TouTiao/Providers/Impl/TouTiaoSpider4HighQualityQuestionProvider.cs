@@ -19,7 +19,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
-    private ISpiderContentRepository SpiderRepository { get; }
+    private ISpiderContentHighQualityQARepository SpiderRepository { get; }
     private SpiderDomainService SpiderDomainService { get; }
     private IEventBusPublisher DistributedEventBus { get; }
     private IRedisService RedisService { get; }
@@ -31,7 +31,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
         IWebElementLoadProvider provider,
         IServiceProvider serviceProvider,
         SpiderDomainService spiderDomainService,
-        ISpiderContentRepository repository,
+        ISpiderContentHighQualityQARepository repository,
         IEventBusPublisher eventBus,
         IRedisService redisService,
         IOptionsSnapshot<SpiderOptions> options) : base(logger)
@@ -200,7 +200,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                 );
             }
 
-            SpiderContent? spiderContent =
+            SpiderContent_HighQualityQA? spiderContent =
                 await this.SpiderDomainService.BuildHighQualityContentAsync(eventData.Title, eventData.SourceFrom, contentItems);
             if (spiderContent != null)
             {

@@ -10,6 +10,8 @@ namespace Berry.Spider.EntityFrameworkCore;
 public class SpiderDbContext : AbpDbContext<SpiderDbContext>
 {
     public DbSet<SpiderContent> SpiderContents { get; set; }
+    public DbSet<SpiderContent_Composition> SpiderContentCompositions { get; set; }
+    public DbSet<SpiderContent_HighQualityQA> SpiderContentHighQualityQas { get; set; }
     public DbSet<SpiderTitleContent> SpiderTitleContents { get; set; }
     public DbSet<SpiderBasic> SpiderBasics { get; set; }
 
@@ -21,10 +23,29 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
     {
         base.OnModelCreating(builder);
 
+        //基础表
         builder.Entity<SpiderContent>(b =>
         {
             b.ToTable("Content");
             //b.ToTable("Content_Composition");
+
+            //Configure the base properties
+            b.ConfigureByConvention();
+        });
+
+        //作文
+        builder.Entity<SpiderContent_Composition>(b =>
+        {
+            b.ToTable("Content_Composition");
+
+            //Configure the base properties
+            b.ConfigureByConvention();
+        });
+
+        //优质问答
+        builder.Entity<SpiderContent_HighQualityQA>(b =>
+        {
+            b.ToTable("Content_HighQualityQA");
 
             //Configure the base properties
             b.ConfigureByConvention();

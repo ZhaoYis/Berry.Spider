@@ -4,11 +4,11 @@ using JetBrains.Annotations;
 namespace Berry.Spider.Domain;
 
 /// <summary>
-/// 爬虫抓取下来的内容
+/// 爬虫抓取下来的内容（优质问答）
 /// </summary>
-public class SpiderContent : SpiderContentBase
+public class SpiderContent_HighQualityQA : SpiderContentBase
 {
-    protected SpiderContent()
+    protected SpiderContent_HighQualityQA()
     {
     }
 
@@ -17,14 +17,14 @@ public class SpiderContent : SpiderContentBase
     /// </summary>
     public string? GroupId { get; set; }
 
-    public SpiderContent([NotNull] string title,
+    public SpiderContent_HighQualityQA([NotNull] string title,
         [NotNull] string content, SpiderSourceFrom @from, [CanBeNull] string? pageUrl = "",
         [CanBeNull] string? keywords = "", [CanBeNull] string? tag = "") : base(title, content, @from, pageUrl,
         keywords, tag)
     {
     }
 
-    public SpiderContent([NotNull] string title,
+    public SpiderContent_HighQualityQA([NotNull] string title,
         [NotNull] string content, string groupId, SpiderSourceFrom @from, [CanBeNull] string? pageUrl = "",
         [CanBeNull] string? keywords = "", [CanBeNull] string? tag = "") : base(title, content, @from, pageUrl,
         keywords, tag)

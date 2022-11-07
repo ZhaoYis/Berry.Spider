@@ -110,7 +110,7 @@ public class SpiderDomainService : DomainService
     /// 统一构建落库实体内容（优质问答）
     /// </summary>
     /// <returns></returns>
-    public Task<SpiderContent> BuildHighQualityContentAsync(string originalTitle, SpiderSourceFrom sourceFrom,
+    public Task<SpiderContent_HighQualityQA> BuildHighQualityContentAsync(string originalTitle, SpiderSourceFrom sourceFrom,
         List<string> contentItems)
     {
         //打乱
@@ -129,7 +129,7 @@ public class SpiderDomainService : DomainService
         originalTitle = $"问题精选：{originalTitle}";
 
         //组装数据
-        var content = new SpiderContent(originalTitle, mainContent.ToString(), sourceFrom);
+        var content = new SpiderContent_HighQualityQA(originalTitle, mainContent.ToString(), sourceFrom);
         return Task.FromResult(content);
     }
 }
