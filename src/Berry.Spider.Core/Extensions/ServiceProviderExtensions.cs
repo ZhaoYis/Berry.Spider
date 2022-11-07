@@ -14,15 +14,27 @@ namespace Berry.Spider.Core
 
         static ServiceProviderExtensions()
         {
-            //Assembly assembly = Assembly.Load("Berry.Spider.TouTiao", "Berry.Spider.Sogou", "Berry.Spider.Baidu");
-            //foreach (Type type in assembly.GetTypes())
-            //{
-            //    SpiderAttribute? attribute = type.GetCustomAttribute<SpiderAttribute>();
-            //    if (attribute != null)
-            //    {
-            //        Cache.TryAdd(attribute.SourceFrom, type);
-            //    }
-            //}
+            List<Type> exportedTypes = new List<Type>();
+            List<string> assemblyNameList = new List<string>
+            {
+                "Berry.Spider.TouTiao",
+                "Berry.Spider.Sogou",
+                "Berry.Spider.Baidu"
+            };
+            foreach (string name in assemblyNameList)
+            {
+                Assembly assembly = Assembly.Load(name);
+                exportedTypes.AddRange(assembly.ExportedTypes);
+            }
+
+            foreach (Type type in exportedTypes)
+            {
+                SpiderAttribute? attribute = type.GetCustomAttribute<SpiderAttribute>();
+                if (attribute != null)
+                {
+                    Cache.TryAdd(attribute.SourceFrom, type);
+                }
+            }
         }
 
         public static Type GetImplType(this IServiceProvider provider, SpiderSourceFrom from)
@@ -32,6 +44,7 @@ namespace Berry.Spider.Core
             {
                 throw new NotImplementedException();
             }
+
             return implType;
         }
     }

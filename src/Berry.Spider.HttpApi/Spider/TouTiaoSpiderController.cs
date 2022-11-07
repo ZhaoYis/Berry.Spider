@@ -28,7 +28,7 @@ public class TouTiaoSpiderController : SpiderControllerBase
     {
         return provider.PushAsync(push);
     }
-    
+
     /// <summary>
     /// 头条：优质_问答
     /// </summary>
@@ -65,6 +65,14 @@ public class TouTiaoSpiderController : SpiderControllerBase
     [HttpPost, Route("push-from-file"), DisableRequestSizeLimit]
     public Task PushAsync(TouTiaoSpiderPushFromFile push)
     {
+        //TODO:待完善
+        // Type implType = this.Provider.GetImplType(push.SourceFrom);
+        // object? o = this.Provider.GetService(implType);
+        // if (o is ISpiderProvider provider)
+        // {
+        //     //await provider.PushAsync();
+        // }
+
         FileHelper fileHelper = new FileHelper(push.File, row =>
         {
             //TODO:通过反射的方式获取到对应的provider，特性名称SpiderAttribute
@@ -87,7 +95,8 @@ public class TouTiaoSpiderController : SpiderControllerBase
                     Keyword = row
                 };
 
-                ISpiderProvider provider = this.Provider.GetRequiredService<TouTiaoSpider4HighQualityQuestionProvider>();
+                ISpiderProvider provider =
+                    this.Provider.GetRequiredService<TouTiaoSpider4HighQualityQuestionProvider>();
                 return provider.PushAsync(eto);
             }
             else if (push.SourceFrom == SpiderSourceFrom.TouTiao_Information)
@@ -109,7 +118,8 @@ public class TouTiaoSpiderController : SpiderControllerBase
                     Keyword = row
                 };
 
-                ISpiderProvider provider = this.Provider.GetRequiredService<TouTiaoSpider4InformationCompositionProvider>();
+                ISpiderProvider provider =
+                    this.Provider.GetRequiredService<TouTiaoSpider4InformationCompositionProvider>();
                 return provider.PushAsync(eto);
             }
 
