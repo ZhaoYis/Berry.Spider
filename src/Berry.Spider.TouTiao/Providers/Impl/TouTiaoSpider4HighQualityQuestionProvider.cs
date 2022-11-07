@@ -51,11 +51,10 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
     /// <returns></returns>
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
     {
-        await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push);
-        // await this.CheckAsync(push.Keyword,
-        //     checkSuccessCallback: async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
-        //     bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
-        //     duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
+        await this.CheckAsync(push.Keyword,
+            checkSuccessCallback: async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
+            bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
+            duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
 
     /// <summary>
@@ -159,7 +158,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                             await Parallel.ForEachAsync(resultContent, new ParallelOptions
                             {
                                 MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
-                            }, (element, token) =>
+                            }, async (element, token) =>
                             {
                                 var answerList = element.TryFindElements(By.TagName("div"));
                                 if (answerList is { Count: > 0 })
@@ -170,18 +169,31 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
 
                                     if (realAnswerList.Any())
                                     {
-                                        //TODO：后续可以做成解析器
-
-                                        //获取回答最长的那一个答案
-                                        string? maxLengthAnswer = realAnswerList.MaxBy(a => a.Text.Length)?.Text;
-                                        if (!string.IsNullOrEmpty(maxLengthAnswer))
+                                        await Parallel.ForEachAsync(realAnswerList, new ParallelOptions
                                         {
-                                            contentItems.Add(maxLengthAnswer);
-                                        }
+                                            MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
+                                        }, (answer, cancellationToken) =>
+                                        {
+                                            if (!string.IsNullOrWhiteSpace(answer.Text))
+                                            {
+                                                if (this.Options.Value.HighQualityAnswerOptions.IsEnable)
+                                                {
+                                                    //TODO：后续优化为计算真实字符数（中文、英文、符号、表情等混合时）
+                                                    if (answer.Text.Length.Between(this.Options.Value.HighQualityAnswerOptions.MinLength, this.Options.Value.HighQualityAnswerOptions.MaxLength))
+                                                    {
+                                                        contentItems.Add(answer.Text);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    contentItems.Add(answer.Text);
+                                                }
+                                            }
+
+                                            return ValueTask.CompletedTask;
+                                        });
                                     }
                                 }
-
-                                return ValueTask.CompletedTask;
                             });
                         }
                     }

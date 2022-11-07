@@ -29,4 +29,9 @@ public class SpiderOptions
     /// 关键字校验选项
     /// </summary>
     public KeywordCheckOptions KeywordCheckOptions { get; set; } = new();
+
+    /// <summary>
+    /// 优质问答选择
+    /// </summary>
+    public HighQualityAnswerOptions HighQualityAnswerOptions { get; set; } = new();
 }
