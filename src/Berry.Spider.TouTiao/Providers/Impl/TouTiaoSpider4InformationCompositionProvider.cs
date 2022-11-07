@@ -24,7 +24,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
     private IRedisService RedisService { get; }
     private IEventBusPublisher DistributedEventBus { get; }
-    private ISpiderContentRepository SpiderRepository { get; }
+    private ISpiderContentCompositionRepository SpiderRepository { get; }
     private SpiderDomainService SpiderDomainService { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
 
@@ -36,7 +36,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
         IWebElementLoadProvider provider,
         IRedisService redisService,
         IEventBusPublisher eventBus,
-        ISpiderContentRepository spiderRepository,
+        ISpiderContentCompositionRepository spiderRepository,
         SpiderDomainService spiderDomainService,
         IOptionsSnapshot<SpiderOptions> options) : base(logger)
     {
@@ -145,7 +145,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
         try
         {
             string groupId = this.GuidGenerator.Create().ToString("N");
-            List<SpiderContent> contentItems = new List<SpiderContent>();
+            List<SpiderContent_Composition> contentItems = new List<SpiderContent_Composition>();
 
             foreach (var item in eventData.Items)
             {
@@ -162,8 +162,8 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                             string content = resultContent.Text;
                             if (!string.IsNullOrEmpty(content))
                             {
-                                SpiderContent spiderContent =
-                                    new SpiderContent(item.Title, content, groupId, eventData.SourceFrom);
+                                SpiderContent_Composition spiderContent =
+                                    new SpiderContent_Composition(item.Title, content, groupId, eventData.SourceFrom);
                                 contentItems.Add(spiderContent);
                             }
                         }
