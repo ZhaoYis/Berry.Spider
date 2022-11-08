@@ -56,11 +56,11 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     /// </summary>
     /// <returns></returns>
     public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
-    {await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push);
-        // await this.CheckAsync(push.Keyword,
-        //     checkSuccessCallback: async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
-        //     bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
-        //     duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
+    {
+        await this.CheckAsync(push.Keyword,
+            checkSuccessCallback: async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
+            bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
+            duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
 
     /// <summary>
