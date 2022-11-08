@@ -1,4 +1,4 @@
-using Berry.Spider.EntityFrameworkCore;
+using Berry.Spider.Contracts;
 using DotNetCore.CAP.Internal;
 using DotNetCore.CAP.Messages;
 using Microsoft.Extensions.Configuration;
@@ -14,10 +14,14 @@ public class SpiderEventBusRabbitMqModule : AbpModule
     {
         var configuration = context.Services.GetConfiguration();
 
-        EventBusRabbitMqOptions options = configuration.GetSection("RabbitMQ:Connections:Default").Get<EventBusRabbitMqOptions>();
         context.Services.AddCap(opt =>
         {
-            opt.UseEntityFramework<SpiderDbContext>();
+            MongoDBOptions mongoDbOptions = configuration.GetSection(nameof(MongoDBOptions)).Get<MongoDBOptions>();
+            opt.UseMongoDB(o =>
+            {
+                o.DatabaseConnection = mongoDbOptions.ConnectionString;
+            });
+
             opt.UseDashboard();
             //消费者线程并行处理消息的线程数
             opt.ConsumerThreadCount = 5;
@@ -28,13 +32,14 @@ public class SpiderEventBusRabbitMqModule : AbpModule
             //成功消息的过期时间（秒）
             opt.SucceedMessageExpiredAfter = 7 * 24 * 3600;
 
+            EventBusRabbitMqOptions rabbitMqOptions = configuration.GetSection("RabbitMQ:Connections:Default").Get<EventBusRabbitMqOptions>();
             opt.UseRabbitMQ(o =>
             {
-                o.HostName = options.HostName;
-                o.UserName = options.UserName;
-                o.Password = options.Password;
-                o.Port = Convert.ToInt32(options.Port);
-                o.VirtualHost = options.VirtualHost;
+                o.HostName = rabbitMqOptions.HostName;
+                o.UserName = rabbitMqOptions.UserName;
+                o.Password = rabbitMqOptions.Password;
+                o.Port = Convert.ToInt32(rabbitMqOptions.Port);
+                o.VirtualHost = rabbitMqOptions.VirtualHost;
 
                 o.CustomHeaders = e => new List<KeyValuePair<string, string>>
                 {

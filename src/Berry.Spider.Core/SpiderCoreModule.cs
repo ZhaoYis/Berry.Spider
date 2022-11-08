@@ -40,6 +40,8 @@ public class SpiderCoreModule : AbpModule
         context.Services.Configure<TitleTemplateContentOptions>(configuration.GetSection(nameof(TitleTemplateContentOptions)));
         //配置AbstractTemplateOptions
         context.Services.Configure<AbstractTemplateOptions>(configuration.GetSection(nameof(AbstractTemplateOptions)));
+        //配置MongoDBOptions
+        context.Services.Configure<MongoDBOptions>(configuration.GetSection(nameof(MongoDBOptions)));
 
         //注入文本解析器
         context.Services.AddTransient<NormalTextAnalysisProvider>();

@@ -27,10 +27,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Domain.Shared"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{093F9BD9-59EE-49FA-87D2-96AB2995EE26}"
 	ProjectSection(SolutionItems) = preProject
-		doc\docker-compose.yml = doc\docker-compose.yml
 		doc\HOW.README.md = doc\HOW.README.md
 		doc\NSSM.README.md = doc\NSSM.README.md
 		doc\Selenium.README.md = doc\Selenium.README.md
+		doc\mongo.docker-compose.yml = doc\mongo.docker-compose.yml
+		doc\agile_config.docker-compose.yml = doc\agile_config.docker-compose.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Contracts", "src\Berry.Spider.Contracts\Berry.Spider.Contracts.csproj", "{A0D6AA7D-9654-4185-945E-33B1831F73BD}"
