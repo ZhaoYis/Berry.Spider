@@ -30,7 +30,7 @@ public class JiebaNetSegmenterProvider : ISegmenterProvider
         Console.WriteLine("【歧义消除】：{0}", string.Join("/ ", segments));
         【歧义消除】：结过婚/ 的/ 和/ 尚未/ 结过婚/ 的
      */
-    
+
     /// <summary>
     /// 中文分词
     /// </summary>

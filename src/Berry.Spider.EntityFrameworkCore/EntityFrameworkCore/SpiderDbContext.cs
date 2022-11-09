@@ -14,7 +14,7 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
     public DbSet<SpiderContent_HighQualityQA> SpiderContentHighQualityQas { get; set; }
     public DbSet<SpiderTitleContent> SpiderTitleContents { get; set; }
     public DbSet<SpiderBasic> SpiderBasics { get; set; }
-    
+
     public SpiderDbContext(DbContextOptions<SpiderDbContext> options) : base(options)
     {
     }

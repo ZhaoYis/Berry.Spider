@@ -105,9 +105,9 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
                     };
 
                     await Parallel.ForEachAsync(resultContent, new ParallelOptions
-                        {
-                            MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
-                        },
+                    {
+                        MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
+                    },
                         async (element, token) =>
                         {
                             string text = element.Text;

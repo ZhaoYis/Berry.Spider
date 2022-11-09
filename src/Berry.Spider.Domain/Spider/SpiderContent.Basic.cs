@@ -11,7 +11,7 @@ public class SpiderContent : SpiderContentBase
     protected SpiderContent()
     {
     }
-    
+
     /// <summary>
     /// 当前关键字查询出来的列表归属组ID
     /// </summary>
