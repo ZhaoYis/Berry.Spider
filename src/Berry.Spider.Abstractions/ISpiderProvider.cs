@@ -6,7 +6,7 @@ public interface ISpiderProvider
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    Task PushAsync<T>(T push) where T : class, ISpiderPushEto;
+    Task PushAsync(string keyword);
 
     /// <summary>
     /// 执行获取一级页面数据任务

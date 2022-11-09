@@ -46,8 +46,14 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
+    public async Task PushAsync(string keyword)
     {
+        SogouSpider4RelatedSearchPushEto push = new SogouSpider4RelatedSearchPushEto
+        {
+            SourceFrom = SpiderSourceFrom.Sogou_Related_Search,
+            Keyword = keyword
+        };
+
         await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
@@ -99,9 +105,9 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
                     };
 
                     await Parallel.ForEachAsync(resultContent, new ParallelOptions
-                    {
-                        MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
-                    },
+                        {
+                            MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
+                        },
                         async (element, token) =>
                         {
                             string text = element.Text;

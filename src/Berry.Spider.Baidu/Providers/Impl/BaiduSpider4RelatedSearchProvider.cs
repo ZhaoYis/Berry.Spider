@@ -48,8 +48,14 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
+    public async Task PushAsync(string keyword)
     {
+        BaiduSpider4RelatedSearchPushEto push = new BaiduSpider4RelatedSearchPushEto
+        {
+            SourceFrom = SpiderSourceFrom.Baidu_Related_Search,
+            Keyword = keyword
+        };
+
         await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);

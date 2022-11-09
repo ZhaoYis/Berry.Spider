@@ -17,7 +17,7 @@ namespace Berry.Spider
         /// <summary>
         /// 搜索关键字
         /// </summary>
-        public string Keyword { get; set; }
+        public string Keyword { get; set; } = null!;
 
         /// <summary>
         /// 保存这次记录最终的标题

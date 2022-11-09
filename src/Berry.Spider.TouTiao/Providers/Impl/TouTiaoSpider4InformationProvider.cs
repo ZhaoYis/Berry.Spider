@@ -42,8 +42,14 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
+    public async Task PushAsync(string keyword)
     {
+        TouTiaoSpider4InformationPushEto push = new TouTiaoSpider4InformationPushEto
+        {
+            SourceFrom = SpiderSourceFrom.TouTiao_Information,
+            Keyword = keyword
+        };
+
         await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
@@ -91,9 +97,9 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                     };
 
                     await Parallel.ForEachAsync(resultContent, new ParallelOptions
-                    {
-                        MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
-                    },
+                        {
+                            MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
+                        },
                         async (element, token) =>
                         {
                             var a = element.TryFindElement(By.TagName("a"));

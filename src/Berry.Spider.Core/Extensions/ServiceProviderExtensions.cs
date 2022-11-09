@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Concurrent;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Berry.Spider.Core
 {
@@ -15,15 +10,10 @@ namespace Berry.Spider.Core
         static ServiceProviderExtensions()
         {
             List<Type> exportedTypes = new List<Type>();
-            List<string> assemblyNameList = new List<string>
+
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (Assembly assembly in assemblies.Where(c => c.FullName != null && c.FullName.StartsWith("Berry")))
             {
-                "Berry.Spider.TouTiao",
-                "Berry.Spider.Sogou",
-                "Berry.Spider.Baidu"
-            };
-            foreach (string name in assemblyNameList)
-            {
-                Assembly assembly = Assembly.Load(name);
                 exportedTypes.AddRange(assembly.ExportedTypes);
             }
 
@@ -37,7 +27,7 @@ namespace Berry.Spider.Core
             }
         }
 
-        public static Type GetImplType(this IServiceProvider provider, SpiderSourceFrom from)
+        public static object GetImplService(this IServiceProvider provider, SpiderSourceFrom from)
         {
             Type? implType = Cache.GetValueOrDefault(from);
             if (implType == null)
@@ -45,7 +35,13 @@ namespace Berry.Spider.Core
                 throw new NotImplementedException();
             }
 
-            return implType;
+            object? o = provider.GetService(implType);
+            if (o == null)
+            {
+                throw new NotImplementedException();
+            }
+
+            return o;
         }
     }
 }

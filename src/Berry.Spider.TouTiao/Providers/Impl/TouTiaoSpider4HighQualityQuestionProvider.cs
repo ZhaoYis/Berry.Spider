@@ -49,8 +49,14 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
+    public async Task PushAsync(string keyword)
     {
+        TouTiaoSpider4HighQualityQuestionPushEto push = new TouTiaoSpider4HighQualityQuestionPushEto
+        {
+            SourceFrom = SpiderSourceFrom.TouTiao_HighQuality_Question,
+            Keyword = keyword
+        };
+
         await this.CheckAsync(push.Keyword,
             checkSuccessCallback: async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,

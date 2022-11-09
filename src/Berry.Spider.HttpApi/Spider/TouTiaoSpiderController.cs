@@ -2,7 +2,6 @@
 using Berry.Spider.Core;
 using Berry.Spider.TouTiao;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Berry.Spider;
 
@@ -23,107 +22,59 @@ public class TouTiaoSpiderController : SpiderControllerBase
     /// 头条：问答
     /// </summary>
     [HttpPost, Route("push-question")]
-    public Task PushAsync([FromBody] TouTiaoSpider4QuestionPushEto push,
+    public Task PushAsync([FromBody] PushKeywordBasicDto push,
         [FromServices] TouTiaoSpider4QuestionProvider provider)
     {
-        return provider.PushAsync(push);
+        return provider.PushAsync(push.Keyword);
     }
 
     /// <summary>
     /// 头条：优质_问答
     /// </summary>
     [HttpPost, Route("push-highQuality-question")]
-    public Task PushAsync([FromBody] TouTiaoSpider4HighQualityQuestionPushEto push,
+    public Task PushAsync([FromBody] PushKeywordBasicDto push,
         [FromServices] TouTiaoSpider4HighQualityQuestionProvider provider)
     {
-        return provider.PushAsync(push);
+        return provider.PushAsync(push.Keyword);
     }
 
     /// <summary>
     /// 头条：资讯
     /// </summary>
     [HttpPost, Route("push-information")]
-    public Task PushAsync([FromBody] TouTiaoSpider4InformationPushEto push,
+    public Task PushAsync([FromBody] PushKeywordBasicDto push,
         [FromServices] TouTiaoSpider4InformationProvider provider)
     {
-        return provider.PushAsync(push);
+        return provider.PushAsync(push.Keyword);
     }
 
     /// <summary>
     /// 头条：头条_资讯_作文板块
     /// </summary>
     [HttpPost, Route("push-information-composition")]
-    public Task PushAsync([FromBody] TouTiaoSpider4InformationPushEto push,
+    public Task PushAsync([FromBody] PushKeywordBasicDto push,
         [FromServices] TouTiaoSpider4InformationCompositionProvider provider)
     {
-        return provider.PushAsync(push);
+        return provider.PushAsync(push.Keyword);
     }
 
     /// <summary>
     /// 将待爬取信息PUSH到消息队列中
     /// </summary>
-    [HttpPost, Route("push-from-file"), DisableRequestSizeLimit]
-    public Task PushAsync(TouTiaoSpiderPushFromFile push)
+    [HttpPost, DisableRequestSizeLimit, Route("push-from-file")]
+    public Task PushAsync(PushFromFileBasicDto push)
     {
-        //TODO:待完善
-        // Type implType = this.Provider.GetImplType(push.SourceFrom);
-        // object? o = this.Provider.GetService(implType);
-        // if (o is ISpiderProvider provider)
-        // {
-        //     //await provider.PushAsync();
-        // }
-
         FileHelper fileHelper = new FileHelper(push.File, row =>
         {
-            //TODO:通过反射的方式获取到对应的provider，特性名称SpiderAttribute
-            if (push.SourceFrom == SpiderSourceFrom.TouTiao_Question)
+            object o = this.Provider.GetImplService(push.SourceFrom);
+            if (o is ISpiderProvider provider)
             {
-                TouTiaoSpider4QuestionPushEto eto = new TouTiaoSpider4QuestionPushEto
-                {
-                    SourceFrom = push.SourceFrom,
-                    Keyword = row
-                };
-
-                ISpiderProvider provider = this.Provider.GetRequiredService<TouTiaoSpider4QuestionProvider>();
-                return provider.PushAsync(eto);
+                return provider.PushAsync(row);
             }
-            else if (push.SourceFrom == SpiderSourceFrom.TouTiao_HighQuality_Question)
+            else
             {
-                TouTiaoSpider4HighQualityQuestionPushEto eto = new TouTiaoSpider4HighQualityQuestionPushEto
-                {
-                    SourceFrom = push.SourceFrom,
-                    Keyword = row
-                };
-
-                ISpiderProvider provider =
-                    this.Provider.GetRequiredService<TouTiaoSpider4HighQualityQuestionProvider>();
-                return provider.PushAsync(eto);
+                throw new NotImplementedException("未实现的爬虫来源");
             }
-            else if (push.SourceFrom == SpiderSourceFrom.TouTiao_Information)
-            {
-                TouTiaoSpider4InformationPushEto eto = new TouTiaoSpider4InformationPushEto
-                {
-                    SourceFrom = push.SourceFrom,
-                    Keyword = row
-                };
-
-                ISpiderProvider provider = this.Provider.GetRequiredService<TouTiaoSpider4InformationProvider>();
-                return provider.PushAsync(eto);
-            }
-            else if (push.SourceFrom == SpiderSourceFrom.TouTiao_Information_Composition)
-            {
-                TouTiaoSpider4InformationCompositionPushEto eto = new TouTiaoSpider4InformationCompositionPushEto
-                {
-                    SourceFrom = push.SourceFrom,
-                    Keyword = row
-                };
-
-                ISpiderProvider provider =
-                    this.Provider.GetRequiredService<TouTiaoSpider4InformationCompositionProvider>();
-                return provider.PushAsync(eto);
-            }
-
-            throw new NotImplementedException("未实现的爬虫来源");
         });
         return fileHelper.InvokeAsync();
     }

@@ -54,8 +54,14 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
+    public async Task PushAsync(string keyword)
     {
+        TouTiaoSpider4InformationCompositionPushEto push = new TouTiaoSpider4InformationCompositionPushEto
+        {
+            SourceFrom = SpiderSourceFrom.TouTiao_Information_Composition,
+            Keyword = keyword
+        };
+
         await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
