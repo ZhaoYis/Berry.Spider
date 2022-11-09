@@ -15,5 +15,5 @@ public class TitleTemplateContentOptions
     /// <summary>
     /// 标题模版
     /// </summary>
-    public List<NameValue> Templates { get; set; }
+    public List<NameValue> Templates { get; set; } = new();
 }

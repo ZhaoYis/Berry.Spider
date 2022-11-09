@@ -4,6 +4,7 @@ using Berry.Spider.Proxy;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using Microsoft.Extensions.ObjectPool;
 using Volo.Abp.Caching;
 using Volo.Abp.Caching.StackExchangeRedis;
 using Volo.Abp.Modularity;
@@ -58,6 +59,10 @@ public class SpiderCoreModule : AbpModule
         });
         //分布式缓存Redis
         Configure<RedisCacheOptions>(options => { options.InstanceName = Assembly.GetExecutingAssembly().FullName; });
+
+        //对象池
+        context.Services.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
+        context.Services.AddSingleton<IStringBuilderObjectPoolProvider, StringBuilderObjectPoolProvider>();
 
         return Task.CompletedTask;
     }

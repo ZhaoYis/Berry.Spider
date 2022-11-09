@@ -8,51 +8,49 @@ public static class ListExtensions
     /// 构造出统一风格的主内容文本
     /// </summary>
     /// <returns></returns>
-    public static string BuildMainContent(this List<string> items)
+    public static string BuildMainContent(this List<string> items, IStringBuilderObjectPoolProvider stringBuilderObjectPoolProvider)
     {
         if (items.Count == 0) return string.Empty;
 
-        StringBuilder builder = new StringBuilder();
-        int index = 0;
-
         items = items.Where(c => !string.IsNullOrWhiteSpace(c)).ToList();
 
-        foreach (string item in items)
+        string mainContent = stringBuilderObjectPoolProvider.Invoke(builder =>
         {
-            index++;
-            builder.AppendFormat("<p>{0}、{1}</p>", index, item);
-        }
-
-        return builder.ToString();
+            for (int i = 0; i < items.Count; i++)
+            {
+                string item = items[i];
+                builder.AppendFormat("<p>{0}、{1}</p>", i + 1, item);
+            }
+        });
+        return mainContent;
     }
 
     /// <summary>
     /// 构造出统一风格的主内容文本（文中插入一张图片）
     /// </summary>
     /// <returns></returns>
-    public static string BuildMainContent(this List<string> items, IImageResourceProvider provider)
+    public static string BuildMainContent(this List<string> items, IImageResourceProvider provider, IStringBuilderObjectPoolProvider stringBuilderObjectPoolProvider)
     {
         if (items.Count == 0) return string.Empty;
 
-        StringBuilder builder = new StringBuilder();
-        int index = 0;
-
         items = items.Where(c => !string.IsNullOrWhiteSpace(c)).ToList();
 
-        foreach (string item in items)
+        string mainContent = stringBuilderObjectPoolProvider.Invoke(builder =>
         {
-            index++;
-
-            if (index == items.Count / 2)
+            for (int i = 0; i < items.Count; i++)
             {
-                string imageUrl = provider.TryGet();
-                builder.AppendFormat("<p><img src='{0}' alt=''></img></p>", imageUrl);
+                string item = items[i];
+
+                if (i == items.Count / 2)
+                {
+                    string imageUrl = provider.TryGet();
+                    builder.AppendFormat("<p><img src='{0}' alt=''></img></p>", imageUrl);
+                }
+
+                builder.AppendFormat("<p>{0}、{1}</p>", i + 1, item);
             }
-
-            builder.AppendFormat("<p>{0}、{1}</p>", index, item);
-        }
-
-        return builder.ToString();
+        });
+        return mainContent;
     }
 
     /// <summary>

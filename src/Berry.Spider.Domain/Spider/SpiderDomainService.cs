@@ -1,4 +1,3 @@
-using System.Text;
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Segmenter;
@@ -16,6 +15,7 @@ public class SpiderDomainService : DomainService
     private IImageResourceProvider ImageResourceProvider { get; }
     private ITemplateRenderer TemplateRenderer { get; }
     private ISegmenterProvider SegmenterProvider { get; }
+    private IStringBuilderObjectPoolProvider StringBuilderObjectPoolProvider { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
     private IOptionsSnapshot<TitleTemplateContentOptions> TitleTemplateOptions { get; }
 
@@ -23,12 +23,14 @@ public class SpiderDomainService : DomainService
         IImageResourceProvider imageResourceProvider,
         ITemplateRenderer templateRenderer,
         ISegmenterProvider segmenterProvider,
+        IStringBuilderObjectPoolProvider stringBuilderObjectPoolProvider,
         IOptionsSnapshot<SpiderOptions> options,
         IOptionsSnapshot<TitleTemplateContentOptions> titleTemplateOptions)
     {
         ImageResourceProvider = imageResourceProvider;
         TemplateRenderer = templateRenderer;
         SegmenterProvider = segmenterProvider;
+        StringBuilderObjectPoolProvider = stringBuilderObjectPoolProvider;
         Options = options;
         TitleTemplateOptions = titleTemplateOptions;
     }
@@ -51,17 +53,17 @@ public class SpiderDomainService : DomainService
                 if (this.Options.Value.IsRandomInsertImage)
                 {
                     mainContent = this.Clock.Now.Hour % 2 == 0
-                        ? contentItems.BuildMainContent(this.ImageResourceProvider)
-                        : contentItems.BuildMainContent();
+                        ? contentItems.BuildMainContent(this.ImageResourceProvider, this.StringBuilderObjectPoolProvider)
+                        : contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider);
                 }
                 else
                 {
-                    mainContent = contentItems.BuildMainContent(this.ImageResourceProvider);
+                    mainContent = contentItems.BuildMainContent(this.ImageResourceProvider, this.StringBuilderObjectPoolProvider);
                 }
             }
             else
             {
-                mainContent = contentItems.BuildMainContent();
+                mainContent = contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider);
             }
 
             if (!string.IsNullOrEmpty(mainContent))
@@ -105,7 +107,6 @@ public class SpiderDomainService : DomainService
         return default;
     }
 
-
     /// <summary>
     /// 统一构建落库实体内容（优质问答）
     /// </summary>
@@ -116,14 +117,15 @@ public class SpiderDomainService : DomainService
         //打乱
         contentItems.RandomSort();
 
-        StringBuilder mainContent = new StringBuilder();
-        int _index = 0;
-        foreach (string item in contentItems)
+        string mainContent = this.StringBuilderObjectPoolProvider.Invoke(builder =>
         {
-            _index++;
-            mainContent.AppendFormat("<p><strong>优质答案（{0}）</strong></p>", _index);
-            mainContent.AppendFormat("<p>{0}</p>", item);
-        }
+            for (int i = 0; i < contentItems.Count; i++)
+            {
+                string item = contentItems[i];
+                builder.AppendFormat("<p><strong>优质答案（{0}）</strong></p>", i + 1);
+                builder.AppendFormat("<p>{0}</p>", item);
+            }
+        });
 
         //格式化标题
         originalTitle = $"问题精选：{originalTitle}";
