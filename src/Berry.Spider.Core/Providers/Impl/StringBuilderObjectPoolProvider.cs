@@ -19,7 +19,7 @@ public class StringBuilderObjectPoolProvider : IStringBuilderObjectPoolProvider
         this.ObjectPoolProvider = provider;
     }
 
-    public string Invoke(Action<StringBuilder> build, int initialCapacity, int maximumRetainedCapacity)
+    public string Invoke(Action<StringBuilder> build, int initialCapacity = 256, int maximumRetainedCapacity = 8192)
     {
         var pool = this.ObjectPoolProvider.CreateStringBuilderPool(initialCapacity, maximumRetainedCapacity);
 
@@ -33,10 +33,5 @@ public class StringBuilderObjectPoolProvider : IStringBuilderObjectPoolProvider
         {
             pool.Return(builder);
         }
-    }
-
-    public string Invoke(Action<StringBuilder> build)
-    {
-        return this.Invoke(build, 256, 8192);
     }
 }
