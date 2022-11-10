@@ -16,4 +16,9 @@ public class HighQualityAnswerOptions
     /// 最大长度
     /// </summary>
     public int MaxLength { get; set; }
+
+    /// <summary>
+    /// 最多记录数
+    /// </summary>
+    public int MaxRecordCount { get; set; } = 10;
 }

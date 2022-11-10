@@ -53,12 +53,14 @@ public class SpiderDomainService : DomainService
                 if (this.Options.Value.IsRandomInsertImage)
                 {
                     mainContent = this.Clock.Now.Hour % 2 == 0
-                        ? contentItems.BuildMainContent(this.ImageResourceProvider, this.StringBuilderObjectPoolProvider)
+                        ? contentItems.BuildMainContent(this.ImageResourceProvider,
+                            this.StringBuilderObjectPoolProvider)
                         : contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider);
                 }
                 else
                 {
-                    mainContent = contentItems.BuildMainContent(this.ImageResourceProvider, this.StringBuilderObjectPoolProvider);
+                    mainContent = contentItems.BuildMainContent(this.ImageResourceProvider,
+                        this.StringBuilderObjectPoolProvider);
                 }
             }
             else
@@ -111,11 +113,14 @@ public class SpiderDomainService : DomainService
     /// 统一构建落库实体内容（优质问答）
     /// </summary>
     /// <returns></returns>
-    public Task<SpiderContent_HighQualityQA> BuildHighQualityContentAsync(string originalTitle, SpiderSourceFrom sourceFrom,
+    public Task<SpiderContent_HighQualityQA> BuildHighQualityContentAsync(string originalTitle,
+        SpiderSourceFrom sourceFrom,
         List<string> contentItems)
     {
         //打乱
         contentItems.RandomSort();
+        //取指定的记录数
+        contentItems = contentItems.Take(this.Options.Value.HighQualityAnswerOptions.MaxRecordCount).ToList();
 
         string mainContent = this.StringBuilderObjectPoolProvider.Invoke(builder =>
         {
@@ -128,7 +133,7 @@ public class SpiderDomainService : DomainService
         });
 
         //格式化标题
-        originalTitle = $"问题精选：{originalTitle}";
+        //originalTitle = $"问题精选：{originalTitle}";
 
         //组装数据
         var content = new SpiderContent_HighQualityQA(originalTitle, mainContent.ToString(), sourceFrom);

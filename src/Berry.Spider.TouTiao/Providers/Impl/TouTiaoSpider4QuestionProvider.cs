@@ -64,7 +64,10 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
         };
 
         await this.CheckAsync(keyword,
-            checkSuccessCallback: async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
+            checkSuccessCallback: async () =>
+            {
+                await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push);
+            },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -100,7 +103,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.ClassName("result-content"));
-                if (resultContent is { Count: > 0 })
+                if (resultContent is {Count: > 0})
                 {
                     this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 
@@ -165,7 +168,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                         if (root == null) return;
 
                         var resultContent = root.TryFindElements(By.ClassName("list"));
-                        if (resultContent is { Count: > 0 })
+                        if (resultContent is {Count: > 0})
                         {
                             await Parallel.ForEachAsync(resultContent, new ParallelOptions
                             {
@@ -173,7 +176,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                             }, async (element, token) =>
                             {
                                 var answerList = element.TryFindElements(By.TagName("div"));
-                                if (answerList is { Count: > 0 })
+                                if (answerList is {Count: > 0})
                                 {
                                     var realAnswerList = answerList
                                         .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))

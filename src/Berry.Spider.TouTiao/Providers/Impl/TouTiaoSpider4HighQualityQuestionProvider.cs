@@ -206,7 +206,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                 );
             }
 
-            SpiderContent_HighQualityQA? spiderContent =
+            SpiderContent_HighQualityQA spiderContent =
                 await this.SpiderDomainService.BuildHighQualityContentAsync(eventData.Title, eventData.SourceFrom, contentItems);
             if (spiderContent != null)
             {
