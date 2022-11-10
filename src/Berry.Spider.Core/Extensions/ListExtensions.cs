@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace Berry.Spider.Core;
 
 public static class ListExtensions

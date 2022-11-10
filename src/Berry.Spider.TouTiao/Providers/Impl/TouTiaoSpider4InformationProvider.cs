@@ -97,9 +97,9 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                     };
 
                     await Parallel.ForEachAsync(resultContent, new ParallelOptions
-                        {
-                            MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
-                        },
+                    {
+                        MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
+                    },
                         async (element, token) =>
                         {
                             var a = element.TryFindElement(By.TagName("a"));
