@@ -27,11 +27,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Domain.Shared"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{093F9BD9-59EE-49FA-87D2-96AB2995EE26}"
 	ProjectSection(SolutionItems) = preProject
-		doc\HOW.README.md = doc\HOW.README.md
-		doc\NSSM.README.md = doc\NSSM.README.md
-		doc\Selenium.README.md = doc\Selenium.README.md
-		doc\mongo.docker-compose.yml = doc\mongo.docker-compose.yml
 		doc\agile_config.docker-compose.yml = doc\agile_config.docker-compose.yml
+		doc\HOW.README.md = doc\HOW.README.md
+		appsettings.demo.json = appsettings.demo.json
+		doc\mongo.docker-compose.yml = doc\mongo.docker-compose.yml
+		doc\NSSM.README.md = doc\NSSM.README.md
+		README.md = README.md
+		doc\Selenium.README.md = doc\Selenium.README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Contracts", "src\Berry.Spider.Contracts\Berry.Spider.Contracts.csproj", "{A0D6AA7D-9654-4185-945E-33B1831F73BD}"
@@ -88,23 +90,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Abstractions",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Tools.BuildSMData", "src\Berry.Spider.Tools.BuildSMData\Berry.Spider.Tools.BuildSMData.csproj", "{9856C125-CD5F-4CAF-B6F9-C57EB0F8B5A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Proxy.Abstractions", "src\Berry.Spider.Proxy.Abstractions\Berry.Spider.Proxy.Abstractions.csproj", "{33563F6C-5BD0-4CC3-A4F2-41497940A8E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Proxy.Abstractions", "src\Berry.Spider.Proxy.Abstractions\Berry.Spider.Proxy.Abstractions.csproj", "{33563F6C-5BD0-4CC3-A4F2-41497940A8E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Proxy.QgNet", "src\Berry.Spider.Proxy.QgNet\Berry.Spider.Proxy.QgNet.csproj", "{F8C6D9E4-E087-4C85-859B-53C1649BB867}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Proxy.QgNet", "src\Berry.Spider.Proxy.QgNet\Berry.Spider.Proxy.QgNet.csproj", "{F8C6D9E4-E087-4C85-859B-53C1649BB867}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Proxy", "src\Berry.Spider.Proxy\Berry.Spider.Proxy.csproj", "{D3D9DFEE-0067-4E6D-A78D-EEFB0B3D830F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Proxy", "src\Berry.Spider.Proxy\Berry.Spider.Proxy.csproj", "{D3D9DFEE-0067-4E6D-A78D-EEFB0B3D830F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.FreeRedis", "src\Berry.Spider.FreeRedis\Berry.Spider.FreeRedis.csproj", "{54074E2E-F272-447A-8D20-CD1DBF2355EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.FreeRedis", "src\Berry.Spider.FreeRedis\Berry.Spider.FreeRedis.csproj", "{54074E2E-F272-447A-8D20-CD1DBF2355EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Tools.SyncToRedis", "src\Berry.Spider.Tools.SyncToRedis\Berry.Spider.Tools.SyncToRedis.csproj", "{1F63C559-BA58-4E23-A950-CEBA871C157A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Tools.SyncToRedis", "src\Berry.Spider.Tools.SyncToRedis\Berry.Spider.Tools.SyncToRedis.csproj", "{1F63C559-BA58-4E23-A950-CEBA871C157A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.EventBus.RabbitMq", "src\Berry.Spider.EventBus.RabbitMq\Berry.Spider.EventBus.RabbitMq.csproj", "{3836B4D3-BA24-4569-8A54-8ECE631CA6CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.EventBus.RabbitMq", "src\Berry.Spider.EventBus.RabbitMq\Berry.Spider.EventBus.RabbitMq.csproj", "{3836B4D3-BA24-4569-8A54-8ECE631CA6CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.EventBus", "src\Berry.Spider.EventBus\Berry.Spider.EventBus.csproj", "{DB30B59C-F46D-456F-9118-A500A33E15A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.EventBus", "src\Berry.Spider.EventBus\Berry.Spider.EventBus.csproj", "{DB30B59C-F46D-456F-9118-A500A33E15A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Segmenter", "src\Berry.Spider.Segmenter\Berry.Spider.Segmenter.csproj", "{2691584C-0C4D-4086-824C-CC02E5182737}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Segmenter", "src\Berry.Spider.Segmenter\Berry.Spider.Segmenter.csproj", "{2691584C-0C4D-4086-824C-CC02E5182737}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Segmenter.JiebaNet", "src\Berry.Spider.Segmenter.JiebaNet\Berry.Spider.Segmenter.JiebaNet.csproj", "{BA719205-A123-4BC9-96D0-03995B7B0480}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Segmenter.JiebaNet", "src\Berry.Spider.Segmenter.JiebaNet\Berry.Spider.Segmenter.JiebaNet.csproj", "{BA719205-A123-4BC9-96D0-03995B7B0480}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
