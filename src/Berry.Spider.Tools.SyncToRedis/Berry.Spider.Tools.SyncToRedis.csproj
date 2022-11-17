@@ -5,7 +5,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>Berry.Spider.Tools._SyncToRedis</RootNamespace>
+	    <TieredPGO>true</TieredPGO>
     </PropertyGroup>
 
     <ItemGroup>

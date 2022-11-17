@@ -6,6 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <LangVersion>default</LangVersion>
+        <TieredPGO>true</TieredPGO>
     </PropertyGroup>
 
     <ItemGroup>

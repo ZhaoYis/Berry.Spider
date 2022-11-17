@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using Volo.Abp.DependencyInjection;
 
@@ -51,7 +52,19 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         options.AddArgument("--disable-infobars");
         //设置user-agent
         options.AddArgument($"--user-agent={UserAgentPoolHelper.RandomGetOne()}");
-
+        
+        //TODO：自定义chrome.exe的位置？
+        //https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver/01fde32d0ed245141e24151f83b7c2db31d596a4#requirements
+        //options.BinaryLocation = "";
+        
+        //Normal：默认值, 等待所有资源下载
+        //Eager：DOM 访问已准备就绪, 但诸如图像的其他资源可能仍在加载
+        //None：完全不会阻塞 WebDriver
+        options.PageLoadStrategy = PageLoadStrategy.Normal;
+        //检查在会话期间导航时 是否使用了过期的 (或) 无效的 TLS Certificate
+        //设置为 false, 则页面浏览遇到任何域证书问题时, 将返回insecure certificate error . 如果设置为 true, 则浏览器将信任无效证书.
+        options.AcceptInsecureCertificates = true;
+        
         //设置代理
         if (isUsedProxy)
         {
