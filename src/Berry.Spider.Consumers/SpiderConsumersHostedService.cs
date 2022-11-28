@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using System.Threading;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Volo.Abp;
 
 namespace Berry.Spider.Consumers;
@@ -35,8 +36,11 @@ public class SpiderConsumersHostedService : IHostedService
         await _abpApplication.InitializeAsync();
 
         //初始化
-        IBootstrapper bootstrapper = _abpApplication.ServiceProvider.GetService<IBootstrapper>();
-        await bootstrapper.BootstrapAsync();
+        IBootstrapper? bootstrapper = _abpApplication.ServiceProvider.GetService<IBootstrapper>();
+        if (bootstrapper != null)
+        {
+            await bootstrapper.BootstrapAsync(cancellationToken);
+        }
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)

@@ -10,23 +10,26 @@ public class CustomSubscribeFilter : SubscribeFilter
     /// <summary>
     /// 订阅方法执行前
     /// </summary>
-    public override void OnSubscribeExecuting(ExecutingContext context)
+    public override Task OnSubscribeExecutingAsync(ExecutingContext context)
     {
+        return Task.CompletedTask;
     }
 
     /// <summary>
     /// 订阅方法执行后
     /// </summary>
-    public override void OnSubscribeExecuted(ExecutedContext context)
+    public override Task OnSubscribeExecutedAsync(ExecutedContext context)
     {
+        return Task.CompletedTask;
     }
 
     /// <summary>
     /// 订阅方法执行异常
     /// </summary>
-    public override void OnSubscribeException(ExceptionContext context)
+    public override Task OnSubscribeExceptionAsync(ExceptionContext context)
     {
         //忽略异常
         context.ExceptionHandled = true;
+        return Task.CompletedTask;
     }
 }
