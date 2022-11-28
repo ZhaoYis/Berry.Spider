@@ -16,6 +16,11 @@ public enum SpiderSourceFrom
     /// EXCEL文件导入
     /// </summary>
     [Description("EXCEL文件导入")] Excel_File_Import = 20,
+    
+    /// <summary>
+    /// JSON文件导入
+    /// </summary>
+    [Description("JSON文件导入")] Json_File_Import = 30,
 
     /// <summary>
     /// 头条_资讯

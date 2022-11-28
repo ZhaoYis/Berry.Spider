@@ -27,7 +27,7 @@ public class TxtFileToDbAppService : ITxtFileToDbAppService
         List<SpiderContent> spiderContents = new List<SpiderContent>();
         foreach (string file in files)
         {
-            string[] fileContents = File.ReadAllLines(file);
+            string[] fileContents = await File.ReadAllLinesAsync(file);
             StringBuilder builder = new StringBuilder();
             if (fileContents.Length > 2)
             {
