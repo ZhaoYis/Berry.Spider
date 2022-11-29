@@ -28,6 +28,7 @@ public class PostItem
     [JsonPropertyName("content")] public string Content { get; set; }
 
     private static readonly Regex ReplaceRegex = new Regex(@"^\d+(、|\.|\．|,|，)*");
+
     public List<string> GetContentList()
     {
         List<string> contents = new();
@@ -38,13 +39,16 @@ public class PostItem
             string trimItem = item.Trim();
             if (ReplaceRegex.IsMatch(trimItem))
             {
-                string newItem = ReplaceRegex.Replace(trimItem, "");
-                contents.Add(newItem);
+                string newItem = ReplaceRegex.Replace(trimItem, "").Replace(" ", "");
+                if (!string.IsNullOrWhiteSpace(newItem) && newItem.Length >= 10)
+                {
+                    contents.Add(newItem);
+                }
             }
         }
-        
+
         contents.RandomSort();
-        
+
         return contents;
     }
 }

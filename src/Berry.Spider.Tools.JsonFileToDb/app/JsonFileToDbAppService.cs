@@ -26,60 +26,61 @@ public class JsonFileToDbAppService : IJsonFileToDbAppService
         // 递归获取文件路径下的所有文件
         var files = Directory.GetFiles(filePath, "*.json", SearchOption.AllDirectories);
         List<SpiderContent> spiderContents = new List<SpiderContent>();
-        foreach (string file in files)
+
+        await Parallel.ForEachAsync(files, new ParallelOptions
         {
-            string fileContent = await File.ReadAllTextAsync(file);
-            if (!string.IsNullOrEmpty(fileContent))
+            MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
+        }, async (file, token) =>
+        {
+            try
             {
-                JsonContentModel? jsonContentModel = JsonSerializer.Deserialize<JsonContentModel>(fileContent);
-                if (jsonContentModel != null)
+                string fileContent = await File.ReadAllTextAsync(file, token);
+                if (!string.IsNullOrEmpty(fileContent))
                 {
-                    List<string> titles = new();
-                    const int maxPageSize = 50;
-                    titles.AddRange(jsonContentModel.Pelates);
-                    titles.AddRange(jsonContentModel.Recommends);
-                    titles.RandomSort();
+                    JsonContentModel? jsonContentModel = JsonSerializer.Deserialize<JsonContentModel>(fileContent);
+                    if (jsonContentModel != null)
+                    {
+                        List<string> titles = new();
+                        titles.AddRange(jsonContentModel.Pelates);
+                        titles.AddRange(jsonContentModel.Recommends);
+                        titles.Distinct().ToList().RandomSort();
+                        if (titles.Count == 0) await Task.CompletedTask;
 
-                    await Parallel.ForEachAsync(jsonContentModel.Posts, new ParallelOptions
-                    {
-                        MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
-                    }, async (item, token) =>
-                    {
-                        List<string> contents = item.GetContentList();
-                        for (int i = 0; i < titles.Count; i++)
+                        foreach (PostItem item in jsonContentModel.Posts)
                         {
-                            List<string> todoSaveList;
-                            string title = titles[i];
+                            List<string> contents = item.GetContentList();
+                            if (contents.Count == 0) continue;
 
-                            if ((i + 1) * maxPageSize <= contents.Count)
+                            ListHelper listHelper = new ListHelper(contents);
+                            foreach (string title in titles)
                             {
-                                todoSaveList = contents.Skip(i * maxPageSize).Take(maxPageSize).ToList();
-                            }
-                            else
-                            {
-                                todoSaveList = contents.Skip(i * maxPageSize)
-                                    .Take(contents.Count - (i * maxPageSize)).ToList();
-                            }
+                                List<string> todoSaveList = listHelper.GetList(10, 100);
 
-                            if (todoSaveList.Count == 0) return;
+                                if (todoSaveList.Count == 0) return;
 
-                            StringBuilder builder = new StringBuilder();
-                            for (int j = 0; j < todoSaveList.Count; j++)
-                            {
-                                builder.AppendLine($"<p>{j + 1}、{todoSaveList[j]}</p>");
+                                string realTitle = $"{title}{todoSaveList.Count}句";
+                                Console.WriteLine($"组合成功，新标题：{realTitle}");
+
+                                StringBuilder builder = new StringBuilder();
+                                for (int j = 0; j < todoSaveList.Count; j++)
+                                {
+                                    builder.AppendLine($"<p>{j + 1}、{todoSaveList[j].Trim()}</p>");
+                                }
+
+                                //组装数据
+                                var spiderContent = new SpiderContent(realTitle, builder.ToString(),
+                                    SpiderSourceFrom.Json_File_Import);
+                                spiderContents.Add(spiderContent);
                             }
-
-                            //组装数据
-                            var spiderContent = new SpiderContent(title, builder.ToString(),
-                                SpiderSourceFrom.Json_File_Import);
-                            spiderContents.Add(spiderContent);
                         }
-
-                        await Task.CompletedTask;
-                    });
+                    }
                 }
             }
-        }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+        });
 
         if (spiderContents.Count == 0) return;
 
