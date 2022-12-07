@@ -32,6 +32,7 @@
       <ProjectReference Include="..\..\src\Berry.Spider.Segmenter.JiebaNet\Berry.Spider.Segmenter.JiebaNet.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.Sogou\Berry.Spider.Sogou.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.TouTiao\Berry.Spider.TouTiao.csproj" />
+      <ProjectReference Include="..\..\src\Berry.Spider.XxlJob.JobHandler\Berry.Spider.XxlJob.JobHandler.csproj" />
     </ItemGroup>
 
     <ItemGroup>
