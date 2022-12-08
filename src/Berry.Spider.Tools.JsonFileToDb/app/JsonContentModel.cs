@@ -40,7 +40,7 @@ public class PostItem
             if (ReplaceRegex.IsMatch(trimItem))
             {
                 string newItem = ReplaceRegex.Replace(trimItem, "").Replace(" ", "");
-                if (!string.IsNullOrWhiteSpace(newItem) && newItem.Length >= 10)
+                if (!string.IsNullOrWhiteSpace(newItem) && newItem.Length >= 5)
                 {
                     contents.Add(newItem);
                 }

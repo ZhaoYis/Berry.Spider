@@ -1,4 +1,7 @@
-﻿using Berry.Spider.EntityFrameworkCore;
+﻿using Berry.Spider.Core;
+using Berry.Spider.Domain;
+using Berry.Spider.EntityFrameworkCore;
+using Berry.Spider.Segmenter.JiebaNet;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,7 +14,10 @@ namespace Berry.Spider.Tools.JsonFileToDb;
 
 [DependsOn(
     typeof(AbpAutofacModule),
-    typeof(SpiderEntityFrameworkCoreModule)
+    typeof(SpiderEntityFrameworkCoreModule),
+    typeof(SpiderSegmenterJiebaNetModule),
+    typeof(SpiderCoreModule),
+    typeof(SpiderDomainModule)
 )]
 public class JsonFileToDbModule : AbpModule
 {
