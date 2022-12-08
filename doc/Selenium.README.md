@@ -49,5 +49,15 @@ https://bot.sannysoft.com/
 擦出webdriver指纹：
 https://zhuanlan.zhihu.com/p/328768200
 
+mysql：
+sudo docker run -d -p 3306:3306 -v /usr/local/mysql/conf:/etc/mysql/conf.d -v /usr/local/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=1q2w3e*.com --name  mysql mysql:5.7
+
 清除mysql缓存
 mysqladmin -u root -p flush-host
+
+xxlJob：
+docker pull xuxueli/xxl-job-admin:2.3.1
+docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://localhost:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai --spring.datasource.username=berry_spider --spring.datasource.password=1q2w3e*.com" -p 4421:8080 -v /tmp:/data/applogs --name xxl-job-admin  -d xuxueli/xxl-job-admin:2.3.1
+
+DotXxlJob：
+https://github.com/xuanye/DotXxlJob
