@@ -40,7 +40,7 @@ public class SpiderDomainService : DomainService
     /// </summary>
     /// <returns></returns>
     public async Task<SpiderContent?> BuildContentAsync(string originalTitle, SpiderSourceFrom sourceFrom,
-        List<string> contentItems)
+        List<string> contentItems, List<string>? subTitle = null)
     {
         if (contentItems.Count >= this.Options.Value.MinRecords)
         {
@@ -54,18 +54,18 @@ public class SpiderDomainService : DomainService
                 {
                     mainContent = this.Clock.Now.Hour % 2 == 0
                         ? contentItems.BuildMainContent(this.ImageResourceProvider,
-                            this.StringBuilderObjectPoolProvider)
-                        : contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider);
+                            this.StringBuilderObjectPoolProvider, subTitle)
+                        : contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider, subTitle);
                 }
                 else
                 {
                     mainContent = contentItems.BuildMainContent(this.ImageResourceProvider,
-                        this.StringBuilderObjectPoolProvider);
+                        this.StringBuilderObjectPoolProvider, subTitle);
                 }
             }
             else
             {
-                mainContent = contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider);
+                mainContent = contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider, subTitle);
             }
 
             if (!string.IsNullOrEmpty(mainContent))

@@ -8,6 +8,8 @@ public class JsonContentModel
 {
     [JsonPropertyName("keywords")] public string keywords { get; set; }
 
+    [JsonPropertyName("dropdowns")] public List<string> Dropdowns { get; set; }
+    
     [JsonPropertyName("recommends")] public List<string> Recommends { get; set; }
 
     [JsonPropertyName("relates")] public List<string> Pelates { get; set; }

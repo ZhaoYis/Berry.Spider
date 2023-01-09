@@ -38,8 +38,8 @@ public class JsonFileToDbAppService : IJsonFileToDbAppService
         {
             try
             {
-                if(file.Contains("(")) return;
-                
+                if (file.Contains("(")) return;
+
                 string fileContent = await File.ReadAllTextAsync(file, token);
                 if (!string.IsNullOrEmpty(fileContent))
                 {
@@ -56,29 +56,19 @@ public class JsonFileToDbAppService : IJsonFileToDbAppService
                             if (contents.Count == 0) continue;
 
                             ListHelper listHelper = new ListHelper(contents);
-                            List<string> todoSaveList = listHelper.GetList(20, 100);
+                            List<string> todoSaveList = listHelper.GetList(50, 100);
 
                             if (todoSaveList.Count == 0) return;
 
                             var spiderContent = await SpiderDomainService.BuildContentAsync(jsonContentModel.keywords,
-                                SpiderSourceFrom.Json_File_Import, todoSaveList);
-
-                            // string realTitle = $"{jsonContentModel.keywords}{todoSaveList.Count}句";
-                            // Console.WriteLine($"组合成功，新标题：{realTitle}");
-                            //
-                            // StringBuilder builder = new StringBuilder();
-                            // for (int j = 0; j < todoSaveList.Count; j++)
-                            // {
-                            //     builder.AppendLine($"<p>{j + 1}、{todoSaveList[j].Trim()}</p>");
-                            // }
-                            //
-                            // //组装数据
-                            // var spiderContent = new SpiderContent(realTitle, builder.ToString(),
-                            //     SpiderSourceFrom.Json_File_Import);
+                                SpiderSourceFrom.Json_File_Import, todoSaveList, jsonContentModel.Dropdowns);
 
                             if (spiderContent != null)
                             {
                                 spiderContents.Add(spiderContent);
+
+                                //当前标题
+                                recommendTitleList.Add(spiderContent.Title);
                             }
                         }
                     }
