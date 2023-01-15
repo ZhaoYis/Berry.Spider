@@ -22,6 +22,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     private ITextAnalysisProvider TextAnalysisProvider { get; }
     private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
     private ISpiderContentRepository SpiderRepository { get; }
+    private ISpiderContentKeywordRepository SpiderKeywordRepository { get; }
     private SpiderDomainService SpiderDomainService { get; }
     private IClock Clock { get; }
     private IEventBusPublisher DistributedEventBus { get; }
@@ -35,6 +36,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
         IServiceProvider serviceProvider,
         SpiderDomainService spiderDomainService,
         ISpiderContentRepository repository,
+        ISpiderContentKeywordRepository keywordRepository,
         IClock clock,
         IEventBusPublisher eventBus,
         IRedisService redisService,
@@ -44,6 +46,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
         this.TextAnalysisProvider = serviceProvider.GetRequiredService<TouTiaoQuestionTextAnalysisProvider>();
         this.ResolveJumpUrlProvider = serviceProvider.GetRequiredService<TouTiaoResolveJumpUrlProvider>();
         this.SpiderRepository = repository;
+        this.SpiderKeywordRepository = keywordRepository;
         this.SpiderDomainService = spiderDomainService;
         this.Clock = clock;
         this.DistributedEventBus = eventBus;
@@ -144,6 +147,11 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                     {
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
                         this.Logger.LogInformation("事件发布成功，等待消费...");
+
+                        //保存采集到的标题
+                        List<SpiderContent_Keyword> list = eto.Items
+                            .Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();
+                        await this.SpiderKeywordRepository.InsertManyAsync(list);
                     }
                 }
             });

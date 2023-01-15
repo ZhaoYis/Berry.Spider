@@ -10,6 +10,7 @@ namespace Berry.Spider.EntityFrameworkCore;
 public class SpiderDbContext : AbpDbContext<SpiderDbContext>
 {
     public DbSet<SpiderContent> SpiderContents { get; set; }
+    public DbSet<SpiderContent_Keyword> SpiderContentKeywords { get; set; }
     public DbSet<SpiderContent_Composition> SpiderContentCompositions { get; set; }
     public DbSet<SpiderContent_HighQualityQA> SpiderContentHighQualityQas { get; set; }
     public DbSet<SpiderTitleContent> SpiderTitleContents { get; set; }
@@ -26,7 +27,7 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
         //基础表
         builder.Entity<SpiderContent>(b =>
         {
-            b.ToTable("Content_20230109");
+            b.ToTable("Content");
             //b.ToTable("Content_Composition");
 
             //Configure the base properties
@@ -46,6 +47,15 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
         builder.Entity<SpiderContent_HighQualityQA>(b =>
         {
             b.ToTable("Content_HighQualityQA");
+
+            //Configure the base properties
+            b.ConfigureByConvention();
+        });
+
+        //根据关键字抓取的一级页面标题信息
+        builder.Entity<SpiderContent_Keyword>(b =>
+        {
+            b.ToTable("Content_Keyword");
 
             //Configure the base properties
             b.ConfigureByConvention();
