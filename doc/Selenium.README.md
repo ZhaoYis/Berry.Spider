@@ -34,8 +34,8 @@ kill -9 进程号
 hub：124.223.62.114:4445
 node-1:121.199.12.249:4445
 
-查找大于100M的文件：
-ls -lh  $(find / -type f -size +100M)
+查找大于100M的文件：[
+ls -lh  $(find / -type f -size +100M)]()
 
 
 https://www.selenium.dev/zh-cn/documentation/grid/configuration/cli_options/

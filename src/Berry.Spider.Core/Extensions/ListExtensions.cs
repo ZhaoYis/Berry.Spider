@@ -7,7 +7,9 @@ public static class ListExtensions
     /// </summary>
     /// <returns></returns>
     public static string BuildMainContent(this List<string> items,
-        IStringBuilderObjectPoolProvider stringBuilderObjectPoolProvider, List<string>? subTitleList = null)
+        IStringBuilderObjectPoolProvider stringBuilderObjectPoolProvider,
+        string? originalTitle = null,
+        List<string>? subTitleList = null)
     {
         if (items.Count == 0) return string.Empty;
 
@@ -15,17 +17,37 @@ public static class ListExtensions
 
         string mainContent = stringBuilderObjectPoolProvider.Invoke(builder =>
         {
+            int _currentIndex = 0; //当前页
+            int _pageSize = 30; //每页记录数
+
             if (subTitleList == null || subTitleList.Count == 0)
             {
-                for (int i = 0; i < items.Count; i++)
+                if (string.IsNullOrEmpty(originalTitle))
                 {
-                    string item = items[i];
-                    builder.AppendFormat("<p>{0}、{1}</p>", i + 1, item);
+                    for (int i = 0; i < items.Count; i++)
+                    {
+                        string item = items[i];
+                        builder.AppendFormat("<p>{0}、{1}</p>", i + 1, item);
+                    }
+                }
+                else
+                {
+                    //将原标题每隔一定记录加到最上面部分
+                    for (int i = 0; i < items.Count; i++)
+                    {
+                        if (i % _pageSize == 0)
+                        {
+                            builder.AppendFormat("<p><strong>{0}</strong></p>", originalTitle);
+                        }
+
+                        string item = items[i];
+                        builder.AppendFormat("<p>{0}、{1}</p>", i + 1, item);
+                    }
                 }
             }
             else
             {
-                if (items.Count < 25 || items.Count / 2 < 13)
+                if (items.Count < _pageSize || (items.Count / 2) < (_pageSize / 2))
                 {
                     //加一个小标题
                     builder.AppendFormat("<p><strong>{0}</strong></p>", subTitleList.First());
@@ -38,8 +60,6 @@ public static class ListExtensions
                 }
                 else
                 {
-                    int _currentIndex = 0;
-                    int _pageSize = 25;
                     int _totalPage = (items.Count / _pageSize) + (items.Count % _pageSize > 0 ? 1 : 0);
                     for (int i = 0; i < _totalPage; i++)
                     {
