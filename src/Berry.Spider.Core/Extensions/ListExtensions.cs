@@ -143,7 +143,7 @@ public static class ListExtensions
     /// <returns></returns>
     public static void RandomSort<T>(this List<T> sources)
     {
-        Random rd = new Random(new Guid().GetHashCode());
+        Random rd = new Random(Guid.NewGuid().GetHashCode());
         for (int i = 0; i < sources.Count - 1; i++)
         {
             var index = rd.Next(0, sources.Count - 1);
@@ -153,4 +153,16 @@ public static class ListExtensions
             }
         }
     }
+
+    // public static List<T> RandomSort<T>(this List<T> sources)
+    // {
+    //     Random random = new Random();
+    //     List<T> newList = new List<T>();
+    //     foreach (var item in sources)
+    //     {
+    //         newList.Insert(random.Next(newList.Count), item);
+    //     }
+    //
+    //     return newList;
+    // }
 }
