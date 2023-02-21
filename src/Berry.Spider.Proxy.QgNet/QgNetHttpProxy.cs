@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Volo.Abp.Caching;
 
@@ -12,17 +13,20 @@ public class QgNetHttpProxy : IHttpProxy
     private QgNetProxyPoolContext QgNetProxyPoolContext { get; }
     private IDistributedCache<QgNetProxyQuotaResult> Cache { get; }
     private IOptionsSnapshot<QgNetProxyOptions> Options { get; }
+    private ILogger<QgNetHttpProxy> Logger { get; }
 
     public QgNetHttpProxy(
         QgNetProxyHttpClient httpClient,
         QgNetProxyPoolContext context,
         IDistributedCache<QgNetProxyQuotaResult> cache,
-        IOptionsSnapshot<QgNetProxyOptions> options)
+        IOptionsSnapshot<QgNetProxyOptions> options,
+        ILogger<QgNetHttpProxy> logger)
     {
         this.QgNetProxyHttpClient = httpClient;
         this.QgNetProxyPoolContext = context;
         this.Cache = cache;
         this.Options = options;
+        this.Logger = logger;
     }
 
     /// <summary>
@@ -63,7 +67,11 @@ public class QgNetHttpProxy : IHttpProxy
     {
         QgNetProxyResult? qgNetProxyResult = await this.QgNetProxyPoolContext.GetAsync();
 
-        if (qgNetProxyResult != null) return qgNetProxyResult.Host;
+        if (qgNetProxyResult != null)
+        {
+            this.Logger.LogInformation($"获取到qg.net代理IP信息：{qgNetProxyResult.Host}");
+            return qgNetProxyResult.Host;
+        }
 
         return string.Empty;
     }

@@ -27,8 +27,7 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
         //基础表
         builder.Entity<SpiderContent>(b =>
         {
-            b.ToTable("Content_20230215");
-            //b.ToTable("Content_Composition");
+            b.ToTable("Content");
 
             //Configure the base properties
             b.ConfigureByConvention();

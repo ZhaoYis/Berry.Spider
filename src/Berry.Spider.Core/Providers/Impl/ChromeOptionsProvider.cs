@@ -60,7 +60,7 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         //Normal：默认值, 等待所有资源下载
         //Eager：DOM 访问已准备就绪, 但诸如图像的其他资源可能仍在加载
         //None：完全不会阻塞 WebDriver
-        options.PageLoadStrategy = PageLoadStrategy.Normal;
+        options.PageLoadStrategy = PageLoadStrategy.Eager;
         //检查在会话期间导航时 是否使用了过期的 (或) 无效的 TLS Certificate
         //设置为 false, 则页面浏览遇到任何域证书问题时, 将返回insecure certificate error . 如果设置为 true, 则浏览器将信任无效证书.
         options.AcceptInsecureCertificates = true;

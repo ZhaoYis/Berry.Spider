@@ -36,7 +36,7 @@ public class DefaultHttpProxy : IHttpProxy
 
         if (result != null)
         {
-            this.Logger.LogInformation($"获取到代理IP信息：{result.Proxy}");
+            this.Logger.LogInformation($"获取到私有部署代理IP信息：{result.Proxy}");
             return result.Proxy;
         }
 

@@ -17,13 +17,13 @@ public class SeleniumProxyProvider : ISeleniumProxyProvider
 
     public async Task<OpenQA.Selenium.Proxy?> GetProxyAsync()
     {
-        IHttpProxy httpProxy = await this.SpiderProxyFactory.GetProxyAsync();
+        IHttpProxy? httpProxy = await this.SpiderProxyFactory.GetProxyAsync();
         if (httpProxy != null)
         {
             string host = await httpProxy.GetProxyUriAsync();
             if (!string.IsNullOrEmpty(host))
             {
-                OpenQA.Selenium.Proxy? proxy = new OpenQA.Selenium.Proxy();
+                OpenQA.Selenium.Proxy proxy = new OpenQA.Selenium.Proxy();
                 proxy.Kind = ProxyKind.Manual;
                 proxy.IsAutoDetect = false;
                 proxy.HttpProxy = host;
