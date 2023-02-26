@@ -24,7 +24,8 @@ public class JiebaNetSegmenterProvider : ISegmenterProvider
         【新词识别】：他/ 来到/ 了/ 网易/ 杭研/ 大厦
 
         segments = segmenter.CutForSearch("小明硕士毕业于中国科学院计算所，后在日本京都大学深造"); // 搜索引擎模式
-        Console.WriteLine("【搜索引擎模式】：{0}", string.Join("/ ", segments));【搜索引擎模式】：小明/ 硕士/ 毕业/ 于/ 中国/ 科学/ 学院/ 科学院/ 中国科学院/ 计算/ 计算所/ ，/ 后/ 在/ 日本/ 京都/ 大学/ 日本京都大学/ 深造
+        Console.WriteLine("【搜索引擎模式】：{0}", string.Join("/ ", segments));
+        【搜索引擎模式】：小明/ 硕士/ 毕业/ 于/ 中国/ 科学/ 学院/ 科学院/ 中国科学院/ 计算/ 计算所/ ，/ 后/ 在/ 日本/ 京都/ 大学/ 日本京都大学/ 深造
         
         segments = segmenter.Cut("结过婚的和尚未结过婚的");
         Console.WriteLine("【歧义消除】：{0}", string.Join("/ ", segments));
