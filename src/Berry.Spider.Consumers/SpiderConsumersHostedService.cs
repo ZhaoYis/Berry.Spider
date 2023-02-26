@@ -1,11 +1,10 @@
-﻿using DotNetCore.CAP.Internal;
+﻿using DotNetCore.CAP;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System.Threading;
 using System.Threading.Tasks;
-using DotNetCore.CAP;
 using Volo.Abp;
 
 namespace Berry.Spider.Consumers;

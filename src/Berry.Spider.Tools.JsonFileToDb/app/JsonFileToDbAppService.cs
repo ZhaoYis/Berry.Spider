@@ -1,8 +1,7 @@
-using System.Text;
-using System.Text.Json;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace Berry.Spider.Tools.JsonFileToDb;
 
@@ -48,21 +47,18 @@ public class JsonFileToDbAppService : IJsonFileToDbAppService
                     {
                         recommendTitleList.AddRange(jsonContentModel.Pelates);
                         recommendTitleList.AddRange(jsonContentModel.Recommends);
+                        //recommendTitleList.Distinct().ToList().RandomSort();
 
-                        List<string> todoSaveContents = new List<string>();
                         foreach (PostItem item in jsonContentModel.Posts)
                         {
                             List<string> contents = item.GetContentList();
                             if (contents.Count == 0) continue;
 
-                            todoSaveContents.AddRange(contents);
-                        }
+                            ListHelper listHelper = new ListHelper(contents);
+                            List<string> todoSaveList = listHelper.GetList(50, 100);
 
-                        todoSaveContents.RandomSort();
-                        ListHelper listHelper = new ListHelper(todoSaveContents);
-                        List<string> todoSaveList = listHelper.GetList(50, 100);
-                        while (todoSaveList.Count > 0)
-                        {
+                            if (todoSaveList.Count == 0) return;
+
                             var spiderContent = await SpiderDomainService.BuildContentAsync(jsonContentModel.keywords,
                                 SpiderSourceFrom.Json_File_Import, todoSaveList, jsonContentModel.Dropdowns);
 
@@ -72,10 +68,7 @@ public class JsonFileToDbAppService : IJsonFileToDbAppService
 
                                 //当前标题
                                 recommendTitleList.Add(spiderContent.Title);
-                                Console.WriteLine(spiderContent.Title);
                             }
-
-                            todoSaveList = listHelper.GetList(50, 100);
                         }
                     }
                 }
