@@ -56,9 +56,11 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
             SourceFrom = SpiderSourceFrom.TouTiao_HighQuality_Question,
             Keyword = keyword
         };
-
-        await this.CheckAsync(push.Keyword,
-            checkSuccessCallback: async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
+        
+        await this.CheckAsync(push.Keyword, checkSuccessCallback: async () =>
+            {
+                await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push);
+            },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
