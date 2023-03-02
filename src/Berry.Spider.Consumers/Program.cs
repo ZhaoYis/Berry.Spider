@@ -3,7 +3,13 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 using System;
+using System.Linq;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Berry.Spider.Core;
+using Microsoft.Extensions.Configuration;
 
 namespace Berry.Spider.Consumers;
 
@@ -11,6 +17,7 @@ public class Program
 {
     public static async Task<int> Main(string[] args)
     {
+        var configuration = GetConfiguration(args);
         Log.Logger = new LoggerConfiguration()
 #if DEBUG
             .MinimumLevel.Debug()
@@ -18,6 +25,9 @@ public class Program
             .MinimumLevel.Information()
 #endif
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+            .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+            .ReadFrom.Configuration(configuration)
             .Enrich.FromLogContext()
             .Enrich.With<ThreadIdEnricher>()
             //Debug
@@ -51,9 +61,16 @@ public class Program
         try
         {
             Log.Information("Starting console host.");
+            Log.Information(JsonSerializer.Serialize(configuration.AsEnumerable().AsDictionary(), new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            }));
 
-            await Host.CreateDefaultBuilder(args)
-                .ConfigureServices(services => { services.AddHostedService<SpiderConsumersHostedService>(); })
+            await Host.CreateDefaultBuilder(args).ConfigureServices(services =>
+                {
+                    services.AddHostedService<SpiderConsumersHostedService>();
+                })
                 //机密配置文件
                 .AddAppSettingsSecretsJson()
                 //集成AgileConfig
@@ -72,5 +89,31 @@ public class Program
         {
             Log.CloseAndFlush();
         }
+    }
+
+    private static IConfiguration GetConfiguration(string[] args)
+    {
+        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        if (args is { Length: > 0 })
+        {
+            string pattern = "^--environment=(.+)$";
+            var envArg = args.FirstOrDefault(arg => Regex.IsMatch(arg, pattern));
+            if (!string.IsNullOrWhiteSpace(envArg))
+            {
+                var envArgGroups = Regex.Match(envArg, pattern).Groups;
+                if (envArgGroups.Count == 2)
+                {
+                    env = envArgGroups[1].Value;
+                }
+            }
+        }
+
+        var builder = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", true)
+            .AddJsonFile($"appsettings.{env}.json", true)
+            .AddEnvironmentVariables()
+            .AddCommandLine(args);
+
+        return builder.Build();
     }
 }
