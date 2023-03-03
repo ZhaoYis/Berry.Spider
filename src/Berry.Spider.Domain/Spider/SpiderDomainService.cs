@@ -55,7 +55,8 @@ public class SpiderDomainService : DomainService
                     mainContent = this.Clock.Now.Hour % 2 == 0
                         ? contentItems.BuildMainContent(this.ImageResourceProvider,
                             this.StringBuilderObjectPoolProvider, subTitleList)
-                        : contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider, originalTitle, subTitleList);
+                        : contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider, originalTitle,
+                            subTitleList);
                 }
                 else
                 {
@@ -65,7 +66,8 @@ public class SpiderDomainService : DomainService
             }
             else
             {
-                mainContent = contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider, originalTitle, subTitleList);
+                mainContent =
+                    contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider, originalTitle, subTitleList);
             }
 
             if (!string.IsNullOrEmpty(mainContent))
@@ -115,26 +117,36 @@ public class SpiderDomainService : DomainService
     /// <returns></returns>
     public Task<SpiderContent_HighQualityQA> BuildHighQualityContentAsync(string originalTitle,
         SpiderSourceFrom sourceFrom,
-        List<string> contentItems)
+        Dictionary<string, List<string>> contentItems)
     {
-        //打乱
-        contentItems.RandomSort();
-        //取指定的记录数
-        contentItems = contentItems.Take(this.Options.Value.HighQualityAnswerOptions.MaxRecordCount).ToList();
-
-        string mainContent = this.StringBuilderObjectPoolProvider.Invoke(builder =>
+        string mainContent = this.StringBuilderObjectPoolProvider.Invoke(mainContentBuilder =>
         {
-            for (int i = 0; i < contentItems.Count; i++)
+            foreach (KeyValuePair<string, List<string>> item in contentItems)
             {
-                string item = contentItems[i];
-                builder.AppendFormat("<p><strong>优质答案（{0}）</strong></p>", i + 1);
-                builder.AppendFormat("<p>{0}</p>", item);
+                string title = item.Key;
+                List<string> answerContentItems = item.Value;
+
+                //打乱
+                answerContentItems.RandomSort();
+                //取指定的记录数
+                answerContentItems = answerContentItems
+                    .Take(this.Options.Value.HighQualityAnswerOptions.MaxRecordCount)
+                    .ToList();
+
+                string itemContent = this.StringBuilderObjectPoolProvider.Invoke(itemContentBuilder =>
+                {
+                    for (int i = 0; i < contentItems.Count; i++)
+                    {
+                        string itemContent = answerContentItems[i];
+                        itemContentBuilder.AppendFormat("<p><strong>{0}</strong></p>", title);
+                        itemContentBuilder.AppendFormat("<p>{0}</p>", itemContent);
+                    }
+                });
+
+                mainContentBuilder.Append(itemContent);
             }
         });
-
-        //格式化标题
-        //originalTitle = $"问题精选：{originalTitle}";
-
+        
         //组装数据
         var content = new SpiderContent_HighQualityQA(originalTitle, mainContent.ToString(), sourceFrom);
         return Task.FromResult(content);

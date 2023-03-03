@@ -16,12 +16,18 @@ public class SpiderEventBusRabbitMqModule : AbpModule
 
         context.Services.AddCap(opt =>
         {
-            MongoDBOptions mongoDbOptions = configuration.GetSection(nameof(MongoDBOptions)).Get<MongoDBOptions>();
-            opt.UseMongoDB(o =>
+            MongoDBOptions? mongoDbOptions = configuration.GetSection(nameof(MongoDBOptions)).Get<MongoDBOptions>();
+            if (mongoDbOptions is { })
             {
-                o.DatabaseConnection = mongoDbOptions.ConnectionString;
-            });
-
+                opt.UseMongoDB(o =>
+                {
+                    o.DatabaseConnection = mongoDbOptions.ConnectionString;
+                    o.DatabaseName = "cap";
+                    o.ReceivedCollection = "cap.received";
+                    o.PublishedCollection = "cap.published";
+                });
+            }
+            
             opt.UseDashboard();
             //消费者线程并行处理消息的线程数
             opt.ConsumerThreadCount = 5;
@@ -32,21 +38,24 @@ public class SpiderEventBusRabbitMqModule : AbpModule
             //成功消息的过期时间（秒）
             opt.SucceedMessageExpiredAfter = 7 * 24 * 3600;
 
-            EventBusRabbitMqOptions rabbitMqOptions = configuration.GetSection("RabbitMQ:Connections:Default").Get<EventBusRabbitMqOptions>();
-            opt.UseRabbitMQ(o =>
+            EventBusRabbitMqOptions? rabbitMqOptions = configuration.GetSection("RabbitMQ:Connections:Default").Get<EventBusRabbitMqOptions>();
+            if (rabbitMqOptions is { })
             {
-                o.HostName = rabbitMqOptions.HostName;
-                o.UserName = rabbitMqOptions.UserName;
-                o.Password = rabbitMqOptions.Password;
-                o.Port = Convert.ToInt32(rabbitMqOptions.Port);
-                o.VirtualHost = rabbitMqOptions.VirtualHost;
-
-                o.CustomHeaders = e => new List<KeyValuePair<string, string>>
+                opt.UseRabbitMQ(o =>
                 {
-                    new(Headers.MessageId, SnowflakeId.Default().NextId().ToString()),
-                    new(Headers.MessageName, e.RoutingKey)
-                };
-            });
+                    o.HostName = rabbitMqOptions.HostName;
+                    o.UserName = rabbitMqOptions.UserName;
+                    o.Password = rabbitMqOptions.Password;
+                    o.Port = Convert.ToInt32(rabbitMqOptions.Port);
+                    o.VirtualHost = rabbitMqOptions.VirtualHost;
+
+                    o.CustomHeaders = e => new List<KeyValuePair<string, string>>
+                    {
+                        new(Headers.MessageId, SnowflakeId.Default().NextId().ToString()),
+                        new(Headers.MessageName, e.RoutingKey)
+                    };
+                });
+            }
         }).AddSubscribeFilter<CustomSubscribeFilter>();
 
         //注册RabbitMq消息发布器
