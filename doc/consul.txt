@@ -1,0 +1,3 @@
+sc create "Consul_Node_1" binPath= "C:\Sofeware\consul_1.15.0_windows_amd64\consul.exe agent -server -ui -bootstrap-expect=1 -data-dir=C:\Sofeware\consul_1.15.0_windows_amd64\ -node=consul-1 -client=0.0.0.0 -bind=10.0.0.15 -datacenter=dc1" start= auto
+
+sc create "Consul_Node_Client" binPath= "C:\Sofeware\consul_1.15.0_windows_amd64\consul.exe agent -bind 0.0.0.0 -client=10.0.0.15 -data-dir=C:\Sofeware\consul_1.15.0_windows_amd64\ -node Consul.Client.Server -join 10.0.0.15" start= auto

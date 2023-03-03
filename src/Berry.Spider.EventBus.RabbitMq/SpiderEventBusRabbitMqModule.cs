@@ -1,4 +1,5 @@
 using Berry.Spider.Contracts;
+using DotNetCore.CAP.Dashboard.NodeDiscovery;
 using DotNetCore.CAP.Internal;
 using DotNetCore.CAP.Messages;
 using Microsoft.Extensions.Configuration;
@@ -27,8 +28,26 @@ public class SpiderEventBusRabbitMqModule : AbpModule
                     o.PublishedCollection = "cap.published";
                 });
             }
-            
+
+            //使用管理面板
             opt.UseDashboard();
+
+            //注册节点到Consul
+            ConsulOptions? consulOptions = configuration.GetSection(nameof(ConsulOptions)).Get<ConsulOptions>();
+            if (consulOptions is {IsEnabled: true})
+            {
+                string nodeId = Guid.NewGuid().ToString("N");
+                string nodeName = "Consumer_" + nodeId;
+                opt.UseDiscovery(d =>
+                {
+                    d.DiscoveryServerHostName = consulOptions.DiscoveryServerHostName;
+                    d.DiscoveryServerPort = consulOptions.DiscoveryServerPort;
+                    d.NodeId = nodeId;
+                    d.NodeName = nodeName;
+                    d.CustomTags = new[] {"Berry_Spider_Consumer"};
+                });
+            }
+
             //消费者线程并行处理消息的线程数
             opt.ConsumerThreadCount = 5;
             //如果设置为 true，则每个消费者组都会根据 ConsumerThreadCount 设置的值创建单独的线程进行处理。
@@ -38,7 +57,8 @@ public class SpiderEventBusRabbitMqModule : AbpModule
             //成功消息的过期时间（秒）
             opt.SucceedMessageExpiredAfter = 7 * 24 * 3600;
 
-            EventBusRabbitMqOptions? rabbitMqOptions = configuration.GetSection("RabbitMQ:Connections:Default").Get<EventBusRabbitMqOptions>();
+            EventBusRabbitMqOptions? rabbitMqOptions =
+                configuration.GetSection("RabbitMQ:Connections:Default").Get<EventBusRabbitMqOptions>();
             if (rabbitMqOptions is { })
             {
                 opt.UseRabbitMQ(o =>
