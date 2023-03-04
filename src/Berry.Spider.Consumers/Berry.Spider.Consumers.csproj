@@ -42,6 +42,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\host\Berry.Spider.Consumers.HttpApi\Berry.Spider.Consumers.HttpApi.csproj" />
       <ProjectReference Include="..\Berry.Spider.Baidu\Berry.Spider.Baidu.csproj" />
       <ProjectReference Include="..\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj" />
       <ProjectReference Include="..\Berry.Spider.EventBus.RabbitMq\Berry.Spider.EventBus.RabbitMq.csproj" />

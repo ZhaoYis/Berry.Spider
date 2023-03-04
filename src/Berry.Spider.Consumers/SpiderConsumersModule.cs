@@ -1,4 +1,5 @@
 ﻿using Berry.Spider.Baidu;
+using Berry.Spider.Consumers.HttpApi;
 using Berry.Spider.Contracts;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.EventBus.RabbitMq;
@@ -21,6 +22,7 @@ namespace Berry.Spider.Consumers;
     typeof(SpiderEntityFrameworkCoreModule),
     typeof(SpiderEventBusRabbitMqModule),
     typeof(SpiderSegmenterJiebaNetModule),
+    typeof(SpiderConsumerHttpApiModule),
     //今日头条模块
     typeof(TouTiaoSpiderModule),
     //搜狗模块
@@ -39,7 +41,8 @@ public class SpiderConsumersModule : AbpModule
         logger.LogInformation($"EnvironmentName => {hostEnvironment.EnvironmentName}");
 
         //集成Exceptionless
-        ExceptionlessOptions options = configuration.GetSection(nameof(ExceptionlessOptions)).Get<ExceptionlessOptions>();
+        ExceptionlessOptions options =
+            configuration.GetSection(nameof(ExceptionlessOptions)).Get<ExceptionlessOptions>();
         if (options.IsEnable && !string.IsNullOrEmpty(options.ApiKey))
         {
             ExceptionlessClient.Default.Startup(options.ApiKey);

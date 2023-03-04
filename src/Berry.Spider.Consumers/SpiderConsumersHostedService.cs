@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using System.Threading;
 using System.Threading.Tasks;
+using Berry.Spider.Consumers.HttpApi;
 using Volo.Abp;
 
 namespace Berry.Spider.Consumers;
@@ -34,9 +35,19 @@ public class SpiderConsumersHostedService : IHostedService
         });
         await _abpApplication.InitializeAsync();
 
+        //启动api服务
+        await Task.Factory.StartNew(async () =>
+        {
+            var apiService = _abpApplication.ServiceProvider.GetService<ISpiderConsumerHttpApiService>();
+            if (apiService is { })
+            {
+                await apiService.InitAsync();
+            }
+        }, cancellationToken);
+
         //初始化
         IBootstrapper? bootstrapper = _abpApplication.ServiceProvider.GetService<IBootstrapper>();
-        if (bootstrapper != null)
+        if (bootstrapper is { })
         {
             await bootstrapper.BootstrapAsync(cancellationToken);
         }
