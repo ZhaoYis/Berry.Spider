@@ -118,6 +118,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.XxlJob", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.XxlJob.JobHandler", "src\Berry.Spider.XxlJob.JobHandler\Berry.Spider.XxlJob.JobHandler.csproj", "{DF88E972-68A0-499B-94CF-BB2CD9E814D5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "openai", "openai", "{8EDFD47D-2AAD-4E4E-A69A-0BB63CDF0BE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.OpenAI", "src\Berry.Spider.OpenAI\Berry.Spider.OpenAI.csproj", "{504266C7-EE1B-4CA0-B28E-172F5CF99575}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -272,6 +276,10 @@ Global
 		{DF88E972-68A0-499B-94CF-BB2CD9E814D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF88E972-68A0-499B-94CF-BB2CD9E814D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF88E972-68A0-499B-94CF-BB2CD9E814D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{504266C7-EE1B-4CA0-B28E-172F5CF99575}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{504266C7-EE1B-4CA0-B28E-172F5CF99575}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{504266C7-EE1B-4CA0-B28E-172F5CF99575}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{504266C7-EE1B-4CA0-B28E-172F5CF99575}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -321,6 +329,8 @@ Global
 		{942A6652-1798-4EA1-9DCD-9C157DDFC455} = {523AD30F-FF86-456E-874E-456979B4141F}
 		{9F8BEAD1-2544-4026-AC86-ACFD7C64ADF3} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 		{DF88E972-68A0-499B-94CF-BB2CD9E814D5} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
+		{8EDFD47D-2AAD-4E4E-A69A-0BB63CDF0BE7} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
+		{504266C7-EE1B-4CA0-B28E-172F5CF99575} = {8EDFD47D-2AAD-4E4E-A69A-0BB63CDF0BE7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}
