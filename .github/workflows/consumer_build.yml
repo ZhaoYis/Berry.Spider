@@ -27,7 +27,7 @@ jobs:
         run: dotnet build src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release
 
       - name: Publish Application
-        run: dotnet publish src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release -o ${{ github.workspace }}/publish /p:Environment=${{ env.ENVIRONMENT }}
+        run: dotnet publish src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release -o ${{ github.workspace }}/publish/output /p:Environment=${{ env.ENVIRONMENT }}
         env:
           ENVIRONMENT: ${{ env.ASPNETCORE_ENVIRONMENT }}
           
@@ -44,15 +44,15 @@ jobs:
 
       - name: Zip artifact
         run: |
-          cd ${{ github.workspace }}/publish
-          Compress-Archive -Path Berry.Spider.Consumers -DestinationPath Berry.Spider.Consumers.zip
+          cd ${{ github.workspace }}/publish/output
+          Compress-Archive -Path output -DestinationPath Berry.Spider.Consumers.zip
         shell: pwsh
       
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: Berry.Spider.Consumers
-          path: ${{ github.workspace }}/publish/Berry.Spider.Consumers.zip
+          path: ${{ github.workspace }}/publish/output/Berry.Spider.Consumers.zip
 
       - name: Attach Artifact to Release
         id: attach_artifact
@@ -61,6 +61,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ github.workspace }}/publish/Berry.Spider.Consumers.zip
+          asset_path: ${{ github.workspace }}/publish/output/Berry.Spider.Consumers.zip
           asset_name: Berry.Spider.Consumers.zip
           asset_content_type: application/zip
