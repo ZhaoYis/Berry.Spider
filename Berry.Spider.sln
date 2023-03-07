@@ -122,6 +122,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "openai", "openai", "{8EDFD4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.OpenAI", "src\Berry.Spider.OpenAI\Berry.Spider.OpenAI.csproj", "{504266C7-EE1B-4CA0-B28E-172F5CF99575}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{2DDD493D-A876-439B-99E6-6DE345680322}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{46854626-E2C5-4C92-890D-A3D7BAB9EC7E}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\consumer_build.yml = .github\workflows\consumer_build.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -331,6 +338,7 @@ Global
 		{DF88E972-68A0-499B-94CF-BB2CD9E814D5} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 		{8EDFD47D-2AAD-4E4E-A69A-0BB63CDF0BE7} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 		{504266C7-EE1B-4CA0-B28E-172F5CF99575} = {8EDFD47D-2AAD-4E4E-A69A-0BB63CDF0BE7}
+		{46854626-E2C5-4C92-890D-A3D7BAB9EC7E} = {2DDD493D-A876-439B-99E6-6DE345680322}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}
