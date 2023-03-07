@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using Berry.Spider.Abstractions;
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
@@ -59,10 +60,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
         };
 
         await this.CheckAsync(push.Keyword,
-            checkSuccessCallback: async () =>
-            {
-                await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push);
-            },
+            checkSuccessCallback: async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -98,7 +96,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.ClassName("result-content"));
-                if (resultContent is {Count: > 0})
+                if (resultContent is { Count: > 0 })
                 {
                     this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 
@@ -152,7 +150,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
     {
         try
         {
-            Dictionary<string, List<string>> contentItems = new Dictionary<string, List<string>>();
+            ConcurrentDictionary<string, List<string>> contentItems = new ConcurrentDictionary<string, List<string>>();
             foreach (var item in eventData.Items)
             {
                 await this.WebElementLoadProvider.InvokeAsync(
@@ -163,7 +161,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                         if (root == null) return;
 
                         var resultContent = root.TryFindElements(By.ClassName("list"));
-                        if (resultContent is {Count: > 0})
+                        if (resultContent is { Count: > 0 })
                         {
                             await Parallel.ForEachAsync(resultContent, new ParallelOptions
                             {
@@ -171,7 +169,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                             }, async (element, token) =>
                             {
                                 var answerList = element.TryFindElements(By.TagName("div"));
-                                if (answerList is {Count: > 0})
+                                if (answerList is { Count: > 0 })
                                 {
                                     var realAnswerList = answerList
                                         .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))
@@ -207,7 +205,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                                             return ValueTask.CompletedTask;
                                         });
 
-                                        contentItems.Add(item.Title, answerContentItems);
+                                        contentItems.TryAdd(item.Title, answerContentItems);
                                     }
                                 }
                             });

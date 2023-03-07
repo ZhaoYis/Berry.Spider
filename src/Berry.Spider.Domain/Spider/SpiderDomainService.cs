@@ -117,7 +117,7 @@ public class SpiderDomainService : DomainService
     /// <returns></returns>
     public Task<SpiderContent_HighQualityQA> BuildHighQualityContentAsync(string originalTitle,
         SpiderSourceFrom sourceFrom,
-        Dictionary<string, List<string>> contentItems)
+        IDictionary<string, List<string>> contentItems)
     {
         string mainContent = this.StringBuilderObjectPoolProvider.Invoke(mainContentBuilder =>
         {
@@ -146,7 +146,7 @@ public class SpiderDomainService : DomainService
                 mainContentBuilder.Append(itemContent);
             }
         });
-        
+
         //组装数据
         var content = new SpiderContent_HighQualityQA(originalTitle, mainContent.ToString(), sourceFrom);
         return Task.FromResult(content);

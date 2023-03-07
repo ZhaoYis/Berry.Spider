@@ -2,10 +2,14 @@
 
 public static class GlobalConstants
 {
-    /// <summary>
-    /// Parallel最大并行数
-    /// </summary>
-    public const int ParallelMaxDegreeOfParallelism = 10;
+    public static int ParallelMaxDegreeOfParallelism
+    {
+        get
+        {
+            //逻辑处理器个数
+            return Environment.ProcessorCount / 2;
+        }
+    }
 
     /// <summary>
     /// 用于判重的Redis的key
