@@ -35,7 +35,7 @@ jobs:
 
       - name: Install jsonnet
         run: |
-          curl -L -o jsonnet.zip https://github.com/google/jsonnet/releases/download/v0.17.0/jsonnet-bin-v0.17.0-windows-amd64.zip
+          curl -o jsonnet.zip -L https://github.com/google/jsonnet/releases/download/v0.17.0/jsonnet-bin-v0.17.0-windows.zip
           7z.exe x jsonnet.zip -y -o C:\jsonnet
           setx PATH "%PATH%;C:\jsonnet"
         shell: powershell
