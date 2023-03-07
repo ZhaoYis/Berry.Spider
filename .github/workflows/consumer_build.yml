@@ -45,9 +45,9 @@ jobs:
       - name: Zip artifact
         run: |
           cd ${{ github.workspace }}/publish
-          zip -r Berry.Spider.Consumers.zip Berry.Spider.Consumers
-        shell: bash
-        
+          Compress-Archive -Path Berry.Spider.Consumers -DestinationPath Berry.Spider.Consumers.zip
+        shell: pwsh
+      
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
