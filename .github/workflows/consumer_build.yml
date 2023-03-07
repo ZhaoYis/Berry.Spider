@@ -31,10 +31,8 @@ jobs:
         shell: powershell
 
       - name: Add 7-Zip to PATH
-        run: |
-          echo '##[add-path]"C:\Program Files\7-Zip"'
-        shell: powershell
-        
+        run: echo "C:\Program Files\7-Zip" >> $GITHUB_PATH
+
       - name: Install jsonnet
         run: |
           curl -L -o jsonnet.zip https://github.com/google/jsonnet/releases/download/v0.17.0/jsonnet-bin-v0.17.0-windows-amd64.zip
