@@ -19,12 +19,28 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '7.x'
+          
+      - name: Install curl
+        run: |
+          choco install curl
+        shell: powershell
+        
+      - name: Install 7-Zip
+        run: |
+          choco install 7zip
+        shell: powershell
 
+      - name: Add 7-Zip to PATH
+        run: |
+          echo '##[add-path]"C:\Program Files\7-Zip"'
+        shell: powershell
+        
       - name: Install jsonnet
         run: |
           curl -L -o jsonnet.zip https://github.com/google/jsonnet/releases/download/v0.17.0/jsonnet-bin-v0.17.0-windows-amd64.zip
-          Expand-Archive jsonnet.zip -DestinationPath jsonnet
-          Add-Path ${{ github.workspace }}/jsonnet
+          7z.exe x jsonnet.zip -y -o C:\jsonnet
+          setx PATH "%PATH%;C:\jsonnet"
+        shell: powershell
 
       - name: Merge appsettings files
         run: |
