@@ -18,13 +18,13 @@ jobs:
           dotnet-version: '7.x'
 
       - name: Restore Dependencies
-        run: dotnet restore
+        run: dotnet restore src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj
 
       - name: Build Application
-        run: dotnet build --configuration Release
+        run: dotnet build src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release
 
       - name: Publish Application
-        run: dotnet publish -c Release -o ./publish
+        run: dotnet publish src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release -o ${{ github.workspace }}/publish
 
       - name: Create Release
         id: create_release
@@ -32,16 +32,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.0.0
-          release_name: Release v1.0.0
+          tag_name: v${{ github.run_number }}
+          release_name: Release v${{ github.run_number }}
           draft: false
           prerelease: false
 
+      - name: Zip artifact
+        run: |
+          cd ${{ github.workspace }}/publish
+          zip -r Berry.Spider.Consumers.zip Berry.Spider.Consumers
+        shell: bash
+        
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: Berry.Spider.Consumers
-          path: ./publish
+          path: ${{ github.workspace }}/publish/Berry.Spider.Consumers.zip
 
       - name: Attach Artifact to Release
         id: attach_artifact
@@ -50,6 +56,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./publish/Berry.Spider.Consumers.zip
+          asset_path: ${{ github.workspace }}/publish/Berry.Spider.Consumers.zip
           asset_name: Berry.Spider.Consumers.zip
           asset_content_type: application/zip
