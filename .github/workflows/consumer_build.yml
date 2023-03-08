@@ -31,14 +31,18 @@ jobs:
         env:
           ENVIRONMENT: ${{ env.ASPNETCORE_ENVIRONMENT }}
           
+      - name: Get current date
+        run: echo "::set-output name=date::$(date +'%Y%m%d')"
+        id: date
+          
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.run_number }}
-          release_name: Release v${{ github.run_number }}
+          tag_name: ${{ steps.date.outputs.date }}-v${{ github.run_number }}
+          release_name: ${{ steps.date.outputs.date }}-v${{ github.run_number }}
           draft: false
           prerelease: false
 
