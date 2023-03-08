@@ -13,7 +13,6 @@ public class SpiderOpenAIModule : AbpModule
      * https://platform.openai.com/docs/introduction/overview
      * https://github.com/betalgo/openai/wiki
      */
-    
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();
@@ -39,6 +38,10 @@ public class SpiderOpenAIModule : AbpModule
             });
 
             context.Services.AddScoped<IOpenAIManager, OpenAIManager>();
+        }
+        else
+        {
+            context.Services.AddScoped<IOpenAIManager, NullOpenAIManager>();
         }
     }
 }

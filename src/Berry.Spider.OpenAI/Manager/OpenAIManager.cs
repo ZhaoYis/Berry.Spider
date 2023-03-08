@@ -18,7 +18,7 @@ public class OpenAIManager : IOpenAIManager
         Logger = logger;
     }
 
-    public async Task<string?> CreateCompletionAsync(string prompt)
+    public async Task<string?> CreateCompletionAsync(string prompt, int? maxTokens = 2048)
     {
         /**
          *
@@ -46,7 +46,8 @@ public class OpenAIManager : IOpenAIManager
         CompletionCreateRequest request = new CompletionCreateRequest
         {
             Prompt = prompt,
-            Model = Models.TextDavinciV3
+            Model = Models.TextDavinciV3,
+            MaxTokens = maxTokens
         };
         var completionResult = await _openAiService.Completions.CreateCompletion(request);
 

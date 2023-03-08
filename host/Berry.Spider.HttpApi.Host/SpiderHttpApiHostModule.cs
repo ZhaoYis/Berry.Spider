@@ -3,6 +3,7 @@ using Berry.Spider.AspNetCore.Mvc;
 using Berry.Spider.Baidu;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.EventBus.RabbitMq;
+using Berry.Spider.OpenAI.Application;
 using Berry.Spider.Segmenter.JiebaNet;
 using Berry.Spider.Sogou;
 using Berry.Spider.TouTiao;
@@ -33,7 +34,9 @@ namespace Berry.Spider.HttpApi.Host;
     //搜狗模块
     typeof(SogouSpiderModule),
     //爬虫模块
-    typeof(SpiderApplicationModule)
+    typeof(SpiderApplicationModule),
+    //OpenAI
+    typeof(SpiderOpenAIApplicationModule)
 )]
 public class SpiderHttpApiHostModule : AbpModule
 {
