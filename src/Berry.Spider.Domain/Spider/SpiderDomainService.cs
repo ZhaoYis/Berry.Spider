@@ -135,7 +135,7 @@ public class SpiderDomainService : DomainService
 
                 string itemContent = this.StringBuilderObjectPoolProvider.Invoke(itemContentBuilder =>
                 {
-                    for (int i = 0; i < contentItems.Count; i++)
+                    for (int i = 0; i < answerContentItems.Count; i++)
                     {
                         string itemContent = answerContentItems[i];
                         itemContentBuilder.AppendFormat("<p><strong>{0}</strong></p>", title);
