@@ -26,7 +26,10 @@ public class SpiderEventBusRabbitMqModule : AbpModule
                     o.DatabaseName = "cap";
                     o.ReceivedCollection = "cap.received";
                     o.PublishedCollection = "cap.published";
+                    o.LockCollection = "cap.lock";
                 });
+
+                opt.UseStorageLock = true;
             }
 
             //使用管理面板
