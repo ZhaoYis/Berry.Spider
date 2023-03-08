@@ -27,7 +27,7 @@ jobs:
         run: dotnet build src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release
 
       - name: Publish Application
-        run: dotnet publish src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release -o ${{ github.workspace }}/publish/output /p:Environment=${{ env.ENVIRONMENT }}
+        run: dotnet publish src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release -o ${{ github.workspace }}/publish/Berry.Spider.Consumers /p:Environment=${{ env.ENVIRONMENT }}
         env:
           ENVIRONMENT: ${{ env.ASPNETCORE_ENVIRONMENT }}
           
@@ -45,7 +45,7 @@ jobs:
       - name: Zip artifact
         run: |
           cd ${{ github.workspace }}/publish
-          Compress-Archive -Path output -DestinationPath Berry.Spider.Consumers.zip
+          Compress-Archive -Path Berry.Spider.Consumers -DestinationPath Berry.Spider.Consumers.zip
         shell: pwsh
       
       - name: Upload Artifact
