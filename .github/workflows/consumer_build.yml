@@ -71,7 +71,7 @@ jobs:
           server: ftp.dsx.plus
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: '/publish/berry_spider'
+          server-dir: '/publish/berry_spider/'
 
       - name: Upload to FTP
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
