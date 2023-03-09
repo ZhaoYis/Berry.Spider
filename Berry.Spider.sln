@@ -133,6 +133,33 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.OpenAI.Applica
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.OpenAI.Contracts", "src\Berry.Spider.OpenAI.Contracts\Berry.Spider.OpenAI.Contracts.csproj", "{52BC6990-012B-41F1-A2DB-D2AD603428B7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mongodb_cluster_with-keyfile-auth", "mongodb_cluster_with-keyfile-auth", "{1E60F977-205B-4A44-BF54-1B6CE4E980CD}"
+	ProjectSection(SolutionItems) = preProject
+		doc\mongodb_cluster_with-keyfile-auth\docker-compose.yml = doc\mongodb_cluster_with-keyfile-auth\docker-compose.yml
+		doc\mongodb_cluster_with-keyfile-auth\readme.md = doc\mongodb_cluster_with-keyfile-auth\readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mongodb-build", "mongodb-build", "{6BDCF170-7CC4-46DB-BFD4-D5D3AFB9D13C}"
+	ProjectSection(SolutionItems) = preProject
+		doc\mongodb_cluster_with-keyfile-auth\mongodb-build\Dockerfile = doc\mongodb_cluster_with-keyfile-auth\mongodb-build\Dockerfile
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "auth", "auth", "{4E2CC2F1-9DCA-4C1C-A5C6-450599A6660F}"
+	ProjectSection(SolutionItems) = preProject
+		doc\mongodb_cluster_with-keyfile-auth\mongodb-build\auth\mongodb-keyfile = doc\mongodb_cluster_with-keyfile-auth\mongodb-build\auth\mongodb-keyfile
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{8D89D911-7509-41DF-B2DB-4A15C339D0C2}"
+	ProjectSection(SolutionItems) = preProject
+		doc\mongodb_cluster_with-keyfile-auth\scripts\auth.js = doc\mongodb_cluster_with-keyfile-auth\scripts\auth.js
+		doc\mongodb_cluster_with-keyfile-auth\scripts\init-configserver.js = doc\mongodb_cluster_with-keyfile-auth\scripts\init-configserver.js
+		doc\mongodb_cluster_with-keyfile-auth\scripts\init-router.js = doc\mongodb_cluster_with-keyfile-auth\scripts\init-router.js
+		doc\mongodb_cluster_with-keyfile-auth\scripts\init-shard01.js = doc\mongodb_cluster_with-keyfile-auth\scripts\init-shard01.js
+		doc\mongodb_cluster_with-keyfile-auth\scripts\init-shard02.js = doc\mongodb_cluster_with-keyfile-auth\scripts\init-shard02.js
+		doc\mongodb_cluster_with-keyfile-auth\scripts\init-shard03.js = doc\mongodb_cluster_with-keyfile-auth\scripts\init-shard03.js
+		doc\mongodb_cluster_with-keyfile-auth\scripts\README.md = doc\mongodb_cluster_with-keyfile-auth\scripts\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -353,6 +380,10 @@ Global
 		{46854626-E2C5-4C92-890D-A3D7BAB9EC7E} = {2DDD493D-A876-439B-99E6-6DE345680322}
 		{48522D07-6C12-4BEC-AC15-900C292738D5} = {8EDFD47D-2AAD-4E4E-A69A-0BB63CDF0BE7}
 		{52BC6990-012B-41F1-A2DB-D2AD603428B7} = {8EDFD47D-2AAD-4E4E-A69A-0BB63CDF0BE7}
+		{1E60F977-205B-4A44-BF54-1B6CE4E980CD} = {093F9BD9-59EE-49FA-87D2-96AB2995EE26}
+		{6BDCF170-7CC4-46DB-BFD4-D5D3AFB9D13C} = {1E60F977-205B-4A44-BF54-1B6CE4E980CD}
+		{4E2CC2F1-9DCA-4C1C-A5C6-450599A6660F} = {6BDCF170-7CC4-46DB-BFD4-D5D3AFB9D13C}
+		{8D89D911-7509-41DF-B2DB-4A15C339D0C2} = {1E60F977-205B-4A44-BF54-1B6CE4E980CD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}
