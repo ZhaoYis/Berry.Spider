@@ -22,6 +22,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
     private ISpiderContentHighQualityQARepository SpiderRepository { get; }
+    private ISpiderContentKeywordRepository SpiderKeywordRepository { get; }
     private SpiderDomainService SpiderDomainService { get; }
     private IEventBusPublisher DistributedEventBus { get; }
     private IRedisService RedisService { get; }
@@ -34,6 +35,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
         IServiceProvider serviceProvider,
         SpiderDomainService spiderDomainService,
         ISpiderContentHighQualityQARepository repository,
+        ISpiderContentKeywordRepository keywordRepository,
         IEventBusPublisher eventBus,
         IRedisService redisService,
         IOptionsSnapshot<SpiderOptions> options) : base(logger)
@@ -41,6 +43,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
         this.WebElementLoadProvider = provider;
         this.ResolveJumpUrlProvider = serviceProvider.GetRequiredService<TouTiaoResolveJumpUrlProvider>();
         this.SpiderRepository = repository;
+        this.SpiderKeywordRepository = keywordRepository;
         this.SpiderDomainService = spiderDomainService;
         this.DistributedEventBus = eventBus;
         this.RedisService = redisService;
@@ -137,6 +140,11 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                     {
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
                         this.Logger.LogInformation("事件发布成功，等待消费...");
+
+                        //保存采集到的标题
+                        List<SpiderContent_Keyword> list = eto.Items
+                            .Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();
+                        await this.SpiderKeywordRepository.InsertManyAsync(list);
                     }
                 }
             });

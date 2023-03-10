@@ -23,6 +23,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     private IEventBusPublisher DistributedEventBus { get; }
     private IRedisService RedisService { get; }
     private ISpiderTitleContentRepository SpiderRepository { get; }
+    private ISpiderContentKeywordRepository SpiderKeywordRepository { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
 
     private string HomePage => "https://www.baidu.com/s?wd={0}";
@@ -33,6 +34,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
         IEventBusPublisher eventBus,
         IRedisService redisService,
         ISpiderTitleContentRepository repository,
+        ISpiderContentKeywordRepository keywordRepository,
         IOptionsSnapshot<SpiderOptions> options) : base(logger)
     {
         this.WebElementLoadProvider = provider;
@@ -41,6 +43,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
         this.DistributedEventBus = eventBus;
         this.RedisService = redisService;
         this.SpiderRepository = repository;
+        this.SpiderKeywordRepository = keywordRepository;
         this.Options = options;
     }
 
@@ -127,6 +130,11 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                         //此处不做消息队列发送，直接存储到数据库
                         await this.HandlePullEventAsync(eto);
                         this.Logger.LogInformation("数据保存成功...");
+                        
+                        //保存采集到的标题
+                        List<SpiderContent_Keyword> list = eto.Items
+                            .Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();
+                        await this.SpiderKeywordRepository.InsertManyAsync(list);
                     }
                 }
             });

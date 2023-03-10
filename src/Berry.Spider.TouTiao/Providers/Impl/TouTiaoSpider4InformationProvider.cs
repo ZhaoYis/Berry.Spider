@@ -1,6 +1,7 @@
 ﻿using Berry.Spider.Abstractions;
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
+using Berry.Spider.Domain;
 using Berry.Spider.EventBus;
 using Berry.Spider.FreeRedis;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
+    private ISpiderContentKeywordRepository SpiderKeywordRepository { get; }
     private IRedisService RedisService { get; }
     private IEventBusPublisher DistributedEventBus { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
@@ -27,6 +29,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     public TouTiaoSpider4InformationProvider(ILogger<TouTiaoSpider4InformationProvider> logger,
         IWebElementLoadProvider provider,
         IServiceProvider serviceProvider,
+        ISpiderContentKeywordRepository keywordRepository,
         IRedisService redisService,
         IEventBusPublisher eventBus,
         IOptionsSnapshot<SpiderOptions> options) : base(logger)
@@ -35,6 +38,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
         this.ResolveJumpUrlProvider = serviceProvider.GetRequiredService<TouTiaoResolveJumpUrlProvider>();
         this.RedisService = redisService;
         this.DistributedEventBus = eventBus;
+        this.SpiderKeywordRepository = keywordRepository;
         this.Options = options;
     }
 
@@ -97,9 +101,9 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                     };
 
                     await Parallel.ForEachAsync(resultContent, new ParallelOptions
-                    {
-                        MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
-                    },
+                        {
+                            MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
+                        },
                         async (element, token) =>
                         {
                             var a = element.TryFindElement(By.TagName("a"));
@@ -126,6 +130,11 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                     {
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
                         this.Logger.LogInformation("事件发布成功，等待消费...");
+
+                        //保存采集到的标题
+                        List<SpiderContent_Keyword> list = eto.Items
+                            .Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();
+                        await this.SpiderKeywordRepository.InsertManyAsync(list);
                     }
                 }
             });

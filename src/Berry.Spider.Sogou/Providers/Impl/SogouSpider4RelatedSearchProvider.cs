@@ -22,6 +22,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
     private IEventBusPublisher DistributedEventBus { get; }
     private IRedisService RedisService { get; }
     private ISpiderTitleContentRepository SpiderRepository { get; }
+    private ISpiderContentKeywordRepository SpiderKeywordRepository { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
 
     private string HomePage => "https://sogou.com";
@@ -32,6 +33,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
         IEventBusPublisher eventBus,
         IRedisService redisService,
         ISpiderTitleContentRepository repository,
+        ISpiderContentKeywordRepository keywordRepository,
         IOptionsSnapshot<SpiderOptions> options) : base(logger)
     {
         this.WebElementLoadProvider = provider;
@@ -39,6 +41,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
         this.DistributedEventBus = eventBus;
         this.RedisService = redisService;
         this.SpiderRepository = repository;
+        this.SpiderKeywordRepository = keywordRepository;
         this.Options = options;
     }
 
@@ -128,6 +131,11 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
                         //此处不做消息队列发送，直接存储到数据库
                         await this.HandlePullEventAsync(eto);
                         this.Logger.LogInformation("数据保存成功...");
+                        
+                        //保存采集到的标题
+                        List<SpiderContent_Keyword> list = eto.Items
+                            .Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();
+                        await this.SpiderKeywordRepository.InsertManyAsync(list);
                     }
                 }
             });

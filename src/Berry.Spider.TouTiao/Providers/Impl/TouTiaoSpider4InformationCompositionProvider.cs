@@ -25,6 +25,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     private IRedisService RedisService { get; }
     private IEventBusPublisher DistributedEventBus { get; }
     private ISpiderContentCompositionRepository SpiderRepository { get; }
+    private ISpiderContentKeywordRepository SpiderKeywordRepository { get; }
     private SpiderDomainService SpiderDomainService { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
 
@@ -37,6 +38,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
         IRedisService redisService,
         IEventBusPublisher eventBus,
         ISpiderContentCompositionRepository spiderRepository,
+        ISpiderContentKeywordRepository keywordRepository,
         SpiderDomainService spiderDomainService,
         IOptionsSnapshot<SpiderOptions> options) : base(logger)
     {
@@ -46,6 +48,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
         this.RedisService = redisService;
         this.DistributedEventBus = eventBus;
         this.SpiderRepository = spiderRepository;
+        this.SpiderKeywordRepository = keywordRepository;
         this.SpiderDomainService = spiderDomainService;
         this.Options = options;
     }
@@ -137,6 +140,11 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                     {
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
                         this.Logger.LogInformation("事件发布成功，等待消费...");
+                        
+                        //保存采集到的标题
+                        List<SpiderContent_Keyword> list = eto.Items
+                            .Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();
+                        await this.SpiderKeywordRepository.InsertManyAsync(list);
                     }
                 }
             });
