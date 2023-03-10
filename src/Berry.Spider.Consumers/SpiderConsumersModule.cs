@@ -39,8 +39,8 @@ public class SpiderConsumersModule : AbpModule
         logger.LogInformation($"EnvironmentName => {hostEnvironment.EnvironmentName}");
 
         //集成Exceptionless
-        ExceptionlessOptions options = configuration.GetSection(nameof(ExceptionlessOptions)).Get<ExceptionlessOptions>();
-        if (options.IsEnable && !string.IsNullOrEmpty(options.ApiKey))
+        ExceptionlessOptions? options = configuration.GetSection(nameof(ExceptionlessOptions)).Get<ExceptionlessOptions>();
+        if (options is { IsEnable: true } && !string.IsNullOrEmpty(options.ApiKey))
         {
             ExceptionlessClient.Default.Startup(options.ApiKey);
         }
