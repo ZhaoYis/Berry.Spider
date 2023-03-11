@@ -20,14 +20,6 @@ jobs:
         with:
           dotnet-version: '7.x'
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - name: Install dependencies
-        run: pip install requests
-
       - name: Restore Dependencies
         run: dotnet restore src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj
 
@@ -76,8 +68,10 @@ jobs:
           asset_path: ${{ github.workspace }}/publish/Berry.Spider.Consumers-v${{ github.run_number }}.zip
           asset_name: Berry.Spider.Consumers-v${{ github.run_number }}.zip
           asset_content_type: application/zip
-          
-      - name: Send notification
-        run: |
-          payload='{"msgtype": "text","text": {"content": "New Release Published: ${{ github.event.release.tag_name }} at ${{ github.event.release.created_at }}.Download URL: ${{ github.event.release.html_url }}"}}'
-          curl '${{ secrets.WECHAT_WEBHOOK }}' -H 'Content-Type: application/json' -d "${payload}"
+
+      - name: Send WeChat message
+        uses: MarvinJWendt/action-webhook@v1.1.0
+        with:
+          method: POST
+          url: ${{ secrets.WECHAT_WEBHOOK }}
+          body: '{"msgtype": "text", "text": {"content": "New Release Published: ${{ github.event.release.tag_name }} at ${{ github.event.release.created_at }}.Download URL: ${{ github.event.release.html_url }}"}}'
