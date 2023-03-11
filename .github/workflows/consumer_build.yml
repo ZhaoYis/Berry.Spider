@@ -11,7 +11,7 @@ jobs:
     
     env:
       ASPNETCORE_ENVIRONMENT: PROD
-      
+    
     steps:
       - uses: actions/checkout@v2
 
@@ -30,11 +30,11 @@ jobs:
         run: dotnet publish src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release -o ${{ github.workspace }}/publish/Berry.Spider.Consumers /p:Environment=${{ env.ENVIRONMENT }}
         env:
           ENVIRONMENT: ${{ env.ASPNETCORE_ENVIRONMENT }}
-          
+
       - name: Get current date
         run: echo "::set-output name=date::$(date +'%Y%m%d')"
         id: date
-          
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -51,7 +51,7 @@ jobs:
           cd ${{ github.workspace }}/publish
           Compress-Archive -Path Berry.Spider.Consumers -DestinationPath Berry.Spider.Consumers-v${{ github.run_number }}.zip
         shell: pwsh
-      
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -68,12 +68,16 @@ jobs:
           asset_path: ${{ github.workspace }}/publish/Berry.Spider.Consumers-v${{ github.run_number }}.zip
           asset_name: Berry.Spider.Consumers-v${{ github.run_number }}.zip
           asset_content_type: application/zip
-          
+
       - name: Build JSON Param
         id: build_json
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
+          CREATED_AT: ${{ github.event.release.created_at }}
+          HTML_URL: ${{ github.event.release.html_url }}
         run: |
           # 组装 content 字符串
-          content=New Release Published: ${{ github.event.release.tag_name }} at ${{ github.event.release.created_at }}. Download URL: ${{ github.event.release.html_url }}
+          content="New Release Published: '$TAG_NAME at $CREATED_AT'. Download URL: '$HTML_URL'"
 
           # 组装 JSON
           json="{\"msgtype\": \"text\", \"text\": {\"content\": \"$content\"}}"
