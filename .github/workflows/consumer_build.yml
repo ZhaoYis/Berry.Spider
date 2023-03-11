@@ -69,12 +69,14 @@ jobs:
           asset_name: Berry.Spider.Consumers-v${{ github.run_number }}.zip
           asset_content_type: application/zip
 
-      - name: Send WeChat message
-        uses: joelwmale/webhook-action@master
+      - name: WeChat Work notification by text
+        uses: chf007/action-wechat-work@master
         env:
+          WECHAT_WORK_BOT_WEBHOOK: ${{secrets.WECHAT_WEBHOOK}}
           TAG_NAME: ${{ github.event.release.tag_name }}
           CREATED_AT: ${{ github.event.release.created_at }}
           HTML_URL: ${{ github.event.release.html_url }}
         with:
-          url: ${{ secrets.WECHAT_WEBHOOK }}
-          body: "{'msgtype': 'text', 'text': {'content': '${{ env.HTML_URL }}'}}"
+          msgtype: text
+          content: "打包成功，请前往https://github.com/ZhaoYis/Berry.Spider/releases下载最新版本。"
+          mentioned_list: '["@all"]'
