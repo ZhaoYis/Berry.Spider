@@ -79,5 +79,5 @@ jobs:
           
       - name: Send notification
         run: |
-          payload='{"msgtype": "text","text": {"content": "New Release Published: ${{ github.event.release.tag_name }} at ${{ github.event.release.created_at }}.\nDownload URL: ${{ github.event.release.html_url }}"}}'
+          payload='{"msgtype": "text","text": {"content": "New Release Published: ${{ github.event.release.tag_name }} at ${{ github.event.release.created_at }}.Download URL: ${{ github.event.release.html_url }}"}}'
           curl '${{ secrets.WECHAT_WEBHOOK }}' -H 'Content-Type: application/json' -d "${payload}"
