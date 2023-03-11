@@ -77,6 +77,7 @@ jobs:
           CREATED_AT: ${{ github.event.release.created_at }}
           HTML_URL: ${{ github.event.release.html_url }}
         with:
-          msgtype: text
-          content: "打包成功，请前往https://github.com/ZhaoYis/Berry.Spider/releases下载最新版本。"
+          msgtype: markdown
+          content: "打包成功！请及时下载最新版本并替换现有程序。\n
+          > 下载地址：[点我前往](https://github.com/ZhaoYis/Berry.Spider/releases) \n"
           mentioned_list: '["@all"]'
