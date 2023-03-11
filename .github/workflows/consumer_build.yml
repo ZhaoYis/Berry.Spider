@@ -72,5 +72,5 @@ jobs:
       - name: Send WeChat message
         uses: joelwmale/webhook-action@master
         with:
-          url: ${{ secrets.WEBHOOK_URL }}
+          url: ${{ secrets.WECHAT_WEBHOOK }}
           data: '{"msgtype": "text", "text": {"content": "New Release Published，Download URL: "}}'
