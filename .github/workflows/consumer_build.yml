@@ -73,4 +73,4 @@ jobs:
         uses: distributhor/webhook-action@v2.0.0
         with:
           url: ${{ secrets.WECHAT_WEBHOOK }}
-          data: '{"msgtype": "text", "text": {"content": "New Release Published，Download URL: '${{ github.event.release.html_url }}'"}}'
+          data: '{"msgtype": "text", "text": {"content": "New Release Published，Download URL: "}}'
