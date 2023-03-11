@@ -68,10 +68,9 @@ jobs:
           asset_path: ${{ github.workspace }}/publish/Berry.Spider.Consumers-v${{ github.run_number }}.zip
           asset_name: Berry.Spider.Consumers-v${{ github.run_number }}.zip
           asset_content_type: application/zip
-
+          
       - name: Send WeChat message
-        uses: MarvinJWendt/action-webhook@v1.1.0
+        uses: distributhor/webhook-action@v2.0.0
         with:
-          method: POST
           url: ${{ secrets.WECHAT_WEBHOOK }}
-          body: '{"msgtype": "text", "text": {"content": "New Release Published: ${{ github.event.release.tag_name }} at ${{ github.event.release.created_at }}.Download URL: ${{ github.event.release.html_url }}"}}'
+          data: '{"msgtype": "text", "text": {"content": "New Release Published: '${{ github.event.release.tag_name }} at ${{ github.event.release.created_at }}'. Download URL: '${{ github.event.release.html_url }}'"}}'
