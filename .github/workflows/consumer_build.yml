@@ -69,27 +69,12 @@ jobs:
           asset_name: Berry.Spider.Consumers-v${{ github.run_number }}.zip
           asset_content_type: application/zip
 
-      - name: Build JSON Param
-        id: build_json
+      - name: Send WeChat message
+        uses: joelwmale/webhook-action@master
         env:
           TAG_NAME: ${{ github.event.release.tag_name }}
           CREATED_AT: ${{ github.event.release.created_at }}
           HTML_URL: ${{ github.event.release.html_url }}
-        run: |
-          # 组装 content 字符串
-          content="New Release Published: '$TAG_NAME' at '$CREATED_AT'. Download URL: '$HTML_URL'"
-
-          # 组装 JSON
-          json="{\"msgtype\": \"text\", \"text\": {\"content\": \"$content\"}}"
-
-          # 输出 JSON 字符串
-          echo $json
-
-          # 将 JSON 字符串保存到 output 中
-          echo "::set-output name=json_output::$json"
-
-      - name: Send WeChat message
-        uses: joelwmale/webhook-action@master
         with:
           url: ${{ secrets.WECHAT_WEBHOOK }}
           body: "{'msgtype': 'text', 'text': {'content': '${{ env.HTML_URL }}'}}"
