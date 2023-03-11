@@ -77,7 +77,7 @@ jobs:
           HTML_URL: ${{ github.event.release.html_url }}
         run: |
           # 组装 content 字符串
-          content="New Release Published: '$TAG_NAME at $CREATED_AT'. Download URL: '$HTML_URL'"
+          content="New Release Published: '$TAG_NAME' at '$CREATED_AT'. Download URL: '$HTML_URL'"
 
           # 组装 JSON
           json="{\"msgtype\": \"text\", \"text\": {\"content\": \"$content\"}}"
@@ -92,4 +92,4 @@ jobs:
         uses: joelwmale/webhook-action@master
         with:
           url: ${{ secrets.WECHAT_WEBHOOK }}
-          body: ${{ steps.build_json.outputs.json_output }}
+          body: "{'msgtype': 'text', 'text': {'content': '${{ env.HTML_URL }}'}}"
