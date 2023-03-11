@@ -70,7 +70,7 @@ jobs:
           asset_content_type: application/zip
           
       - name: Send WeChat message
-        uses: distributhor/webhook-action@v2.0.0
+        uses: joelwmale/webhook-action@master
         with:
-          url: ${{ secrets.WECHAT_WEBHOOK }}
+          url: ${{ secrets.WEBHOOK_URL }}
           data: '{"msgtype": "text", "text": {"content": "New Release Published，Download URL: "}}'
