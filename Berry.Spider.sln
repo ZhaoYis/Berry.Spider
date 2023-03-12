@@ -160,6 +160,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{8D89
 		doc\mongodb_cluster_with-keyfile-auth\scripts\README.md = doc\mongodb_cluster_with-keyfile-auth\scripts\README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Weixin", "src\Berry.Spider.Weixin\Berry.Spider.Weixin.csproj", "{DA156CAA-0882-4F35-B93F-C8058A7C13A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Weixin.Work", "src\Berry.Spider.Weixin.Work\Berry.Spider.Weixin.Work.csproj", "{C8DF288D-2A85-4EAE-92FD-0E6E2A022526}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -326,6 +330,14 @@ Global
 		{52BC6990-012B-41F1-A2DB-D2AD603428B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52BC6990-012B-41F1-A2DB-D2AD603428B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52BC6990-012B-41F1-A2DB-D2AD603428B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA156CAA-0882-4F35-B93F-C8058A7C13A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA156CAA-0882-4F35-B93F-C8058A7C13A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA156CAA-0882-4F35-B93F-C8058A7C13A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA156CAA-0882-4F35-B93F-C8058A7C13A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8DF288D-2A85-4EAE-92FD-0E6E2A022526}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8DF288D-2A85-4EAE-92FD-0E6E2A022526}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8DF288D-2A85-4EAE-92FD-0E6E2A022526}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8DF288D-2A85-4EAE-92FD-0E6E2A022526}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -384,6 +396,8 @@ Global
 		{6BDCF170-7CC4-46DB-BFD4-D5D3AFB9D13C} = {1E60F977-205B-4A44-BF54-1B6CE4E980CD}
 		{4E2CC2F1-9DCA-4C1C-A5C6-450599A6660F} = {6BDCF170-7CC4-46DB-BFD4-D5D3AFB9D13C}
 		{8D89D911-7509-41DF-B2DB-4A15C339D0C2} = {1E60F977-205B-4A44-BF54-1B6CE4E980CD}
+		{DA156CAA-0882-4F35-B93F-C8058A7C13A0} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
+		{C8DF288D-2A85-4EAE-92FD-0E6E2A022526} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}
