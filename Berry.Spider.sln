@@ -164,6 +164,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Weixin", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Weixin.Work", "src\Berry.Spider.Weixin.Work\Berry.Spider.Weixin.Work.csproj", "{C8DF288D-2A85-4EAE-92FD-0E6E2A022526}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.EventBus.MongoDB", "src\Berry.Spider.EventBus.MongoDB\Berry.Spider.EventBus.MongoDB.csproj", "{1E1198B3-D130-4D19-B266-DA0050E250BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -338,6 +340,10 @@ Global
 		{C8DF288D-2A85-4EAE-92FD-0E6E2A022526}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8DF288D-2A85-4EAE-92FD-0E6E2A022526}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8DF288D-2A85-4EAE-92FD-0E6E2A022526}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E1198B3-D130-4D19-B266-DA0050E250BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E1198B3-D130-4D19-B266-DA0050E250BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E1198B3-D130-4D19-B266-DA0050E250BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E1198B3-D130-4D19-B266-DA0050E250BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -398,6 +404,7 @@ Global
 		{8D89D911-7509-41DF-B2DB-4A15C339D0C2} = {1E60F977-205B-4A44-BF54-1B6CE4E980CD}
 		{DA156CAA-0882-4F35-B93F-C8058A7C13A0} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 		{C8DF288D-2A85-4EAE-92FD-0E6E2A022526} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
+		{1E1198B3-D130-4D19-B266-DA0050E250BE} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}
