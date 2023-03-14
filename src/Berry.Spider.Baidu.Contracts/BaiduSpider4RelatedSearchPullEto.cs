@@ -1,12 +1,11 @@
 using Berry.Spider.Core;
-using Volo.Abp.EventBus;
 
 namespace Berry.Spider.Baidu;
 
 /// <summary>
 /// 百度：相关搜索
 /// </summary>
-[EventName(RoutingKeyString)]
+[SpiderEventName(RoutingKeyString, SpiderSourceFrom.Baidu_Related_Search)]
 public class BaiduSpider4RelatedSearchPullEto : SpiderPullBaseEto
 {
     public const string RoutingKeyString = "Berry.Baidu.RelatedSearch.Pull";

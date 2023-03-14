@@ -1,8 +1,8 @@
-using Volo.Abp.EventBus;
+using Berry.Spider.Core;
 
 namespace Berry.Spider.TouTiao;
 
-[EventName(RoutingKeyString)]
+[SpiderEventName(RoutingKeyString, SpiderSourceFrom.TouTiao_HighQuality_Question)]
 public class TouTiaoSpider4HighQualityQuestionPushEto : SpiderPushBaseEto
 {
     public const string RoutingKeyString = "Berry.TouTiao.HighQualityQuestion.Push";

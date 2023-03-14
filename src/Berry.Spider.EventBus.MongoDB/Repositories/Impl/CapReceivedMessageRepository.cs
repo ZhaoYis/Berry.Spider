@@ -5,9 +5,9 @@ using Volo.Abp.MongoDB;
 
 namespace Berry.Spider.EventBus.MongoDB.Repositories;
 
-public class CapPublishedMessageRepository : MongoDbRepository<CapMongoDbContext, CapPublishedMessage, long>, ICapPublishedMessageRepository
+public class CapReceivedMessageRepository : MongoDbRepository<CapMongoDbContext, CapReceivedMessage, long>, ICapReceivedMessageRepository
 {
-    public CapPublishedMessageRepository(IMongoDbContextProvider<CapMongoDbContext> dbContextProvider) : base(dbContextProvider)
+    public CapReceivedMessageRepository(IMongoDbContextProvider<CapMongoDbContext> dbContextProvider) : base(dbContextProvider)
     {
     }
 
@@ -15,7 +15,7 @@ public class CapPublishedMessageRepository : MongoDbRepository<CapMongoDbContext
     {
         var collection = await GetCollectionAsync(cancellationToken);
         await collection.DeleteOneAsync(
-            Builders<CapPublishedMessage>.Filter.Eq(b => b.Id, id),
+            Builders<CapReceivedMessage>.Filter.Eq(b => b.Id, id),
             cancellationToken
         );
     }
@@ -24,7 +24,7 @@ public class CapPublishedMessageRepository : MongoDbRepository<CapMongoDbContext
     {
         var collection = await GetCollectionAsync(cancellationToken);
         await collection.DeleteManyAsync(
-            Builders<CapPublishedMessage>.Filter.In(b => b.Name, names),
+            Builders<CapReceivedMessage>.Filter.In(b => b.Name, names),
             cancellationToken
         );
     }
@@ -33,7 +33,7 @@ public class CapPublishedMessageRepository : MongoDbRepository<CapMongoDbContext
     {
         var collection = await GetCollectionAsync(cancellationToken);
         await collection.DeleteManyAsync(
-            Builders<CapPublishedMessage>.Filter.Eq(b => b.Name, name),
+            Builders<CapReceivedMessage>.Filter.Eq(b => b.Name, name),
             cancellationToken
         );
     }

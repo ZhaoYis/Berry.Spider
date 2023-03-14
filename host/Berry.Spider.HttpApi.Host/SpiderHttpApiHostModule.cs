@@ -2,6 +2,7 @@ using Berry.Spider.Application;
 using Berry.Spider.AspNetCore.Mvc;
 using Berry.Spider.Baidu;
 using Berry.Spider.EntityFrameworkCore;
+using Berry.Spider.EventBus.MongoDB;
 using Berry.Spider.EventBus.RabbitMq;
 using Berry.Spider.OpenAI.Application;
 using Berry.Spider.Segmenter.JiebaNet;
@@ -26,6 +27,7 @@ namespace Berry.Spider.HttpApi.Host;
     typeof(SpiderEntityFrameworkCoreModule),
     typeof(SpiderAspNetCoreMvcModule),
     typeof(SpiderEventBusRabbitMqModule),
+    typeof(SpiderEventBusMongoDBModule),
     typeof(SpiderSegmenterJiebaNetModule),
     //今日头条模块
     typeof(TouTiaoSpiderModule),

@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Data;
 using Volo.Abp.Modularity;
 using Volo.Abp.MongoDB;
-using Volo.Abp.Uow;
 
 namespace Berry.Spider.EventBus.MongoDB;
 
@@ -22,17 +21,15 @@ public class SpiderEventBusMongoDBModule : AbpModule
         {
             Configure<AbpDbConnectionOptions>(options =>
             {
-                options.ConnectionStrings.Default = mongoDbOptions.ConnectionString;
-            });
-            Configure<AbpUnitOfWorkDefaultOptions>(options =>
-            {
-                options.TransactionBehavior = UnitOfWorkTransactionBehavior.Disabled;
+                string connectionString = mongoDbOptions.ConnectionString;
+                options.ConnectionStrings.Default = connectionString;
             });
 
             context.Services.AddMongoDbContext<CapMongoDbContext>(options =>
             {
                 options.AddDefaultRepositories();
                 options.AddRepository<ICapPublishedMessageRepository, CapPublishedMessageRepository>();
+                options.AddRepository<ICapReceivedMessageRepository, CapReceivedMessageRepository>();
             });
         }
     }

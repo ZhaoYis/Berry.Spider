@@ -1,6 +1,6 @@
 using Volo.Abp.Domain.Entities;
 
-namespace Berry.Spider.EventBus.MongoDB.MongoDB;
+namespace Berry.Spider.EventBus.MongoDB;
 
 public class CapPublishedMessage : Entity<long>
 {

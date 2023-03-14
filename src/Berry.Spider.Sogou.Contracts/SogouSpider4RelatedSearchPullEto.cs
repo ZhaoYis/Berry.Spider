@@ -1,12 +1,11 @@
 using Berry.Spider.Core;
-using Volo.Abp.EventBus;
 
 namespace Berry.Spider.Sogou;
 
 /// <summary>
 /// 搜狗：相关搜索
 /// </summary>
-[EventName(RoutingKeyString)]
+[SpiderEventName(RoutingKeyString, SpiderSourceFrom.Sogou_Related_Search)]
 public class SogouSpider4RelatedSearchPullEto : SpiderPullBaseEto
 {
     public const string RoutingKeyString = "Berry.Sogou.RelatedSearch.Pull";

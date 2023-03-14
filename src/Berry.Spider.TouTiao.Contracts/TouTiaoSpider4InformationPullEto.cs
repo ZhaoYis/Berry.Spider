@@ -1,12 +1,11 @@
 ﻿using Berry.Spider.Core;
-using Volo.Abp.EventBus;
 
 namespace Berry.Spider.TouTiao;
 
 /// <summary>
 /// 头条：资讯
 /// </summary>
-[EventName(RoutingKeyString)]
+[SpiderEventName(RoutingKeyString, SpiderSourceFrom.TouTiao_Information)]
 public class TouTiaoSpider4InformationPullEto : SpiderPullBaseEto
 {
     public const string RoutingKeyString = "Berry.TouTiao.Information.Pull";

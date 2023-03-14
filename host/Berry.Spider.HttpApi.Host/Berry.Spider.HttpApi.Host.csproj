@@ -33,6 +33,7 @@
       <ProjectReference Include="..\..\src\Berry.Spider.AspNetCore.Mvc\Berry.Spider.AspNetCore.Mvc.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.Baidu\Berry.Spider.Baidu.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj" />
+      <ProjectReference Include="..\..\src\Berry.Spider.EventBus.MongoDB\Berry.Spider.EventBus.MongoDB.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.EventBus.RabbitMq\Berry.Spider.EventBus.RabbitMq.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.HttpApi\Berry.Spider.HttpApi.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.OpenAI.Application\Berry.Spider.OpenAI.Application.csproj" />
