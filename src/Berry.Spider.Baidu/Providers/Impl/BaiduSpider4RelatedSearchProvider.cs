@@ -14,7 +14,7 @@ namespace Berry.Spider.Baidu;
 /// <summary>
 /// 百度：相关推荐
 /// </summary>
-[Spider(SpiderSourceFrom.Baidu_Related_Search)]
+[SpiderService(SpiderSourceFrom.Baidu_Related_Search)]
 public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4RelatedSearchProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }

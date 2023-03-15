@@ -13,7 +13,7 @@ namespace Berry.Spider.Core
 
             foreach (Type type in exportedTypes)
             {
-                SpiderAttribute? attribute = type.GetCustomAttribute<SpiderAttribute>();
+                SpiderServiceAttribute? attribute = type.GetCustomAttribute<SpiderServiceAttribute>();
                 if (attribute != null)
                 {
                     Cache.TryAdd(attribute.SourceFrom, type);

@@ -14,7 +14,7 @@ namespace Berry.Spider.Sogou;
 /// <summary>
 /// 搜狗：相关推荐
 /// </summary>
-[Spider(SpiderSourceFrom.Sogou_Related_Search)]
+[SpiderService(SpiderSourceFrom.Sogou_Related_Search)]
 public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4RelatedSearchProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }

@@ -14,7 +14,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：资讯
 /// </summary>
-[Spider(SpiderSourceFrom.TouTiao_Information)]
+[SpiderService(SpiderSourceFrom.TouTiao_Information)]
 public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4InformationProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }

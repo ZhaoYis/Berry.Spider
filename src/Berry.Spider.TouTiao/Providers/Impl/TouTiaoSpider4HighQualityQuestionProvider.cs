@@ -15,7 +15,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：优质_问答
 /// </summary>
-[Spider(SpiderSourceFrom.TouTiao_HighQuality_Question)]
+[SpiderService(SpiderSourceFrom.TouTiao_HighQuality_Question)]
 public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpider4HighQualityQuestionProvider>,
     ISpiderProvider
 {

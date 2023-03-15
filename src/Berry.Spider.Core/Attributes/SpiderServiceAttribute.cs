@@ -4,9 +4,9 @@
     /// 自定义爬虫特性
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class SpiderAttribute : Attribute
+    public class SpiderServiceAttribute : Attribute
     {
-        public SpiderAttribute(SpiderSourceFrom from)
+        public SpiderServiceAttribute(SpiderSourceFrom from)
         {
             this.SourceFrom = from;
         }
