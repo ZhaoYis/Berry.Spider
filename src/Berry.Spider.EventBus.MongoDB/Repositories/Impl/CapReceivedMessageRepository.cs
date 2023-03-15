@@ -1,4 +1,3 @@
-using Berry.Spider.EventBus.MongoDB.MongoDB;
 using MongoDB.Driver;
 using Volo.Abp.Domain.Repositories.MongoDB;
 using Volo.Abp.MongoDB;
