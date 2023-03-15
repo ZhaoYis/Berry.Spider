@@ -28,8 +28,8 @@ public class SpiderEventBusMongoDBModule : AbpModule
             context.Services.AddMongoDbContext<CapMongoDbContext>(options =>
             {
                 options.AddDefaultRepositories();
-                options.AddRepository<ICapPublishedMessageRepository, CapPublishedMessageRepository>();
-                options.AddRepository<ICapReceivedMessageRepository, CapReceivedMessageRepository>();
+                options.AddRepository<CapPublishedMessage, CapPublishedMessageRepository>();
+                options.AddRepository<CapReceivedMessage, CapReceivedMessageRepository>();
             });
         }
     }
