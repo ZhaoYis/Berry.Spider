@@ -9,13 +9,7 @@ namespace Berry.Spider.Core
 
         static ServiceProviderExtensions()
         {
-            List<Type> exportedTypes = new List<Type>();
-
-            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (Assembly assembly in assemblies.Where(c => c.FullName != null && c.FullName.StartsWith("Berry")))
-            {
-                exportedTypes.AddRange(assembly.ExportedTypes);
-            }
+            List<Type> exportedTypes = AssemblyHelper.CurrentDomainExportedTypes;
 
             foreach (Type type in exportedTypes)
             {
