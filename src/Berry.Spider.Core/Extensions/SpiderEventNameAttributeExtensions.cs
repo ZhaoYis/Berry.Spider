@@ -78,6 +78,11 @@ public static class SpiderEventNameAttributeExtensions
 
     private static List<SpiderEventNameAttribute>? GetAttributes(this SpiderSourceFrom from)
     {
-        return EtoTypesCache[from];
+        if (EtoTypesCache.ContainsKey(from))
+        {
+            return EtoTypesCache[from];
+        }
+
+        return default;
     }
 }

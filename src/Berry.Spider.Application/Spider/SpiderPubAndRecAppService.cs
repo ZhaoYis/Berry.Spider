@@ -23,8 +23,10 @@ public class SpiderPubAndRecAppService : ApplicationService, ISpiderPubAndRecApp
     public async Task ClearTodoTaskAsync(SpiderSourceFrom from)
     {
         List<string> names = from.TryGetRoutingKeys();
-
-        await _publishedMessageRepository.BatchDeleteByNamesAsync(names, CancellationToken.None);
-        await _receivedMessageRepository.BatchDeleteByNamesAsync(names, CancellationToken.None);
+        if (names is { Count: > 0 })
+        {
+            await _publishedMessageRepository.BatchDeleteByNamesAsync(names, CancellationToken.None);
+            await _receivedMessageRepository.BatchDeleteByNamesAsync(names, CancellationToken.None);
+        }
     }
 }
