@@ -31,9 +31,6 @@ public class ServDetectorHostedService : IHostedService
         });
 
         await _abpApplication.InitializeAsync();
-
-        //启动服务
-        await _abpApplication.ServiceProvider.GetRequiredService<IServDetectorAppService>().RunAsync();
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
