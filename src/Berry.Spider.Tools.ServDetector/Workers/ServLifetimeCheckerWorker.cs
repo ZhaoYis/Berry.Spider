@@ -1,5 +1,9 @@
-using System.Diagnostics;
+using System.Text.Json;
+using Berry.Spider.Common;
+using Berry.Spider.FreeRedis;
+using Berry.Spider.Weixin.Work;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Volo.Abp.BackgroundWorkers;
 using Volo.Abp.Threading;
 
@@ -7,32 +11,46 @@ namespace Berry.Spider.Tools.ServDetector;
 
 public class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
 {
-    public ServLifetimeCheckerWorker(AbpAsyncTimer timer, IServiceScopeFactory serviceScopeFactory) : base(timer, serviceScopeFactory)
+    private readonly IWeixinWorkRobotClient _weixinWorkRobotClient;
+    private WeixinWorkRobotOptions RobotOptions { get; }
+
+    public ServLifetimeCheckerWorker(AbpAsyncTimer timer,
+        IServiceScopeFactory serviceScopeFactory,
+        IWeixinWorkRobotClient weixinWorkRobotClient,
+        IOptions<WeixinWorkRobotOptions> options) : base(timer, serviceScopeFactory)
     {
+        _weixinWorkRobotClient = weixinWorkRobotClient;
+        RobotOptions = options.Value;
+
         Timer.Period = 5 * 1000;
     }
 
     protected override async Task DoWorkAsync(PeriodicBackgroundWorkerContext workerContext)
     {
-        var provider = workerContext.ServiceProvider;
-
-        Process[] processes = Process.GetProcesses();
-
-        Console.WriteLine("PID\tProcess Name\tMemory Usage\tCPU Usage");
-        foreach (Process process in processes.Where(c => c.ProcessName.StartsWith("Berry")))
+        IRedisService? redisService = workerContext.ServiceProvider.GetService<IRedisService>();
+        if (redisService is { })
         {
-            string memoryUsage = string.Format("{0:#,##0} M", process.WorkingSet64 / 1024 / 1024);
-            string cpuUsage = "";
-            if (Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.OSVersion.Platform == PlatformID.Unix)
+            var lifetimeDict = await redisService.HGetAllAsync<string>(GlobalConstants.SPIDER_APPLICATION_LIFETIME_KEY);
+            if (lifetimeDict is { Count: > 0 })
             {
-                cpuUsage = "None";
-            }
-            else
-            {
-                cpuUsage = string.Format("{0:0.00}%", process.TotalProcessorTime / Process.GetCurrentProcess().TotalProcessorTime * 100);
-            }
+                List<ApplicationLifetimeData> applicationLifetimeList = new();
+                foreach (KeyValuePair<string, string> pair in lifetimeDict)
+                {
+                    string json = pair.Value;
+                    ApplicationLifetimeData? lifetime = JsonSerializer.Deserialize<ApplicationLifetimeData>(json);
+                    if (lifetime is { })
+                    {
+                        applicationLifetimeList.Add(lifetime);
+                    }
+                }
 
-            Console.WriteLine("{0}\t{1}\t{2}\t{3}", process.Id, process.ProcessName, memoryUsage, cpuUsage);
+                //构建消息
+                string msg = ApplicationLifetimeHelper.Build(applicationLifetimeList);
+
+                //发送消息
+                MarkdownMessageDto markdownMessage = new MarkdownMessageDto(msg);
+                await _weixinWorkRobotClient.SendAsync(this.RobotOptions.AppKey, markdownMessage);
+            }
         }
     }
 }

@@ -32,11 +32,11 @@ public class SpiderClientRegister : ISpiderClientRegister
             int pid = Process.GetCurrentProcess().Id;
             string clientId = _guidGenerator.Create().ToString("N");
 
-            ApplicationProcess applicationProcess = new ApplicationProcess { ClientId = clientId, Pid = pid };
+            ApplicationProcessData applicationProcess = new ApplicationProcessData { ClientId = clientId, Pid = pid };
             AppDomain.CurrentDomain.SetData(GlobalConstants.SPIDER_CLIENT_KEY, applicationProcess);
 
             //注册服务
-            ApplicationLifetime lifetime = new ApplicationLifetime { AreYouOk = true };
+            ApplicationLifetimeData lifetime = new ApplicationLifetimeData { AreYouOk = true };
             await _redisService.HSetAsync(GlobalConstants.SPIDER_APPLICATION_LIFETIME_KEY, clientId, JsonSerializer.Serialize(lifetime));
         }
         catch (Exception e)
@@ -54,10 +54,10 @@ public class SpiderClientRegister : ISpiderClientRegister
         try
         {
             object? applicationProcess = AppDomain.CurrentDomain.GetData(GlobalConstants.SPIDER_CLIENT_KEY);
-            if (applicationProcess is ApplicationProcess app)
+            if (applicationProcess is ApplicationProcessData app)
             {
                 string json = await _redisService.HGetAsync<string>(GlobalConstants.SPIDER_APPLICATION_LIFETIME_KEY, app.ClientId);
-                ApplicationLifetime? lifetime = JsonSerializer.Deserialize<ApplicationLifetime>(json);
+                ApplicationLifetimeData? lifetime = JsonSerializer.Deserialize<ApplicationLifetimeData>(json);
                 if (lifetime is { })
                 {
                     lifetime.IsKill = true;

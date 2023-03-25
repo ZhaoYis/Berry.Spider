@@ -22,7 +22,7 @@ public class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
     {
         AppDomain appDomain = AppDomain.CurrentDomain;
         object? applicationProcess = appDomain.GetData(GlobalConstants.SPIDER_CLIENT_KEY);
-        if (applicationProcess is ApplicationProcess app)
+        if (applicationProcess is ApplicationProcessData app)
         {
             IRedisService? redisService = workerContext.ServiceProvider.GetService<IRedisService>();
             if (!string.IsNullOrEmpty(app.ClientId) && redisService is { })
@@ -41,7 +41,7 @@ public class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
                         cpuUsage = string.Format("{0:0.00}%", currentProcess.TotalProcessorTime / Process.GetCurrentProcess().TotalProcessorTime * 100);
                     }
 
-                    ApplicationLifetime lifetime = new ApplicationLifetime
+                    ApplicationLifetimeData lifetime = new ApplicationLifetimeData
                     {
                         AreYouOk = true,
                         MachineName = Environment.MachineName,

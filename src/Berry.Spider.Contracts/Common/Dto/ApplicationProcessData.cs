@@ -1,6 +1,6 @@
 namespace Berry.Spider.Common;
 
-public class ApplicationProcess
+public class ApplicationProcessData
 {
     /// <summary>
     /// 自定义ClientId

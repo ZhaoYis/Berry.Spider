@@ -1,8 +1,8 @@
 namespace Berry.Spider.Common;
 
-public class ApplicationLifetime
+public class ApplicationLifetimeData
 {
-    public ApplicationLifetime()
+    public ApplicationLifetimeData()
     {
         IsKill = false;
         Time = DateTime.Now;
@@ -47,4 +47,6 @@ public class ApplicationLifetime
     /// 快照时间
     /// </summary>
     public DateTime Time { get; set; }
+
+    public bool IsOverTime => (DateTime.Now - this.Time).TotalMinutes > 10;
 }
