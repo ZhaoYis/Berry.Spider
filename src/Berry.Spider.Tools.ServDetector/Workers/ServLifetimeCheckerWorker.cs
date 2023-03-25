@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Berry.Spider.Common;
 using Berry.Spider.FreeRedis;
+using Berry.Spider.Weixin;
 using Berry.Spider.Weixin.Work;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -17,12 +18,12 @@ public class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
     public ServLifetimeCheckerWorker(AbpAsyncTimer timer,
         IServiceScopeFactory serviceScopeFactory,
         IWeixinWorkRobotClient weixinWorkRobotClient,
-        IOptions<WeixinWorkRobotOptions> options) : base(timer, serviceScopeFactory)
+        IOptionsSnapshot<WeixinWorkRobotOptions> options) : base(timer, serviceScopeFactory)
     {
         _weixinWorkRobotClient = weixinWorkRobotClient;
         RobotOptions = options.Value;
 
-        Timer.Period = 10 * 1000;
+        Timer.Period = RobotOptions.TimerPeriod;
     }
 
     protected override async Task DoWorkAsync(PeriodicBackgroundWorkerContext workerContext)
@@ -58,13 +59,15 @@ public class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
                 {
                     //发送消息
                     MarkdownMessageDto markdownMessage = new MarkdownMessageDto(msg);
-                    await _weixinWorkRobotClient.SendAsync(this.RobotOptions.AppKey, markdownMessage);
-                }
-
-                //通知成功后清除节点信息
-                if (todoRemoveNodes is { Count: > 0 })
-                {
-                    await redisService.HDelAsync(GlobalConstants.SPIDER_APPLICATION_LIFETIME_KEY, todoRemoveNodes.ToArray());
+                    WeixinResult weixinResult = await _weixinWorkRobotClient.SendAsync(this.RobotOptions.AppKey, markdownMessage);
+                    if (weixinResult is { IsSuccessful: true })
+                    {
+                        //通知成功后清除节点信息
+                        if (todoRemoveNodes is { Count: > 0 })
+                        {
+                            await redisService.HDelAsync(GlobalConstants.SPIDER_APPLICATION_LIFETIME_KEY, todoRemoveNodes.ToArray());
+                        }
+                    }
                 }
             }
         }
