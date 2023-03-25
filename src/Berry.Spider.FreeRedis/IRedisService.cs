@@ -4,7 +4,15 @@ namespace Berry.Spider.FreeRedis;
 
 public interface IRedisService : ISingletonDependency
 {
-    Task<bool> SetAsync(string key, string source);
+    Task<bool> SetAsync<T>(string key, T source);
 
-    Task<bool> SetAsync(string key, object[] source);
+    Task<bool> SetAsync<T>(string key, T[] source);
+
+    Task<T[]> GetAllAsync<T>(string key);
+
+    Task<bool> HSetAsync<T>(string key, string field, T value);
+
+    Task<T> HGetAsync<T>(string key, string field);
+
+    Task<Dictionary<string, T>> HGetAllAsync<T>(string key);
 }

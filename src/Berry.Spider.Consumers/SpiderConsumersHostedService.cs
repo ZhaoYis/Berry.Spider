@@ -6,6 +6,7 @@ using Serilog;
 using System.Threading;
 using System.Threading.Tasks;
 using Volo.Abp;
+using Volo.Abp.Threading;
 
 namespace Berry.Spider.Consumers;
 
@@ -15,11 +16,18 @@ public class SpiderConsumersHostedService : IHostedService
 
     private readonly IConfiguration _configuration;
     private readonly IHostEnvironment _hostEnvironment;
+    private readonly IHostApplicationLifetime _appLifetime;
 
-    public SpiderConsumersHostedService(IConfiguration configuration, IHostEnvironment hostEnvironment)
+    public SpiderConsumersHostedService(IConfiguration configuration,
+        IHostEnvironment hostEnvironment,
+        IHostApplicationLifetime appLifetime)
     {
         _configuration = configuration;
         _hostEnvironment = hostEnvironment;
+        _appLifetime = appLifetime;
+
+        //注册应用程序启动、停止事件
+        ApplicationRegisterHandler();
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
@@ -45,5 +53,29 @@ public class SpiderConsumersHostedService : IHostedService
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         await _abpApplication.ShutdownAsync();
+    }
+
+    private void ApplicationRegisterHandler()
+    {
+        _appLifetime.ApplicationStarted.Register(OnRegister);
+        _appLifetime.ApplicationStopping.Register(OnUnRegister);
+    }
+
+    private void OnRegister()
+    {
+        ISpiderClientRegister? register = _abpApplication.ServiceProvider.GetService<ISpiderClientRegister>();
+        if (register != null)
+        {
+            AsyncHelper.RunSync(() => register.RegisterAsync());
+        }
+    }
+
+    private void OnUnRegister()
+    {
+        ISpiderClientRegister? register = _abpApplication.ServiceProvider.GetService<ISpiderClientRegister>();
+        if (register != null)
+        {
+            AsyncHelper.RunSync(() => register.UnRegisterAsync());
+        }
     }
 }

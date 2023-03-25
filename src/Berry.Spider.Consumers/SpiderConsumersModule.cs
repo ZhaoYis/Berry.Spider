@@ -1,7 +1,9 @@
-﻿using Berry.Spider.Baidu;
+﻿using System.Threading.Tasks;
+using Berry.Spider.Baidu;
 using Berry.Spider.Contracts;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.EventBus.RabbitMq;
+using Berry.Spider.FreeRedis;
 using Berry.Spider.Segmenter.JiebaNet;
 using Berry.Spider.Sogou;
 using Berry.Spider.TouTiao;
@@ -12,15 +14,20 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Volo.Abp;
 using Volo.Abp.Autofac;
+using Volo.Abp.BackgroundWorkers;
+using Volo.Abp.BackgroundWorkers.Quartz;
 using Volo.Abp.Modularity;
 
 namespace Berry.Spider.Consumers;
 
 [DependsOn(
     typeof(AbpAutofacModule),
+    typeof(AbpBackgroundWorkersQuartzModule),
     typeof(SpiderEntityFrameworkCoreModule),
     typeof(SpiderEventBusRabbitMqModule),
     typeof(SpiderSegmenterJiebaNetModule),
+    //FreeRedis
+    typeof(SpiderFreeRedisModule),
     //今日头条模块
     typeof(TouTiaoSpiderModule),
     //搜狗模块
@@ -30,7 +37,7 @@ namespace Berry.Spider.Consumers;
 )]
 public class SpiderConsumersModule : AbpModule
 {
-    public override void OnApplicationInitialization(ApplicationInitializationContext context)
+    public override async Task OnApplicationInitializationAsync(ApplicationInitializationContext context)
     {
         var logger = context.ServiceProvider.GetRequiredService<ILogger<SpiderConsumersModule>>();
         var configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
@@ -44,6 +51,9 @@ public class SpiderConsumersModule : AbpModule
         {
             ExceptionlessClient.Default.Startup(options.ApiKey);
         }
+
+        //注册服务
+        await context.AddBackgroundWorkerAsync<ServLifetimeCheckerWorker>();
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
