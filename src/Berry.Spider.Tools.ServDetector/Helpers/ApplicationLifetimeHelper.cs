@@ -5,17 +5,17 @@ namespace Berry.Spider.Tools.ServDetector;
 
 public static class ApplicationLifetimeHelper
 {
-    public static string Build(List<ApplicationLifetimeData> applicationLifetimeList)
+    public static string? Build(List<ApplicationLifetimeData> applicationLifetimeList)
     {
-        StringBuilder builder = new StringBuilder("## 采集节点异常告警消息\n");
         //异常节点数
         int notOkNodeCount = applicationLifetimeList.Count(a => !a.AreYouOk || a.IsOverTime);
         if (notOkNodeCount == 0)
         {
-            builder.AppendLine("<font color='info'>节点一切正常~</font>");
+            return default;
         }
         else
         {
+            StringBuilder builder = new StringBuilder("## 采集节点异常告警消息\n");
             builder.AppendLine($"采集共有<font color='warning'>{notOkNodeCount}</font>个节点出现异常，请及时关注");
 
             //根据机器分组
@@ -38,8 +38,8 @@ public static class ApplicationLifetimeHelper
                     builder.AppendLine($">探测时间：{data.Time:yyyy-MM-dd HH:mm:ss}\n");
                 }
             }
-        }
 
-        return builder.ToString();
+            return builder.ToString();
+        }
     }
 }

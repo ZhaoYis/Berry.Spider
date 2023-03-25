@@ -13,6 +13,8 @@ public interface IRedisService : ISingletonDependency
     Task<bool> HSetAsync<T>(string key, string field, T value);
 
     Task<T> HGetAsync<T>(string key, string field);
+    
+    Task<bool> HDelAsync(string key, params string[] fields);
 
     Task<Dictionary<string, T>> HGetAllAsync<T>(string key);
 }

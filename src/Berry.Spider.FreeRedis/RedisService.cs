@@ -49,6 +49,12 @@ public class RedisService : IRedisService
         return result;
     }
 
+    public async Task<bool> HDelAsync(string key, params string[] fields)
+    {
+        var result = await _redisClient.HDelAsync(key, fields);
+        return result > 0;
+    }
+
     public async Task<Dictionary<string, T>> HGetAllAsync<T>(string key)
     {
         var result = await _redisClient.HGetAllAsync<T>(key);
