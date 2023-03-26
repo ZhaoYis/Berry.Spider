@@ -15,9 +15,10 @@ public static class ApplicationLifetimeHelper
         }
         else
         {
-            StringBuilder builder = new StringBuilder("## 采集节点异常告警消息\n");
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine("# 采集节点异常告警消息");
             builder.AppendLine($"采集共有<font color='warning'>{notOkNodeCount}</font>个节点出现异常，请及时关注¥_¥");
-            builder.AppendLine($"推送时间：<font color='info'>{DateTime.Now:yyyy-MM-dd HH:mm:ss}</font>");
+            builder.AppendLine($"推送时间：<font color='info'>{DateTime.Now:yyyy-MM-dd HH:mm:ss}</font>\n");
 
             //根据机器分组
             var groupByMachineName = applicationLifetimeList
@@ -29,7 +30,7 @@ public static class ApplicationLifetimeHelper
                 string machineName = item.Key;
                 List<ApplicationLifetimeData> list = item.OrderByDescending(c => c.Time).ToList();
 
-                builder.AppendLine($"机器名称：<font color='warning'>{machineName}</font>");
+                builder.AppendLine($"**机器名称：<font color='warning'>{machineName}</font>**");
                 foreach (ApplicationLifetimeData data in list)
                 {
                     builder.AppendLine($">进程ID：{data.ProcessId}");
