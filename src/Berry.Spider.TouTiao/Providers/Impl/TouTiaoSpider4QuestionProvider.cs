@@ -137,8 +137,6 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                                     Title = text,
                                     Href = realHref
                                 });
-
-                                this.Logger.LogInformation(text + "  ---> " + href);
                             }
                         }
                     });

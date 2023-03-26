@@ -122,7 +122,6 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
                                 Href = href
                             });
 
-                            this.Logger.LogInformation(text + "  ---> " + href);
                             await Task.CompletedTask;
                         });
 

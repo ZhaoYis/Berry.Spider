@@ -120,8 +120,6 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                                         Title = text,
                                         Href = realHref
                                     });
-
-                                    this.Logger.LogInformation(text + "  ---> " + href);
                                 }
                             }
                         });

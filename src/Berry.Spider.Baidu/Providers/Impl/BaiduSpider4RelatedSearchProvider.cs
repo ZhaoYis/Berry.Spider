@@ -120,8 +120,6 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                                 Title = text,
                                 Href = realHref
                             });
-
-                            this.Logger.LogInformation(text + "  ---> " + href);
                         }
                     });
 
