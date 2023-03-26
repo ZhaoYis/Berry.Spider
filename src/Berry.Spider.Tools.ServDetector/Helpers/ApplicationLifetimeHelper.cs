@@ -32,9 +32,8 @@ public static class ApplicationLifetimeHelper
                 foreach (ApplicationLifetimeData data in list)
                 {
                     builder.AppendLine($">进程ID：{data.ProcessId}");
-                    builder.AppendLine($">进程名称：{data.ProcessName}");
                     builder.AppendLine($">内存占用：{data.MemoryUsage}");
-                    builder.AppendLine($">CPU占用：{data.CpuUsage}");
+                    builder.AppendLine($">推送时间：{DateTime.Now:yyyy-MM-dd HH:mm:ss}");
                     builder.AppendLine($">探测时间：{data.Time:yyyy-MM-dd HH:mm:ss}\n");
                 }
             }
