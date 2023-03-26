@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
 using Microsoft.Extensions.Logging;
@@ -27,8 +28,8 @@ public class JsonFileToDbAppService : IJsonFileToDbAppService
         string filePath = Path.Combine(AppContext.BaseDirectory, "files");
         // 递归获取文件路径下的所有文件
         var files = Directory.GetFiles(filePath, "*.json", SearchOption.AllDirectories);
-        List<SpiderContent> spiderContents = new List<SpiderContent>();
-        List<string> recommendTitleList = new();
+        ImmutableList<SpiderContent> spiderContents = ImmutableList.Create<SpiderContent>();
+        ImmutableList<string> recommendTitleList = ImmutableList.Create<string>();
 
         await Parallel.ForEachAsync(files, new ParallelOptions
         {
@@ -45,9 +46,8 @@ public class JsonFileToDbAppService : IJsonFileToDbAppService
                     JsonContentModel? jsonContentModel = JsonSerializer.Deserialize<JsonContentModel>(fileContent);
                     if (jsonContentModel != null)
                     {
-                        recommendTitleList.AddRange(jsonContentModel.Pelates);
-                        recommendTitleList.AddRange(jsonContentModel.Recommends);
-                        //recommendTitleList.Distinct().ToList().RandomSort();
+                        recommendTitleList = recommendTitleList.AddRange(jsonContentModel.Pelates);
+                        recommendTitleList = recommendTitleList.AddRange(jsonContentModel.Recommends);
 
                         foreach (PostItem item in jsonContentModel.Posts)
                         {
@@ -64,10 +64,10 @@ public class JsonFileToDbAppService : IJsonFileToDbAppService
 
                             if (spiderContent != null)
                             {
-                                spiderContents.Add(spiderContent);
+                                spiderContents = spiderContents.Add(spiderContent);
 
                                 //当前标题
-                                recommendTitleList.Add(spiderContent.Title);
+                                recommendTitleList = recommendTitleList.Add(spiderContent.Title);
                             }
                         }
                     }

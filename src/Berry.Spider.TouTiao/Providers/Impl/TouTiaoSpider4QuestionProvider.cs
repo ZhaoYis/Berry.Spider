@@ -1,4 +1,5 @@
-﻿using Berry.Spider.Abstractions;
+﻿using System.Collections.Immutable;
+using Berry.Spider.Abstractions;
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
@@ -110,12 +111,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
-                    var eto = new TouTiaoSpider4QuestionPullEto
-                    {
-                        Keyword = eventData.Keyword,
-                        Title = eventData.Keyword
-                    };
-
+                    ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                     await Parallel.ForEachAsync(resultContent, new ParallelOptions
                     {
                         MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
@@ -132,7 +128,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                             string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
                             if (!string.IsNullOrEmpty(realHref))
                             {
-                                eto.Items.Add(new ChildPageDataItem
+                                childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
                                 {
                                     Title = text,
                                     Href = realHref
@@ -141,8 +137,15 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                         }
                     });
 
-                    if (eto.Items.Any())
+                    if (childPageDataItems.Any())
                     {
+                        var eto = new TouTiaoSpider4QuestionPullEto
+                        {
+                            Keyword = eventData.Keyword,
+                            Title = eventData.Keyword,
+                            Items = childPageDataItems.ToList()
+                        };
+                        
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
 
                         //保存采集到的标题
