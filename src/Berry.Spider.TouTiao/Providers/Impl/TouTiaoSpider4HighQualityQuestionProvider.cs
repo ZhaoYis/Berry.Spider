@@ -130,8 +130,6 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                                     Title = text,
                                     Href = realHref
                                 });
-
-                                this.Logger.LogInformation(text + "  ---> " + href);
                             }
                         }
                     });
