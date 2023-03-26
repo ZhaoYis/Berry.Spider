@@ -1,13 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Berry.Spider.Baidu;
-using Berry.Spider.Contracts;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.EventBus.RabbitMq;
 using Berry.Spider.FreeRedis;
 using Berry.Spider.Segmenter.JiebaNet;
 using Berry.Spider.Sogou;
 using Berry.Spider.TouTiao;
-using Exceptionless;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -44,13 +42,6 @@ public class SpiderConsumersModule : AbpModule
 
         var hostEnvironment = context.ServiceProvider.GetRequiredService<IHostEnvironment>();
         logger.LogInformation($"EnvironmentName => {hostEnvironment.EnvironmentName}");
-
-        //集成Exceptionless
-        ExceptionlessOptions? options = configuration.GetSection(nameof(ExceptionlessOptions)).Get<ExceptionlessOptions>();
-        if (options is { IsEnable: true } && !string.IsNullOrEmpty(options.ApiKey))
-        {
-            ExceptionlessClient.Default.Startup(options.ApiKey);
-        }
 
         //注册服务
         await context.AddBackgroundWorkerAsync<ServLifetimeCheckerWorker>();

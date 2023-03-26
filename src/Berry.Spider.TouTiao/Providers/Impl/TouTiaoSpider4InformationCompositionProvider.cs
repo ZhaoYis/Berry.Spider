@@ -103,7 +103,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                 var resultContent = root.TryFindElements(By.ClassName("result-content"));
                 if (resultContent is { Count: > 0 })
                 {
-                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+                    this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
                     var eto = new TouTiaoSpider4InformationCompositionPullEto
                     {
@@ -139,7 +139,6 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                     if (eto.Items.Any())
                     {
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
-                        this.Logger.LogInformation("事件发布成功，等待消费...");
                         
                         //保存采集到的标题
                         List<SpiderContent_Keyword> list = eto.Items

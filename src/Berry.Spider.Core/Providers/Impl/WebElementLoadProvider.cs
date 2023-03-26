@@ -42,10 +42,8 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                 string title = driver.Title;
                 string url = driver.Url;
 
-                this.Logger.LogInformation("开始执行[{0}]，页面地址：{1}", title, url);
-
                 string current = driver.CurrentWindowHandle;
-                this.Logger.LogInformation("当前窗口句柄：" + current);
+                this.Logger.LogDebug("当前窗口句柄：{0}，采集关键字：{1}", current, title);
 
                 // 隐式等待
                 //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -106,10 +104,8 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                 string title = driver.Title;
                 string url = driver.Url;
 
-                this.Logger.LogInformation("开始执行[{0}]，页面地址：{1}", title, url);
-
                 string current = driver.CurrentWindowHandle;
-                this.Logger.LogInformation("当前窗口句柄：" + current);
+                this.Logger.LogDebug("当前窗口句柄：{0}，采集关键字：{1}", current, title);
 
                 // 隐式等待
                 //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -160,7 +156,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                 string url = driver.Url;
 
                 string current = driver.CurrentWindowHandle;
-                this.Logger.LogInformation("当前窗口句柄：" + current);
+                this.Logger.LogDebug("当前窗口句柄：{0}，采集关键字：{1}", current, title);
 
                 // 隐式等待
                 //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);

@@ -96,7 +96,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                 var resultContent = root.TryFindElements(By.TagName("a"));
                 if (resultContent is { Count: > 0 })
                 {
-                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+                    this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
                     var eto = new BaiduSpider4RelatedSearchPullEto
                     {
@@ -129,7 +129,6 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                     {
                         //此处不做消息队列发送，直接存储到数据库
                         await this.HandlePullEventAsync(eto);
-                        this.Logger.LogInformation("数据保存成功...");
                         
                         //保存采集到的标题
                         List<SpiderContent_Keyword> list = eto.Items

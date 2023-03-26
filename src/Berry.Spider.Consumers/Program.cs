@@ -19,11 +19,7 @@ public class Program
     {
         var configuration = GetConfiguration(args);
         Log.Logger = new LoggerConfiguration()
-#if DEBUG
             .MinimumLevel.Debug()
-#else
-            .MinimumLevel.Information()
-#endif
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
             .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
@@ -55,7 +51,6 @@ public class Program
                     outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} ERROR [berry-spider-consumers] [] [] [] [] [{ThreadId}] --- {Message:lj}{NewLine}{Exception}",
                     rollingInterval: RollingInterval.Day)))
             .WriteTo.Async(c => c.Console())
-            .WriteTo.Exceptionless(e => e.AddTags("Berry.Spider.Consumers"))
             .CreateLogger();
 
         try
