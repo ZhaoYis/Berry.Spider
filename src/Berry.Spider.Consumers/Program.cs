@@ -19,11 +19,12 @@ public class Program
     {
         var configuration = GetConfiguration(args);
         Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+            .MinimumLevel.Information()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .MinimumLevel.Override("Volo.Abp", LogEventLevel.Warning)
+            .MinimumLevel.Override("DotNetCore.CAP", LogEventLevel.Warning)
             .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
             .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
-            .ReadFrom.Configuration(configuration)
             .Enrich.FromLogContext()
             .Enrich.With<ThreadIdEnricher>()
             //Debug
@@ -50,7 +51,9 @@ public class Program
                     path: "Logs/logs-Error-.log",
                     outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} ERROR [berry-spider-consumers] [] [] [] [] [{ThreadId}] --- {Message:lj}{NewLine}{Exception}",
                     rollingInterval: RollingInterval.Day)))
-            .WriteTo.Async(c => c.Console())
+            .WriteTo.Async(c => c.Console(
+                restrictedToMinimumLevel: LogEventLevel.Information
+            ))
             .CreateLogger();
 
         try
@@ -62,10 +65,7 @@ public class Program
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             }));
 
-            await Host.CreateDefaultBuilder(args).ConfigureServices(services =>
-                {
-                    services.AddHostedService<SpiderConsumersHostedService>();
-                })
+            await Host.CreateDefaultBuilder(args).ConfigureServices(services => { services.AddHostedService<SpiderConsumersHostedService>(); })
                 //机密配置文件
                 .AddAppSettingsSecretsJson()
                 //集成AgileConfig
