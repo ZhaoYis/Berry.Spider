@@ -1,4 +1,5 @@
-﻿using Berry.Spider.Abstractions;
+﻿using System.Collections.Immutable;
+using Berry.Spider.Abstractions;
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
@@ -101,12 +102,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
-                    var eto = new BaiduSpider4RelatedSearchPullEto
-                    {
-                        Keyword = eventData.Keyword,
-                        Title = eventData.Keyword
-                    };
-
+                    ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                     await Parallel.ForEachAsync(resultContent, new ParallelOptions
                     {
                         MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
@@ -118,7 +114,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                         string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
                         if (!string.IsNullOrEmpty(realHref))
                         {
-                            eto.Items.Add(new ChildPageDataItem
+                            childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
                             {
                                 Title = text,
                                 Href = realHref
@@ -126,14 +122,20 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                         }
                     });
 
-                    if (eto.Items.Any())
+                    if (childPageDataItems.Any())
                     {
+                        var eto = new BaiduSpider4RelatedSearchPullEto
+                        {
+                            Keyword = eventData.Keyword,
+                            Title = eventData.Keyword,
+                            Items = childPageDataItems.ToList()
+                        };
+                        
                         //此处不做消息队列发送，直接存储到数据库
                         await this.HandlePullEventAsync(eto);
 
                         //保存采集到的标题
-                        List<SpiderContent_Keyword> list = eto.Items
-                            .Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();
+                        List<SpiderContent_Keyword> list = eto.Items.Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();
                         await this.SpiderKeywordRepository.InsertManyAsync(list);
                     }
                 }

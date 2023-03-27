@@ -1,4 +1,5 @@
-﻿using Berry.Spider.Abstractions;
+﻿using System.Collections.Immutable;
+using Berry.Spider.Abstractions;
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
@@ -107,12 +108,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
-                    var eto = new TouTiaoSpider4InformationCompositionPullEto
-                    {
-                        Keyword = eventData.Keyword,
-                        Title = eventData.Keyword
-                    };
-
+                    ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                     await Parallel.ForEachAsync(resultContent, new ParallelOptions
                     {
                         MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
@@ -127,7 +123,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                             string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
                             if (!string.IsNullOrEmpty(realHref))
                             {
-                                eto.Items.Add(new ChildPageDataItem
+                                childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
                                 {
                                     Title = text,
                                     Href = realHref
@@ -136,13 +132,19 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                         }
                     });
 
-                    if (eto.Items.Any())
+                    if (childPageDataItems.Any())
                     {
+                        var eto = new TouTiaoSpider4InformationCompositionPullEto
+                        {
+                            Keyword = eventData.Keyword,
+                            Title = eventData.Keyword,
+                            Items = childPageDataItems.ToList()
+                        };
+                        
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
 
                         //保存采集到的标题
-                        List<SpiderContent_Keyword> list = eto.Items
-                            .Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();
+                        List<SpiderContent_Keyword> list = eto.Items.Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();
                         await this.SpiderKeywordRepository.InsertManyAsync(list);
                     }
                 }
@@ -158,7 +160,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
         try
         {
             string groupId = this.GuidGenerator.Create().ToString("N");
-            List<SpiderContent_Composition> contentItems = new List<SpiderContent_Composition>();
+            ImmutableList<SpiderContent_Composition> contentItems = ImmutableList.Create<SpiderContent_Composition>();
 
             foreach (var item in eventData.Items)
             {
@@ -175,9 +177,8 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                             string content = resultContent.Text;
                             if (!string.IsNullOrEmpty(content))
                             {
-                                SpiderContent_Composition spiderContent =
-                                    new SpiderContent_Composition(item.Title, content, groupId, eventData.SourceFrom);
-                                contentItems.Add(spiderContent);
+                                SpiderContent_Composition spiderContent = new SpiderContent_Composition(item.Title, content, groupId, eventData.SourceFrom);
+                                contentItems = contentItems.Add(spiderContent);
                             }
                         }
 

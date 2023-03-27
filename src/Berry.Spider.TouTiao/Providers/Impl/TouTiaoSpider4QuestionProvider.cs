@@ -148,8 +148,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
 
                         //保存采集到的标题
-                        List<SpiderContent_Keyword> list = eto.Items
-                            .Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();
+                        List<SpiderContent_Keyword> list = eto.Items.Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();
                         await this.SpiderKeywordRepository.InsertManyAsync(list);
                     }
                 }
@@ -164,7 +163,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     {
         try
         {
-            List<string> contentItems = new List<string>();
+            ImmutableList<string> contentItems = ImmutableList.Create<string>();
             foreach (var item in eventData.Items)
             {
                 await this.WebElementLoadProvider.InvokeAsync(
@@ -202,7 +201,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                                                 var list = await this.TextAnalysisProvider.InvokeAsync(answer.Text);
                                                 if (list.Count > 0)
                                                 {
-                                                    contentItems.AddRange(list);
+                                                    contentItems= contentItems.AddRange(list);
                                                     this.Logger.LogInformation("总共解析到记录：" + list.Count);
                                                 }
                                             }
@@ -216,9 +215,8 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
             }
 
             //去重
-            contentItems = contentItems.Distinct().ToList();
-            SpiderContent? spiderContent =
-                await this.SpiderDomainService.BuildContentAsync(eventData.Title, eventData.SourceFrom, contentItems);
+            List<string> todoSaveContentItems = contentItems.Distinct().ToList();
+            SpiderContent? spiderContent = await this.SpiderDomainService.BuildContentAsync(eventData.Title, eventData.SourceFrom, todoSaveContentItems);
             if (spiderContent != null)
             {
                 await this.SpiderRepository.InsertAsync(spiderContent);

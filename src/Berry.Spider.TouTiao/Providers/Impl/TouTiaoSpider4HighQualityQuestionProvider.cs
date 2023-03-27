@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Collections.Immutable;
 using Berry.Spider.Abstractions;
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
@@ -104,12 +105,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
-                    var eto = new TouTiaoSpider4HighQualityQuestionPullEto
-                    {
-                        Keyword = eventData.Keyword,
-                        Title = eventData.Keyword
-                    };
-
+                    ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                     await Parallel.ForEachAsync(resultContent, new ParallelOptions
                     {
                         MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
@@ -126,7 +122,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                             string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
                             if (!string.IsNullOrEmpty(realHref))
                             {
-                                eto.Items.Add(new ChildPageDataItem
+                                childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
                                 {
                                     Title = text,
                                     Href = realHref
@@ -135,13 +131,19 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                         }
                     });
 
-                    if (eto.Items.Any())
+                    if (childPageDataItems.Any())
                     {
+                        var eto = new TouTiaoSpider4HighQualityQuestionPullEto
+                        {
+                            Keyword = eventData.Keyword,
+                            Title = eventData.Keyword,
+                            Items = childPageDataItems.ToList()
+                        };
+
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
 
                         //保存采集到的标题
-                        List<SpiderContent_Keyword> list = eto.Items
-                            .Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();
+                        List<SpiderContent_Keyword> list = eto.Items.Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();
                         await this.SpiderKeywordRepository.InsertManyAsync(list);
                     }
                 }
@@ -195,9 +197,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                                                 if (this.Options.Value.HighQualityAnswerOptions.IsEnable)
                                                 {
                                                     //TODO：后续优化为计算真实字符数（中文、英文、符号、表情等混合时）
-                                                    if (answer.Text.Length.Between(
-                                                            this.Options.Value.HighQualityAnswerOptions.MinLength,
-                                                            this.Options.Value.HighQualityAnswerOptions.MaxLength))
+                                                    if (answer.Text.Length.Between(this.Options.Value.HighQualityAnswerOptions.MinLength, this.Options.Value.HighQualityAnswerOptions.MaxLength))
                                                     {
                                                         answerContentItems.Add(answer.Text);
                                                     }
@@ -220,9 +220,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                 );
             }
 
-            SpiderContent_HighQualityQA spiderContent =
-                await this.SpiderDomainService.BuildHighQualityContentAsync(eventData.Title, eventData.SourceFrom,
-                    contentItems);
+            SpiderContent_HighQualityQA spiderContent = await this.SpiderDomainService.BuildHighQualityContentAsync(eventData.Title, eventData.SourceFrom, contentItems);
             await this.SpiderRepository.InsertAsync(spiderContent);
             this.Logger.LogInformation("落库成功，标题：" + spiderContent.Title + "，共计：" + contentItems.Count + "条记录");
         }
