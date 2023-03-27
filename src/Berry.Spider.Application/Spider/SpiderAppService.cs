@@ -10,14 +10,14 @@ namespace Berry.Spider.Application.Spider;
 /// 爬虫服务
 /// </summary>
 public class SpiderAppService : CrudAppService<
-    SpiderBasic,
+    SpiderBasicInfo,
     SpiderDto,
     int,
     GetListInput,
     SpiderCreateInput,
     SpiderUpdateInput>, ISpiderAppService
 {
-    public SpiderAppService(IRepository<SpiderBasic, int> repository) : base(repository)
+    public SpiderAppService(IRepository<SpiderBasicInfo, int> repository) : base(repository)
     {
     }
 
@@ -37,9 +37,9 @@ public class SpiderAppService : CrudAppService<
     {
         CustomPagedResultDto<SpiderDto> result = new CustomPagedResultDto<SpiderDto>();
 
-        List<SpiderBasic> list = await this.Repository.GetListAsync(c => !c.IsDeleted);
+        List<SpiderBasicInfo> list = await this.Repository.GetListAsync(c => !c.IsDeleted);
         result.Total = list.Count;
-        result.Items = this.ObjectMapper.Map<List<SpiderBasic>, List<SpiderDto>>(list);
+        result.Items = this.ObjectMapper.Map<List<SpiderBasicInfo>, List<SpiderDto>>(list);
 
         return result;
     }

@@ -22,7 +22,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
     private IEventBusPublisher DistributedEventBus { get; }
     private IRedisService RedisService { get; }
-    private ISpiderTitleContentRepository SpiderRepository { get; }
+    private ISpiderContentTitleRepository SpiderRepository { get; }
     private ISpiderContentKeywordRepository SpiderKeywordRepository { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
 
@@ -33,7 +33,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
         IServiceProvider serviceProvider,
         IEventBusPublisher eventBus,
         IRedisService redisService,
-        ISpiderTitleContentRepository repository,
+        ISpiderContentTitleRepository repository,
         ISpiderContentKeywordRepository keywordRepository,
         IOptionsSnapshot<SpiderOptions> options) : base(logger)
     {
@@ -144,10 +144,10 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     {
         try
         {
-            List<SpiderTitleContent> contents = new List<SpiderTitleContent>();
+            List<SpiderContent_Title> contents = new List<SpiderContent_Title>();
             foreach (var item in eventData.Items)
             {
-                var content = new SpiderTitleContent(item.Title, item.Href, eventData.SourceFrom);
+                var content = new SpiderContent_Title(item.Title, item.Href, eventData.SourceFrom);
                 contents.Add(content);
             }
 

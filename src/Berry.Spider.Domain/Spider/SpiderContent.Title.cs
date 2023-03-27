@@ -5,14 +5,13 @@ namespace Berry.Spider.Domain;
 /// <summary>
 /// 只保存标题和链接
 /// </summary>
-public class SpiderTitleContent : EntityBase
+public class SpiderContent_Title : EntityBase
 {
     /// <summary>
     /// 已采集
     /// </summary>
     public int Collected { get; set; } = 1;
 
-    /// <summary>
     /// 已发布
     /// </summary>
     public int Published { get; set; } = 0;
@@ -42,11 +41,11 @@ public class SpiderTitleContent : EntityBase
     /// </summary>
     public string From { get; set; }
 
-    public SpiderTitleContent()
+    public SpiderContent_Title()
     {
     }
 
-    public SpiderTitleContent(
+    public SpiderContent_Title(
         string title,
         string content,
         SpiderSourceFrom from)

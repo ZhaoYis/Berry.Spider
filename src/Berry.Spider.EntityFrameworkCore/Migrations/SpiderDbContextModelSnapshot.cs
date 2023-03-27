@@ -18,10 +18,10 @@ namespace Berry.Spider.EntityFrameworkCore.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("_Abp_DatabaseProvider", EfCoreDatabaseProvider.MySql)
-                .HasAnnotation("ProductVersion", "7.0.0")
+                .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Berry.Spider.Domain.SpiderBasic", b =>
+            modelBuilder.Entity("Berry.Spider.Domain.SpiderBasicInfo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,7 +64,7 @@ namespace Berry.Spider.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SpiderBasic", (string)null);
+                    b.ToTable("spider_basic_info", (string)null);
                 });
 
             modelBuilder.Entity("Berry.Spider.Domain.SpiderContent", b =>
@@ -131,7 +131,52 @@ namespace Berry.Spider.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Content", (string)null);
+                    b.ToTable("spider_content", (string)null);
+                });
+
+            modelBuilder.Entity("Berry.Spider.Domain.SpiderContentTitle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Author")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Collected")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnType("longtext")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<string>("From")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Published")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("spider_content_title", (string)null);
                 });
 
             modelBuilder.Entity("Berry.Spider.Domain.SpiderContent_Composition", b =>
@@ -198,7 +243,7 @@ namespace Berry.Spider.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Content_Composition", (string)null);
+                    b.ToTable("spider_content_composition", (string)null);
                 });
 
             modelBuilder.Entity("Berry.Spider.Domain.SpiderContent_HighQualityQA", b =>
@@ -265,7 +310,7 @@ namespace Berry.Spider.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Content_HighQualityQA", (string)null);
+                    b.ToTable("spider_content_high_quality_qa", (string)null);
                 });
 
             modelBuilder.Entity("Berry.Spider.Domain.SpiderContent_Keyword", b =>
@@ -300,52 +345,7 @@ namespace Berry.Spider.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Content_Keyword", (string)null);
-                });
-
-            modelBuilder.Entity("Berry.Spider.Domain.SpiderTitleContent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Author")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("Collected")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasMaxLength(40)
-                        .HasColumnType("varchar(40)")
-                        .HasColumnName("ConcurrencyStamp");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ExtraProperties")
-                        .HasColumnType("longtext")
-                        .HasColumnName("ExtraProperties");
-
-                    b.Property<string>("From")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("Published")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TitleContent", (string)null);
+                    b.ToTable("spider_content_keyword", (string)null);
                 });
 #pragma warning restore 612, 618
         }

@@ -6,16 +6,16 @@ using Volo.Abp.EntityFrameworkCore;
 
 namespace Berry.Spider.EntityFrameworkCore;
 
-public class SpiderTitleContentRepository : EfCoreRepository<SpiderDbContext, SpiderTitleContent, int>,
-    ISpiderTitleContentRepository
+public class SpiderTitleContentRepository : EfCoreRepository<SpiderDbContext, SpiderContent_Title, int>,
+    ISpiderContentTitleRepository
 {
     public SpiderTitleContentRepository(IDbContextProvider<SpiderDbContext> dbContextProvider) : base(dbContextProvider)
     {
     }
 
-    public async Task<int> MyCountAsync(Expression<Func<SpiderTitleContent, bool>> predicate, CancellationToken cancellationToken = default)
+    public async Task<int> MyCountAsync(Expression<Func<SpiderContent_Title, bool>> predicate, CancellationToken cancellationToken = default)
     {
         var db = await this.GetDbContextAsync();
-        return await db.SpiderTitleContents.CountAsync(predicate, cancellationToken);
+        return await db.SpiderContentTitles.CountAsync(predicate, cancellationToken);
     }
 }

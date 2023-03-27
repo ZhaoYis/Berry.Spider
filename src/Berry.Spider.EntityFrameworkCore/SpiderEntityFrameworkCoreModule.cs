@@ -24,8 +24,8 @@ public class SpiderEntityFrameworkCoreModule : AbpModule
             options.AddRepository<SpiderContent, SpiderContentRepository>();
             options.AddRepository<SpiderContent_HighQualityQA, SpiderContentHighQualityQARepository>();
             options.AddRepository<SpiderContent_Composition, SpiderContentCompositionRepository>();
-            options.AddRepository<SpiderTitleContent, SpiderTitleContentRepository>();
-            options.AddRepository<SpiderBasic, SpiderBasicRepository>();
+            options.AddRepository<SpiderContent_Title, SpiderTitleContentRepository>();
+            options.AddRepository<SpiderBasicInfo, SpiderBasicInfoRepository>();
         });
 
         Configure<AbpDbContextOptions>(options =>

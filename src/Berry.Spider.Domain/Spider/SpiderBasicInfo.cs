@@ -7,13 +7,13 @@ namespace Berry.Spider.Domain;
 /// <summary>
 /// 爬虫基础信息
 /// </summary>
-public class SpiderBasic : EntityBase, IHasCreationTime, IHasModificationTime, ISoftDelete
+public class SpiderBasicInfo : EntityBase, IHasCreationTime, IHasModificationTime, ISoftDelete
 {
-    protected SpiderBasic()
+    protected SpiderBasicInfo()
     {
     }
 
-    public SpiderBasic(string name, SpiderSourceFrom @from, string remark)
+    public SpiderBasicInfo(string name, SpiderSourceFrom @from, string remark)
     {
         this.Name = name;
         this.From = from;

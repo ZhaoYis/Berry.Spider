@@ -12,18 +12,19 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Berry.Spider.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(SpiderDbContext))]
-    [Migration("20221107095111_Add_Content_Tables")]
-    partial class Add_Content_Tables
+    [Migration("20230327140842_Init")]
+    partial class Init
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("_Abp_DatabaseProvider", EfCoreDatabaseProvider.MySql)
-                .HasAnnotation("ProductVersion", "6.0.10")
+                .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Berry.Spider.Domain.SpiderBasic", b =>
+            modelBuilder.Entity("Berry.Spider.Domain.SpiderBasicInfo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,7 +67,7 @@ namespace Berry.Spider.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SpiderBasic", (string)null);
+                    b.ToTable("spider_basic_info", (string)null);
                 });
 
             modelBuilder.Entity("Berry.Spider.Domain.SpiderContent", b =>
@@ -133,7 +134,52 @@ namespace Berry.Spider.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Content", (string)null);
+                    b.ToTable("spider_content", (string)null);
+                });
+
+            modelBuilder.Entity("Berry.Spider.Domain.SpiderContentTitle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Author")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Collected")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnType("longtext")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<string>("From")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Published")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("spider_content_title", (string)null);
                 });
 
             modelBuilder.Entity("Berry.Spider.Domain.SpiderContent_Composition", b =>
@@ -200,7 +246,7 @@ namespace Berry.Spider.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Content_Composition", (string)null);
+                    b.ToTable("spider_content_composition", (string)null);
                 });
 
             modelBuilder.Entity("Berry.Spider.Domain.SpiderContent_HighQualityQA", b =>
@@ -267,19 +313,13 @@ namespace Berry.Spider.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Content_HighQualityQA", (string)null);
+                    b.ToTable("spider_content_high_quality_qa", (string)null);
                 });
 
-            modelBuilder.Entity("Berry.Spider.Domain.SpiderTitleContent", b =>
+            modelBuilder.Entity("Berry.Spider.Domain.SpiderContent_Keyword", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Author")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("Collected")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -288,31 +328,27 @@ namespace Berry.Spider.EntityFrameworkCore.Migrations
                         .HasColumnType("varchar(40)")
                         .HasColumnName("ConcurrencyStamp");
 
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("ExtraProperties")
                         .HasColumnType("longtext")
                         .HasColumnName("ExtraProperties");
 
                     b.Property<string>("From")
                         .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("Published")
-                        .HasColumnType("int");
+                        .HasColumnType("longtext")
+                        .HasColumnName("出处");
 
                     b.Property<DateTime>("Time")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("时间");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("longtext")
+                        .HasColumnName("标题");
 
                     b.HasKey("Id");
 
-                    b.ToTable("TitleContent", (string)null);
+                    b.ToTable("spider_content_keyword", (string)null);
                 });
 #pragma warning restore 612, 618
         }
