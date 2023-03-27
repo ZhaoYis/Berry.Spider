@@ -6,11 +6,11 @@
     [AttributeUsage(AttributeTargets.Class)]
     public class SpiderServiceAttribute : Attribute
     {
-        public SpiderServiceAttribute(SpiderSourceFrom from)
+        public SpiderServiceAttribute(SpiderSourceFrom[] fromArray)
         {
-            this.SourceFrom = from;
+            this.SourceFromArray = fromArray.Distinct().ToArray();
         }
 
-        public SpiderSourceFrom SourceFrom { get; set; }
+        public SpiderSourceFrom[] SourceFromArray { get; set; }
     }
 }

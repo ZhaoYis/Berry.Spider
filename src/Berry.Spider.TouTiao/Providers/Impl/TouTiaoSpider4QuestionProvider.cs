@@ -16,7 +16,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：问答
 /// </summary>
-[SpiderService(SpiderSourceFrom.TouTiao_Question)]
+[SpiderService(new[] {SpiderSourceFrom.TouTiao_Question, SpiderSourceFrom.TouTiao_Question_Ext_NO_1})]
 public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4QuestionProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -59,16 +59,15 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync(string keyword)
+    public async Task PushAsync(string keyword, SpiderSourceFrom from)
     {
         TouTiaoSpider4QuestionPushEto push = new TouTiaoSpider4QuestionPushEto
         {
-            SourceFrom = SpiderSourceFrom.TouTiao_Question,
+            SourceFrom = from,
             Keyword = keyword
         };
 
-        await this.CheckAsync(keyword,
-            checkSuccessCallback: async () =>
+        await this.CheckAsync(keyword, from, async () =>
             {
                 await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push);
             },
@@ -80,12 +79,12 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     /// 二次重复性校验
     /// </summary>
     /// <returns></returns>
-    protected override async Task<bool> DuplicateCheckAsync(string keyword)
+    protected override async Task<bool> DuplicateCheckAsync(string keyword, SpiderSourceFrom from)
     {
         string key = GlobalConstants.SPIDER_KEYWORDS_KEY;
         if (this.Options.Value.KeywordCheckOptions.OnlyCurrentCategory)
         {
-            key += $":{SpiderSourceFrom.TouTiao_Question.ToString()}";
+            key += $":{from.ToString()}";
         }
 
         bool result = await this.RedisService.SetAsync(key, keyword);
@@ -107,7 +106,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.ClassName("result-content"));
-                if (resultContent is { Count: > 0 })
+                if (resultContent is {Count: > 0})
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
@@ -145,7 +144,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                             Title = eventData.Keyword,
                             Items = childPageDataItems.ToList()
                         };
-                        
+
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
 
                         //保存采集到的标题
@@ -176,7 +175,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                         if (root == null) return;
 
                         var resultContent = root.TryFindElements(By.ClassName("list"));
-                        if (resultContent is { Count: > 0 })
+                        if (resultContent is {Count: > 0})
                         {
                             await Parallel.ForEachAsync(resultContent, new ParallelOptions
                             {
@@ -184,7 +183,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                             }, async (element, token) =>
                             {
                                 var answerList = element.TryFindElements(By.TagName("div"));
-                                if (answerList is { Count: > 0 })
+                                if (answerList is {Count: > 0})
                                 {
                                     var realAnswerList = answerList
                                         .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))

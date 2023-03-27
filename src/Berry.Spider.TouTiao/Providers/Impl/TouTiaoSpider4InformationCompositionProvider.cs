@@ -15,9 +15,8 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：头条_资讯_作文板块
 /// </summary>
-[SpiderService(SpiderSourceFrom.TouTiao_Information_Composition)]
-public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiaoSpider4InformationCompositionProvider>,
-    ISpiderProvider
+[SpiderService(new[] {SpiderSourceFrom.TouTiao_Information_Composition})]
+public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiaoSpider4InformationCompositionProvider>, ISpiderProvider
 {
     private IGuidGenerator GuidGenerator { get; }
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -57,15 +56,18 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync(string keyword)
+    public async Task PushAsync(string keyword, SpiderSourceFrom from)
     {
         TouTiaoSpider4InformationCompositionPushEto push = new TouTiaoSpider4InformationCompositionPushEto
         {
-            SourceFrom = SpiderSourceFrom.TouTiao_Information_Composition,
+            SourceFrom = from,
             Keyword = keyword
         };
 
-        await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
+        await this.CheckAsync(push.Keyword, from, async () =>
+            {
+                await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push);
+            },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -74,12 +76,12 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     /// 二次重复性校验
     /// </summary>
     /// <returns></returns>
-    protected override async Task<bool> DuplicateCheckAsync(string keyword)
+    protected override async Task<bool> DuplicateCheckAsync(string keyword, SpiderSourceFrom from)
     {
         string key = GlobalConstants.SPIDER_KEYWORDS_KEY;
         if (this.Options.Value.KeywordCheckOptions.OnlyCurrentCategory)
         {
-            key += $":{SpiderSourceFrom.TouTiao_Information_Composition.ToString()}";
+            key += $":{from.ToString()}";
         }
 
         bool result = await this.RedisService.SetAsync(key, keyword);
@@ -101,7 +103,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.ClassName("result-content"));
-                if (resultContent is { Count: > 0 })
+                if (resultContent is {Count: > 0})
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
@@ -137,7 +139,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                     if (eto.Items.Any())
                     {
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
-                        
+
                         //保存采集到的标题
                         List<SpiderContent_Keyword> list = eto.Items
                             .Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();

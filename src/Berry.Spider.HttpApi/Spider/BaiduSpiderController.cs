@@ -19,16 +19,6 @@ public class BaiduSpiderController : SpiderControllerBase
     }
 
     /// <summary>
-    /// 百度：相关推荐
-    /// </summary>
-    [HttpPost, Route("push-related-search")]
-    public Task PushAsync([FromBody] PushKeywordBasicDto push,
-        [FromServices] BaiduSpider4RelatedSearchProvider provider)
-    {
-        return provider.PushAsync(push.Keyword);
-    }
-
-    /// <summary>
     /// 将待爬取信息PUSH到消息队列中
     /// </summary>
     [HttpPost, Route("push-from-file"), DisableRequestSizeLimit]
@@ -39,7 +29,7 @@ public class BaiduSpiderController : SpiderControllerBase
             object o = this.Provider.GetImplService(push.SourceFrom);
             if (o is ISpiderProvider provider)
             {
-                return provider.PushAsync(row);
+                return provider.PushAsync(row, push.SourceFrom);
             }
             else
             {

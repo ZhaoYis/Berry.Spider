@@ -19,46 +19,6 @@ public class TouTiaoSpiderController : SpiderControllerBase
     }
 
     /// <summary>
-    /// 头条：问答
-    /// </summary>
-    [HttpPost, Route("push-question")]
-    public Task PushAsync([FromBody] PushKeywordBasicDto push,
-        [FromServices] TouTiaoSpider4QuestionProvider provider)
-    {
-        return provider.PushAsync(push.Keyword);
-    }
-
-    /// <summary>
-    /// 头条：优质_问答
-    /// </summary>
-    [HttpPost, Route("push-highQuality-question")]
-    public Task PushAsync([FromBody] PushKeywordBasicDto push,
-        [FromServices] TouTiaoSpider4HighQualityQuestionProvider provider)
-    {
-        return provider.PushAsync(push.Keyword);
-    }
-
-    /// <summary>
-    /// 头条：资讯
-    /// </summary>
-    [HttpPost, Route("push-information")]
-    public Task PushAsync([FromBody] PushKeywordBasicDto push,
-        [FromServices] TouTiaoSpider4InformationProvider provider)
-    {
-        return provider.PushAsync(push.Keyword);
-    }
-
-    /// <summary>
-    /// 头条：头条_资讯_作文板块
-    /// </summary>
-    [HttpPost, Route("push-information-composition")]
-    public Task PushAsync([FromBody] PushKeywordBasicDto push,
-        [FromServices] TouTiaoSpider4InformationCompositionProvider provider)
-    {
-        return provider.PushAsync(push.Keyword);
-    }
-
-    /// <summary>
     /// 将待爬取信息PUSH到消息队列中
     /// </summary>
     [HttpPost, DisableRequestSizeLimit, Route("push-from-file")]
@@ -69,7 +29,7 @@ public class TouTiaoSpiderController : SpiderControllerBase
             object o = this.Provider.GetImplService(push.SourceFrom);
             if (o is ISpiderProvider provider)
             {
-                return provider.PushAsync(row);
+                return provider.PushAsync(row, push.SourceFrom);
             }
             else
             {

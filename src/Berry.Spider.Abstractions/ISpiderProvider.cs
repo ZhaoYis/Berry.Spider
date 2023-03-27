@@ -1,3 +1,5 @@
+using Berry.Spider.Core;
+
 namespace Berry.Spider.Abstractions;
 
 public interface ISpiderProvider
@@ -6,7 +8,7 @@ public interface ISpiderProvider
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    Task PushAsync(string keyword);
+    Task PushAsync(string keyword, SpiderSourceFrom from);
 
     /// <summary>
     /// 执行获取一级页面数据任务

@@ -14,7 +14,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：资讯
 /// </summary>
-[SpiderService(SpiderSourceFrom.TouTiao_Information)]
+[SpiderService(new[] {SpiderSourceFrom.TouTiao_Information})]
 public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4InformationProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -46,15 +46,18 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync(string keyword)
+    public async Task PushAsync(string keyword, SpiderSourceFrom from)
     {
         TouTiaoSpider4InformationPushEto push = new TouTiaoSpider4InformationPushEto
         {
-            SourceFrom = SpiderSourceFrom.TouTiao_Information,
+            SourceFrom = from,
             Keyword = keyword
         };
 
-        await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
+        await this.CheckAsync(push.Keyword, from, async () =>
+            {
+                await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push);
+            },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -63,12 +66,12 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     /// 二次重复性校验
     /// </summary>
     /// <returns></returns>
-    protected override async Task<bool> DuplicateCheckAsync(string keyword)
+    protected override async Task<bool> DuplicateCheckAsync(string keyword, SpiderSourceFrom from)
     {
         string key = GlobalConstants.SPIDER_KEYWORDS_KEY;
         if (this.Options.Value.KeywordCheckOptions.OnlyCurrentCategory)
         {
-            key += $":{SpiderSourceFrom.TouTiao_Information.ToString()}";
+            key += $":{from.ToString()}";
         }
 
         bool result = await this.RedisService.SetAsync(key, keyword);
@@ -90,7 +93,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.ClassName("result-content"));
-                if (resultContent is { Count: > 0 })
+                if (resultContent is {Count: > 0})
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 

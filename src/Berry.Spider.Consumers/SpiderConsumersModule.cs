@@ -51,7 +51,9 @@ public class SpiderConsumersModule : AbpModule
     {
         //今日头条
         context.Services.AddTransient<TouTiaoSpider4QuestionEventHandler>();
+        context.Services.AddTransient<TouTiaoSpider4QuestionExtNo1EventHandler>();
         context.Services.AddTransient<TouTiaoSpider4HighQualityQuestionEventHandler>();
+        context.Services.AddTransient<TouTiaoSpider4HighQualityQuestionExtNo1EventHandler>();
         context.Services.AddTransient<TouTiaoSpider4InformationEventHandler>();
         context.Services.AddTransient<TouTiaoSpider4InformationCompositionEventHandler>();
 

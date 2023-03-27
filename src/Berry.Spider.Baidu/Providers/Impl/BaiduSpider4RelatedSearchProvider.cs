@@ -14,7 +14,7 @@ namespace Berry.Spider.Baidu;
 /// <summary>
 /// 百度：相关推荐
 /// </summary>
-[SpiderService(SpiderSourceFrom.Baidu_Related_Search)]
+[SpiderService(new[] {SpiderSourceFrom.Baidu_Related_Search})]
 public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4RelatedSearchProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -51,15 +51,18 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync(string keyword)
+    public async Task PushAsync(string keyword, SpiderSourceFrom from)
     {
         BaiduSpider4RelatedSearchPushEto push = new BaiduSpider4RelatedSearchPushEto
         {
-            SourceFrom = SpiderSourceFrom.Baidu_Related_Search,
+            SourceFrom = from,
             Keyword = keyword
         };
 
-        await this.CheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
+        await this.CheckAsync(push.Keyword, from, async () =>
+            {
+                await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push);
+            },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -68,12 +71,12 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     /// 二次重复性校验
     /// </summary>
     /// <returns></returns>
-    protected override async Task<bool> DuplicateCheckAsync(string keyword)
+    protected override async Task<bool> DuplicateCheckAsync(string keyword, SpiderSourceFrom from)
     {
         string key = GlobalConstants.SPIDER_KEYWORDS_KEY;
         if (this.Options.Value.KeywordCheckOptions.OnlyCurrentCategory)
         {
-            key += $":{SpiderSourceFrom.Baidu_Related_Search.ToString()}";
+            key += $":{from.ToString()}";
         }
 
         bool result = await this.RedisService.SetAsync(key, keyword);
@@ -94,7 +97,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.TagName("a"));
-                if (resultContent is { Count: > 0 })
+                if (resultContent is {Count: > 0})
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
@@ -127,7 +130,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                     {
                         //此处不做消息队列发送，直接存储到数据库
                         await this.HandlePullEventAsync(eto);
-                        
+
                         //保存采集到的标题
                         List<SpiderContent_Keyword> list = eto.Items
                             .Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();

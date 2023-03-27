@@ -32,15 +32,33 @@ public enum SpiderSourceFrom
     /// </summary>
     [Description("头条_资讯_作文板块")] TouTiao_Information_Composition = 102,
 
+    #region 头条_问答
+
     /// <summary>
     /// 头条_问答
     /// </summary>
     [Description("头条_问答")] TouTiao_Question = 110,
 
     /// <summary>
+    /// 头条_问答_扩展_01
+    /// </summary>
+    [Description("头条_问答_扩展_01")] TouTiao_Question_Ext_NO_1 = 2110,
+
+    #endregion
+
+    #region 头条_优质_问答
+
+    /// <summary>
     /// 头条_优质_问答
     /// </summary>
     [Description("头条_优质_问答")] TouTiao_HighQuality_Question = 111,
+
+    /// <summary>
+    /// 头条_优质_问答_扩展_01
+    /// </summary>
+    [Description("头条_优质_问答_扩展_01")] TouTiao_HighQuality_Question_Ext_NO_1 = 2111,
+
+    #endregion
 
     /// <summary> 
     /// 百度_相关推荐

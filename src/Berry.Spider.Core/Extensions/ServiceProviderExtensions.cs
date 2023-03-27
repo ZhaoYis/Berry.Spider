@@ -14,9 +14,12 @@ namespace Berry.Spider.Core
             foreach (Type type in exportedTypes)
             {
                 SpiderServiceAttribute? attribute = type.GetCustomAttribute<SpiderServiceAttribute>();
-                if (attribute != null)
+                if (attribute is {SourceFromArray: {Length: > 0}})
                 {
-                    Cache.TryAdd(attribute.SourceFrom, type);
+                    foreach (SpiderSourceFrom sourceFrom in attribute.SourceFromArray)
+                    {
+                        Cache.TryAdd(sourceFrom, type);
+                    }
                 }
             }
         }

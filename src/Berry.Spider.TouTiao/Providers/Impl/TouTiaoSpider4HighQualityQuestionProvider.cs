@@ -15,9 +15,8 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：优质_问答
 /// </summary>
-[SpiderService(SpiderSourceFrom.TouTiao_HighQuality_Question)]
-public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpider4HighQualityQuestionProvider>,
-    ISpiderProvider
+[SpiderService(new[] {SpiderSourceFrom.TouTiao_HighQuality_Question, SpiderSourceFrom.TouTiao_HighQuality_Question_Ext_NO_1})]
+public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpider4HighQualityQuestionProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
@@ -54,7 +53,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync(string keyword)
+    public async Task PushAsync(string keyword, SpiderSourceFrom from)
     {
         TouTiaoSpider4HighQualityQuestionPushEto push = new TouTiaoSpider4HighQualityQuestionPushEto
         {
@@ -62,8 +61,10 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
             Keyword = keyword
         };
 
-        await this.CheckAsync(push.Keyword,
-            checkSuccessCallback: async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
+        await this.CheckAsync(push.Keyword, from,async () =>
+            {
+                await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push);
+            },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -72,12 +73,12 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
     /// 二次重复性校验
     /// </summary>
     /// <returns></returns>
-    protected override async Task<bool> DuplicateCheckAsync(string keyword)
+    protected override async Task<bool> DuplicateCheckAsync(string keyword, SpiderSourceFrom from)
     {
         string key = GlobalConstants.SPIDER_KEYWORDS_KEY;
         if (this.Options.Value.KeywordCheckOptions.OnlyCurrentCategory)
         {
-            key += $":{SpiderSourceFrom.TouTiao_HighQuality_Question.ToString()}";
+            key += $":{from.ToString()}";
         }
 
         bool result = await this.RedisService.SetAsync(key, keyword);
@@ -99,7 +100,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.ClassName("result-content"));
-                if (resultContent is { Count: > 0 })
+                if (resultContent is {Count: > 0})
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
@@ -166,7 +167,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                         if (root == null) return;
 
                         var resultContent = root.TryFindElements(By.ClassName("list"));
-                        if (resultContent is { Count: > 0 })
+                        if (resultContent is {Count: > 0})
                         {
                             await Parallel.ForEachAsync(resultContent, new ParallelOptions
                             {
@@ -174,7 +175,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                             }, async (element, token) =>
                             {
                                 var answerList = element.TryFindElements(By.TagName("div"));
-                                if (answerList is { Count: > 0 })
+                                if (answerList is {Count: > 0})
                                 {
                                     var realAnswerList = answerList
                                         .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))
