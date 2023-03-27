@@ -18,7 +18,7 @@ public static class ApplicationLifetimeHelper
             StringBuilder builder = new StringBuilder();
             builder.AppendLine("# 采集节点异常告警消息");
             builder.AppendLine($"采集共有<font color='warning'>{notOkNodeCount}</font>个节点出现异常，请及时关注¥_¥");
-            builder.AppendLine($"推送时间：<font color='info'>{DateTime.Now:yyyy-MM-dd HH:mm:ss}</font>\n");
+            builder.AppendLine($"推送时间：<font color='info'>{DateTime.Now:yyyy-MM-dd HH:mm:ss}</font>{Environment.NewLine}");
 
             //根据机器分组
             var groupByMachineName = applicationLifetimeList
@@ -35,7 +35,7 @@ public static class ApplicationLifetimeHelper
                 {
                     builder.AppendLine($">进程ID：{data.ProcessId}");
                     builder.AppendLine($">内存占用：{data.MemoryUsage}");
-                    builder.AppendLine($">探测时间：{data.Time:yyyy-MM-dd HH:mm:ss}\n");
+                    builder.AppendLine($">探测时间：{data.Time:yyyy-MM-dd HH:mm:ss}{Environment.NewLine}");
                 }
             }
 
