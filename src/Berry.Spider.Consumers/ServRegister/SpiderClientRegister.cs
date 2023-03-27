@@ -29,7 +29,7 @@ public class SpiderClientRegister : ISpiderClientRegister
         try
         {
             //当前启动程序的进程id
-            int pid = Process.GetCurrentProcess().Id;
+            int pid = Environment.ProcessId;
             string clientId = _guidGenerator.Create().ToString("N");
 
             ApplicationProcessData applicationProcess = new ApplicationProcessData { ClientId = clientId, Pid = pid };
