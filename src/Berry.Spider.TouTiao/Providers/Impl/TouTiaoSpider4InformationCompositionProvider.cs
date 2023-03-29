@@ -65,10 +65,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
             Keyword = keyword
         };
 
-        await this.CheckAsync(push.Keyword, from, async () =>
-            {
-                await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push);
-            },
+        await this.CheckAsync(push.Keyword, from, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -140,7 +137,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                             Title = eventData.Keyword,
                             Items = childPageDataItems.ToList()
                         };
-                        
+
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
 
                         //保存采集到的标题
@@ -187,7 +184,9 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                 );
             }
 
-            await this.SpiderRepository.InsertManyAsync(contentItems);
+            //去重
+            List<SpiderContent_Composition> todoSaveContentItems = contentItems.Where(c => !string.IsNullOrEmpty(c.Content)).ToList();
+            await this.SpiderRepository.InsertManyAsync(todoSaveContentItems);
         }
         catch (Exception exception)
         {

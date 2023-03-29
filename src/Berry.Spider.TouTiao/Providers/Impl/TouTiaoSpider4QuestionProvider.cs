@@ -67,10 +67,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
             Keyword = keyword
         };
 
-        await this.CheckAsync(keyword, from, async () =>
-            {
-                await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push);
-            },
+        await this.CheckAsync(keyword, from, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -201,7 +198,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                                                 var list = await this.TextAnalysisProvider.InvokeAsync(answer.Text);
                                                 if (list.Count > 0)
                                                 {
-                                                    contentItems= contentItems.AddRange(list);
+                                                    contentItems = contentItems.AddRange(list);
                                                     this.Logger.LogInformation("总共解析到记录：" + list.Count);
                                                 }
                                             }
@@ -215,7 +212,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
             }
 
             //去重
-            List<string> todoSaveContentItems = contentItems.Distinct().ToList();
+            List<string> todoSaveContentItems = contentItems.Where(c => !string.IsNullOrEmpty(c)).Distinct().ToList();
             SpiderContent? spiderContent = await this.SpiderDomainService.BuildContentAsync(eventData.Title, eventData.SourceFrom, todoSaveContentItems);
             if (spiderContent != null)
             {

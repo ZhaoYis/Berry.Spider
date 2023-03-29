@@ -62,10 +62,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
             Keyword = keyword
         };
 
-        await this.CheckAsync(push.Keyword, from,async () =>
-            {
-                await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push);
-            },
+        await this.CheckAsync(push.Keyword, from, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -185,8 +182,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
 
                                     if (realAnswerList.Any())
                                     {
-                                        List<string> answerContentItems = new List<string>();
-
+                                        ImmutableList<string> answerContentItems = ImmutableList.Create<string>();
                                         await Parallel.ForEachAsync(realAnswerList, new ParallelOptions
                                         {
                                             MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
@@ -199,19 +195,21 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                                                     //TODO：后续优化为计算真实字符数（中文、英文、符号、表情等混合时）
                                                     if (answer.Text.Length.Between(this.Options.Value.HighQualityAnswerOptions.MinLength, this.Options.Value.HighQualityAnswerOptions.MaxLength))
                                                     {
-                                                        answerContentItems.Add(answer.Text);
+                                                        answerContentItems = answerContentItems.Add(answer.Text);
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    answerContentItems.Add(answer.Text);
+                                                    answerContentItems = answerContentItems.Add(answer.Text);
                                                 }
                                             }
 
                                             return ValueTask.CompletedTask;
                                         });
 
-                                        contentItems.TryAdd(item.Title, answerContentItems);
+                                        //去重
+                                        List<string> todoSaveContentItems = answerContentItems.Where(c => !string.IsNullOrEmpty(c)).Distinct().ToList();
+                                        contentItems.TryAdd(item.Title, todoSaveContentItems);
                                     }
                                 }
                             });
