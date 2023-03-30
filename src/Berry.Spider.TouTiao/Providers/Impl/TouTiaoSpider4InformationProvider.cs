@@ -125,7 +125,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
 
                     if (childPageDataItems.Any())
                     {
-                        var eto = new TouTiaoSpider4QuestionPullEto
+                        var eto = new TouTiaoSpider4InformationPullEto
                         {
                             Keyword = eventData.Keyword,
                             Title = eventData.Keyword,

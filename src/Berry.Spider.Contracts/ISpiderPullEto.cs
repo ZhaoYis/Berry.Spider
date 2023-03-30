@@ -8,6 +8,11 @@ public interface ISpiderPullEto : ISpiderEto
     string Title { get; set; }
 
     /// <summary>
+    /// 关键字
+    /// </summary>
+    string Keyword { get; set; }
+
+    /// <summary>
     /// 二级页面地址信息
     /// </summary>
     List<ChildPageDataItem> Items { get; set; }

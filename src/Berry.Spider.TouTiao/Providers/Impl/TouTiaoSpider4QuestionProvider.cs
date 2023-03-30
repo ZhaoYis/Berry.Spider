@@ -61,11 +61,20 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     /// <returns></returns>
     public async Task PushAsync(string keyword, SpiderSourceFrom from)
     {
-        TouTiaoSpider4QuestionPushEto push = new TouTiaoSpider4QuestionPushEto
+        ISpiderPushEto push = new TouTiaoSpider4QuestionPushEto
         {
             SourceFrom = from,
             Keyword = keyword
         };
+
+        if (from == SpiderSourceFrom.TouTiao_Question_Ext_NO_1)
+        {
+            push = new TouTiaoSpider4QuestionExtNo1PushEto
+            {
+                SourceFrom = from,
+                Keyword = keyword
+            };
+        }
 
         await this.CheckAsync(keyword, from, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
@@ -135,12 +144,22 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
 
                     if (childPageDataItems.Any())
                     {
-                        var eto = new TouTiaoSpider4QuestionPullEto
+                        ISpiderPullEto eto = new TouTiaoSpider4QuestionPullEto
                         {
                             Keyword = eventData.Keyword,
                             Title = eventData.Keyword,
                             Items = childPageDataItems.ToList()
                         };
+
+                        if (eventData.SourceFrom == SpiderSourceFrom.TouTiao_Question_Ext_NO_1)
+                        {
+                            eto = new TouTiaoSpider4QuestionExtNo1PullEto
+                            {
+                                Keyword = eventData.Keyword,
+                                Title = eventData.Keyword,
+                                Items = childPageDataItems.ToList()
+                            };
+                        }
 
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
 

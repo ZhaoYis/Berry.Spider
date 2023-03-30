@@ -56,11 +56,20 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
     /// <returns></returns>
     public async Task PushAsync(string keyword, SpiderSourceFrom from)
     {
-        TouTiaoSpider4HighQualityQuestionPushEto push = new TouTiaoSpider4HighQualityQuestionPushEto
+        ISpiderPushEto push = new TouTiaoSpider4HighQualityQuestionPushEto
         {
             SourceFrom = SpiderSourceFrom.TouTiao_HighQuality_Question,
             Keyword = keyword
         };
+
+        if (from == SpiderSourceFrom.TouTiao_HighQuality_Question_Ext_NO_1)
+        {
+            push = new TouTiaoSpider4HighQualityQuestionExtNo1PushEto
+            {
+                SourceFrom = SpiderSourceFrom.TouTiao_HighQuality_Question,
+                Keyword = keyword
+            };
+        }
 
         await this.CheckAsync(push.Keyword, from, async () => { await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
@@ -130,12 +139,22 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
 
                     if (childPageDataItems.Any())
                     {
-                        var eto = new TouTiaoSpider4HighQualityQuestionPullEto
+                        ISpiderPullEto eto = new TouTiaoSpider4HighQualityQuestionPullEto
                         {
                             Keyword = eventData.Keyword,
                             Title = eventData.Keyword,
                             Items = childPageDataItems.ToList()
                         };
+
+                        if (eventData.SourceFrom == SpiderSourceFrom.TouTiao_HighQuality_Question_Ext_NO_1)
+                        {
+                            eto = new TouTiaoSpider4HighQualityQuestionExtNo1PullEto
+                            {
+                                Keyword = eventData.Keyword,
+                                Title = eventData.Keyword,
+                                Items = childPageDataItems.ToList()
+                            };
+                        }
 
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
 
