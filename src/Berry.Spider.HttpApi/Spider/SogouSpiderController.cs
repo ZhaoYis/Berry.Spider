@@ -24,9 +24,9 @@ public class SogouSpiderController : SpiderControllerBase
     [HttpPost, DisableRequestSizeLimit, Route("push-from-file")]
     public Task PushAsync(PushFromFileBasicDto push)
     {
+        object o = this.Provider.GetImplService(push.SourceFrom);
         FileHelper fileHelper = new FileHelper(push.File, row =>
         {
-            object o = this.Provider.GetImplService(push.SourceFrom);
             if (o is ISpiderProvider provider)
             {
                 return provider.PushAsync(row, push.SourceFrom);
