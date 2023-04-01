@@ -1,13 +1,12 @@
 using System.Collections.Concurrent;
 using System.Reflection;
-using Volo.Abp.EventBus;
 
 namespace Berry.Spider.Core;
 
 public static class SpiderEventNameAttributeExtensions
 {
-    private static readonly ConcurrentDictionary<Type, SpiderEventNameAttribute?> EtoTypeCache = new();
-    private static readonly ConcurrentDictionary<SpiderSourceFrom, List<SpiderEventNameAttribute>?> EtoTypesCache = new();
+    private static readonly ConcurrentDictionary<Type, SpiderEventNameAttribute?> EventNameAttributeCache = new();
+    private static readonly ConcurrentDictionary<SpiderSourceFrom, List<EventNameCacheItem>?> EventNameAttributesCache = new();
 
     static SpiderEventNameAttributeExtensions()
     {
@@ -15,19 +14,19 @@ public static class SpiderEventNameAttributeExtensions
 
         foreach (Type type in exportedTypes)
         {
-            SpiderEventNameAttribute? attribute = type.GetCustomAttribute<SpiderEventNameAttribute>();
-            if (attribute != null)
+            SpiderEventNameAttribute? eventNameAttribute = type.GetCustomAttribute<SpiderEventNameAttribute>();
+            if (eventNameAttribute != null)
             {
-                if (EtoTypesCache.ContainsKey(attribute.SourceFrom))
+                if (EventNameAttributesCache.ContainsKey(eventNameAttribute.SourceFrom))
                 {
-                    var list = EtoTypesCache[attribute.SourceFrom];
-                    list?.Add(attribute);
+                    var list = EventNameAttributesCache[eventNameAttribute.SourceFrom];
+                    list.Add(new EventNameCacheItem(type, eventNameAttribute));
 
-                    EtoTypesCache[attribute.SourceFrom] = list;
+                    EventNameAttributesCache[eventNameAttribute.SourceFrom] = list;
                 }
                 else
                 {
-                    EtoTypesCache.TryAdd(attribute.SourceFrom, new List<SpiderEventNameAttribute> { attribute });
+                    EventNameAttributesCache.TryAdd(eventNameAttribute.SourceFrom, new List<EventNameCacheItem> { new EventNameCacheItem(type, eventNameAttribute) });
                 }
             }
         }
@@ -35,7 +34,7 @@ public static class SpiderEventNameAttributeExtensions
 
     public static string TryGetRoutingKey<T>(this T t)
     {
-        SpiderEventNameAttribute? attribute = GetAttribute(t);
+        SpiderEventNameAttribute? attribute = t.GetAttribute();
         if (attribute == null)
         {
             return nameof(T);
@@ -48,7 +47,7 @@ public static class SpiderEventNameAttributeExtensions
 
     public static List<string> TryGetRoutingKeys(this SpiderSourceFrom from)
     {
-        List<SpiderEventNameAttribute>? attributes = GetAttributes(from);
+        List<SpiderEventNameAttribute>? attributes = from.GetAttributes();
         if (attributes is { Count: > 0 })
         {
             return attributes.Select(c => c.Name).ToList();
@@ -59,12 +58,24 @@ public static class SpiderEventNameAttributeExtensions
         }
     }
 
+    public static object TryCreateEto(this SpiderSourceFrom from, EtoType type, params object?[]? args)
+    {
+        Type? etoObjType = from.GetEtoType(type);
+        if (etoObjType is { })
+        {
+            object instance = Activator.CreateInstance(etoObjType, args);
+            return instance;
+        }
+
+        return new();
+    }
+
     private static SpiderEventNameAttribute? GetAttribute<T>(this T t)
     {
         if (t == null) throw new ArgumentNullException(nameof(t));
 
         Type type = t.GetType();
-        return EtoTypeCache.GetOrAdd(type, t =>
+        return EventNameAttributeCache.GetOrAdd(type, t =>
         {
             SpiderEventNameAttribute? attribute = t.GetCustomAttribute<SpiderEventNameAttribute>();
             if (attribute != null)
@@ -78,11 +89,37 @@ public static class SpiderEventNameAttributeExtensions
 
     private static List<SpiderEventNameAttribute>? GetAttributes(this SpiderSourceFrom from)
     {
-        if (EtoTypesCache.ContainsKey(from))
+        if (EventNameAttributesCache.ContainsKey(from))
         {
-            return EtoTypesCache[from];
+            return EventNameAttributesCache[from].Select(e => e.EventNameAttribute).ToList();
         }
 
         return default;
     }
+
+    private static Type? GetEtoType(this SpiderSourceFrom from, EtoType type)
+    {
+        if (EventNameAttributesCache.ContainsKey(from))
+        {
+            return EventNameAttributesCache[from]
+                .Where(e => e.EventNameAttribute.EtoType == type)
+                .Select(e => e.ObjType)
+                .FirstOrDefault();
+        }
+
+        return default;
+    }
+}
+
+internal class EventNameCacheItem
+{
+    public EventNameCacheItem(Type objType, SpiderEventNameAttribute eventNameAttribute)
+    {
+        this.ObjType = objType;
+        this.EventNameAttribute = eventNameAttribute;
+    }
+
+    public Type ObjType { get; set; }
+
+    public SpiderEventNameAttribute EventNameAttribute { get; set; }
 }

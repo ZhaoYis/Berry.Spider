@@ -5,7 +5,7 @@ namespace Berry.Spider.Sogou;
 /// <summary>
 /// 搜狗：相关搜索
 /// </summary>
-[SpiderEventName(RoutingKeyString, SpiderSourceFrom.Sogou_Related_Search)]
+[SpiderEventName(EtoType.Pull, RoutingKeyString, SpiderSourceFrom.Sogou_Related_Search)]
 public class SogouSpider4RelatedSearchPullEto : SpiderPullBaseEto
 {
     public const string RoutingKeyString = "Berry.Sogou.RelatedSearch.Pull";
@@ -13,5 +13,13 @@ public class SogouSpider4RelatedSearchPullEto : SpiderPullBaseEto
 
     public SogouSpider4RelatedSearchPullEto() : base(SpiderSourceFrom.Sogou_Related_Search)
     {
+    }
+    
+    public SogouSpider4RelatedSearchPullEto(SpiderSourceFrom from, string keyword, string title, List<ChildPageDataItem> items) : this()
+    {
+        this.SourceFrom = from;
+        this.Keyword = keyword;
+        this.Title = title;
+        this.Items = items;
     }
 }

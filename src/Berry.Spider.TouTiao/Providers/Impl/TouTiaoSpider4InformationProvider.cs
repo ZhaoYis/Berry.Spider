@@ -15,7 +15,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：资讯
 /// </summary>
-[SpiderService(new[] {SpiderSourceFrom.TouTiao_Information})]
+[SpiderService(new[] { SpiderSourceFrom.TouTiao_Information })]
 public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4InformationProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -49,16 +49,9 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     /// <returns></returns>
     public async Task PushAsync(string keyword, SpiderSourceFrom from)
     {
-        TouTiaoSpider4InformationPushEto push = new TouTiaoSpider4InformationPushEto
-        {
-            SourceFrom = from,
-            Keyword = keyword
-        };
+        var eto = from.TryCreateEto(EtoType.Push, from, keyword);
 
-        await this.CheckAsync(push.Keyword, from, async () =>
-            {
-                await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push);
-            },
+        await this.CheckAsync(keyword, from, async () => { await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto); },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -94,7 +87,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.ClassName("result-content"));
-                if (resultContent is {Count: > 0})
+                if (resultContent is { Count: > 0 })
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
@@ -125,18 +118,15 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
 
                     if (childPageDataItems.Any())
                     {
-                        var eto = new TouTiaoSpider4InformationPullEto
-                        {
-                            Keyword = eventData.Keyword,
-                            Title = eventData.Keyword,
-                            Items = childPageDataItems.ToList()
-                        };
-
+                        var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom, eventData.Keyword, eventData.Keyword, childPageDataItems.ToList());
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
 
                         //保存采集到的标题
-                        List<SpiderContent_Keyword> list = eto.Items.Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();
-                        await this.SpiderKeywordRepository.InsertManyAsync(list);
+                        if (eto is ISpiderPullEto pullEto)
+                        {
+                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom)).ToList();
+                            await this.SpiderKeywordRepository.InsertManyAsync(list);
+                        }
                     }
                 }
             });

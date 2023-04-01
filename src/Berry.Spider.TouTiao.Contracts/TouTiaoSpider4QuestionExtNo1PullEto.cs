@@ -5,7 +5,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 头条：问答
 /// </summary>
-[SpiderEventName(RoutingKeyString, SpiderSourceFrom.TouTiao_Question_Ext_NO_1)]
+[SpiderEventName(EtoType.Pull, RoutingKeyString, SpiderSourceFrom.TouTiao_Question_Ext_NO_1)]
 public class TouTiaoSpider4QuestionExtNo1PullEto : SpiderPullBaseEto
 {
     public const string RoutingKeyString = "Berry.TouTiao.QuestionExtNo1.Pull";
@@ -13,5 +13,13 @@ public class TouTiaoSpider4QuestionExtNo1PullEto : SpiderPullBaseEto
 
     public TouTiaoSpider4QuestionExtNo1PullEto() : base(SpiderSourceFrom.TouTiao_Question_Ext_NO_1)
     {
+    }
+
+    public TouTiaoSpider4QuestionExtNo1PullEto(SpiderSourceFrom from, string keyword, string title, List<ChildPageDataItem> items) : this()
+    {
+        this.SourceFrom = from;
+        this.Keyword = keyword;
+        this.Title = title;
+        this.Items = items;
     }
 }

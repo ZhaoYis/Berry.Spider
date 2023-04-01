@@ -2,7 +2,7 @@ using Berry.Spider.Core;
 
 namespace Berry.Spider.TouTiao;
 
-[SpiderEventName(RoutingKeyString, SpiderSourceFrom.TouTiao_HighQuality_Question)]
+[SpiderEventName(EtoType.Pull, RoutingKeyString, SpiderSourceFrom.TouTiao_HighQuality_Question)]
 public class TouTiaoSpider4HighQualityQuestionPullEto : SpiderPullBaseEto
 {
     public const string RoutingKeyString = "Berry.TouTiao.HighQualityQuestion.Pull";
@@ -10,5 +10,13 @@ public class TouTiaoSpider4HighQualityQuestionPullEto : SpiderPullBaseEto
 
     public TouTiaoSpider4HighQualityQuestionPullEto() : base(SpiderSourceFrom.TouTiao_HighQuality_Question)
     {
+    }
+    
+    public TouTiaoSpider4HighQualityQuestionPullEto(SpiderSourceFrom from, string keyword, string title, List<ChildPageDataItem> items) : this()
+    {
+        this.SourceFrom = from;
+        this.Keyword = keyword;
+        this.Title = title;
+        this.Items = items;
     }
 }

@@ -52,15 +52,11 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
     /// <returns></returns>
     public async Task PushAsync(string keyword, SpiderSourceFrom from)
     {
-        SogouSpider4RelatedSearchPushEto push = new SogouSpider4RelatedSearchPushEto
-        {
-            SourceFrom = from,
-            Keyword = keyword
-        };
+        var eto = from.TryCreateEto(EtoType.Push, from, keyword);
 
-        await this.CheckAsync(push.Keyword, from,async () =>
+        await this.CheckAsync(keyword, from,async () =>
             {
-                await this.DistributedEventBus.PublishAsync(push.TryGetRoutingKey(), push);
+                await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
             },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
@@ -126,19 +122,17 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
 
                     if (childPageDataItems.Any())
                     {
-                        var eto = new SogouSpider4RelatedSearchPullEto
-                        {
-                            Keyword = eventData.Keyword,
-                            Title = eventData.Keyword,
-                            Items = childPageDataItems.ToList()
-                        };
-
-                        //此处不做消息队列发送，直接存储到数据库
-                        await this.HandlePullEventAsync(eto);
-
+                        var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom, eventData.Keyword, eventData.Keyword, childPageDataItems.ToList());
+                        
                         //保存采集到的标题
-                        List<SpiderContent_Keyword> list = eto.Items.Select(item => new SpiderContent_Keyword(item.Title, eto.SourceFrom)).ToList();
-                        await this.SpiderKeywordRepository.InsertManyAsync(list);
+                        if (eto is ISpiderPullEto pullEto)
+                        {
+                            //此处不做消息队列发送，直接存储到数据库
+                            await this.HandlePullEventAsync(pullEto);
+
+                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom)).ToList();
+                            await this.SpiderKeywordRepository.InsertManyAsync(list);
+                        }
                     }
                 }
             });

@@ -2,7 +2,7 @@ using Berry.Spider.Core;
 
 namespace Berry.Spider.TouTiao;
 
-[SpiderEventName(RoutingKeyString, SpiderSourceFrom.TouTiao_Information_Composition)]
+[SpiderEventName(EtoType.Pull, RoutingKeyString, SpiderSourceFrom.TouTiao_Information_Composition)]
 public class TouTiaoSpider4InformationCompositionPullEto : SpiderPullBaseEto
 {
     public const string RoutingKeyString = "Berry.TouTiao.InformationComposition.Pull";
@@ -10,5 +10,13 @@ public class TouTiaoSpider4InformationCompositionPullEto : SpiderPullBaseEto
 
     public TouTiaoSpider4InformationCompositionPullEto() : base(SpiderSourceFrom.TouTiao_Information_Composition)
     {
+    }
+    
+    public TouTiaoSpider4InformationCompositionPullEto(SpiderSourceFrom from, string keyword, string title, List<ChildPageDataItem> items) : this()
+    {
+        this.SourceFrom = from;
+        this.Keyword = keyword;
+        this.Title = title;
+        this.Items = items;
     }
 }
