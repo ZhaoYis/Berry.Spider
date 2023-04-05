@@ -68,6 +68,9 @@ public class SpiderCoreModule : AbpModule
         context.Services.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
         context.Services.AddSingleton<IStringBuilderObjectPoolProvider, StringBuilderObjectPoolProvider>();
 
+        //User-Agent
+        context.Services.AddHttpClient<UserAgentHttpClient>();
+        
         return Task.CompletedTask;
     }
 }

@@ -12,10 +12,13 @@ namespace Berry.Spider.Core;
 public class ChromeOptionsProvider : IDriverOptionsProvider
 {
     private ISeleniumProxyProvider SeleniumProxyProvider { get; }
+    private IUserAgentProvider UserAgentProvider { get; }
 
-    public ChromeOptionsProvider(ISeleniumProxyProvider proxyProvider)
+    public ChromeOptionsProvider(ISeleniumProxyProvider proxyProvider,
+        IUserAgentProvider userAgentProvider)
     {
         this.SeleniumProxyProvider = proxyProvider;
+        this.UserAgentProvider = userAgentProvider;
     }
 
     public async Task<ChromeOptions> BuildAsync(bool isUsedProxy = true)
@@ -51,7 +54,8 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         //防止信息栏出现（去掉提示：Chrome正收到自动测试软件的控制）
         options.AddArgument("--disable-infobars");
         //设置user-agent
-        options.AddArgument($"--user-agent={UserAgentPoolHelper.RandomGetOne()}");
+        string userAgent = await this.UserAgentProvider.GetOnesAsync();
+        options.AddArgument($"--user-agent={userAgent}");
 
         //TODO：自定义chrome.exe的位置？
         //https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver/01fde32d0ed245141e24151f83b7c2db31d596a4#requirements
