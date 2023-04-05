@@ -51,7 +51,11 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     {
         var eto = from.TryCreateEto(EtoType.Push, from, keyword);
 
-        await this.CheckAsync(keyword, from, async () => { await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto); },
+        await this.CheckAsync(keyword, from, async () =>
+            {
+                string topicName = eto.TryGetRoutingKey();
+                await this.DistributedEventBus.PublishAsync(topicName, eto);
+            },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -104,6 +108,16 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                                 string text = a.Text;
                                 string href = a.GetAttribute("href");
 
+                                //执行相似度检测
+                                double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
+                                if (this.Options.Value.KeywordCheckOptions.IsEnableSimilarityCheck)
+                                {
+                                    if (sim * 100 < this.Options.Value.KeywordCheckOptions.MinSimilarity)
+                                    {
+                                        return;
+                                    }
+                                }
+                                
                                 string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
                                 if (!string.IsNullOrEmpty(realHref))
                                 {

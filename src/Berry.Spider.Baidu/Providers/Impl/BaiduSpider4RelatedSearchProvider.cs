@@ -15,7 +15,7 @@ namespace Berry.Spider.Baidu;
 /// <summary>
 /// 百度：相关推荐
 /// </summary>
-[SpiderService(new[] { SpiderSourceFrom.Baidu_Related_Search })]
+[SpiderService(new[] {SpiderSourceFrom.Baidu_Related_Search})]
 public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4RelatedSearchProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -56,7 +56,11 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     {
         var eto = from.TryCreateEto(EtoType.Push, from, keyword);
 
-        await this.CheckAsync(keyword, from, async () => { await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto); },
+        await this.CheckAsync(keyword, from, async () =>
+            {
+                string topicName = eto.TryGetRoutingKey();
+                await this.DistributedEventBus.PublishAsync(topicName, eto);
+            },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -91,7 +95,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.TagName("a"));
-                if (resultContent is { Count: > 0 })
+                if (resultContent is {Count: > 0})
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
@@ -103,6 +107,16 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                     {
                         string text = element.Text;
                         string href = element.GetAttribute("href");
+
+                        //执行相似度检测
+                        double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
+                        if (this.Options.Value.KeywordCheckOptions.IsEnableSimilarityCheck)
+                        {
+                            if (sim * 100 < this.Options.Value.KeywordCheckOptions.MinSimilarity)
+                            {
+                                return;
+                            }
+                        }
 
                         string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
                         if (!string.IsNullOrEmpty(realHref))

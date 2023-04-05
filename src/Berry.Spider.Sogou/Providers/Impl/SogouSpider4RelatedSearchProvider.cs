@@ -54,9 +54,10 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
     {
         var eto = from.TryCreateEto(EtoType.Push, from, keyword);
 
-        await this.CheckAsync(keyword, from,async () =>
+        await this.CheckAsync(keyword, from, async () =>
             {
-                await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
+                string topicName = eto.TryGetRoutingKey();
+                await this.DistributedEventBus.PublishAsync(topicName, eto);
             },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
@@ -110,6 +111,16 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
                         {
                             string text = element.Text;
                             string href = element.GetAttribute("href");
+
+                            //执行相似度检测
+                            double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
+                            if (this.Options.Value.KeywordCheckOptions.IsEnableSimilarityCheck)
+                            {
+                                if (sim * 100 < this.Options.Value.KeywordCheckOptions.MinSimilarity)
+                                {
+                                    return;
+                                }
+                            }
 
                             childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
                             {

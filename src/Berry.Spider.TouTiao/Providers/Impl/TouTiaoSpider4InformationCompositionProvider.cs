@@ -16,7 +16,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：头条_资讯_作文板块
 /// </summary>
-[SpiderService(new[] { SpiderSourceFrom.TouTiao_Information_Composition })]
+[SpiderService(new[] {SpiderSourceFrom.TouTiao_Information_Composition})]
 public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiaoSpider4InformationCompositionProvider>, ISpiderProvider
 {
     private IGuidGenerator GuidGenerator { get; }
@@ -61,7 +61,11 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     {
         var eto = from.TryCreateEto(EtoType.Push, from, keyword);
 
-        await this.CheckAsync(keyword, from, async () => { await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto); },
+        await this.CheckAsync(keyword, from, async () =>
+            {
+                string topicName = eto.TryGetRoutingKey();
+                await this.DistributedEventBus.PublishAsync(topicName, eto);
+            },
             bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
     }
@@ -97,7 +101,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.ClassName("result-content"));
-                if (resultContent is { Count: > 0 })
+                if (resultContent is {Count: > 0})
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
@@ -112,6 +116,16 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                         {
                             string text = a.Text;
                             string href = a.GetAttribute("href");
+
+                            //执行相似度检测
+                            double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
+                            if (this.Options.Value.KeywordCheckOptions.IsEnableSimilarityCheck)
+                            {
+                                if (sim * 100 < this.Options.Value.KeywordCheckOptions.MinSimilarity)
+                                {
+                                    return;
+                                }
+                            }
 
                             string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
                             if (!string.IsNullOrEmpty(realHref))
