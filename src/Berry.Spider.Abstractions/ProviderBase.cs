@@ -59,6 +59,11 @@ public abstract class ProviderBase<T>
                     await checkSuccessCallback.Invoke();
                 }
             }
+            else
+            {
+                //执行回调函数
+                await checkSuccessCallback.Invoke();
+            }
         }
     }
 
