@@ -78,20 +78,15 @@ public static class SpiderEventNameAttributeExtensions
         return EventNameAttributeCache.GetOrAdd(type, t =>
         {
             SpiderEventNameAttribute? attribute = t.GetCustomAttribute<SpiderEventNameAttribute>();
-            if (attribute != null)
-            {
-                return attribute;
-            }
-
-            return default;
+            return attribute ?? default;
         });
     }
 
     private static List<SpiderEventNameAttribute>? GetAttributes(this SpiderSourceFrom from)
     {
-        if (EventNameAttributesCache.ContainsKey(from))
+        if (EventNameAttributesCache.TryGetValue(from, out List<EventNameCacheItem>? value))
         {
-            return EventNameAttributesCache[from].Select(e => e.EventNameAttribute).ToList();
+            return value.Select(e => e.EventNameAttribute).ToList();
         }
 
         return default;
@@ -99,10 +94,9 @@ public static class SpiderEventNameAttributeExtensions
 
     private static Type? GetEtoType(this SpiderSourceFrom from, EtoType type)
     {
-        if (EventNameAttributesCache.ContainsKey(from))
+        if (EventNameAttributesCache.TryGetValue(from, out List<EventNameCacheItem>? value))
         {
-            return EventNameAttributesCache[from]
-                .Where(e => e.EventNameAttribute.EtoType == type)
+            return value.Where(e => e.EventNameAttribute.EtoType == type)
                 .Select(e => e.ObjType)
                 .FirstOrDefault();
         }
