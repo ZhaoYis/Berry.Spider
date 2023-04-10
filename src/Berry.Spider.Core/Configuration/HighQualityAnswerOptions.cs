@@ -21,4 +21,9 @@ public class HighQualityAnswerOptions
     /// 最多记录数
     /// </summary>
     public int MaxRecordCount { get; set; } = 10;
+
+    /// <summary>
+    /// 落库最小记录数
+    /// </summary>
+    public int MinSaveRecordCount { get; set; }
 }
