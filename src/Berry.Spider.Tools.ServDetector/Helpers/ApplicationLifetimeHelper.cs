@@ -8,7 +8,7 @@ public static class ApplicationLifetimeHelper
     public static string? Build(List<ApplicationLifetimeData> applicationLifetimeList)
     {
         //异常节点数
-        int notOkNodeCount = applicationLifetimeList.Count(a => !a.AreYouOk || a.IsOverTime);
+        int notOkNodeCount = applicationLifetimeList.Count(a => !a.AreYouOk || a.IsOverTime());
         if (notOkNodeCount == 0)
         {
             return default;
@@ -22,7 +22,7 @@ public static class ApplicationLifetimeHelper
 
             //根据机器分组
             var groupByMachineName = applicationLifetimeList
-                .Where(a => !a.AreYouOk || a.IsOverTime)
+                .Where(a => !a.AreYouOk || a.IsOverTime())
                 .GroupBy(a => a.MachineName);
 
             foreach (IGrouping<string, ApplicationLifetimeData> item in groupByMachineName)

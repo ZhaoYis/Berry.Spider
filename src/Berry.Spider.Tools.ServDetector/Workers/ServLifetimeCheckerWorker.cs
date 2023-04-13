@@ -46,7 +46,7 @@ public class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
                     {
                         applicationLifetimeList.Add(lifetime);
 
-                        if (!lifetime.AreYouOk || lifetime.IsOverTime)
+                        if (!lifetime.AreYouOk || lifetime.IsOverTime())
                         {
                             todoRemoveNodes.Add(clientId);
                         }

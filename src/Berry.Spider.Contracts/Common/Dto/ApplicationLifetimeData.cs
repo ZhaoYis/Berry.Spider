@@ -48,5 +48,5 @@ public class ApplicationLifetimeData
     /// </summary>
     public DateTime Time { get; set; }
 
-    public bool IsOverTime => (DateTime.Now - this.Time).TotalMinutes > 10;
+    public bool IsOverTime() => (DateTime.Now - this.Time).TotalMinutes > 10;
 }
