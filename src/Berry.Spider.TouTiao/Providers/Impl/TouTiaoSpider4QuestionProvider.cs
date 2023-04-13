@@ -25,7 +25,6 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     private ISpiderContentRepository SpiderRepository { get; }
     private ISpiderContentKeywordRepository SpiderKeywordRepository { get; }
     private SpiderDomainService SpiderDomainService { get; }
-    private IClock Clock { get; }
     private IEventBusPublisher DistributedEventBus { get; }
     private IRedisService RedisService { get; }
     private IOptionsSnapshot<SpiderOptions> Options { get; }
@@ -38,7 +37,6 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
         SpiderDomainService spiderDomainService,
         ISpiderContentRepository repository,
         ISpiderContentKeywordRepository keywordRepository,
-        IClock clock,
         IEventBusPublisher eventBus,
         IRedisService redisService,
         IOptionsSnapshot<SpiderOptions> options) : base(logger)
@@ -49,7 +47,6 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
         this.SpiderRepository = repository;
         this.SpiderKeywordRepository = keywordRepository;
         this.SpiderDomainService = spiderDomainService;
-        this.Clock = clock;
         this.DistributedEventBus = eventBus;
         this.RedisService = redisService;
         this.Options = options;
