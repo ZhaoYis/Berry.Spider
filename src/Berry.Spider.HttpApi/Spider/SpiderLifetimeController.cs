@@ -1,4 +1,3 @@
-using Berry.Spider.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Berry.Spider;
@@ -6,7 +5,7 @@ namespace Berry.Spider;
 /// <summary>
 /// 爬虫状态服务
 /// </summary>
-[Microsoft.AspNetCore.Components.Route("api/services/spider-lifetime")]
+[Route("api/services/spider-lifetime")]
 public class SpiderLifetimeController : SpiderControllerBase
 {
     private readonly ISpiderLifetimeAppService _spiderLifetimeAppService;
