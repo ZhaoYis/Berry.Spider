@@ -68,6 +68,12 @@ public class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
                             await redisService.HDelAsync(GlobalConstants.SPIDER_APPLICATION_LIFETIME_KEY, todoRemoveNodes.ToArray());
                         }
                     }
+                    else
+                    {
+                        weixinResult.errmsg ??= "服务器未知错误";
+                        TextMessageDto textMessage = new TextMessageDto(weixinResult.errmsg);
+                        await _weixinWorkRobotClient.SendAsync(this.RobotOptions.AppKey, textMessage);
+                    }
                 }
             }
         }
