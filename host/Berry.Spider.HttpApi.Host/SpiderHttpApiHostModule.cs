@@ -14,6 +14,9 @@ using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc.AntiForgery;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
+using Volo.Abp.Json;
+using Volo.Abp.Json.SystemTextJson;
+using Volo.Abp.Json.SystemTextJson.JsonConverters;
 using Volo.Abp.Modularity;
 using Volo.Abp.Swashbuckle;
 
@@ -76,6 +79,11 @@ public class SpiderHttpApiHostModule : AbpModule
             });
         });
 
+        Configure<AbpJsonOptions>(opt =>
+        {
+            opt.OutputDateTimeFormat = "yyyy-MM-dd HH:mm:ss:fff";
+        });
+        
         return Task.CompletedTask;
     }
 

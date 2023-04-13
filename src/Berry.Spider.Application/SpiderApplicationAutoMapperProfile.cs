@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Berry.Spider.Common;
 using Berry.Spider.Domain;
 using Volo.Abp.AutoMapper;
 
@@ -27,5 +28,7 @@ public class SpiderApplicationAutoMapperProfile : Profile
             .Ignore(c => c.IsDeleted)
             .Ignore(c => c.ExtraProperties)
             .Ignore(c => c.ConcurrencyStamp);
+
+        CreateMap<ApplicationLifetimeData, ApplicationLifetimeDto>();
     }
 }
