@@ -10,13 +10,12 @@ using Berry.Spider.Sogou;
 using Berry.Spider.TouTiao;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerUI;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc.AntiForgery;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
 using Volo.Abp.Json;
-using Volo.Abp.Json.SystemTextJson;
-using Volo.Abp.Json.SystemTextJson.JsonConverters;
 using Volo.Abp.Modularity;
 using Volo.Abp.Swashbuckle;
 
@@ -109,7 +108,11 @@ public class SpiderHttpApiHostModule : AbpModule
         app.UseAuthentication();
 
         app.UseSwagger();
-        app.UseAbpSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "Support APP API"); });
+        app.UseAbpSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Support APP API");
+            options.DocExpansion(DocExpansion.None);
+        });
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints();
 
