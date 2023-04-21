@@ -34,4 +34,9 @@ public class SpiderOptions
     /// 优质问答选择
     /// </summary>
     public HighQualityAnswerOptions HighQualityAnswerOptions { get; set; } = new();
+
+    /// <summary>
+    /// 内容子标题选项
+    /// </summary>
+    public SubTitleOptions SubTitleOptions { get; set; } = new();
 }

@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+using System.Text;
 using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Segmenter;
@@ -53,25 +55,33 @@ public class SpiderDomainService : DomainService
                 if (this.Options.Value.IsRandomInsertImage)
                 {
                     mainContent = this.Clock.Now.Hour % 2 == 0
-                        ? contentItems.BuildMainContent(this.ImageResourceProvider,
-                            this.StringBuilderObjectPoolProvider, subTitleList)
-                        : contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider, originalTitle,
-                            subTitleList);
+                        ? contentItems.BuildMainContent(this.ImageResourceProvider, this.StringBuilderObjectPoolProvider, subTitleList)
+                        : contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider, originalTitle, subTitleList);
                 }
                 else
                 {
-                    mainContent = contentItems.BuildMainContent(this.ImageResourceProvider,
-                        this.StringBuilderObjectPoolProvider, subTitleList);
+                    mainContent = contentItems.BuildMainContent(this.ImageResourceProvider, this.StringBuilderObjectPoolProvider, subTitleList);
                 }
             }
             else
             {
-                mainContent =
-                    contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider, originalTitle, subTitleList);
+                mainContent = contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider, originalTitle, subTitleList);
             }
 
-            if (!string.IsNullOrEmpty(mainContent))
+            if (mainContent is { Length: > 0 })
             {
+                //处理子标题
+                if (this.Options.Value.SubTitleOptions.IsEnable)
+                {
+                    var opSubTitleList = subTitleList.Take(this.Options.Value.SubTitleOptions.MaxRecords).ToList();
+
+                    var subTitleContent = opSubTitleList.BuildSubTitleContent(this.StringBuilderObjectPoolProvider);
+                    if (subTitleContent is { Length: > 0 })
+                    {
+                        mainContent = mainContent.Insert(0, subTitleContent);
+                    }
+                }
+
                 if (this.TitleTemplateOptions.Value.IsEnableFormatTitle)
                 {
                     //随机获取一个模版名称
@@ -93,7 +103,7 @@ public class SpiderDomainService : DomainService
                 }
 
                 //组装数据
-                var content = new SpiderContent(originalTitle, mainContent, sourceFrom);
+                var content = new SpiderContent(originalTitle, mainContent.ToString(), sourceFrom);
 
                 //TODO：根据配置决定是否需要进行分词操作
                 //TODO：或许可以重构成服务，其他使用的地方无需关注这些逻辑
@@ -119,6 +129,7 @@ public class SpiderDomainService : DomainService
         SpiderSourceFrom sourceFrom,
         IDictionary<string, List<string>> contentItems)
     {
+        ImmutableList<string> subTitleList = ImmutableList.Create<string>();
         string mainContent = this.StringBuilderObjectPoolProvider.Invoke(mainContentBuilder =>
         {
             foreach (KeyValuePair<string, List<string>> item in contentItems)
@@ -133,19 +144,33 @@ public class SpiderDomainService : DomainService
                     .Take(this.Options.Value.HighQualityAnswerOptions.MaxRecordCount)
                     .ToList();
 
-                string itemContent = this.StringBuilderObjectPoolProvider.Invoke(itemContentBuilder =>
+                StringBuilder itemContentBuilder = new StringBuilder();
+                for (int i = 0; i < answerContentItems.Count; i++)
                 {
-                    for (int i = 0; i < answerContentItems.Count; i++)
-                    {
-                        string itemContent = answerContentItems[i];
-                        itemContentBuilder.AppendFormat("<p><strong>{0}</strong></p>", title);
-                        itemContentBuilder.AppendFormat("<p>{0}</p>", itemContent);
-                    }
-                });
+                    string itemContent = answerContentItems[i];
+                    itemContentBuilder.AppendFormat("<p id='{0}'><strong>{0}</strong></p>", title);
+                    itemContentBuilder.AppendFormat("<p>{0}</p>", itemContent);
 
-                mainContentBuilder.Append(itemContent);
+                    subTitleList = subTitleList.Add(title);
+                }
+                mainContentBuilder.Append(itemContentBuilder);
             }
         });
+
+        if (mainContent is { Length: > 0 })
+        {
+            //处理子标题
+            if (this.Options.Value.SubTitleOptions.IsEnable)
+            {
+                var opSubTitleList = subTitleList.Take(this.Options.Value.SubTitleOptions.MaxRecords).ToList();
+
+                var subTitleContent = opSubTitleList.BuildSubTitleContent(this.StringBuilderObjectPoolProvider);
+                if (subTitleContent is { Length: > 0 })
+                {
+                    mainContent = mainContent.Insert(0, subTitleContent);
+                }
+            }
+        }
 
         //组装数据
         var content = new SpiderContent_HighQualityQA(originalTitle, mainContent.ToString(), sourceFrom);

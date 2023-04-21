@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Berry.Spider.Core;
 
 public static class ListExtensions
@@ -11,7 +13,7 @@ public static class ListExtensions
         string? originalTitle = null,
         List<string>? subTitleList = null)
     {
-        if (items.Count == 0) return string.Empty;
+        if (items.Count == 0) return default;
 
         items = items.Where(c => !string.IsNullOrWhiteSpace(c)).ToList();
 
@@ -50,7 +52,8 @@ public static class ListExtensions
                 if (items.Count < _pageSize || (items.Count / 2) < (_pageSize / 2))
                 {
                     //加一个小标题
-                    builder.AppendFormat("<p><strong>{0}</strong></p>", subTitleList.First());
+                    string subTitle = subTitleList.First();
+                    builder.AppendFormat("<p id='{0}'><strong>{0}</strong></p>", subTitle);
 
                     for (int i = 0; i < items.Count; i++)
                     {
@@ -72,7 +75,7 @@ public static class ListExtensions
                                 ? subTitleList.OrderBy(c => Guid.NewGuid()).First()
                                 : subTitleList[i];
                             //加一个小标题
-                            builder.AppendFormat("<p><strong>{0}</strong></p>", subTitle);
+                            builder.AppendFormat("<p id='{0}'><strong>{0}</strong></p>", subTitle);
 
                             for (int j = 0; j < current.Count; j++)
                             {
@@ -92,7 +95,7 @@ public static class ListExtensions
                                         ? subTitleList.OrderBy(c => Guid.NewGuid()).First()
                                         : subTitleList[i];
                                     //加一个小标题
-                                    builder.AppendFormat("<p><strong>{0}</strong></p>", subTitle);
+                                    builder.AppendFormat("<p id='{0}'><strong>{0}</strong></p>", subTitle);
                                 }
 
                                 string item = current[k];
@@ -105,6 +108,7 @@ public static class ListExtensions
                 }
             }
         });
+
         return mainContent;
     }
 
@@ -115,7 +119,7 @@ public static class ListExtensions
     public static string BuildMainContent(this List<string> items, IImageResourceProvider provider,
         IStringBuilderObjectPoolProvider stringBuilderObjectPoolProvider, List<string>? subTitleList = null)
     {
-        if (items.Count == 0) return string.Empty;
+        if (items.Count == 0) return default;
 
         items = items.Where(c => !string.IsNullOrWhiteSpace(c)).ToList();
 
@@ -134,7 +138,34 @@ public static class ListExtensions
                 builder.AppendFormat("<p>{0}、{1}</p>", i + 1, item);
             }
         });
+
         return mainContent;
+    }
+
+    /// <summary>
+    /// 构造出统一风格的子标题文本
+    /// </summary>
+    /// <returns></returns>
+    public static string BuildSubTitleContent(this List<string> subTitleList,
+        IStringBuilderObjectPoolProvider stringBuilderObjectPoolProvider)
+    {
+        if (subTitleList.Count == 0) return default;
+
+        string subTitleContent = stringBuilderObjectPoolProvider.Invoke(builder =>
+        {
+            builder.AppendLine("<h3>本文目录一览：</h3>");
+            builder.AppendLine("<ul>");
+            
+            for (int i = 0; i < subTitleList.Count; i++)
+            {
+                string item = subTitleList[i];
+                builder.AppendFormat("<li style='margin-bottom: 3px;list-style: none'><a href='#{1}' title='{1}'>{0}、{1}</a></li>", i + 1, item);
+            }
+            
+            builder.AppendLine("</ul>");
+        });
+
+        return subTitleContent;
     }
 
     /// <summary>
