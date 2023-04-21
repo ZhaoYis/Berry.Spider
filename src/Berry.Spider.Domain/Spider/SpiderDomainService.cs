@@ -70,18 +70,6 @@ public class SpiderDomainService : DomainService
 
             if (mainContent is { Length: > 0 })
             {
-                //处理子标题
-                if (this.Options.Value.SubTitleOptions.IsEnable)
-                {
-                    var opSubTitleList = subTitleList.Take(this.Options.Value.SubTitleOptions.MaxRecords).ToList();
-
-                    var subTitleContent = opSubTitleList.BuildSubTitleContent(this.StringBuilderObjectPoolProvider);
-                    if (subTitleContent is { Length: > 0 })
-                    {
-                        mainContent = mainContent.Insert(0, subTitleContent);
-                    }
-                }
-
                 if (this.TitleTemplateOptions.Value.IsEnableFormatTitle)
                 {
                     //随机获取一个模版名称
@@ -153,6 +141,7 @@ public class SpiderDomainService : DomainService
 
                     subTitleList = subTitleList.Add(title);
                 }
+
                 mainContentBuilder.Append(itemContentBuilder);
             }
         });
