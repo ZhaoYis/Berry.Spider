@@ -12,11 +12,12 @@ public class TouTiaoSpider4HighQualityQuestionExtNo1PullEto : SpiderPullBaseEto
     {
     }
     
-    public TouTiaoSpider4HighQualityQuestionExtNo1PullEto(SpiderSourceFrom from, string keyword, string title, List<ChildPageDataItem> items) : this()
+    public TouTiaoSpider4HighQualityQuestionExtNo1PullEto(SpiderSourceFrom from, string keyword, string title, List<ChildPageDataItem> items, string? traceCode) : this()
     {
         this.SourceFrom = from;
         this.Keyword = keyword;
         this.Title = title;
         this.Items = items;
+        this.TraceCode = traceCode;
     }
 }

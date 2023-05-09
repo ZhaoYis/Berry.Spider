@@ -12,9 +12,10 @@ public class TouTiaoSpider4HighQualityQuestionExtNo1PushEto : SpiderPushBaseEto
     {
     }
 
-    public TouTiaoSpider4HighQualityQuestionExtNo1PushEto(SpiderSourceFrom from, string keyword) : this()
+    public TouTiaoSpider4HighQualityQuestionExtNo1PushEto(SpiderSourceFrom from, string keyword, string? traceCode) : this()
     {
         this.SourceFrom = from;
         this.Keyword = keyword;
+        this.TraceCode = traceCode;
     }
 }

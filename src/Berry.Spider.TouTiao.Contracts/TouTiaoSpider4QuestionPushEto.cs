@@ -12,9 +12,10 @@ public class TouTiaoSpider4QuestionPushEto : SpiderPushBaseEto
     {
     }
 
-    public TouTiaoSpider4QuestionPushEto(SpiderSourceFrom from, string keyword) : this()
+    public TouTiaoSpider4QuestionPushEto(SpiderSourceFrom from, string keyword, string? traceCode) : this()
     {
         this.SourceFrom = from;
         this.Keyword = keyword;
+        this.TraceCode = traceCode;
     }
 }

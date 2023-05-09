@@ -12,9 +12,10 @@ public class SogouSpider4RelatedSearchPushEto : SpiderPushBaseEto
     {
     }
 
-    public SogouSpider4RelatedSearchPushEto(SpiderSourceFrom from, string keyword) : this()
+    public SogouSpider4RelatedSearchPushEto(SpiderSourceFrom from, string keyword, string? traceCode) : this()
     {
         this.SourceFrom = from;
         this.Keyword = keyword;
+        this.TraceCode = traceCode;
     }
 }

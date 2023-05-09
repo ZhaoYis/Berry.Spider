@@ -150,7 +150,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
 
                     if (childPageDataItems.Any())
                     {
-                        var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom, eventData.Keyword, eventData.Keyword, childPageDataItems.ToList());
+                        var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom, eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode);
 
                         //保存采集到的标题
                         if (eto is ISpiderPullEto pullEto)

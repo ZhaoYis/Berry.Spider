@@ -12,9 +12,10 @@ public class BaiduSpider4RelatedSearchPushEto : SpiderPushBaseEto
     {
     }
 
-    public BaiduSpider4RelatedSearchPushEto(SpiderSourceFrom from, string keyword) : this()
+    public BaiduSpider4RelatedSearchPushEto(SpiderSourceFrom from, string keyword, string? traceCode) : this()
     {
         this.SourceFrom = from;
         this.Keyword = keyword;
+        this.TraceCode = traceCode;
     }
 }
