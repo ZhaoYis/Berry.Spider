@@ -42,7 +42,7 @@ public class SpiderDomainService : DomainService
     /// </summary>
     /// <returns></returns>
     public async Task<SpiderContent?> BuildContentAsync(string originalTitle, SpiderSourceFrom sourceFrom,
-        List<string> contentItems, List<string>? subTitleList = null)
+        List<string> contentItems, List<string>? subTitleList = null, string? traceCode = null)
     {
         if (contentItems.Count >= this.Options.Value.MinRecords)
         {
@@ -92,6 +92,7 @@ public class SpiderDomainService : DomainService
 
                 //组装数据
                 var content = new SpiderContent(originalTitle, mainContent.ToString(), sourceFrom);
+                content.SetTraceCodeIfNotNull(traceCode);
 
                 //TODO：根据配置决定是否需要进行分词操作
                 //TODO：或许可以重构成服务，其他使用的地方无需关注这些逻辑
@@ -115,7 +116,8 @@ public class SpiderDomainService : DomainService
     /// <returns></returns>
     public Task<SpiderContent_HighQualityQA> BuildHighQualityContentAsync(string originalTitle,
         SpiderSourceFrom sourceFrom,
-        IDictionary<string, List<string>> contentItems)
+        IDictionary<string, List<string>> contentItems,
+        string? traceCode = null)
     {
         ImmutableList<string> subTitleList = ImmutableList.Create<string>();
         string mainContent = this.StringBuilderObjectPoolProvider.Invoke(mainContentBuilder =>

@@ -50,15 +50,32 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
         this.Options = options;
     }
 
+    // /// <summary>
+    // /// 向队列推送源数据
+    // /// </summary>
+    // /// <returns></returns>
+    // public async Task PushAsync(string keyword, SpiderSourceFrom from)
+    // {
+    //     var eto = from.TryCreateEto(EtoType.Push, from, keyword);
+    //
+    //     await this.CheckAsync(keyword, from, async () =>
+    //         {
+    //             string topicName = eto.TryGetRoutingKey();
+    //             await this.DistributedEventBus.PublishAsync(topicName, eto);
+    //         },
+    //         bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
+    //         duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
+    // }
+
     /// <summary>
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync(string keyword, SpiderSourceFrom from)
+    public async Task PushAsync(SpiderPushToQueueDto dto)
     {
-        var eto = from.TryCreateEto(EtoType.Push, from, keyword);
+        var eto = dto.SourceFrom.TryCreateEto(EtoType.Push, dto.SourceFrom, dto.Keyword, dto.TraceCode);
 
-        await this.CheckAsync(keyword, from, async () =>
+        await this.CheckAsync(dto.Keyword, dto.SourceFrom, async () =>
             {
                 string topicName = eto.TryGetRoutingKey();
                 await this.DistributedEventBus.PublishAsync(topicName, eto);
@@ -146,7 +163,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                         //保存采集到的标题
                         if (eto is ISpiderPullEto pullEto)
                         {
-                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom)).ToList();
+                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom, eventData.TraceCode)).ToList();
                             await this.SpiderKeywordRepository.InsertManyAsync(list);
                         }
                     }
@@ -228,7 +245,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
             //检查落库最小记录数
             if (contentItems.Count > this.Options.Value.HighQualityAnswerOptions.MinSaveRecordCount)
             {
-                SpiderContent_HighQualityQA spiderContent = await this.SpiderDomainService.BuildHighQualityContentAsync(eventData.Title, eventData.SourceFrom, contentItems);
+                SpiderContent_HighQualityQA spiderContent = await this.SpiderDomainService.BuildHighQualityContentAsync(eventData.Title, eventData.SourceFrom, contentItems, traceCode: eventData.TraceCode);
                 await this.SpiderRepository.InsertAsync(spiderContent);
                 this.Logger.LogInformation("落库成功，标题：" + spiderContent.Title + "，共计：" + contentItems.Count + "条记录");
             }

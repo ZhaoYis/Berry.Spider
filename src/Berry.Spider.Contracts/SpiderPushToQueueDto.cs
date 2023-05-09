@@ -1,9 +1,17 @@
-﻿using Berry.Spider.Core;
+using Berry.Spider.Core;
+using Berry.Spider.Domain.Shared;
 
 namespace Berry.Spider;
 
-public class SpiderPushBaseEto : ISpiderPushEto
+public class SpiderPushToQueueDto : ITraceCode
 {
+    public SpiderPushToQueueDto(string keyword, SpiderSourceFrom from, string? traceCode)
+    {
+        this.SourceFrom = from;
+        this.Keyword = keyword;
+        this.TraceCode = traceCode;
+    }
+
     /// <summary>
     /// 来源
     /// </summary>

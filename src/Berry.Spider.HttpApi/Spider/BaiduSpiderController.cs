@@ -1,5 +1,4 @@
 ﻿using Berry.Spider.Abstractions;
-using Berry.Spider.Baidu;
 using Berry.Spider.Core;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,7 +28,7 @@ public class BaiduSpiderController : SpiderControllerBase
         {
             if (o is ISpiderProvider provider)
             {
-                return provider.PushAsync(row, push.SourceFrom);
+                return provider.PushAsync(new SpiderPushToQueueDto(row, push.SourceFrom, push.TraceCode));
             }
             else
             {

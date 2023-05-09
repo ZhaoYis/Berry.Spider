@@ -16,7 +16,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：问答
 /// </summary>
-[SpiderService(new[] {SpiderSourceFrom.TouTiao_Question, SpiderSourceFrom.TouTiao_Question_Ext_NO_1})]
+[SpiderService(new[] { SpiderSourceFrom.TouTiao_Question, SpiderSourceFrom.TouTiao_Question_Ext_NO_1 })]
 public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4QuestionProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -52,15 +52,32 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
         this.Options = options;
     }
 
+    // /// <summary>
+    // /// 向队列推送源数据
+    // /// </summary>
+    // /// <returns></returns>
+    // public async Task PushAsync(string keyword, SpiderSourceFrom from)
+    // {
+    //     var eto = from.TryCreateEto(EtoType.Push, from, keyword);
+    //
+    //     await this.CheckAsync(keyword, from, async () =>
+    //         {
+    //             string topicName = eto.TryGetRoutingKey();
+    //             await this.DistributedEventBus.PublishAsync(topicName, eto);
+    //         },
+    //         bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
+    //         duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
+    // }
+
     /// <summary>
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync(string keyword, SpiderSourceFrom from)
+    public async Task PushAsync(SpiderPushToQueueDto dto)
     {
-        var eto = from.TryCreateEto(EtoType.Push, from, keyword);
+        var eto = dto.SourceFrom.TryCreateEto(EtoType.Push, dto.SourceFrom, dto.Keyword, dto.TraceCode);
 
-        await this.CheckAsync(keyword, from, async () =>
+        await this.CheckAsync(dto.Keyword, dto.SourceFrom, async () =>
             {
                 string topicName = eto.TryGetRoutingKey();
                 await this.DistributedEventBus.PublishAsync(topicName, eto);
@@ -100,7 +117,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.ClassName("result-content"));
-                if (resultContent is {Count: > 0})
+                if (resultContent is { Count: > 0 })
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
@@ -148,7 +165,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                         //保存采集到的标题
                         if (eto is ISpiderPullEto pullEto)
                         {
-                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom)).ToList();
+                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom, eventData.TraceCode)).ToList();
                             await this.SpiderKeywordRepository.InsertManyAsync(list);
                         }
                     }
@@ -175,7 +192,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                         if (root == null) return;
 
                         var resultContent = root.TryFindElements(By.ClassName("list"));
-                        if (resultContent is {Count: > 0})
+                        if (resultContent is { Count: > 0 })
                         {
                             await Parallel.ForEachAsync(resultContent, new ParallelOptions
                             {
@@ -183,7 +200,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                             }, async (element, token) =>
                             {
                                 var answerList = element.TryFindElements(By.TagName("div"));
-                                if (answerList is {Count: > 0})
+                                if (answerList is { Count: > 0 })
                                 {
                                     var realAnswerList = answerList
                                         .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))
@@ -217,7 +234,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
 
             //去重
             List<string> todoSaveContentItems = contentItems.Where(c => !string.IsNullOrEmpty(c)).Distinct().ToList();
-            SpiderContent? spiderContent = await this.SpiderDomainService.BuildContentAsync(eventData.Title, eventData.SourceFrom, todoSaveContentItems);
+            SpiderContent? spiderContent = await this.SpiderDomainService.BuildContentAsync(eventData.Title, eventData.SourceFrom, todoSaveContentItems, traceCode: eventData.TraceCode);
             if (spiderContent != null)
             {
                 await this.SpiderRepository.InsertAsync(spiderContent);

@@ -2,10 +2,11 @@ using Berry.Spider.Core;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using Berry.Spider.Domain.Shared;
 
 namespace Berry.Spider.Domain;
 
-public class SpiderContentBase : EntityBase
+public class SpiderContentBase : EntityBase, ITraceCode
 {
     /// <summary>
     /// 已采集
@@ -67,6 +68,11 @@ public class SpiderContentBase : EntityBase
     [Column("tag")]
     public string? Tag { get; set; }
 
+    /// <summary>
+    /// 用作当前关键字最初导入时的批次追踪标识
+    /// </summary>
+    public string? TraceCode { get; set; }
+
     protected SpiderContentBase()
     {
     }
@@ -87,5 +93,16 @@ public class SpiderContentBase : EntityBase
         this.PageUrl = pageUrl;
         this.Keywords = keywords ?? "";
         this.Tag = tag ?? "";
+    }
+
+    /// <summary>
+    /// 设置追踪标识
+    /// </summary>
+    public void SetTraceCodeIfNotNull(string? traceCode)
+    {
+        if (!string.IsNullOrEmpty(traceCode))
+        {
+            this.TraceCode = traceCode;
+        }
     }
 }

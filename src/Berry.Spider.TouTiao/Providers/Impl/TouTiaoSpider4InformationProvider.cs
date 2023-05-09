@@ -43,15 +43,32 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
         this.Options = options;
     }
 
+    // /// <summary>
+    // /// 向队列推送源数据
+    // /// </summary>
+    // /// <returns></returns>
+    // public async Task PushAsync(string keyword, SpiderSourceFrom from)
+    // {
+    //     var eto = from.TryCreateEto(EtoType.Push, from, keyword);
+    //
+    //     await this.CheckAsync(keyword, from, async () =>
+    //         {
+    //             string topicName = eto.TryGetRoutingKey();
+    //             await this.DistributedEventBus.PublishAsync(topicName, eto);
+    //         },
+    //         bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
+    //         duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
+    // }
+
     /// <summary>
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync(string keyword, SpiderSourceFrom from)
+    public async Task PushAsync(SpiderPushToQueueDto dto)
     {
-        var eto = from.TryCreateEto(EtoType.Push, from, keyword);
+        var eto = dto.SourceFrom.TryCreateEto(EtoType.Push, dto.SourceFrom, dto.Keyword, dto.TraceCode);
 
-        await this.CheckAsync(keyword, from, async () =>
+        await this.CheckAsync(dto.Keyword, dto.SourceFrom, async () =>
             {
                 string topicName = eto.TryGetRoutingKey();
                 await this.DistributedEventBus.PublishAsync(topicName, eto);
@@ -117,7 +134,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                                         return;
                                     }
                                 }
-                                
+
                                 string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
                                 if (!string.IsNullOrEmpty(realHref))
                                 {
@@ -138,7 +155,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                         //保存采集到的标题
                         if (eto is ISpiderPullEto pullEto)
                         {
-                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom)).ToList();
+                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom, eventData.TraceCode)).ToList();
                             await this.SpiderKeywordRepository.InsertManyAsync(list);
                         }
                     }

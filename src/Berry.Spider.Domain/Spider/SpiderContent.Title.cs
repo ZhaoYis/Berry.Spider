@@ -1,11 +1,12 @@
 using Berry.Spider.Core;
+using Berry.Spider.Domain.Shared;
 
 namespace Berry.Spider.Domain;
 
 /// <summary>
 /// 只保存标题和链接
 /// </summary>
-public class SpiderContent_Title : EntityBase
+public class SpiderContent_Title : EntityBase, ITraceCode
 {
     /// <summary>
     /// 已采集
@@ -41,6 +42,11 @@ public class SpiderContent_Title : EntityBase
     /// </summary>
     public string From { get; set; }
 
+    /// <summary>
+    /// 用作当前关键字最初导入时的批次追踪标识
+    /// </summary>
+    public string? TraceCode { get; set; }
+
     public SpiderContent_Title()
     {
     }
@@ -48,12 +54,14 @@ public class SpiderContent_Title : EntityBase
     public SpiderContent_Title(
         string title,
         string content,
-        SpiderSourceFrom from)
+        SpiderSourceFrom from,
+        string? traceCode)
     {
         this.Title = title;
         this.Content = content;
         this.Author = from.ToString();
         this.From = from.ToString();
         this.Time = DateTimeOffset.Now.DateTime;
+        this.TraceCode = traceCode;
     }
 }

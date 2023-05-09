@@ -15,7 +15,7 @@ namespace Berry.Spider.Baidu;
 /// <summary>
 /// 百度：相关推荐
 /// </summary>
-[SpiderService(new[] {SpiderSourceFrom.Baidu_Related_Search})]
+[SpiderService(new[] { SpiderSourceFrom.Baidu_Related_Search })]
 public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4RelatedSearchProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -48,15 +48,32 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
         this.Options = options;
     }
 
+    // /// <summary>
+    // /// 向队列推送源数据
+    // /// </summary>
+    // /// <returns></returns>
+    // public async Task PushAsync(string keyword, SpiderSourceFrom from)
+    // {
+    //     var eto = from.TryCreateEto(EtoType.Push, from, keyword);
+    //
+    //     await this.CheckAsync(keyword, from, async () =>
+    //         {
+    //             string topicName = eto.TryGetRoutingKey();
+    //             await this.DistributedEventBus.PublishAsync(topicName, eto);
+    //         },
+    //         bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
+    //         duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
+    // }
+
     /// <summary>
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync(string keyword, SpiderSourceFrom from)
+    public async Task PushAsync(SpiderPushToQueueDto dto)
     {
-        var eto = from.TryCreateEto(EtoType.Push, from, keyword);
+        var eto = dto.SourceFrom.TryCreateEto(EtoType.Push, dto.SourceFrom, dto.Keyword, dto.TraceCode);
 
-        await this.CheckAsync(keyword, from, async () =>
+        await this.CheckAsync(dto.Keyword, dto.SourceFrom, async () =>
             {
                 string topicName = eto.TryGetRoutingKey();
                 await this.DistributedEventBus.PublishAsync(topicName, eto);
@@ -95,7 +112,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.TagName("a"));
-                if (resultContent is {Count: > 0})
+                if (resultContent is { Count: > 0 })
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
@@ -139,7 +156,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                             //此处不做消息队列发送，直接存储到数据库
                             await this.HandlePullEventAsync(pullEto);
 
-                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom)).ToList();
+                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom, eventData.TraceCode)).ToList();
                             await this.SpiderKeywordRepository.InsertManyAsync(list);
                         }
                     }
@@ -157,7 +174,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
             List<SpiderContent_Title> contents = new List<SpiderContent_Title>();
             foreach (var item in eventData.Items)
             {
-                var content = new SpiderContent_Title(item.Title, item.Href, eventData.SourceFrom);
+                var content = new SpiderContent_Title(item.Title, item.Href, eventData.SourceFrom, eventData.TraceCode);
                 contents.Add(content);
             }
 

@@ -1,10 +1,11 @@
-﻿namespace Berry.Spider;
+﻿using Berry.Spider.Domain.Shared;
 
-public interface ISpiderPushEto : ISpiderEto
+namespace Berry.Spider;
+
+public interface ISpiderPushEto : ISpiderEto, ITraceCode
 {
     /// <summary>
     /// 关键字
     /// </summary>
     string Keyword { get; set; }
-    // List<string> Keywords { get; set; }
 }

@@ -1,6 +1,5 @@
 ﻿using Berry.Spider.Abstractions;
 using Berry.Spider.Core;
-using Berry.Spider.TouTiao;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Berry.Spider;
@@ -29,7 +28,7 @@ public class TouTiaoSpiderController : SpiderControllerBase
         {
             if (o is ISpiderProvider provider)
             {
-                return provider.PushAsync(row, push.SourceFrom);
+                return provider.PushAsync(new SpiderPushToQueueDto(row, push.SourceFrom, push.TraceCode));
             }
             else
             {

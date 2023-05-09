@@ -16,7 +16,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：头条_资讯_作文板块
 /// </summary>
-[SpiderService(new[] {SpiderSourceFrom.TouTiao_Information_Composition})]
+[SpiderService(new[] { SpiderSourceFrom.TouTiao_Information_Composition })]
 public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiaoSpider4InformationCompositionProvider>, ISpiderProvider
 {
     private IGuidGenerator GuidGenerator { get; }
@@ -53,15 +53,32 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
         this.Options = options;
     }
 
+    // /// <summary>
+    // /// 向队列推送源数据
+    // /// </summary>
+    // /// <returns></returns>
+    // public async Task PushAsync(string keyword, SpiderSourceFrom from)
+    // {
+    //     var eto = from.TryCreateEto(EtoType.Push, from, keyword);
+    //
+    //     await this.CheckAsync(keyword, from, async () =>
+    //         {
+    //             string topicName = eto.TryGetRoutingKey();
+    //             await this.DistributedEventBus.PublishAsync(topicName, eto);
+    //         },
+    //         bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
+    //         duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
+    // }
+
     /// <summary>
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync(string keyword, SpiderSourceFrom from)
+    public async Task PushAsync(SpiderPushToQueueDto dto)
     {
-        var eto = from.TryCreateEto(EtoType.Push, from, keyword);
+        var eto = dto.SourceFrom.TryCreateEto(EtoType.Push, dto.SourceFrom, dto.Keyword, dto.TraceCode);
 
-        await this.CheckAsync(keyword, from, async () =>
+        await this.CheckAsync(dto.Keyword, dto.SourceFrom, async () =>
             {
                 string topicName = eto.TryGetRoutingKey();
                 await this.DistributedEventBus.PublishAsync(topicName, eto);
@@ -101,7 +118,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                 if (root == null) return;
 
                 var resultContent = root.TryFindElements(By.ClassName("result-content"));
-                if (resultContent is {Count: > 0})
+                if (resultContent is { Count: > 0 })
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
@@ -147,7 +164,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                         //保存采集到的标题
                         if (eto is ISpiderPullEto pullEto)
                         {
-                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom)).ToList();
+                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom, eventData.TraceCode)).ToList();
                             await this.SpiderKeywordRepository.InsertManyAsync(list);
                         }
                     }
@@ -182,6 +199,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                             if (!string.IsNullOrEmpty(content))
                             {
                                 SpiderContent_Composition spiderContent = new SpiderContent_Composition(item.Title, content, groupId, eventData.SourceFrom);
+                                spiderContent.SetTraceCodeIfNotNull(eventData.TraceCode);
                                 contentItems = contentItems.Add(spiderContent);
                             }
                         }

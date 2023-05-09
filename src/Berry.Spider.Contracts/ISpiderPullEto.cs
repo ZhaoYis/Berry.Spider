@@ -1,6 +1,8 @@
-﻿namespace Berry.Spider;
+﻿using Berry.Spider.Domain.Shared;
 
-public interface ISpiderPullEto : ISpiderEto
+namespace Berry.Spider;
+
+public interface ISpiderPullEto : ISpiderEto, ITraceCode
 {
     /// <summary>
     /// 保存这次记录最终的标题

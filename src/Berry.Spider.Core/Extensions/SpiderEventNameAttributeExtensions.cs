@@ -63,8 +63,8 @@ public static class SpiderEventNameAttributeExtensions
         Type? etoObjType = from.GetEtoType(type);
         if (etoObjType is { })
         {
-            object instance = Activator.CreateInstance(etoObjType, args);
-            return instance;
+            object? instance = Activator.CreateInstance(etoObjType, args);
+            return instance ?? new object();
         }
 
         return new();
