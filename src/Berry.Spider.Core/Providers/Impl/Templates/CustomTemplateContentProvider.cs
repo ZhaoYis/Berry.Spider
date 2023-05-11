@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Berry.Spider.Contracts;
 using Microsoft.Extensions.Options;
 using Volo.Abp;
@@ -11,37 +12,40 @@ namespace Berry.Spider.Core;
 /// </summary>
 public class CustomTemplateContentProvider : ITemplateContentContributor, ITransientDependency
 {
-    private IOptionsSnapshot<TitleTemplateContentOptions> TitleTemplateContentOptions { get; }
-    private IOptionsSnapshot<AbstractTemplateOptions> AbstractTemplateOptions { get; }
+    private TitleTemplateContentOptions TitleTemplateContentOptions { get; }
+    private AbstractTemplateOptions AbstractTemplateOptions { get; }
 
     public CustomTemplateContentProvider(IOptionsSnapshot<TitleTemplateContentOptions> titleTemplateContentOptions,
         IOptionsSnapshot<AbstractTemplateOptions> abstractTemplateOptions)
     {
-        this.TitleTemplateContentOptions = titleTemplateContentOptions;
-        this.AbstractTemplateOptions = abstractTemplateOptions;
+        this.TitleTemplateContentOptions = titleTemplateContentOptions.Value;
+        this.AbstractTemplateOptions = abstractTemplateOptions.Value;
     }
 
     public Task<string> GetOrNullAsync(TemplateContentContributorContext context)
     {
         var templateName = context.TemplateDefinition.Name;
 
-        List<NameValue> templates = new List<NameValue>();
+        ImmutableList<NameValue> templates = ImmutableList.Create<NameValue>();
 
         //标题模版
-        if (this.TitleTemplateContentOptions.Value is { IsEnableFormatTitle: true } &&
-            this.TitleTemplateContentOptions.Value.Templates.Count > 0)
+        if (this.TitleTemplateContentOptions is {IsEnableFormatTitle: true, Templates.Count: > 0})
         {
-            templates.AddRange(this.TitleTemplateContentOptions.Value.Templates);
+            templates = templates.AddRange(this.TitleTemplateContentOptions.Templates);
         }
 
         //摘要模版
-        if (this.AbstractTemplateOptions.Value is { IsEnableAbstract: true } &&
-            this.AbstractTemplateOptions.Value.Templates.Count > 0)
+        if (this.AbstractTemplateOptions is {IsEnableAbstract: true, Templates.Count: > 0})
         {
-            templates.AddRange(this.AbstractTemplateOptions.Value.Templates);
+            templates = templates.AddRange(this.AbstractTemplateOptions.Templates);
         }
 
-        NameValue nameValue = templates.First(c => c.Name.Equals(templateName));
-        return Task.FromResult(nameValue.Value);
+        NameValue? nameValue = templates.FirstOrDefault(c => !string.IsNullOrEmpty(c.Name) && c.Name.Equals(templateName));
+        if (nameValue is { })
+        {
+            return Task.FromResult(nameValue.Value);
+        }
+
+        return Task.FromResult("{{model.original_title}}");
     }
 }
