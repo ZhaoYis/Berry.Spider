@@ -35,11 +35,16 @@ public static class ApplicationLifetimeHelper
                 {
                     builder.AppendLine($">进程ID：{data.ProcessId}");
                     builder.AppendLine($">内存占用：{data.MemoryUsage}");
-                    builder.AppendLine($">探测时间：{data.Time:yyyy-MM-dd HH:mm:ss}{Environment.NewLine}");
+                    builder.AppendLine($">CPU占用：{data.CpuUsage}");
+                    builder.AppendLine($">探测时间：{data.Time:yyyy-MM-dd HH:mm:ss}");
+                    builder.Append($"{Environment.NewLine}");
                 }
+
+                builder.Append($"{Environment.NewLine}");
             }
 
-            return builder.ToString();
+            string s = builder.ToString();
+            return s;
         }
     }
 }

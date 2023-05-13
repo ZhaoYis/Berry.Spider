@@ -17,7 +17,7 @@ public class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
     public ServLifetimeCheckerWorker(AbpAsyncTimer timer, IServiceScopeFactory serviceScopeFactory) : base(timer,
         serviceScopeFactory)
     {
-        Timer.Period = 5 * 1000;
+        Timer.Period = 10 * 1000;
     }
 
     protected override async Task DoWorkAsync(PeriodicBackgroundWorkerContext workerContext)
@@ -34,8 +34,8 @@ public class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
                 if (currentProcess.Id == app.Pid)
                 {
                     string memoryUsage = $"{currentProcess.WorkingSet64 / 1024 / 1024:#,##0} MB";
-                    string cpuUsage = this.GetCurrentProcessCpuUsage(currentProcess);
-
+                    string cpuUsage = await this.GetCurrentProcessCpuUsageAsync();
+                    
                     ApplicationLifetimeData lifetime = new ApplicationLifetimeData
                     {
                         AreYouOk = true,
@@ -54,26 +54,23 @@ public class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
         }
     }
 
-    private string GetCurrentProcessCpuUsage(Process currentProcess)
+    private async Task<string> GetCurrentProcessCpuUsageAsync()
     {
-        // 获取上次CPU时间
-        TimeSpan lastCpuTime = currentProcess.TotalProcessorTime;
-        // 获取当前时间
-        DateTime lastUpdateTime = DateTime.Now;
-        // 等待一段时间，例如100毫秒
-        Thread.Sleep(500);
-        // 获取当前时间
-        DateTime currentTime = DateTime.Now;
-        // 获取当前CPU时间
-        TimeSpan currentCpuTime = currentProcess.TotalProcessorTime;
-        // 计算时间间隔内的CPU时间差
-        TimeSpan cpuTimeDiff = currentCpuTime - lastCpuTime;
-        // 计算时间间隔
-        TimeSpan timeDiff = currentTime - lastUpdateTime;
-        // 计算CPU使用率
-        float cpuUsage = (float) cpuTimeDiff.Ticks / (float) timeDiff.Ticks / (float) Environment.ProcessorCount;
+        DateTime startTime = DateTime.UtcNow;
+        TimeSpan processorTimeBeforeSpin = Process.GetCurrentProcess().TotalProcessorTime;
 
-        string cpuUsageString = $"{cpuUsage * 100:0.00}%";
+        //等待500ms
+        await Task.Delay(500);
+
+        TimeSpan processorTimeAfterSpin = Process.GetCurrentProcess().TotalProcessorTime;
+        DateTime endTime = DateTime.UtcNow;
+
+        double timeDiff = (endTime - startTime).TotalMilliseconds;
+        double cpuTimeDiff = (processorTimeAfterSpin - processorTimeBeforeSpin).TotalMilliseconds;
+
+        double cpuUsage = cpuTimeDiff / (timeDiff * Environment.ProcessorCount);
+
+        string cpuUsageString = cpuUsage.ToString("P");
         return cpuUsageString;
     }
 }

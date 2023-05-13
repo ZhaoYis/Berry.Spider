@@ -32,7 +32,7 @@ public class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
         if (redisService is { })
         {
             var lifetimeDict = await redisService.HGetAllAsync<string>(GlobalConstants.SPIDER_APPLICATION_LIFETIME_KEY);
-            if (lifetimeDict is { Count: > 0 })
+            if (lifetimeDict is {Count: > 0})
             {
                 List<ApplicationLifetimeData> applicationLifetimeList = new();
                 List<string> todoRemoveNodes = new List<string>();
@@ -60,19 +60,17 @@ public class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
                     //发送消息
                     MarkdownMessageDto markdownMessage = new MarkdownMessageDto(msg);
                     WeixinResult weixinResult = await _weixinWorkRobotClient.SendAsync(this.RobotOptions.AppKey, markdownMessage);
-                    if (weixinResult is { IsSuccessful: true })
-                    {
-                        //通知成功后清除节点信息
-                        if (todoRemoveNodes is { Count: > 0 })
-                        {
-                            await redisService.HDelAsync(GlobalConstants.SPIDER_APPLICATION_LIFETIME_KEY, todoRemoveNodes.ToArray());
-                        }
-                    }
-                    else
+                    if (weixinResult is {IsSuccessful: false})
                     {
                         weixinResult.errmsg ??= "服务器未知错误";
                         TextMessageDto textMessage = new TextMessageDto(weixinResult.errmsg);
                         await _weixinWorkRobotClient.SendAsync(this.RobotOptions.AppKey, textMessage);
+                    }
+
+                    //清除节点信息
+                    if (todoRemoveNodes is {Count: > 0})
+                    {
+                        await redisService.HDelAsync(GlobalConstants.SPIDER_APPLICATION_LIFETIME_KEY, todoRemoveNodes.ToArray());
                     }
                 }
             }
