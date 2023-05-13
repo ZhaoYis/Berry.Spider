@@ -14,17 +14,15 @@ namespace Berry.Spider.Baidu;
 )]
 public class BaiduSpiderModule : AbpModule
 {
-    public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
         //注入百度爬虫提供者
         context.Services.AddTransient<BaiduSpider4RelatedSearchProvider>();
 
         //注入文本解析器
-        context.Services.AddTransient<BaiduRelatedSearchTextAnalysisProvider>();
+        context.Services.AddSingleton<BaiduRelatedSearchTextAnalysisProvider>();
 
         //注册解析真实跳转的Url地址解析器
         context.Services.AddSingleton<BaiduResolveJumpUrlProvider>();
-
-        return Task.CompletedTask;
     }
 }

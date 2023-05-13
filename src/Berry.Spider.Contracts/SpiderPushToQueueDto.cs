@@ -25,5 +25,5 @@ public class SpiderPushToQueueDto : ITraceCode
     /// <summary>
     /// 关键字
     /// </summary>
-    public string Keyword { get; set; } = null!;
+    public string Keyword { get; set; }
 }

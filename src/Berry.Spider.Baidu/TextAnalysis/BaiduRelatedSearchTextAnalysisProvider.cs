@@ -9,6 +9,6 @@ public class BaiduRelatedSearchTextAnalysisProvider : ITextAnalysisProvider
 {
     public Task<List<string>> InvokeAsync(string source)
     {
-        throw new NotImplementedException();
+        return Task.FromResult(new List<string>());
     }
 }

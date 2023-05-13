@@ -27,7 +27,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     private ISpiderContentCompositionRepository SpiderRepository { get; }
     private ISpiderContentKeywordRepository SpiderKeywordRepository { get; }
     private SpiderDomainService SpiderDomainService { get; }
-    private IOptionsSnapshot<SpiderOptions> Options { get; }
+    private SpiderOptions Options { get; }
 
     private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=information&dvpf=pc";
 
@@ -50,25 +50,8 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
         this.SpiderRepository = spiderRepository;
         this.SpiderKeywordRepository = keywordRepository;
         this.SpiderDomainService = spiderDomainService;
-        this.Options = options;
+        this.Options = options.Value;
     }
-
-    // /// <summary>
-    // /// 向队列推送源数据
-    // /// </summary>
-    // /// <returns></returns>
-    // public async Task PushAsync(string keyword, SpiderSourceFrom from)
-    // {
-    //     var eto = from.TryCreateEto(EtoType.Push, from, keyword);
-    //
-    //     await this.CheckAsync(keyword, from, async () =>
-    //         {
-    //             string topicName = eto.TryGetRoutingKey();
-    //             await this.DistributedEventBus.PublishAsync(topicName, eto);
-    //         },
-    //         bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
-    //         duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
-    // }
 
     /// <summary>
     /// 向队列推送源数据
@@ -83,8 +66,8 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                 string topicName = eto.TryGetRoutingKey();
                 await this.DistributedEventBus.PublishAsync(topicName, eto);
             },
-            bloomCheck: this.Options.Value.KeywordCheckOptions.BloomCheck,
-            duplicateCheck: this.Options.Value.KeywordCheckOptions.RedisCheck);
+            bloomCheck: this.Options.KeywordCheckOptions.BloomCheck,
+            duplicateCheck: this.Options.KeywordCheckOptions.RedisCheck);
     }
 
     /// <summary>
@@ -94,7 +77,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     protected override async Task<bool> DuplicateCheckAsync(string keyword, SpiderSourceFrom from)
     {
         string key = GlobalConstants.SPIDER_KEYWORDS_KEY;
-        if (this.Options.Value.KeywordCheckOptions.OnlyCurrentCategory)
+        if (this.Options.KeywordCheckOptions.OnlyCurrentCategory)
         {
             key += $":{from.ToString()}";
         }
@@ -136,9 +119,9 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
 
                             //执行相似度检测
                             double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
-                            if (this.Options.Value.KeywordCheckOptions.IsEnableSimilarityCheck)
+                            if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
                             {
-                                if (sim * 100 < this.Options.Value.KeywordCheckOptions.MinSimilarity)
+                                if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
                                 {
                                     return;
                                 }

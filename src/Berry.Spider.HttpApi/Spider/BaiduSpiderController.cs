@@ -24,17 +24,15 @@ public class BaiduSpiderController : SpiderControllerBase
     public Task PushAsync(PushFromFileBasicDto push)
     {
         object o = this.Provider.GetImplService(push.SourceFrom);
-        FileHelper fileHelper = new FileHelper(push.File, row =>
+        if (o is ISpiderProvider provider)
         {
-            if (o is ISpiderProvider provider)
-            {
-                return provider.PushAsync(new SpiderPushToQueueDto(row, push.SourceFrom, push.TraceCode));
-            }
-            else
-            {
-                throw new NotImplementedException("未实现的爬虫来源");
-            }
-        });
-        return fileHelper.InvokeAsync();
+            FileHelper fileHelper = new FileHelper(push.File,
+                row => provider.PushAsync(new SpiderPushToQueueDto(row, push.SourceFrom, push.TraceCode)));
+            return fileHelper.InvokeAsync();
+        }
+        else
+        {
+            throw new NotImplementedException("未实现的爬虫来源");
+        }
     }
 }

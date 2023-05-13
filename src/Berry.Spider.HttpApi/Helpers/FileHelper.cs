@@ -19,22 +19,15 @@ public class FileHelper
 
         try
         {
-            await using (var stream = System.IO.File.Create(filePath))
+            await using (var stream = File.Create(filePath))
             {
                 await _file.CopyToAsync(stream);
             }
-
-            if (System.IO.File.Exists(filePath))
+            await foreach (string row in this.TryReadLinesAsync(filePath))
             {
-                List<string> rows = (await System.IO.File.ReadAllLinesAsync(filePath))
-                    .Where(c => !string.IsNullOrWhiteSpace(c.Trim()))
-                    .ToList();
-                if (rows.Count > 0)
+                if (!string.IsNullOrWhiteSpace(row))
                 {
-                    foreach (string row in rows)
-                    {
-                        await _onInvoke.Invoke(row);
-                    }
+                    await _onInvoke.Invoke(row);
                 }
             }
         }
@@ -45,10 +38,15 @@ public class FileHelper
         finally
         {
             //删除临时文件
-            if (System.IO.File.Exists(filePath))
+            if (File.Exists(filePath))
             {
-                System.IO.File.Delete(filePath);
+                File.Delete(filePath);
             }
         }
+    }
+
+    private IAsyncEnumerable<string> TryReadLinesAsync(string filePath)
+    {
+        return File.ReadLinesAsync(filePath);
     }
 }

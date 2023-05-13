@@ -9,7 +9,7 @@ namespace Berry.Spider.Sogou
     {
         public Task<List<string>> InvokeAsync(string source)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(new List<string>());
         }
     }
 }
