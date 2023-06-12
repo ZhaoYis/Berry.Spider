@@ -165,6 +165,8 @@ public class SpiderDomainService : DomainService
 
         //组装数据
         var content = new SpiderContent_HighQualityQA(originalTitle, mainContent.ToString(), sourceFrom);
+        content.SetTraceCodeIfNotNull(traceCode);
+        
         return Task.FromResult(content);
     }
 }
