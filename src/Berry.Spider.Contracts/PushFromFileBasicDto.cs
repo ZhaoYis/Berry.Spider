@@ -7,6 +7,8 @@ namespace Berry.Spider;
 
 public class PushFromFileBasicDto : ITraceCode
 {
+    private string _traceCode;
+
     /// <summary>
     /// 来源
     /// </summary>
@@ -22,5 +24,29 @@ public class PushFromFileBasicDto : ITraceCode
     /// <summary>
     /// 用作当前关键字最初导入时的批次追踪标识
     /// </summary>
-    public string? TraceCode { get; set; }
+    public string? TraceCode
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(_traceCode))
+            {
+                string fileName = this.File.FileName.Split('.').First();
+                _traceCode = fileName;
+            }
+
+            return _traceCode;
+        }
+        set
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                string fileName = this.File.FileName.Split('.').First();
+                _traceCode = fileName;
+            }
+            else
+            {
+                _traceCode = value;
+            }
+        }
+    }
 }
