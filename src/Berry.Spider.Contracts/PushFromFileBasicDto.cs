@@ -7,7 +7,7 @@ namespace Berry.Spider;
 
 public class PushFromFileBasicDto : ITraceCode
 {
-    private string _traceCode;
+    private string? _traceCode;
 
     /// <summary>
     /// 来源
@@ -28,25 +28,14 @@ public class PushFromFileBasicDto : ITraceCode
     {
         get
         {
-            if (string.IsNullOrEmpty(_traceCode))
+            string? fileName = this.File.FileName[0..this.File.FileName.LastIndexOf('.')];
+            if (string.IsNullOrEmpty(_traceCode) && !string.IsNullOrWhiteSpace(fileName))
             {
-                string fileName = this.File.FileName.Split('.').First();
                 _traceCode = fileName;
             }
 
             return _traceCode;
         }
-        set
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                string fileName = this.File.FileName.Split('.').First();
-                _traceCode = fileName;
-            }
-            else
-            {
-                _traceCode = value;
-            }
-        }
+        set => _traceCode = value;
     }
 }
