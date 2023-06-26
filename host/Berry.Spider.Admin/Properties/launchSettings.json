@@ -18,10 +18,10 @@
     "Berry.Spider.Admin": {
       "commandName": "Project",
       "launchBrowser": true,
+      "applicationUrl": "https://localhost:44382/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "DEV"
-      },
-      "applicationUrl": "https://localhost:44382/"
+      }
     }
   }
 }
