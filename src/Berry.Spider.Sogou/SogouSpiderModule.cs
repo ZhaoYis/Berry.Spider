@@ -14,11 +14,12 @@ namespace Berry.Spider.Sogou;
 )]
 public class SogouSpiderModule : AbpModule
 {
-    public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
         //注入搜狗爬虫提供者
-        context.Services.AddTransient<SogouSpider4RelatedSearchProvider>();
+        context.Services.AddSingleton<SogouSpider4RelatedSearchProvider>();
 
-        return Task.CompletedTask;
+        //注入文本解析器
+        context.Services.AddTransient<SogouRelatedSearchTextAnalysisProvider>();
     }
 }

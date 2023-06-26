@@ -1,5 +1,5 @@
-using System.Net.Http.Json;
 using Microsoft.Extensions.Options;
+using System.Net.Http.Json;
 
 namespace Berry.Spider.Proxy.QgNet;
 
@@ -36,7 +36,7 @@ public class QgNetProxyHttpClient
             var result =
                 await this.Client.GetFromJsonAsync<QgNetResult<List<QgNetProxyResult>>>(
                     $"/allocate?Key={this.Options.Value.AuthKey}&Detail=1&Distinct=1&Num=1");
-            if (result is {IsSuccess: true})
+            if (result is { IsSuccess: true })
             {
                 List<QgNetProxyResult> data = result.Data;
                 return data.First();
@@ -61,7 +61,7 @@ public class QgNetProxyHttpClient
             var result =
                 await this.Client.GetFromJsonAsync<QgNetProxyQuotaResult>(
                     $"/info/quota?Key={this.Options.Value.AuthKey}");
-            if (result is {IsSuccess: true})
+            if (result is { IsSuccess: true })
             {
                 return result;
             }

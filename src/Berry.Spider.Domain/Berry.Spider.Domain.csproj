@@ -1,19 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+	    <TieredPGO>true</TieredPGO>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Volo.Abp.Core" Version="5.3.4" />
-      <PackageReference Include="Volo.Abp.Ddd.Domain" Version="5.3.4" />
+      <PackageReference Include="Volo.Abp.Core" Version="7.1.1" />
+      <PackageReference Include="Volo.Abp.Ddd.Domain" Version="7.1.1" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Berry.Spider.Core\Berry.Spider.Core.csproj" />
       <ProjectReference Include="..\Berry.Spider.Domain.Shared\Berry.Spider.Domain.Shared.csproj" />
+      <ProjectReference Include="..\Berry.Spider.Segmenter\Berry.Spider.Segmenter.csproj" />
     </ItemGroup>
 
 </Project>

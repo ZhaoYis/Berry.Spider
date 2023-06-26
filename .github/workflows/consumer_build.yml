@@ -1,0 +1,83 @@
+name: Build and Release .NET Core Console App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    env:
+      ASPNETCORE_ENVIRONMENT: PROD
+    
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '7.x'
+
+      - name: Restore Dependencies
+        run: dotnet restore src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj
+
+      - name: Build Application
+        run: dotnet build src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release
+
+      - name: Publish Application
+        run: dotnet publish src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release -o ${{ github.workspace }}/publish/Berry.Spider.Consumers /p:Environment=${{ env.ENVIRONMENT }}
+        env:
+          ENVIRONMENT: ${{ env.ASPNETCORE_ENVIRONMENT }}
+
+      - name: Get current date
+        run: echo "::set-output name=date::$(date +'%Y%m%d')"
+        id: date
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.date.outputs.date }}-v${{ github.run_number }}
+          release_name: ${{ steps.date.outputs.date }}-v${{ github.run_number }}
+          draft: false
+          prerelease: false
+
+      - name: Zip artifact
+        run: |
+          cd ${{ github.workspace }}/publish
+          Compress-Archive -Path Berry.Spider.Consumers -DestinationPath Berry.Spider.Consumers-v${{ github.run_number }}.zip
+        shell: pwsh
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Berry.Spider.Consumers
+          path: ${{ github.workspace }}/publish/Berry.Spider.Consumers-v${{ github.run_number }}.zip
+
+      - name: Attach Artifact to Release
+        id: attach_artifact
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ github.workspace }}/publish/Berry.Spider.Consumers-v${{ github.run_number }}.zip
+          asset_name: Berry.Spider.Consumers-v${{ github.run_number }}.zip
+          asset_content_type: application/zip
+
+      - name: WeChat Work notification by text
+        uses: chf007/action-wechat-work@master
+        env:
+          WECHAT_WORK_BOT_WEBHOOK: ${{secrets.WECHAT_WEBHOOK}}
+          TAG_NAME: ${{ github.event.release.tag_name }}
+          CREATED_AT: ${{ github.event.release.created_at }}
+          HTML_URL: ${{ github.event.release.html_url }}
+        with:
+          msgtype: markdown
+          content: "打包成功！请及时下载最新版本并替换现有程序。\n
+          > 下载地址：[点我前往](https://github.com/ZhaoYis/Berry.Spider/releases) \n"
+          mentioned_list: '["@all"]'

@@ -16,12 +16,18 @@ namespace Berry.Spider.TouTiao;
 )]
 public class TouTiaoSpiderModule : AbpModule
 {
-    public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        //ע��ͷ�������ṩ��
+        //注入头条爬虫提供者
         context.Services.AddTransient<TouTiaoSpider4QuestionProvider>();
+        context.Services.AddTransient<TouTiaoSpider4HighQualityQuestionProvider>();
         context.Services.AddTransient<TouTiaoSpider4InformationProvider>();
+        context.Services.AddTransient<TouTiaoSpider4InformationCompositionProvider>();
 
-        return Task.CompletedTask;
+        //注入文本解析器
+        context.Services.AddSingleton<TouTiaoQuestionTextAnalysisProvider>();
+
+        //注册解析真实跳转的Url地址解析器
+        context.Services.AddSingleton<TouTiaoResolveJumpUrlProvider>();
     }
 }

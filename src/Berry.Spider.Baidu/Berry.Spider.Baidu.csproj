@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+	    <TieredPGO>true</TieredPGO>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Volo.Abp.Core" Version="5.3.4" />
-      <PackageReference Include="Volo.Abp.Ddd.Application" Version="5.3.4" />
-      <PackageReference Include="Volo.Abp.EventBus.RabbitMQ" Version="5.3.4" />
+      <PackageReference Include="Volo.Abp.Core" Version="7.1.1" />
+      <PackageReference Include="Volo.Abp.Ddd.Application" Version="7.1.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -17,6 +17,7 @@
       <ProjectReference Include="..\Berry.Spider.Baidu.Contracts\Berry.Spider.Baidu.Contracts.csproj" />
       <ProjectReference Include="..\Berry.Spider.Core\Berry.Spider.Core.csproj" />
       <ProjectReference Include="..\Berry.Spider.Domain\Berry.Spider.Domain.csproj" />
+      <ProjectReference Include="..\Berry.Spider.EventBus\Berry.Spider.EventBus.csproj" />
       <ProjectReference Include="..\Berry.Spider.Proxy.Local\Berry.Spider.Proxy.Local.csproj" />
     </ItemGroup>
 

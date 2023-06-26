@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+	    <TieredPGO>true</TieredPGO>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="DotNetCore.CAP.Dashboard" Version="7.1.0" />
+      <PackageReference Include="DotNetCore.CAP.MongoDB" Version="7.1.0" />
+      <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="7.1.0" />
+      <PackageReference Include="Volo.Abp.Core" Version="7.1.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj" />
+      <ProjectReference Include="..\Berry.Spider.EventBus\Berry.Spider.EventBus.csproj" />
+    </ItemGroup>
+
+</Project>

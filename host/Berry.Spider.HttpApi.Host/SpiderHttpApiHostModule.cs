@@ -2,15 +2,20 @@ using Berry.Spider.Application;
 using Berry.Spider.AspNetCore.Mvc;
 using Berry.Spider.Baidu;
 using Berry.Spider.EntityFrameworkCore;
+using Berry.Spider.EventBus.MongoDB;
+using Berry.Spider.EventBus.RabbitMq;
+using Berry.Spider.OpenAI.Application;
+using Berry.Spider.Segmenter.JiebaNet;
 using Berry.Spider.Sogou;
 using Berry.Spider.TouTiao;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerUI;
 using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc.AntiForgery;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
-using Volo.Abp.EventBus.RabbitMq;
+using Volo.Abp.Json;
 using Volo.Abp.Modularity;
 using Volo.Abp.Swashbuckle;
 
@@ -20,10 +25,12 @@ namespace Berry.Spider.HttpApi.Host;
     typeof(AbpAutofacModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule),
-    typeof(AbpEventBusRabbitMqModule),
     typeof(SpiderHttpApiModule),
     typeof(SpiderEntityFrameworkCoreModule),
     typeof(SpiderAspNetCoreMvcModule),
+    typeof(SpiderEventBusRabbitMqModule),
+    typeof(SpiderEventBusMongoDBModule),
+    typeof(SpiderSegmenterJiebaNetModule),
     //今日头条模块
     typeof(TouTiaoSpiderModule),
     //百度模块
@@ -31,7 +38,9 @@ namespace Berry.Spider.HttpApi.Host;
     //搜狗模块
     typeof(SogouSpiderModule),
     //爬虫模块
-    typeof(SpiderApplicationModule)
+    typeof(SpiderApplicationModule),
+    //OpenAI
+    typeof(SpiderOpenAIApplicationModule)
 )]
 public class SpiderHttpApiHostModule : AbpModule
 {
@@ -69,6 +78,11 @@ public class SpiderHttpApiHostModule : AbpModule
             });
         });
 
+        Configure<AbpJsonOptions>(opt =>
+        {
+            opt.OutputDateTimeFormat = "yyyy-MM-dd HH:mm:ss:fff";
+        });
+        
         return Task.CompletedTask;
     }
 
@@ -94,7 +108,11 @@ public class SpiderHttpApiHostModule : AbpModule
         app.UseAuthentication();
 
         app.UseSwagger();
-        app.UseAbpSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "Support APP API"); });
+        app.UseAbpSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Support APP API");
+            options.DocExpansion(DocExpansion.None);
+        });
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints();
 

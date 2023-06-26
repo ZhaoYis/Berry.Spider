@@ -1,20 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+	    <TieredPGO>true</TieredPGO>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Volo.Abp.AutoMapper" Version="5.3.4" />
-      <PackageReference Include="Volo.Abp.Core" Version="5.3.4" />
-      <PackageReference Include="Volo.Abp.Ddd.Application" Version="5.3.4" />
+      <PackageReference Include="Volo.Abp.AutoMapper" Version="7.1.1" />
+      <PackageReference Include="Volo.Abp.Core" Version="7.1.1" />
+      <PackageReference Include="Volo.Abp.Ddd.Application" Version="7.1.1" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Berry.Spider.Contracts\Berry.Spider.Contracts.csproj" />
       <ProjectReference Include="..\Berry.Spider.Domain\Berry.Spider.Domain.csproj" />
+      <ProjectReference Include="..\Berry.Spider.EventBus.MongoDB\Berry.Spider.EventBus.MongoDB.csproj" />
     </ItemGroup>
 
 </Project>

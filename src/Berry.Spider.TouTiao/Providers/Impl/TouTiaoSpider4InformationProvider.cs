@@ -1,50 +1,78 @@
-﻿using Berry.Spider.Abstractions;
+﻿using System.Collections.Immutable;
+using Berry.Spider.Abstractions;
+using Berry.Spider.Contracts;
 using Berry.Spider.Core;
+using Berry.Spider.Domain;
+using Berry.Spider.EventBus;
 using Berry.Spider.FreeRedis;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
-using Volo.Abp.EventBus.Distributed;
 
 namespace Berry.Spider.TouTiao;
 
 /// <summary>
 /// 今日头条：资讯
 /// </summary>
-[Spider(SpiderSourceFrom.TouTiao_Information)]
+[SpiderService(new[] { SpiderSourceFrom.TouTiao_Information })]
 public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4InformationProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
+    private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
+    private ISpiderContentKeywordRepository SpiderKeywordRepository { get; }
     private IRedisService RedisService { get; }
-    private IDistributedEventBus DistributedEventBus { get; }
+    private IEventBusPublisher DistributedEventBus { get; }
+    private SpiderOptions Options { get; }
 
     private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=information&dvpf=pc";
 
     public TouTiaoSpider4InformationProvider(ILogger<TouTiaoSpider4InformationProvider> logger,
         IWebElementLoadProvider provider,
+        IServiceProvider serviceProvider,
+        ISpiderContentKeywordRepository keywordRepository,
         IRedisService redisService,
-        IDistributedEventBus eventBus) : base(logger)
+        IEventBusPublisher eventBus,
+        IOptionsSnapshot<SpiderOptions> options) : base(logger)
     {
         this.WebElementLoadProvider = provider;
+        this.ResolveJumpUrlProvider = serviceProvider.GetRequiredService<TouTiaoResolveJumpUrlProvider>();
         this.RedisService = redisService;
         this.DistributedEventBus = eventBus;
+        this.SpiderKeywordRepository = keywordRepository;
+        this.Options = options.Value;
     }
 
     /// <summary>
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync<T>(T push) where T : class, ISpiderPushEto
+    public async Task PushAsync(SpiderPushToQueueDto dto)
     {
-        await this.BloomCheckAsync(push.Keyword, async () => { await this.DistributedEventBus.PublishAsync(push); });
+        var eto = dto.SourceFrom.TryCreateEto(EtoType.Push, dto.SourceFrom, dto.Keyword, dto.TraceCode);
+
+        await this.CheckAsync(dto.Keyword, dto.SourceFrom, async () =>
+            {
+                string topicName = eto.TryGetRoutingKey();
+                await this.DistributedEventBus.PublishAsync(topicName, eto);
+            },
+            bloomCheck: this.Options.KeywordCheckOptions.BloomCheck,
+            duplicateCheck: this.Options.KeywordCheckOptions.RedisCheck);
     }
 
     /// <summary>
     /// 二次重复性校验
     /// </summary>
     /// <returns></returns>
-    protected override async Task<bool> DuplicateCheckAsync(string keyword)
+    protected override async Task<bool> DuplicateCheckAsync(string keyword, SpiderSourceFrom from)
     {
-        bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY, keyword);
+        string key = GlobalConstants.SPIDER_KEYWORDS_KEY;
+        if (this.Options.KeywordCheckOptions.OnlyCurrentCategory)
+        {
+            key += $":{from.ToString()}";
+        }
+
+        bool result = await this.RedisService.SetAsync(key, keyword);
         return result;
     }
 
@@ -52,77 +80,77 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     /// 执行获取一级页面数据任务
     /// </summary>
     /// <returns></returns>
-    public async Task ExecuteAsync<T>(T request) where T : class, ISpiderRequest
+    public async Task HandlePushEventAsync<T>(T eventData) where T : class, ISpiderPushEto
     {
-        try
-        {
-            string targetUrl = string.Format(this.HomePage, request.Keyword);
-            await this.WebElementLoadProvider.InvokeAsync(
-                targetUrl,
-                drv =>
+        string targetUrl = string.Format(this.HomePage, eventData.Keyword);
+        await this.WebElementLoadProvider.InvokeAsync(
+            targetUrl,
+            drv => drv.FindElement(By.ClassName("s-result-list")),
+            async root =>
+            {
+                if (root == null) return;
+
+                var resultContent = root.TryFindElements(By.ClassName("result-content"));
+                if (resultContent is { Count: > 0 })
                 {
-                    try
-                    {
-                        return drv.FindElement(By.ClassName("s-result-list"));
-                    }
-                    catch (Exception e)
-                    {
-                        return null;
-                    }
-                },
-                async root =>
-                {
-                    if (root == null) return;
+                    this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
 
-                    var resultContent = root.FindElements(By.ClassName("result-content"));
-                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
-
-                    if (resultContent.Count > 0)
-                    {
-                        var eto = new TouTiaoSpider4QuestionPullEto
-                            { Keyword = request.Keyword, Title = request.Keyword };
-
-                        foreach (IWebElement element in resultContent)
+                    ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
+                    await Parallel.ForEachAsync(resultContent, new ParallelOptions
                         {
-                            var a = element.FindElement(By.TagName("a"));
+                            MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
+                        },
+                        async (element, token) =>
+                        {
+                            var a = element.TryFindElement(By.TagName("a"));
                             if (a != null)
                             {
                                 string text = a.Text;
                                 string href = a.GetAttribute("href");
 
-                                eto.Items.Add(new ChildPageDataItem
+                                //执行相似度检测
+                                double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
+                                if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
                                 {
-                                    Title = text,
-                                    Href = href
-                                });
+                                    if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
+                                    {
+                                        return;
+                                    }
+                                }
 
-                                this.Logger.LogInformation(text + "  ---> " + href);
+                                string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
+                                if (!string.IsNullOrEmpty(realHref))
+                                {
+                                    childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
+                                    {
+                                        Title = text,
+                                        Href = realHref
+                                    });
+                                }
                             }
-                        }
+                        });
 
-                        if (eto.Items.Any())
+                    if (childPageDataItems.Any())
+                    {
+                        var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom, eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode);
+                        await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
+
+                        //保存采集到的标题
+                        if (eto is ISpiderPullEto pullEto)
                         {
-                            await this.DistributedEventBus.PublishAsync(eto);
-                            this.Logger.LogInformation("事件发布成功，等待消费...");
+                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom, eventData.TraceCode)).ToList();
+                            await this.SpiderKeywordRepository.InsertManyAsync(list);
                         }
                     }
-                });
-        }
-        catch (Exception exception)
-        {
-            this.Logger.LogException(exception);
-        }
-        finally
-        {
-            //ignore..
-        }
+                }
+            });
     }
 
     /// <summary>
     /// 执行根据一级页面采集到的地址获取二级页面具体目标数据任务
     /// </summary>
     /// <returns></returns>
-    public Task HandleEventAsync<T>(T eventData) where T : class, ISpiderPullEto
+    public Task HandlePullEventAsync<T>(T eventData) where T : class, ISpiderPullEto
     {
         throw new NotImplementedException();
     }

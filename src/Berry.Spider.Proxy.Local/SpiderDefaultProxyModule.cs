@@ -24,7 +24,7 @@ public class SpiderDefaultProxyModule : AbpModule
         //配置HttpProxyOptions
         context.Services.Configure<HttpProxyOptions>(configuration.GetSection(nameof(HttpProxyOptions)));
         context.Services.AddScoped<IHttpProxy, DefaultHttpProxy>();
-        
+
         return Task.CompletedTask;
     }
 }

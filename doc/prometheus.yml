@@ -1,0 +1,29 @@
+# my global config
+global:
+  scrape_interval: 15s # 每15s采集一次数据
+  evaluation_interval: 15s # 每15s做一次告警检测
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+# rule_files指定加载的告警规则文件
+rule_files:
+# - "first_rules.yml"
+# - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "win_nodes_47.114.177.24"
+    static_configs:
+      - targets: ["localhost:9182"]

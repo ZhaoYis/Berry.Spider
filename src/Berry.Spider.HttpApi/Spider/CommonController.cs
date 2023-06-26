@@ -51,7 +51,7 @@ public class CommonController : SpiderControllerBase
 
             throw new SpiderBizException("文件生成失败！");
         }
-        catch (Exception e)
+        catch (Exception)
         {
             //ignore..
             throw new SpiderBizException("文件生成失败！");

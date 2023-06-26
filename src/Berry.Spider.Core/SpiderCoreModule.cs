@@ -1,9 +1,10 @@
-using System.Reflection;
 using Berry.Spider.Contracts;
 using Berry.Spider.FreeRedis;
 using Berry.Spider.Proxy;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.ObjectPool;
+using System.Reflection;
 using Volo.Abp.Caching;
 using Volo.Abp.Caching.StackExchangeRedis;
 using Volo.Abp.Modularity;
@@ -40,12 +41,18 @@ public class SpiderCoreModule : AbpModule
         context.Services.Configure<TitleTemplateContentOptions>(configuration.GetSection(nameof(TitleTemplateContentOptions)));
         //配置AbstractTemplateOptions
         context.Services.Configure<AbstractTemplateOptions>(configuration.GetSection(nameof(AbstractTemplateOptions)));
+        //配置MongoDBOptions
+        context.Services.Configure<MongoDBOptions>(configuration.GetSection(nameof(MongoDBOptions)));
+        //配置ConsulOptions
+        context.Services.Configure<ConsulOptions>(configuration.GetSection(nameof(ConsulOptions)));
+        //配置OpenAIOptions
+        context.Services.Configure<OpenAIOptions>(configuration.GetSection(nameof(OpenAIOptions)));
 
         //注入文本解析器
-        context.Services.AddTransient<TouTiaoQuestionTextAnalysisProvider>();
-        context.Services.AddTransient<BaiduRelatedSearchTextAnalysisProvider>();
-        context.Services.AddTransient<SogouRelatedSearchTextAnalysisProvider>();
         context.Services.AddTransient<NormalTextAnalysisProvider>();
+
+        //注册解析真实跳转的Url地址解析器
+        context.Services.AddSingleton<NormalResolveJumpUrlProvider>();
 
         //分布式缓存
         Configure<AbpDistributedCacheOptions>(options =>
@@ -57,6 +64,13 @@ public class SpiderCoreModule : AbpModule
         //分布式缓存Redis
         Configure<RedisCacheOptions>(options => { options.InstanceName = Assembly.GetExecutingAssembly().FullName; });
 
+        //对象池
+        context.Services.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
+        context.Services.AddSingleton<IStringBuilderObjectPoolProvider, StringBuilderObjectPoolProvider>();
+
+        //User-Agent
+        context.Services.AddHttpClient<UserAgentHttpClient>();
+        
         return Task.CompletedTask;
     }
 }

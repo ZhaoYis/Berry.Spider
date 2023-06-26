@@ -1,4 +1,4 @@
-namespace Berry.Spider.Core.Helpers;
+namespace Berry.Spider.Core;
 
 public static class StringHelper
 {

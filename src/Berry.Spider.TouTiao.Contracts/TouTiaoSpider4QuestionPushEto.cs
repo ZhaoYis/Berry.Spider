@@ -1,8 +1,21 @@
-﻿using Volo.Abp.EventBus;
+﻿using Berry.Spider.Core;
 
 namespace Berry.Spider.TouTiao;
 
-[EventName("Berry.TouTiao.Question.Push")]
+[SpiderEventName(EtoType.Push, RoutingKeyString, SpiderSourceFrom.TouTiao_Question)]
 public class TouTiaoSpider4QuestionPushEto : SpiderPushBaseEto
 {
+    public const string RoutingKeyString = "Berry.TouTiao.Question.Push";
+    public const string QueueNameString = "TouTiao.Question.Push";
+
+    public TouTiaoSpider4QuestionPushEto()
+    {
+    }
+
+    public TouTiaoSpider4QuestionPushEto(SpiderSourceFrom from, string keyword, string? traceCode) : this()
+    {
+        this.SourceFrom = from;
+        this.Keyword = keyword;
+        this.TraceCode = traceCode;
+    }
 }

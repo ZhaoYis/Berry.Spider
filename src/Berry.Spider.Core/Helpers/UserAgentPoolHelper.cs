@@ -1,7 +1,8 @@
 namespace Berry.Spider.Core;
 
 /// <summary>
-/// User-Agent池。https://useragentstring.com/pages/useragentstring.php?typ=Browser
+/// User-Agent池。
+/// https://useragentstring.com/pages/useragentstring.php?typ=Browser
 /// </summary>
 public static class UserAgentPoolHelper
 {

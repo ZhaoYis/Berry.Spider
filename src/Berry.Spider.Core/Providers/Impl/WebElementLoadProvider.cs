@@ -2,7 +2,6 @@ using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System.Drawing;
-using Volo.Abp;
 
 namespace Berry.Spider.Core;
 
@@ -25,10 +24,10 @@ public class WebElementLoadProvider : IWebElementLoadProvider
         Func<IWebElement?, Task> executor)
     {
         //检查是否处于人机验证资源锁定阶段
-        if (await this.InterceptorProvider.IsLockedAsync())
-        {
-            throw new BusinessException("人机验证资源锁定中，请稍后再试~");
-        }
+        // if (await this.InterceptorProvider.IsLockedAsync())
+        // {
+        //     throw new BusinessException("人机验证资源锁定中，请稍后再试~");
+        // }
 
         using (var driver = await this.WebDriverProvider.GetAsync())
         {
@@ -37,16 +36,14 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                 driver.Navigate().GoToUrl(targetUrl);
 
                 //人机验证拦截
-                await this.InterceptorProvider.InvokeAsync(driver);
+                //await this.InterceptorProvider.InvokeAsync(driver);
 
                 //获取跳转后url
                 string title = driver.Title;
                 string url = driver.Url;
 
-                this.Logger.LogInformation("开始执行[{0}]，页面地址：{1}", title, url);
-
                 string current = driver.CurrentWindowHandle;
-                this.Logger.LogInformation("当前窗口句柄：" + current);
+                this.Logger.LogInformation("当前窗口句柄：{0}，采集关键字：{1}", current, title);
 
                 // 隐式等待
                 //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -63,8 +60,16 @@ public class WebElementLoadProvider : IWebElementLoadProvider
 
                 var page = driver.PageSource;
 
-                IWebElement? webElement = wait.Until(selector);
-                await executor.Invoke(webElement);
+                try
+                {
+                    IWebElement? webElement = wait.Until(selector);
+                    await executor.Invoke(webElement);
+                }
+                catch (Exception exception)
+                {
+                    this.Logger.LogException(exception);
+                    await executor.Invoke(null);
+                }
             }
             catch (Exception exception)
             {
@@ -80,11 +85,11 @@ public class WebElementLoadProvider : IWebElementLoadProvider
     public async Task<T?> InvokeAsync<T>(string targetUrl, Func<IWebDriver, IWebElement?> selector,
         Func<IWebElement?, Task<T>> executor)
     {
-        //检查是否处于人机验证资源锁定阶段
-        if (await this.InterceptorProvider.IsLockedAsync())
-        {
-            throw new BusinessException("人机验证资源锁定中，请稍后再试~");
-        }
+        // //检查是否处于人机验证资源锁定阶段
+        // if (await this.InterceptorProvider.IsLockedAsync())
+        // {
+        //     throw new BusinessException("人机验证资源锁定中，请稍后再试~");
+        // }
 
         using (var driver = await this.WebDriverProvider.GetAsync())
         {
@@ -93,16 +98,14 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                 driver.Navigate().GoToUrl(targetUrl);
 
                 //人机验证拦截
-                await this.InterceptorProvider.InvokeAsync(driver);
+                //await this.InterceptorProvider.InvokeAsync(driver);
 
                 //获取跳转后url
                 string title = driver.Title;
                 string url = driver.Url;
 
-                this.Logger.LogInformation("开始执行[{0}]，页面地址：{1}", title, url);
-
                 string current = driver.CurrentWindowHandle;
-                this.Logger.LogInformation("当前窗口句柄：" + current);
+                this.Logger.LogInformation("当前窗口句柄：{0}，采集关键字：{1}", current, title);
 
                 // 隐式等待
                 //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -153,7 +156,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                 string url = driver.Url;
 
                 string current = driver.CurrentWindowHandle;
-                this.Logger.LogInformation("当前窗口句柄：" + current);
+                this.Logger.LogInformation("当前窗口句柄：{0}，采集关键字：{1}", current, title);
 
                 // 隐式等待
                 //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
