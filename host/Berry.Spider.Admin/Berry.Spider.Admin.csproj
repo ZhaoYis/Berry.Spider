@@ -108,4 +108,8 @@
     <ProjectReference Include="..\Berry.Spider.HttpApi.StaticClient\Berry.Spider.HttpApi.StaticClient.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
