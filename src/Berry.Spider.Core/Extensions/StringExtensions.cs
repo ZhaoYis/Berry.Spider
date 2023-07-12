@@ -1,4 +1,5 @@
-﻿using ToolGood.Words;
+﻿using System.Collections.Immutable;
+using ToolGood.Words;
 
 namespace Berry.Spider.Core;
 
@@ -8,19 +9,20 @@ public static class StringExtensions
 
     static StringExtensions()
     {
-        string dataFilePath = Path.Combine(AppContext.BaseDirectory, "SensitiveWords", "data.txt");
-        if (File.Exists(dataFilePath))
+        string filePath = Path.Combine(AppContext.BaseDirectory, "SensitiveWords");
+        var files = Directory.GetFiles(filePath, "*.txt", SearchOption.AllDirectories);
+
+        ImmutableList<string> sensitiveWords = ImmutableList.Create<string>();
+        foreach (string file in files)
         {
-            List<string> sensitiveWords = File.ReadAllLines(dataFilePath)
+            List<string> words = File.ReadAllLines(file)
                 .Where(c => !string.IsNullOrWhiteSpace(c))
-                .Distinct()
                 .ToList();
-            WordsMatch.SetKeywords(sensitiveWords);
+
+            sensitiveWords = sensitiveWords.AddRange(words);
         }
-        else
-        {
-            WordsMatch.SetKeywords(new List<string>());
-        }
+
+        WordsMatch.SetKeywords(sensitiveWords);
     }
 
     /// <summary>
