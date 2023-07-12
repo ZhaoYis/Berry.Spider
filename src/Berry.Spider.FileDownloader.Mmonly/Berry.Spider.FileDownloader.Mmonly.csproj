@@ -41,10 +41,4 @@
       <ProjectReference Include="..\Berry.Spider.Mmonly\Berry.Spider.Mmonly.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Update="SensitiveWords\data.txt">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
 </Project>
