@@ -12,7 +12,7 @@ public class QgNetHttpProxy : IHttpProxy
     private QgNetProxyHttpClient QgNetProxyHttpClient { get; }
     private QgNetProxyPoolContext QgNetProxyPoolContext { get; }
     private IDistributedCache<QgNetProxyQuotaResult> Cache { get; }
-    private IOptionsSnapshot<QgNetProxyOptions> Options { get; }
+    private QgNetProxyOptions Options { get; }
     private ILogger<QgNetHttpProxy> Logger { get; }
 
     public QgNetHttpProxy(
@@ -25,7 +25,7 @@ public class QgNetHttpProxy : IHttpProxy
         this.QgNetProxyHttpClient = httpClient;
         this.QgNetProxyPoolContext = context;
         this.Cache = cache;
-        this.Options = options;
+        this.Options = options.Value;
         this.Logger = logger;
     }
 
@@ -34,7 +34,7 @@ public class QgNetHttpProxy : IHttpProxy
     /// </summary>
     public async Task<bool> IsInvalid()
     {
-        if (this.Options.Value.IsEnable)
+        if (this.Options.IsEnable)
         {
             QgNetProxyQuotaResult? quotaResult = await this.Cache.GetAsync(CacheKey);
             if (quotaResult != null)

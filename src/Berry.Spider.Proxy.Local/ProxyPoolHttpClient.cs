@@ -5,14 +5,14 @@ namespace Berry.Spider.Proxy;
 
 public class ProxyPoolHttpClient
 {
-    private IOptionsSnapshot<HttpProxyOptions> Options { get; }
+    private HttpProxyOptions Options { get; }
     private HttpClient Client { get; }
 
     public ProxyPoolHttpClient(IOptionsSnapshot<HttpProxyOptions> options, HttpClient httpClient)
     {
-        this.Options = options;
+        this.Options = options.Value;
         this.Client = httpClient;
-        this.Client.BaseAddress = new Uri(this.Options.Value.ProxyPoolApiHost);
+        this.Client.BaseAddress = new Uri(this.Options.ProxyPoolApiHost);
     }
 
     /// <summary>

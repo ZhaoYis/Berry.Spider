@@ -12,7 +12,7 @@ public class HumanMachineVerificationInterceptorProvider : IHumanMachineVerifica
 
     private ILogger<HumanMachineVerificationInterceptorProvider> Logger { get; }
     private IDistributedCache Cache { get; }
-    private IOptionsSnapshot<HumanMachineVerificationOptions> Options { get; }
+    private HumanMachineVerificationOptions Options { get; }
 
     public HumanMachineVerificationInterceptorProvider(ILogger<HumanMachineVerificationInterceptorProvider> logger,
         IDistributedCache cache,
@@ -20,14 +20,14 @@ public class HumanMachineVerificationInterceptorProvider : IHumanMachineVerifica
     {
         this.Logger = logger;
         this.Cache = cache;
-        this.Options = options;
+        this.Options = options.Value;
     }
 
     public async Task InvokeAsync(IWebDriver webDriver)
     {
         string url = webDriver.Url;
 
-        if (this.Options.Value.BlackHosts.Contains(url))
+        if (this.Options.BlackHosts.Contains(url))
         {
             this.Logger.LogInformation($"命中了人机验证，只有等一会儿咯~");
             //等一会儿吧~
@@ -35,7 +35,7 @@ public class HumanMachineVerificationInterceptorProvider : IHumanMachineVerifica
             await this.Cache.SetStringAsync(cacheKey, url,
                 new DistributedCacheEntryOptions
                 {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(this.Options.Value.LockExpiration)
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(this.Options.LockExpiration)
                 });
         }
 

@@ -21,7 +21,7 @@ public class BuildSMDataAppService : IBuildSMDataAppService
 
     private ITextAnalysisProvider TextAnalysisProvider { get; }
     private ITemplateRenderer TemplateRenderer { get; }
-    private IOptionsSnapshot<AbstractTemplateOptions> AbstractTemplateOptions { get; }
+    private AbstractTemplateOptions AbstractTemplateOptions { get; }
     private ILogger<BuildSMDataAppService> Logger { get; }
 
     private readonly Regex _imgRegex = new Regex("<img.*></img>");
@@ -34,7 +34,7 @@ public class BuildSMDataAppService : IBuildSMDataAppService
         this.ServiceScopeFactory = serviceScopeFactory;
         this.TextAnalysisProvider = serviceProvider.GetRequiredService<NormalTextAnalysisProvider>();
         this.TemplateRenderer = templateRenderer;
-        this.AbstractTemplateOptions = abstractTemplateOptions;
+        this.AbstractTemplateOptions = abstractTemplateOptions.Value;
         this.Logger = logger;
     }
 
@@ -128,10 +128,10 @@ public class BuildSMDataAppService : IBuildSMDataAppService
             builder.Insert(0, $"<p><b>{smWord}{fixedWord}</b></p>");
 
             //组装摘要
-            if (this.AbstractTemplateOptions.Value.IsEnableAbstract)
+            if (this.AbstractTemplateOptions.IsEnableAbstract)
             {
                 //随机获取一个模版名称
-                List<string> names = this.AbstractTemplateOptions.Value.Templates.Select(c => c.Name).ToList();
+                List<string> names = this.AbstractTemplateOptions.Templates.Select(c => c.Name).ToList();
                 if (names.Count > 0)
                 {
                     int index = new Random().Next(0, names.Count - 1);

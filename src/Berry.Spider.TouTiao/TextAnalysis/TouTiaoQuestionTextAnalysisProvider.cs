@@ -14,11 +14,11 @@ public class TouTiaoQuestionTextAnalysisProvider : ITextAnalysisProvider
     //https://blog.csdn.net/xjp_xujiping/article/details/50210533
 
     private static readonly Regex ReplaceRegex = new Regex(@"^\d+(、|\.|\．|,|，)*");
-    private IOptionsSnapshot<SpiderOptions> Options { get; }
+    private SpiderOptions Options { get; }
 
     public TouTiaoQuestionTextAnalysisProvider(IOptionsSnapshot<SpiderOptions> options)
     {
-        this.Options = options;
+        this.Options = options.Value;
     }
 
     public Task<List<string>> InvokeAsync(string source)
@@ -55,7 +55,7 @@ public class TouTiaoQuestionTextAnalysisProvider : ITextAnalysisProvider
                 newItem = newItem.ReplaceTo(' ').Replace(" ", "").Trim();
 
                 //验证内容最小长度
-                if (!string.IsNullOrWhiteSpace(newItem) && newItem.Length > this.Options.Value.MinContentLength)
+                if (!string.IsNullOrWhiteSpace(newItem) && newItem.Length > this.Options.MinContentLength)
                 {
                     list.Add(newItem);
                 }

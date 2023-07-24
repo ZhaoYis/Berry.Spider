@@ -29,7 +29,7 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
         //基础表
         builder.Entity<SpiderContent>(b =>
         {
-            b.ToTable($"{TableNamePrefix}_content");
+            b.ToTable($"{TableNamePrefix}_content_20230718");
 
             //Configure the base properties
             b.ConfigureByConvention();

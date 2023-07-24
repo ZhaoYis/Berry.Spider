@@ -18,8 +18,8 @@ public class SpiderDomainService : DomainService
     private ITemplateRenderer TemplateRenderer { get; }
     private ISegmenterProvider SegmenterProvider { get; }
     private IStringBuilderObjectPoolProvider StringBuilderObjectPoolProvider { get; }
-    private IOptionsSnapshot<SpiderOptions> Options { get; }
-    private IOptionsSnapshot<TitleTemplateContentOptions> TitleTemplateOptions { get; }
+    private SpiderOptions Options { get; }
+    private TitleTemplateContentOptions TitleTemplateOptions { get; }
 
     public SpiderDomainService(
         IImageResourceProvider imageResourceProvider,
@@ -33,8 +33,8 @@ public class SpiderDomainService : DomainService
         TemplateRenderer = templateRenderer;
         SegmenterProvider = segmenterProvider;
         StringBuilderObjectPoolProvider = stringBuilderObjectPoolProvider;
-        Options = options;
-        TitleTemplateOptions = titleTemplateOptions;
+        Options = options.Value;
+        TitleTemplateOptions = titleTemplateOptions.Value;
     }
 
     /// <summary>
@@ -44,15 +44,15 @@ public class SpiderDomainService : DomainService
     public async Task<SpiderContent?> BuildContentAsync(string originalTitle, SpiderSourceFrom sourceFrom,
         List<string> contentItems, List<string>? subTitleList = null, string? traceCode = null)
     {
-        if (contentItems.Count >= this.Options.Value.MinRecords)
+        if (contentItems.Count >= this.Options.MinRecords)
         {
             //打乱
             contentItems.RandomSort();
 
             string mainContent;
-            if (this.Options.Value.IsInsertImage)
+            if (this.Options.IsInsertImage)
             {
-                if (this.Options.Value.IsRandomInsertImage)
+                if (this.Options.IsRandomInsertImage)
                 {
                     mainContent = this.Clock.Now.Hour % 2 == 0
                         ? contentItems.BuildMainContent(this.ImageResourceProvider, this.StringBuilderObjectPoolProvider, subTitleList)
@@ -70,10 +70,10 @@ public class SpiderDomainService : DomainService
 
             if (mainContent is { Length: > 0 })
             {
-                if (this.TitleTemplateOptions.Value.IsEnableFormatTitle)
+                if (this.TitleTemplateOptions.IsEnableFormatTitle)
                 {
                     //随机获取一个模版名称
-                    List<string> names = this.TitleTemplateOptions.Value.Templates.Select(c => c.Name).ToList();
+                    List<string> names = this.TitleTemplateOptions.Templates.Select(c => c.Name).ToList();
                     if (names.Count > 0)
                     {
                         int index = new Random(this.GuidGenerator.Create().GetHashCode()).Next(0, names.Count - 1);
@@ -131,7 +131,7 @@ public class SpiderDomainService : DomainService
                 answerContentItems.RandomSort();
                 //取指定的记录数
                 answerContentItems = answerContentItems
-                    .Take(this.Options.Value.HighQualityAnswerOptions.MaxRecordCount)
+                    .Take(this.Options.HighQualityAnswerOptions.MaxRecordCount)
                     .ToList();
 
                 StringBuilder itemContentBuilder = new StringBuilder();
@@ -151,9 +151,9 @@ public class SpiderDomainService : DomainService
         if (mainContent is { Length: > 0 })
         {
             //处理子标题
-            if (this.Options.Value.SubTitleOptions.IsEnable)
+            if (this.Options.SubTitleOptions.IsEnable)
             {
-                var opSubTitleList = subTitleList.Take(this.Options.Value.SubTitleOptions.MaxRecords).ToList();
+                var opSubTitleList = subTitleList.Take(this.Options.SubTitleOptions.MaxRecords).ToList();
 
                 var subTitleContent = opSubTitleList.BuildSubTitleContent(this.StringBuilderObjectPoolProvider);
                 if (subTitleContent is { Length: > 0 })

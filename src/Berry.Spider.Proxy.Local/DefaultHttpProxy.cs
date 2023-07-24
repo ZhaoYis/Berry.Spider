@@ -7,14 +7,14 @@ public class DefaultHttpProxy : IHttpProxy
 {
     private ILogger<DefaultHttpProxy> Logger { get; }
     private ProxyPoolHttpClient PoolHttpClient { get; }
-    private IOptionsSnapshot<HttpProxyOptions> Options { get; }
+    private HttpProxyOptions Options { get; }
 
     public DefaultHttpProxy(ILogger<DefaultHttpProxy> logger, ProxyPoolHttpClient httpClient,
         IOptionsSnapshot<HttpProxyOptions> options)
     {
         this.Logger = logger;
         this.PoolHttpClient = httpClient;
-        this.Options = options;
+        this.Options = options.Value;
     }
 
     /// <summary>
@@ -22,7 +22,7 @@ public class DefaultHttpProxy : IHttpProxy
     /// </summary>
     public Task<bool> IsInvalid()
     {
-        if (this.Options.Value.IsEnable)
+        if (this.Options.IsEnable)
         {
             return Task.FromResult<bool>(true);
         }

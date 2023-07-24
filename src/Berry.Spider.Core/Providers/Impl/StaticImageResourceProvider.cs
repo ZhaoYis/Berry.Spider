@@ -9,21 +9,21 @@ namespace Berry.Spider.Core;
 /// </summary>
 public class StaticImageResourceProvider : IImageResourceProvider
 {
-    public IOptionsSnapshot<ImageResourceOptions> Options { get; }
+    public ImageResourceOptions Options { get; }
     public IGuidGenerator GuidGenerator { get; }
 
     public StaticImageResourceProvider(IOptionsSnapshot<ImageResourceOptions> options, IGuidGenerator generator)
     {
-        this.Options = options;
+        this.Options = options.Value;
         this.GuidGenerator = generator;
     }
 
     public string TryGet()
     {
         Random random = new Random(this.GuidGenerator.Create().GetHashCode());
-        int next = random.Next(this.Options.Value.MinId, this.Options.Value.MaxId);
+        int next = random.Next(this.Options.MinId, this.Options.MaxId);
 
-        string url = string.Format(this.Options.Value.TemplateUrl, next);
+        string url = string.Format(this.Options.TemplateUrl, next);
 
         return url;
     }
