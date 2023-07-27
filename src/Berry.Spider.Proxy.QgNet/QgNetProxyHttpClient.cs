@@ -5,15 +5,15 @@ namespace Berry.Spider.Proxy.QgNet;
 
 public class QgNetProxyHttpClient
 {
-    private IOptionsSnapshot<QgNetProxyOptions> Options { get; }
+    private QgNetProxyOptions Options { get; }
     private HttpClient Client { get; }
 
     public QgNetProxyHttpClient(IOptionsSnapshot<QgNetProxyOptions> options, HttpClient httpClient)
     {
-        this.Options = options;
+        this.Options = options.Value;
 
         this.Client = httpClient;
-        this.Client.BaseAddress = new Uri(this.Options.Value.ProxyPoolApiHost);
+        this.Client.BaseAddress = new Uri(this.Options.ProxyPoolApiHost);
     }
 
     /// <summary>
@@ -35,7 +35,7 @@ public class QgNetProxyHttpClient
         {
             var result =
                 await this.Client.GetFromJsonAsync<QgNetResult<List<QgNetProxyResult>>>(
-                    $"/allocate?Key={this.Options.Value.AuthKey}&Detail=1&Distinct=1&Num=1");
+                    $"/allocate?Key={this.Options.AuthKey}&Detail=1&Distinct=1&Num=1");
             if (result is { IsSuccess: true })
             {
                 List<QgNetProxyResult> data = result.Data;
@@ -60,7 +60,7 @@ public class QgNetProxyHttpClient
         {
             var result =
                 await this.Client.GetFromJsonAsync<QgNetProxyQuotaResult>(
-                    $"/info/quota?Key={this.Options.Value.AuthKey}");
+                    $"/info/quota?Key={this.Options.AuthKey}");
             if (result is { IsSuccess: true })
             {
                 return result;

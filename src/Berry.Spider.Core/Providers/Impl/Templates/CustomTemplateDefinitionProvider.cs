@@ -10,24 +10,24 @@ namespace Berry.Spider.Core;
 /// </summary>
 public class CustomTemplateDefinitionProvider : TemplateDefinitionProvider
 {
-    private IOptionsSnapshot<TitleTemplateContentOptions> TitleTemplateContentOptions { get; }
-    private IOptionsSnapshot<AbstractTemplateOptions> AbstractTemplateOptions { get; }
+    private TitleTemplateContentOptions TitleTemplateContentOptions { get; }
+    private AbstractTemplateOptions AbstractTemplateOptions { get; }
 
     public CustomTemplateDefinitionProvider(IOptionsSnapshot<TitleTemplateContentOptions> titleTemplateContentOptions,
         IOptionsSnapshot<AbstractTemplateOptions> abstractTemplateOptions)
     {
-        this.TitleTemplateContentOptions = titleTemplateContentOptions;
-        this.AbstractTemplateOptions = abstractTemplateOptions;
+        this.TitleTemplateContentOptions = titleTemplateContentOptions.Value;
+        this.AbstractTemplateOptions = abstractTemplateOptions.Value;
     }
 
     public override void Define(ITemplateDefinitionContext context)
     {
         //标题模版
-        if (this.TitleTemplateContentOptions.Value is { IsEnableFormatTitle: true } &&
-            this.TitleTemplateContentOptions.Value.Templates.Count > 0)
+        if (this.TitleTemplateContentOptions is { IsEnableFormatTitle: true } &&
+            this.TitleTemplateContentOptions.Templates.Count > 0)
         {
             List<string> titleTemplateNames =
-                this.TitleTemplateContentOptions.Value.Templates.Select(c => c.Name).ToList();
+                this.TitleTemplateContentOptions.Templates.Select(c => c.Name).ToList();
             foreach (string name in titleTemplateNames)
             {
                 context.Add(new TemplateDefinition(name).WithScribanEngine());
@@ -35,11 +35,11 @@ public class CustomTemplateDefinitionProvider : TemplateDefinitionProvider
         }
 
         //摘要模版
-        if (this.AbstractTemplateOptions.Value is { IsEnableAbstract: true } &&
-            this.AbstractTemplateOptions.Value.Templates.Count > 0)
+        if (this.AbstractTemplateOptions is { IsEnableAbstract: true } &&
+            this.AbstractTemplateOptions.Templates.Count > 0)
         {
             List<string> abstractTemplateNames =
-                this.AbstractTemplateOptions.Value.Templates.Select(c => c.Name).ToList();
+                this.AbstractTemplateOptions.Templates.Select(c => c.Name).ToList();
             foreach (string name in abstractTemplateNames)
             {
                 context.Add(new TemplateDefinition(name).WithScribanEngine());

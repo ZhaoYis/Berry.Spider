@@ -9,12 +9,12 @@ namespace Berry.Spider.Core;
 
 public class WebDriverProvider : IWebDriverProvider
 {
-    private IOptionsSnapshot<WebDriverOptions> DriverOptions { get; }
+    private WebDriverOptions DriverOptions { get; }
     private IDriverOptionsProvider DriverOptionsProvider { get; }
 
     public WebDriverProvider(IOptionsSnapshot<WebDriverOptions> options, IDriverOptionsProvider optionsProvider)
     {
-        this.DriverOptions = options;
+        this.DriverOptions = options.Value;
         this.DriverOptionsProvider = optionsProvider;
     }
 
@@ -24,14 +24,14 @@ public class WebDriverProvider : IWebDriverProvider
         {
             var options = await this.DriverOptionsProvider.BuildAsync();
 
-            if (this.DriverOptions.Value.LocalOptions.IsEnable)
+            if (this.DriverOptions.LocalOptions.IsEnable)
             {
-                IWebDriver driver = new ChromeDriver(this.DriverOptions.Value.LocalOptions.LocalAddress, options);
+                IWebDriver driver = new ChromeDriver(this.DriverOptions.LocalOptions.LocalAddress, options);
                 return driver;
             }
-            else if (this.DriverOptions.Value.RemoteOptions.IsEnable)
+            else if (this.DriverOptions.RemoteOptions.IsEnable)
             {
-                IWebDriver driver = new RemoteWebDriver(new Uri(this.DriverOptions.Value.RemoteOptions.RemoteAddress), options);
+                IWebDriver driver = new RemoteWebDriver(new Uri(this.DriverOptions.RemoteOptions.RemoteAddress), options);
                 return driver;
             }
         }

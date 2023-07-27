@@ -44,12 +44,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="SensitiveWords\data.txt">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
-    <ItemGroup>
       <Folder Include="Logs" />
     </ItemGroup>
 
