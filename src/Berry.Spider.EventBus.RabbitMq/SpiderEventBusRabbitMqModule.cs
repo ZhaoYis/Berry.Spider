@@ -1,5 +1,4 @@
 using Berry.Spider.Contracts;
-using DotNetCore.CAP.Dashboard.NodeDiscovery;
 using DotNetCore.CAP.Internal;
 using DotNetCore.CAP.Messages;
 using Microsoft.Extensions.Configuration;
@@ -37,24 +36,25 @@ public class SpiderEventBusRabbitMqModule : AbpModule
 
             //注册节点到Consul
             ConsulOptions? consulOptions = configuration.GetSection(nameof(ConsulOptions)).Get<ConsulOptions>();
-            if (consulOptions is {IsEnabled: true})
+            if (consulOptions is { IsEnabled: true })
             {
                 string nodeId = Guid.NewGuid().ToString("N");
                 string nodeName = "Consumer_" + nodeId;
-                opt.UseDiscovery(d =>
+                opt.UseConsulDiscovery(d =>
                 {
                     d.DiscoveryServerHostName = consulOptions.DiscoveryServerHostName;
                     d.DiscoveryServerPort = consulOptions.DiscoveryServerPort;
                     d.NodeId = nodeId;
                     d.NodeName = nodeName;
-                    d.CustomTags = new[] {"Berry_Spider_Consumer"};
+                    d.CustomTags = new[] { "Berry_Spider_Consumer" };
                 });
             }
 
             //消费者线程并行处理消息的线程数
             opt.ConsumerThreadCount = 5;
             //如果设置为 true，则每个消费者组都会根据 ConsumerThreadCount 设置的值创建单独的线程进行处理。
-            opt.UseDispatchingPerGroup = true;
+            // opt.UseDispatchingPerGroup = true;
+            opt.EnableConsumerPrefetch = true;
             //失败消息的过期时间（秒）
             opt.FailedMessageExpiredAfter = 30 * 24 * 3600;
             //成功消息的过期时间（秒）
@@ -72,10 +72,14 @@ public class SpiderEventBusRabbitMqModule : AbpModule
                     o.Port = Convert.ToInt32(rabbitMqOptions.Port);
                     o.VirtualHost = rabbitMqOptions.VirtualHost;
 
-                    o.CustomHeaders = e => new List<KeyValuePair<string, string>>
+                    o.CustomHeadersBuilder = (eventArgs, provider) =>
                     {
-                        new(Headers.MessageId, SnowflakeId.Default().NextId().ToString()),
-                        new(Headers.MessageName, e.RoutingKey)
+                        ISnowflakeId snowflakeId = provider.GetRequiredService<ISnowflakeId>();
+                        return new List<KeyValuePair<string, string>>
+                        {
+                            new(Headers.MessageId, snowflakeId.NextId().ToString()),
+                            new(Headers.MessageName, eventArgs.RoutingKey)
+                        };
                     };
                 });
             }
