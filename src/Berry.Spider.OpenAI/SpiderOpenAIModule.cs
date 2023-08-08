@@ -1,8 +1,8 @@
 using Berry.Spider.Contracts;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OpenAI.GPT3.Extensions;
-using OpenAI.GPT3.ObjectModels;
+using OpenAI.Extensions;
+using OpenAI.ObjectModels;
 using Volo.Abp.Modularity;
 
 namespace Berry.Spider.OpenAI;
