@@ -9,7 +9,7 @@ public static class StringExtensions
 
     static StringExtensions()
     {
-        string filePath = Path.Combine(AppContext.BaseDirectory, "SensitiveWords");
+        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SensitiveWords");
         var files = Directory.GetFiles(filePath, "*.txt", SearchOption.AllDirectories);
 
         ImmutableList<string> sensitiveWords = ImmutableList.Create<string>();
@@ -22,7 +22,10 @@ public static class StringExtensions
             sensitiveWords = sensitiveWords.AddRange(words);
         }
 
-        WordsMatch.SetKeywords(sensitiveWords);
+        if (sensitiveWords is { Count: > 0 })
+        {
+            WordsMatch.SetKeywords(sensitiveWords);
+        }
     }
 
     /// <summary>
