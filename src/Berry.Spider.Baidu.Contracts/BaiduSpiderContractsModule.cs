@@ -10,8 +10,8 @@ namespace Berry.Spider.Baidu;
 )]
 public class BaiduSpiderContractsModule : AbpModule
 {
-    public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        return base.ConfigureServicesAsync(context);
+        base.ConfigureServices(context);
     }
 }

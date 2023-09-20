@@ -5,7 +5,7 @@ namespace Berry.Spider.FreeRedis;
 
 public class RedisService : IRedisService
 {
-    private readonly RedisClient _redisClient;
+    private static RedisClient _redisClient;
 
     public RedisService(IOptionsSnapshot<RedisOptions> options)
     {

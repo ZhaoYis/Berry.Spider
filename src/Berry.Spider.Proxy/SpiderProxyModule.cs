@@ -10,10 +10,8 @@ namespace Berry.Spider.Proxy;
 [DependsOn(typeof(SpiderDefaultProxyModule), typeof(SpiderQgNetProxyModule))]
 public class SpiderProxyModule : AbpModule
 {
-    public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
         context.Services.AddTransient<ISpiderProxyFactory, SpiderProxyFactory>();
-
-        return Task.CompletedTask;
     }
 }

@@ -21,7 +21,7 @@ namespace Berry.Spider.Core;
     typeof(SpiderProxyModule))]
 public class SpiderCoreModule : AbpModule
 {
-    public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();
 
@@ -70,7 +70,5 @@ public class SpiderCoreModule : AbpModule
 
         //User-Agent
         context.Services.AddHttpClient<UserAgentHttpClient>();
-        
-        return Task.CompletedTask;
     }
 }

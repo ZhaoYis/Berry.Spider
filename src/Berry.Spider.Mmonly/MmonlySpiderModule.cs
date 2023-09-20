@@ -23,7 +23,8 @@ public class MmonlySpiderModule : AbpModule
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();
-        SpiderQuartzOptions quartzOptions = configuration.GetSection(nameof(SpiderQuartzOptions)).Get<SpiderQuartzOptions>();
+        SpiderQuartzOptions quartzOptions =
+            configuration.GetSection(nameof(SpiderQuartzOptions)).Get<SpiderQuartzOptions>();
 
         PreConfigure<AbpQuartzOptions>(options =>
         {
@@ -51,22 +52,17 @@ public class MmonlySpiderModule : AbpModule
                 // });
                 configure.UseInMemoryStore();
                 configure.MaxBatchSize = 100;
-                configure.UseDefaultThreadPool(tp =>
-                {
-                    tp.MaxConcurrency = 10;
-                });
+                configure.UseDefaultThreadPool(tp => { tp.MaxConcurrency = 10; });
             };
         });
     }
 
-    public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
         Configure<AbpBackgroundJobQuartzOptions>(options =>
         {
             options.RetryCount = 1;
             options.RetryIntervalMillisecond = 1000;
         });
-
-        return Task.CompletedTask;
     }
 }

@@ -44,7 +44,7 @@ namespace Berry.Spider.HttpApi.Host;
 )]
 public class SpiderHttpApiHostModule : AbpModule
 {
-    public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
@@ -82,8 +82,6 @@ public class SpiderHttpApiHostModule : AbpModule
         {
             opt.OutputDateTimeFormat = "yyyy-MM-dd HH:mm:ss:fff";
         });
-        
-        return Task.CompletedTask;
     }
 
     public override Task OnApplicationInitializationAsync(ApplicationInitializationContext context)

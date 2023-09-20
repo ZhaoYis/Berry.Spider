@@ -8,8 +8,7 @@ namespace Berry.Spider.Domain;
 )]
 public class SpiderDomainModule : AbpModule
 {
-    public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        return Task.CompletedTask;
     }
 }

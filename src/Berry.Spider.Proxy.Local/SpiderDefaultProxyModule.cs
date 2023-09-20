@@ -11,7 +11,7 @@ namespace Berry.Spider.Proxy;
 [DependsOn(typeof(SpiderProxyAbstractionsModule))]
 public class SpiderDefaultProxyModule : AbpModule
 {
-    public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();
 
@@ -24,7 +24,5 @@ public class SpiderDefaultProxyModule : AbpModule
         //配置HttpProxyOptions
         context.Services.Configure<HttpProxyOptions>(configuration.GetSection(nameof(HttpProxyOptions)));
         context.Services.AddScoped<IHttpProxy, DefaultHttpProxy>();
-
-        return Task.CompletedTask;
     }
 }

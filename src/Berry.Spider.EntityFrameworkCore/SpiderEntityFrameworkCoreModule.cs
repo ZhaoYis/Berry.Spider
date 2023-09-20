@@ -11,7 +11,7 @@ namespace Berry.Spider.EntityFrameworkCore;
     typeof(AbpEntityFrameworkCoreModule), typeof(AbpDapperModule))]
 public class SpiderEntityFrameworkCoreModule : AbpModule
 {
-    public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
         context.Services.AddAbpDbContext<SpiderDbContext>();
 
@@ -34,7 +34,5 @@ public class SpiderEntityFrameworkCoreModule : AbpModule
              * See also SpiderDbContextFactory for EF Core tooling. */
             options.UseMySQL();
         });
-
-        return Task.CompletedTask;
     }
 }

@@ -11,7 +11,7 @@ namespace Berry.Spider.Proxy.QgNet;
 [DependsOn(typeof(SpiderProxyAbstractionsModule))]
 public class SpiderQgNetProxyModule : AbpModule
 {
-    public override Task ConfigureServicesAsync(ServiceConfigurationContext context)
+    public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var configuration = context.Services.GetConfiguration();
 
@@ -25,7 +25,5 @@ public class SpiderQgNetProxyModule : AbpModule
         context.Services.Configure<QgNetProxyOptions>(configuration.GetSection(nameof(QgNetProxyOptions)));
         context.Services.AddScoped<IHttpProxy, QgNetHttpProxy>();
         context.Services.AddSingleton<QgNetProxyPoolContext>();
-
-        return Task.CompletedTask;
     }
 }
