@@ -9,7 +9,7 @@ public class StringExtensions_UnitTest
     [Fact]
     public void Replace_Can_Be_Successful_Test()
     {
-        string source = "这是一段文字條萊垍頭";
+        string source = "这是一段文字招聘兼职";
 
         string result = source.ReplaceTo('*');
 

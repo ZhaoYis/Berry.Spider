@@ -5,7 +5,7 @@ namespace Berry.Spider.Core;
 
 public static class StringExtensions
 {
-    private static readonly WordsMatch WordsMatch = new();
+    private static readonly StringSearchEx3 WordsMatch = new();
 
     static StringExtensions()
     {
@@ -24,7 +24,7 @@ public static class StringExtensions
 
         if (sensitiveWords is { Count: > 0 })
         {
-            WordsMatch.SetKeywords(sensitiveWords);
+            WordsMatch.SetKeywords(sensitiveWords.Distinct().ToList());
         }
     }
 

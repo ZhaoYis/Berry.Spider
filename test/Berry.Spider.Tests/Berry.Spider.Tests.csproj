@@ -27,7 +27,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="SensitiveWords\data.txt">
+      <None Update="SensitiveWords\广告.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>

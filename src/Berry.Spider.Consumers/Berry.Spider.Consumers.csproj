@@ -56,9 +56,6 @@
       <None Update="SensitiveWords\涉枪涉爆违法信息关键词.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="SensitiveWords\网址.txt">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
       <None Update="SensitiveWords\色情类.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
