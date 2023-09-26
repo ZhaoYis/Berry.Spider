@@ -73,7 +73,7 @@ public class MmonlySpiderAppService : ApplicationService, IMmonlySpiderAppServic
                 {
                     if (root == null) return;
 
-                    var resultContent = root.FindElements(By.ClassName("ABox"));
+                    var resultContent = root.FindElements(By.CssSelector(".ABox"));
                     this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
 
                     if (resultContent.Count > 0)
