@@ -94,12 +94,12 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
         string targetUrl = string.Format(this.HomePage, eventData.Keyword);
         await this.WebElementLoadProvider.InvokeAsync(
             targetUrl,
-            drv => drv.FindElement(By.ClassName("s-result-list")),
+            drv => drv.FindElement(By.CssSelector(".s-result-list")),
             async root =>
             {
                 if (root == null) return;
 
-                var resultContent = root.TryFindElements(By.ClassName("result-content"));
+                var resultContent = root.TryFindElements(By.CssSelector(".result-content"));
                 if (resultContent is {Count: > 0})
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
@@ -172,12 +172,12 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
             {
                 await this.WebElementLoadProvider.InvokeAsync(
                     item.Href,
-                    drv => drv.FindElement(By.ClassName("s-container")),
+                    drv => drv.FindElement(By.CssSelector(".s-container")),
                     async root =>
                     {
                         if (root == null) return;
 
-                        var resultContent = root.TryFindElements(By.ClassName("list"));
+                        var resultContent = root.TryFindElements(By.CssSelector(".list"));
                         if (resultContent is {Count: > 0})
                         {
                             await Parallel.ForEachAsync(resultContent, new ParallelOptions

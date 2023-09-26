@@ -124,7 +124,7 @@ public class MmonlyFileDownloadJob : AsyncBackgroundJob<MmonlyFileDownloadArgs>,
                 {
                     try
                     {
-                        return drv.FindElement(By.ClassName("pages"));
+                        return drv.FindElement(By.CssSelector(".pages"));
                     }
                     catch (Exception e)
                     {
