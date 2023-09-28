@@ -41,7 +41,7 @@ public class CustomTemplateContentProvider : ITemplateContentContributor, ITrans
         }
 
         NameValue? nameValue = templates.FirstOrDefault(c => !string.IsNullOrEmpty(c.Name) && c.Name.Equals(templateName));
-        if (nameValue is { })
+        if (nameValue is not null)
         {
             return Task.FromResult(nameValue.Value);
         }

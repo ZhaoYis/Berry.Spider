@@ -17,7 +17,7 @@ public class SpiderEventBusRabbitMqModule : AbpModule
         context.Services.AddCap(opt =>
         {
             MongoDBOptions? mongoDbOptions = configuration.GetSection(nameof(MongoDBOptions)).Get<MongoDBOptions>();
-            if (mongoDbOptions is { })
+            if (mongoDbOptions is not null)
             {
                 opt.UseMongoDB(o =>
                 {
@@ -51,7 +51,7 @@ public class SpiderEventBusRabbitMqModule : AbpModule
             }
 
             ConsumerOptions? consumerOptions = configuration.GetSection(nameof(ConsulOptions)).Get<ConsumerOptions>();
-            if (consumerOptions is { })
+            if (consumerOptions is not null)
             {
                 //消费者线程并行处理消息的线程数
                 opt.ConsumerThreadCount = consumerOptions.ConsumerThreadCount;
@@ -67,7 +67,7 @@ public class SpiderEventBusRabbitMqModule : AbpModule
 
             EventBusRabbitMqOptions? rabbitMqOptions =
                 configuration.GetSection("RabbitMQ:Connections:Default").Get<EventBusRabbitMqOptions>();
-            if (rabbitMqOptions is { })
+            if (rabbitMqOptions is not null)
             {
                 opt.UseRabbitMQ(o =>
                 {
