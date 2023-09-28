@@ -37,7 +37,7 @@ public class WebDriverProvider : IWebDriverProvider
         }
         catch (Exception e)
         {
-            throw new SpiderBizException($"创建WebDriver失败，{e.Message}");
+            throw new SpiderBizException($"创建WebDriver失败，{e.ToString()}");
         }
 
         throw new SpiderBizException("not no found webdriver...");

@@ -85,12 +85,12 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
         string targetUrl = string.Format(this.HomePage, eventData.Keyword);
         await this.WebElementLoadProvider.InvokeAsync(
             targetUrl,
-            drv => drv.FindElement(By.ClassName("s-result-list")),
+            drv => drv.FindElement(By.CssSelector(".s-result-list")),
             async root =>
             {
                 if (root == null) return;
 
-                var resultContent = root.TryFindElements(By.ClassName("result-content"));
+                var resultContent = root.TryFindElements(By.CssSelector(".result-content"));
                 if (resultContent is { Count: > 0 })
                 {
                     this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);

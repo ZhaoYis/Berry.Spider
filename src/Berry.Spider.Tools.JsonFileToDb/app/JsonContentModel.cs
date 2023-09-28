@@ -35,7 +35,8 @@ public class PostItem
     {
         List<string> contents = new();
 
-        List<string> res = this.Content.Split('\n').ToList();
+        if (string.IsNullOrWhiteSpace(this.Content)) return contents;
+        List<string> res = this.Content.Split('\n', '\r').Where(c => !string.IsNullOrWhiteSpace(c)).ToList();
         foreach (string item in res)
         {
             string trimItem = item.Trim();
