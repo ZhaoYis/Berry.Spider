@@ -50,11 +50,16 @@ public class SpiderEventBusRabbitMqModule : AbpModule
                 });
             }
 
-            //消费者线程并行处理消息的线程数
-            opt.ConsumerThreadCount = 1;
-            //如果设置为 true，则每个消费者组都会根据 ConsumerThreadCount 设置的值创建单独的线程进行处理。
-            // opt.UseDispatchingPerGroup = true;
-            opt.EnableConsumerPrefetch = true;
+            ConsumerOptions? consumerOptions = configuration.GetSection(nameof(ConsulOptions)).Get<ConsumerOptions>();
+            if (consumerOptions is { })
+            {
+                //消费者线程并行处理消息的线程数
+                opt.ConsumerThreadCount = consumerOptions.ConsumerThreadCount;
+                //如果设置为 true，则每个消费者组都会根据 ConsumerThreadCount 设置的值创建单独的线程进行处理。
+                // opt.UseDispatchingPerGroup = true;
+                opt.EnableConsumerPrefetch = consumerOptions.EnableConsumerPrefetch;
+            }
+
             //失败消息的过期时间（秒）
             opt.FailedMessageExpiredAfter = 30 * 24 * 3600;
             //成功消息的过期时间（秒）

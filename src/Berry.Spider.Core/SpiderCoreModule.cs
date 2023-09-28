@@ -47,6 +47,8 @@ public class SpiderCoreModule : AbpModule
         context.Services.Configure<ConsulOptions>(configuration.GetSection(nameof(ConsulOptions)));
         //配置OpenAIOptions
         context.Services.Configure<OpenAIOptions>(configuration.GetSection(nameof(OpenAIOptions)));
+        //配置ConsumerOptions
+        context.Services.Configure<ConsumerOptions>(configuration.GetSection(nameof(ConsumerOptions)));
 
         //注入文本解析器
         context.Services.AddTransient<NormalTextAnalysisProvider>();
