@@ -51,7 +51,7 @@ public class SpiderEventBusRabbitMqModule : AbpModule
             }
 
             //消费者线程并行处理消息的线程数
-            opt.ConsumerThreadCount = 5;
+            opt.ConsumerThreadCount = 1;
             //如果设置为 true，则每个消费者组都会根据 ConsumerThreadCount 设置的值创建单独的线程进行处理。
             // opt.UseDispatchingPerGroup = true;
             opt.EnableConsumerPrefetch = true;
