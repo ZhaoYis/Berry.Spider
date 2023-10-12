@@ -161,6 +161,14 @@ public class SpiderDomainService : DomainService
                     mainContent = mainContent.Insert(0, subTitleContent);
                 }
             }
+            
+            //处理原标题
+            if (this.Options.MainTitleOptions.IsEnable)
+            {
+                var opSubTitleList = subTitleList.Take(this.Options.MainTitleOptions.MaxRecords).ToList();
+                string opSubTitleString = string.Join("，", opSubTitleList);
+                originalTitle = $"{originalTitle}，{opSubTitleString}";
+            }
         }
 
         //组装数据
