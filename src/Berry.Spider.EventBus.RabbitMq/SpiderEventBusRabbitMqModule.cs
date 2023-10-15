@@ -50,7 +50,7 @@ public class SpiderEventBusRabbitMqModule : AbpModule
                 });
             }
 
-            ConsumerOptions? consumerOptions = configuration.GetSection(nameof(ConsulOptions)).Get<ConsumerOptions>();
+            ConsumerOptions? consumerOptions = configuration.GetSection(nameof(ConsumerOptions)).Get<ConsumerOptions>();
             if (consumerOptions is not null)
             {
                 //消费者线程并行处理消息的线程数
