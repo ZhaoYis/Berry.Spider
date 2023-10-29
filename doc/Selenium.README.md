@@ -61,3 +61,6 @@ docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://localhost:3306/xxl_jo
 
 DotXxlJob：
 https://github.com/xuanye/DotXxlJob
+
+docker build -f Dockerfile_Consumers -t berry_consumers:v1.0.0 .
+docker run -d --name berry_consumers berry_consumers:v1.0.0

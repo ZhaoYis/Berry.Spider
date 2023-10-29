@@ -1,26 +1,16 @@
-﻿FROM mcr.microsoft.com/dotnet/runtime:6.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/runtime:7.0 AS base
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj", "Berry.Spider.Consumers/"]
-COPY ["src/Berry.Spider.TouTiao.Contracts/Berry.Spider.TouTiao.Contracts.csproj", "Berry.Spider.TouTiao.Contracts/"]
-COPY ["src/Berry.Spider.Contracts/Berry.Spider.Contracts.csproj", "Berry.Spider.Contracts/"]
-COPY ["src/Berry.Spider.Core/Berry.Spider.Core.csproj", "Berry.Spider.Core/"]
-COPY ["src/Berry.Spider.Proxy/Berry.Spider.Proxy.csproj", "Berry.Spider.Proxy/"]
-COPY ["src/Berry.Spider.Domain.Shared/Berry.Spider.Domain.Shared.csproj", "Berry.Spider.Domain.Shared/"]
-COPY ["src/Berry.Spider.Domain/Berry.Spider.Domain.csproj", "Berry.Spider.Domain/"]
-COPY ["src/Berry.Spider.Baidu/Berry.Spider.Baidu.csproj", "Berry.Spider.Baidu/"]
-COPY ["src/Berry.Spider.Baidu.Contracts/Berry.Spider.Baidu.Contracts.csproj", "Berry.Spider.Baidu.Contracts/"]
-COPY ["src/Berry.Spider.TouTiao/Berry.Spider.TouTiao.csproj", "Berry.Spider.TouTiao/"]
-COPY ["src/Berry.Spider.EntityFrameworkCore/Berry.Spider.EntityFrameworkCore.csproj", "Berry.Spider.EntityFrameworkCore/"]
+COPY ["src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj", "src/Berry.Spider.Consumers/"]
 RUN dotnet restore "src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj"
 COPY . .
-WORKDIR "/src/Berry.Spider.Consumers"
+WORKDIR "/src/src/Berry.Spider.Consumers"
 RUN dotnet build "Berry.Spider.Consumers.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Berry.Spider.Consumers.csproj" -c Release -o /app/publish
+RUN dotnet publish "Berry.Spider.Consumers.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

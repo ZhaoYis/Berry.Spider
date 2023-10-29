@@ -86,6 +86,8 @@ public class SpiderEventBusRabbitMqModule : AbpModule
                             new(Headers.MessageName, eventArgs.RoutingKey)
                         };
                     };
+
+                    o.PublishConfirms = rabbitMqOptions.PublishConfirms;
                 });
             }
         }).AddSubscribeFilter<CustomSubscribeFilter>();
