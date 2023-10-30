@@ -55,7 +55,8 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             {
                 PollingInterval = TimeSpan.FromSeconds(5),
             };
-            wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+            wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException),
+                typeof(NotFoundException));
 
             var page = driver.PageSource;
 
@@ -116,7 +117,8 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             {
                 PollingInterval = TimeSpan.FromSeconds(5),
             };
-            wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+            wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException),
+                typeof(NotFoundException));
 
             var page = driver.PageSource;
 
@@ -127,7 +129,6 @@ public class WebElementLoadProvider : IWebElementLoadProvider
         catch (Exception exception)
         {
             this.Logger.LogException(exception);
-
             return await Task.FromResult(default(T));
         }
         finally
