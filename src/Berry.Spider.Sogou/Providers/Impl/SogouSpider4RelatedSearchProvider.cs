@@ -104,7 +104,6 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
 
                 var resultContent = root.TryFindElements(By.TagName("a"));
                 if (resultContent is null or {Count: 0}) return;
-                this.Logger.LogInformation("总共采集到记录：{0}", resultContent.Count);
 
                 ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                 foreach (IWebElement element in resultContent)
@@ -131,6 +130,9 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
 
                 if (childPageDataItems is {Count: > 0})
                 {
+                    this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
+                        eventData.Keyword, childPageDataItems.Count);
+
                     var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom,
                         eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode,
                         eventData.IdentityId);

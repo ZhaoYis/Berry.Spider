@@ -106,7 +106,6 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
 
                 var resultContent = root.TryFindElements(By.CssSelector(".result-content"));
                 if (resultContent is null or {Count: 0}) return;
-                this.Logger.LogInformation("总共采集到记录：{0}", resultContent.Count);
 
                 ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                 foreach (IWebElement element in resultContent)
@@ -143,6 +142,9 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
 
                 if (childPageDataItems is {Count: > 0})
                 {
+                    this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
+                        eventData.Keyword, childPageDataItems.Count);
+
                     var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom,
                         eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode,
                         eventData.IdentityId);
@@ -238,7 +240,8 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                     await this.SpiderDomainService.BuildHighQualityContentAsync(eventData.Title, eventData.SourceFrom,
                         contentItems, traceCode: eventData.TraceCode);
                 await this.SpiderRepository.InsertAsync(spiderContent);
-                this.Logger.LogInformation("落库成功，标题：{0}，共计：{1}条记录", spiderContent.Title, contentItems.Count);
+                this.Logger.LogInformation("落库成功关键字：{0}，标题：{0}，共计：{1}行记录", eventData.Keyword, spiderContent.Title,
+                    contentItems.Count);
             }
         }
         catch (Exception exception)
