@@ -10,14 +10,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
+using Volo.Abp.Timing;
 
 namespace Berry.Spider.TouTiao;
 
 /// <summary>
 /// 今日头条：优质_问答
 /// </summary>
-[SpiderService(new[]
-    {SpiderSourceFrom.TouTiao_HighQuality_Question, SpiderSourceFrom.TouTiao_HighQuality_Question_Ext_NO_1})]
+[SpiderService(new[] {SpiderSourceFrom.TouTiao_HighQuality_Question, SpiderSourceFrom.TouTiao_HighQuality_Question_Ext_NO_1})]
 public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpider4HighQualityQuestionProvider>,
     ISpiderProvider
 {
@@ -29,8 +29,9 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
     private IEventBusPublisher DistributedEventBus { get; }
     private IRedisService RedisService { get; }
     private SpiderOptions Options { get; }
+    private IClock Clock { get; }
 
-    private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=question&dvpf=pc";
+    private string HomePage => "https://so.toutiao.com/search?wid_ct={0}&keyword={1}&pd=question&dvpf=pc&page_num=0&source=input";
 
     public TouTiaoSpider4HighQualityQuestionProvider(ILogger<TouTiaoSpider4HighQualityQuestionProvider> logger,
         IWebElementLoadProvider provider,
@@ -40,7 +41,8 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
         ISpiderContentKeywordRepository keywordRepository,
         IEventBusPublisher eventBus,
         IRedisService redisService,
-        IOptionsSnapshot<SpiderOptions> options) : base(logger)
+        IOptionsSnapshot<SpiderOptions> options,
+        IClock clock) : base(logger)
     {
         this.WebElementLoadProvider = provider;
         this.ResolveJumpUrlProvider = serviceProvider.GetRequiredService<TouTiaoResolveJumpUrlProvider>();
@@ -50,6 +52,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
         this.DistributedEventBus = eventBus;
         this.RedisService = redisService;
         this.Options = options.Value;
+        this.Clock = clock;
     }
 
     /// <summary>
@@ -93,10 +96,10 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
     public async Task HandlePushEventAsync<T>(T eventData) where T : class, ISpiderPushEto
     {
         //验证一次
-        bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PUSH, eventData.IdentityId);
-        if (!result) return;
+        // bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PUSH, eventData.IdentityId);
+        // if (!result) return;
 
-        string targetUrl = string.Format(this.HomePage, eventData.Keyword);
+        string targetUrl = string.Format(this.HomePage, this.Clock.Now.ToTimestamp(), eventData.Keyword);
         await this.WebElementLoadProvider.InvokeAsync(
             targetUrl,
             drv => drv.FindElement(By.CssSelector(".s-result-list")),
@@ -169,8 +172,8 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
     public async Task HandlePullEventAsync<T>(T eventData) where T : class, ISpiderPullEto
     {
         //验证一次
-        bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PULL, eventData.IdentityId);
-        if (!result) return;
+        // bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PULL, eventData.IdentityId);
+        // if (!result) return;
 
         try
         {

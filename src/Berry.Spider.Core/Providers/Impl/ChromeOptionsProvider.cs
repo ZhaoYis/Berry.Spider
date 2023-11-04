@@ -68,13 +68,6 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         //检查在会话期间导航时 是否使用了过期的 (或) 无效的 TLS Certificate
         //设置为 false, 则页面浏览遇到任何域证书问题时, 将返回insecure certificate error . 如果设置为 true, 则浏览器将信任无效证书.
         options.AcceptInsecureCertificates = true;
-        //设置日志级别
-        options.SetLoggingPreference(LogType.Client, LogLevel.Off);
-        options.SetLoggingPreference(LogType.Driver, LogLevel.Off);
-        options.SetLoggingPreference(LogType.Browser, LogLevel.Off);
-        options.SetLoggingPreference(LogType.Server, LogLevel.Off);
-        options.SetLoggingPreference(LogType.Profiler, LogLevel.Off);
-        options.SetLoggingPreference(LogType.Performance, LogLevel.Off);
 
         //设置代理
         if (isUsedProxy)

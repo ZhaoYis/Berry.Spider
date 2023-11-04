@@ -94,9 +94,9 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     /// <returns></returns>
     public async Task HandlePushEventAsync<T>(T eventData) where T : class, ISpiderPushEto
     {
-        //验证一次
-        bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PUSH, eventData.IdentityId);
-        if (!result) return;
+        // //验证一次
+        // bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PUSH, eventData.IdentityId);
+        // if (!result) return;
 
         string targetUrl = string.Format(this.HomePage, eventData.Keyword);
         await this.WebElementLoadProvider.InvokeAsync(
@@ -168,9 +168,9 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     /// <returns></returns>
     public async Task HandlePullEventAsync<T>(T eventData) where T : class, ISpiderPullEto
     {
-        //验证一次
-        bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PULL, eventData.IdentityId);
-        if (!result) return;
+        // //验证一次
+        // bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PULL, eventData.IdentityId);
+        // if (!result) return;
 
         try
         {
