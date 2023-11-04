@@ -26,4 +26,20 @@ public class SpiderPushToQueueDto : ITraceCode
     /// 关键字
     /// </summary>
     public string Keyword { get; set; }
+
+    /// <summary>
+    /// 计算当前入队组合唯一标识
+    /// </summary>
+    /// <returns></returns>
+    public string GetIdentityId()
+    {
+        return this.ToString().ToMd5();
+    }
+
+    /// <summary>Returns a string that represents the current object.</summary>
+    /// <returns>A string that represents the current object.</returns>
+    public override string ToString()
+    {
+        return $"SourceFrom={SourceFrom.ToString()}-TraceCode={TraceCode}-Keyword={Keyword}";
+    }
 }

@@ -7,15 +7,17 @@ public class BaiduSpider4RelatedSearchPushEto : SpiderPushBaseEto
 {
     public const string RoutingKeyString = "Berry.Baidu.RelatedSearch.Push";
     public const string QueueNameString = "Baidu.RelatedSearch.Push";
-    
+
     public BaiduSpider4RelatedSearchPushEto()
     {
     }
 
-    public BaiduSpider4RelatedSearchPushEto(SpiderSourceFrom from, string keyword, string? traceCode) : this()
+    public BaiduSpider4RelatedSearchPushEto(SpiderSourceFrom from, string keyword, string? traceCode, string identityId)
+        : this()
     {
         this.SourceFrom = from;
         this.Keyword = keyword;
         this.TraceCode = traceCode;
+        this.IdentityId = identityId;
     }
 }

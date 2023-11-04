@@ -14,13 +14,15 @@ public class SogouSpider4RelatedSearchPullEto : SpiderPullBaseEto
     public SogouSpider4RelatedSearchPullEto() : base(SpiderSourceFrom.Sogou_Related_Search)
     {
     }
-    
-    public SogouSpider4RelatedSearchPullEto(SpiderSourceFrom from, string keyword, string title, List<ChildPageDataItem> items, string? traceCode) : this()
+
+    public SogouSpider4RelatedSearchPullEto(SpiderSourceFrom from, string keyword, string title,
+        List<ChildPageDataItem> items, string? traceCode, string identityId) : this()
     {
         this.SourceFrom = from;
         this.Keyword = keyword;
         this.Title = title;
         this.Items = items;
         this.TraceCode = traceCode;
+        this.IdentityId = identityId;
     }
 }

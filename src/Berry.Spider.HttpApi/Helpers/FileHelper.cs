@@ -25,9 +25,9 @@ public class FileHelper
             }
             await foreach (string row in this.TryReadLinesAsync(filePath))
             {
-                if (!string.IsNullOrWhiteSpace(row))
+                if (!string.IsNullOrWhiteSpace(row.Trim()))
                 {
-                    await _onInvoke.Invoke(row);
+                    await _onInvoke.Invoke(row.Trim());
                 }
             }
         }

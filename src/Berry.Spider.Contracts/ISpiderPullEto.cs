@@ -2,7 +2,7 @@
 
 namespace Berry.Spider;
 
-public interface ISpiderPullEto : ISpiderEto, ITraceCode
+public interface ISpiderPullEto : ISpiderEto, ITraceCode, ISourceIdentityId
 {
     /// <summary>
     /// 保存这次记录最终的标题
