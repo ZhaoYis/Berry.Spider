@@ -39,9 +39,11 @@ public class WebElementLoadProvider : IWebElementLoadProvider
 
             //获取跳转后url
             string title = driver.Title;
+            string page = driver.PageSource;
             string url = driver.Url;
-
             string current = driver.CurrentWindowHandle;
+            
+            if (string.IsNullOrEmpty(title)) return;
             this.Logger.LogInformation("当前窗口句柄：{0}，采集关键字：{1}", current, title);
 
             // 隐式等待
@@ -57,8 +59,6 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             };
             wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException),
                 typeof(NotFoundException));
-
-            var page = driver.PageSource;
 
             try
             {
@@ -101,9 +101,10 @@ public class WebElementLoadProvider : IWebElementLoadProvider
 
             //获取跳转后url
             string title = driver.Title;
-            string url = driver.Url;
-
+            string page = driver.PageSource;
             string current = driver.CurrentWindowHandle;
+            
+            if (string.IsNullOrEmpty(title)) return default;
             this.Logger.LogInformation("当前窗口句柄：{0}，采集关键字：{1}", current, title);
 
             // 隐式等待
@@ -120,10 +121,8 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException),
                 typeof(NotFoundException));
 
-            var page = driver.PageSource;
-
             IWebElement? webElement = wait.Until(selector);
-            T? result = await executor.Invoke(webElement);
+            T result = await executor.Invoke(webElement);
             return result;
         }
         catch (Exception exception)
@@ -152,8 +151,9 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             //获取跳转后url
             string title = driver.Title;
             string url = driver.Url;
-
             string current = driver.CurrentWindowHandle;
+            
+            if (string.IsNullOrEmpty(title)) return string.Empty;
             this.Logger.LogInformation("当前窗口句柄：{0}，采集关键字：{1}", current, title);
 
             // 隐式等待
