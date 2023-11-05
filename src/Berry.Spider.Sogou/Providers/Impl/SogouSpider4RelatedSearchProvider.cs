@@ -85,71 +85,81 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
     /// </summary>
     public async Task HandlePushEventAsync<T>(T eventData) where T : class, ISpiderPushEto
     {
-        //验证一次
-        bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PUSH, eventData.IdentityId);
-        if (!result) return;
-
-        //获取url地址
-        string realUrl = await this.WebElementLoadProvider.AutoClickAsync(this.HomePage, eventData.Keyword,
-            By.Id("query"),
-            By.Id("stb"));
-        if (string.IsNullOrWhiteSpace(realUrl)) return;
-
-        await this.WebElementLoadProvider.InvokeAsync(
-            realUrl,
-            drv => drv.FindElement(By.Id("hint_container")),
-            async root =>
+        try
+        {
+            //关键字采集唯一性验证
+            if (this.Options.IsEnablePushUniqVerif)
             {
-                if (root == null) return;
+                bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PUSH, eventData.IdentityId);
+                if (!result) return;
+            }
 
-                var resultContent = root.TryFindElements(By.TagName("a"));
-                if (resultContent is null or {Count: 0}) return;
+            //获取url地址
+            string realUrl = await this.WebElementLoadProvider.AutoClickAsync(this.HomePage, eventData.Keyword,
+                By.Id("query"),
+                By.Id("stb"));
+            if (string.IsNullOrWhiteSpace(realUrl)) return;
 
-                ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
-                foreach (IWebElement element in resultContent)
+            await this.WebElementLoadProvider.InvokeAsync(
+                realUrl,
+                drv => drv.FindElement(By.Id("hint_container")),
+                async root =>
                 {
-                    string text = element.Text;
-                    string href = element.GetAttribute("href");
+                    if (root == null) return;
 
-                    //执行相似度检测
-                    double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
-                    if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
+                    var resultContent = root.TryFindElements(By.TagName("a"));
+                    if (resultContent is null or {Count: 0}) return;
+
+                    ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
+                    foreach (IWebElement element in resultContent)
                     {
-                        if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
+                        string text = element.Text;
+                        string href = element.GetAttribute("href");
+
+                        //执行相似度检测
+                        double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
+                        if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
                         {
-                            return;
+                            if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
+                            {
+                                return;
+                            }
+                        }
+
+                        childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
+                        {
+                            Title = text,
+                            Href = href
+                        });
+                    }
+
+                    if (childPageDataItems is {Count: > 0})
+                    {
+                        this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
+                            eventData.Keyword, childPageDataItems.Count);
+
+                        var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom,
+                            eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode,
+                            eventData.IdentityId);
+
+                        //保存采集到的标题
+                        if (eto is ISpiderPullEto pullEto)
+                        {
+                            //此处不做消息队列发送，直接存储到数据库
+                            await this.HandlePullEventAsync(pullEto);
+
+                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item =>
+                                    new SpiderContent_Keyword(item.Title, pullEto.SourceFrom, eventData.TraceCode))
+                                .ToList();
+                            await this.SpiderKeywordRepository.InsertManyAsync(list);
                         }
                     }
-
-                    childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
-                    {
-                        Title = text,
-                        Href = href
-                    });
-                }
-
-                if (childPageDataItems is {Count: > 0})
-                {
-                    this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
-                        eventData.Keyword, childPageDataItems.Count);
-
-                    var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom,
-                        eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode,
-                        eventData.IdentityId);
-
-                    //保存采集到的标题
-                    if (eto is ISpiderPullEto pullEto)
-                    {
-                        //此处不做消息队列发送，直接存储到数据库
-                        await this.HandlePullEventAsync(pullEto);
-
-                        List<SpiderContent_Keyword> list = pullEto.Items.Select(item =>
-                                new SpiderContent_Keyword(item.Title, pullEto.SourceFrom, eventData.TraceCode))
-                            .ToList();
-                        await this.SpiderKeywordRepository.InsertManyAsync(list);
-                    }
-                }
-            });
+                });
+        }
+        catch (Exception exception)
+        {
+            this.Logger.LogException(exception);
+        }
     }
 
     /// <summary>
@@ -157,10 +167,6 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
     /// </summary>
     public async Task HandlePullEventAsync<T>(T eventData) where T : class, ISpiderPullEto
     {
-        //验证一次
-        bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PULL, eventData.IdentityId);
-        if (!result) return;
-
         try
         {
             List<SpiderContent_Title> contents = new List<SpiderContent_Title>();

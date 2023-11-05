@@ -24,6 +24,16 @@ public class SpiderOptions
     /// 落库时是否随机插入图片
     /// </summary>
     public bool IsRandomInsertImage { get; set; }
+    
+    /// <summary>
+    /// 关键字采集是否启用唯一性验证（Push模式）
+    /// </summary>
+    public bool IsEnablePushUniqVerif { get; set; }
+    
+    /// <summary>
+    /// 关键字采集是否启用唯一性验证（Pull模式）
+    /// </summary>
+    public bool IsEnablePullUniqVerif { get; set; }
 
     /// <summary>
     /// 关键字校验选项
