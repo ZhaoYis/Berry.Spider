@@ -44,4 +44,9 @@ public class SpiderOptions
     /// 内容子标题选项
     /// </summary>
     public SubTitleOptions SubTitleOptions { get; set; } = new();
+    
+    /// <summary>
+    /// 监听服务配置选项
+    /// </summary>
+    public ServLifetimeOptions ServLifetimeOptions { get; set; } = new();
 }

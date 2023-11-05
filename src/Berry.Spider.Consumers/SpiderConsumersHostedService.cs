@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using System.Threading;
 using System.Threading.Tasks;
+using Berry.Spider.Contracts;
 using Volo.Abp;
 using Volo.Abp.Threading;
 
@@ -26,8 +27,16 @@ public class SpiderConsumersHostedService : IHostedService
         _hostEnvironment = hostEnvironment;
         _appLifetime = appLifetime;
 
-        //注册应用程序启动、停止事件
-        ApplicationRegisterHandler();
+        SpiderOptions? spiderOptions = configuration.GetSection(nameof(SpiderOptions)).Get<SpiderOptions>();
+        if (spiderOptions is not null)
+        {
+            ServLifetimeOptions lifetimeOptions = spiderOptions.ServLifetimeOptions;
+            if (lifetimeOptions.IsEnable)
+            {
+                //注册应用程序启动、停止事件
+                ApplicationRegisterHandler();
+            }
+        }
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
