@@ -21,5 +21,6 @@ public class SogouSpiderModule : AbpModule
 
         //注入文本解析器
         context.Services.AddTransient<SogouRelatedSearchTextAnalysisProvider>();
+        context.Services.AddTransient<SogouSpider4WenWenTextAnalysisProvider>();
     }
 }
