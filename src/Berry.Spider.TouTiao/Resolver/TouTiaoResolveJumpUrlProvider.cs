@@ -9,6 +9,7 @@ public class TouTiaoResolveJumpUrlProvider : IResolveJumpUrlProvider
 {
     private static Regex Toutiaoapi_Com_Regex = new(@"toutiaoapi\.com");
     private static Regex Toutiao_Com_Regex = new(@"toutiao\.com");
+    private static Regex Url_Regex = new(@"^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$");
 
     private TouTiaoOptions TouTiaoOptions { get; }
 
@@ -45,6 +46,11 @@ public class TouTiaoResolveJumpUrlProvider : IResolveJumpUrlProvider
                     jumpToUrl = match.Groups[1].Value;
                 }
             }
+        }
+
+        if (!Url_Regex.Match(jumpToUrl).Success)
+        {
+            jumpToUrl = "";
         }
 
         return Task.FromResult(jumpToUrl);
