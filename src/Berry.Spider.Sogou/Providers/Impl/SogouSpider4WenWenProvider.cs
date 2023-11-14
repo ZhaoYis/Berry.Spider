@@ -134,7 +134,7 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
                         childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
                         {
                             Title = text,
-                            Href = href
+                            Href = $"{this.HomePage}{href}"
                         });
                     }
 
@@ -202,7 +202,7 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
                                 .Where(c => c.GetAttribute("class").Contains("answer_con"))
                                 .ToList();
                             if (realAnswerList is null or {Count: 0}) continue;
-                            
+
                             ImmutableList<string> answerContentItems = ImmutableList.Create<string>();
                             foreach (IWebElement answer in realAnswerList)
                             {
@@ -230,6 +230,8 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
                                 .Where(c => !string.IsNullOrEmpty(c)).Distinct().ToList();
                             contentItems.TryAdd(item.Title, todoSaveContentItems);
                         }
+
+                        await Task.CompletedTask;
                     }
                 );
 
