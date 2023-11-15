@@ -134,7 +134,7 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
                         childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
                         {
                             Title = text,
-                            Href = $"{this.HomePage}{href}"
+                            Href = href
                         });
                     }
 
