@@ -107,7 +107,7 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
 
             await this.WebElementLoadProvider.InvokeAsync(
                 realUrl,
-                drv => drv.FindElement(By.Id("results")),
+                drv => drv.FindElement(By.CssSelector(".results")),
                 async root =>
                 {
                     if (root == null) return;
