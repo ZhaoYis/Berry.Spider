@@ -42,9 +42,9 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             string page = driver.PageSource;
             string url = driver.Url;
             string current = driver.CurrentWindowHandle;
-            
+
             if (string.IsNullOrEmpty(title)) return;
-            this.Logger.LogInformation("当前窗口句柄：{0}，采集关键字：{1}", current, title);
+            this.Logger.LogInformation("[Void]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
 
             // 隐式等待
             //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -102,10 +102,11 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             //获取跳转后url
             string title = driver.Title;
             string page = driver.PageSource;
+            string url = driver.Url;
             string current = driver.CurrentWindowHandle;
-            
+
             if (string.IsNullOrEmpty(title)) return default;
-            this.Logger.LogInformation("当前窗口句柄：{0}，采集关键字：{1}", current, title);
+            this.Logger.LogInformation("[T]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
 
             // 隐式等待
             //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -152,9 +153,9 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             string title = driver.Title;
             string url = driver.Url;
             string current = driver.CurrentWindowHandle;
-            
+
             if (string.IsNullOrEmpty(title)) return string.Empty;
-            this.Logger.LogInformation("当前窗口句柄：{0}，采集关键字：{1}", current, title);
+            this.Logger.LogInformation("[AC]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
 
             // 隐式等待
             //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);

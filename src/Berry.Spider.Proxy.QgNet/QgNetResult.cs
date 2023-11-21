@@ -1,29 +1,29 @@
+using System.Text.Json.Serialization;
+
 namespace Berry.Spider.Proxy.QgNet;
 
 public class QgNetResult<T> where T : class, new()
 {
-    // Code	    Integer	结果编码:0(成功）-1(失败)
-    // TaskID	Integer	任务ID
-    // Num	    Integer	申请数量
-    // Data	    Array	代理IP数据信息，包含节点IP、端口、失效日期
-    // Msg	    String	区域ID，多个用”，”分割;*代表全部
+    /// <summary>
+    /// 请求状态码。
+    /// </summary>
+    [JsonPropertyName("code")]
+    public string Code { get; set; }
 
-    /**
-     *  -1 未知错误
-        -10 参数不合法!
-        -100 计划不存在或已过期!
-        -101 请求数量超过计划通道数!
-        -102 没有剩余的可用通道。
-     */
-    public int Code { get; set; }
-
+    /// <summary>
+    /// IP资源列表。
+    /// </summary>
+    [JsonPropertyName("data")]
     public T Data { get; set; }
-    public int Num { get; set; }
-    public string TaskID { get; set; }
-    public string Msg { get; set; }
+
+    /// <summary>
+    /// 唯一请求ID，每次请求都会返回。定位问题时需要提供该次请求的 request_id。
+    /// </summary>
+    [JsonPropertyName("request_id")]
+    public string RequestId { get; set; }
 
     /// <summary>
     /// 是否成功
     /// </summary>
-    public bool IsSuccess => this.Code == 0;
+    public bool IsSuccess => this.Code == "SUCCESS";
 }

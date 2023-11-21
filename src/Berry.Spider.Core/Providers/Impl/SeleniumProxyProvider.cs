@@ -25,7 +25,7 @@ public class SeleniumProxyProvider : ISeleniumProxyProvider
             {
                 OpenQA.Selenium.Proxy proxy = new OpenQA.Selenium.Proxy();
                 proxy.Kind = ProxyKind.Manual;
-                proxy.IsAutoDetect = false;
+                proxy.IsAutoDetect = true;
                 proxy.HttpProxy = host;
 
                 return proxy;

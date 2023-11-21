@@ -26,6 +26,8 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         //https://www.cnblogs.com/gurenyumao/p/14721035.html
         ChromeOptions options = new ChromeOptions();
 
+        //窗口最大化运行
+        options.AddArgument("--start-maximized");
         //Chrome在root权限下跑
         options.AddArgument("--no-sandbox");
         //停用DNS预读
@@ -40,6 +42,7 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         options.AddArgument("--disable-popup-blocking");
         //无界面运行(无窗口)，也叫无头浏览器，通常用于远程运行，在本地运行也可以通过该参数提升运行效率
         //在无头模式下运行，即没有UI或显示服务器依赖性。
+        //https://developer.chrome.com/articles/new-headless/
         options.AddArgument("--headless");
         //设置浏览器以隐身模式(无痕模式运行)
         options.AddArgument("--incognito");
@@ -64,7 +67,7 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         //Normal：默认值, 等待所有资源下载
         //Eager：DOM 访问已准备就绪, 但诸如图像的其他资源可能仍在加载
         //None：完全不会阻塞 WebDriver
-        options.PageLoadStrategy = PageLoadStrategy.Normal;
+        options.PageLoadStrategy = PageLoadStrategy.Eager;
         //检查在会话期间导航时 是否使用了过期的 (或) 无效的 TLS Certificate
         //设置为 false, 则页面浏览遇到任何域证书问题时, 将返回insecure certificate error . 如果设置为 true, 则浏览器将信任无效证书.
         options.AcceptInsecureCertificates = true;
@@ -76,7 +79,7 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
             if (proxy != null)
             {
                 //使用指定的代理服务器，覆盖系统设置。此交换机仅影响HTTP和HTTPS请求
-                //options.AddArgument($"--proxy-server={proxy.HttpProxy}");
+                // options.AddArgument($"--proxy-server={proxy.HttpProxy}");
                 options.Proxy = proxy;
             }
         }

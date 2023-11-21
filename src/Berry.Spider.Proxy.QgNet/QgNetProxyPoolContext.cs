@@ -18,22 +18,20 @@ public class QgNetProxyPoolContext
 
     public async Task<QgNetProxyResult?> GetAsync()
     {
-        // QgNetProxyResult? result = await this.Cache.GetAsync(CacheKey);
-        //
-        // //检查当前IP是否有效，无效则重新获取一个
-        // if (result is { IsInvalid: true })
-        // {
-        //     return result;
-        // }
-        // else
-        // {
-        //     result = await this.QgNetProxyHttpClient.GetOneAsync();
-        //     await this.SetProxyResultAsync(result);
-        //
-        //     return result;
-        // }
-        
-        return await this.QgNetProxyHttpClient.GetOneAsync();
+        QgNetProxyResult? result = await this.Cache.GetAsync(CacheKey);
+
+        //检查当前IP是否有效，无效则重新获取一个
+        if (result is { IsInvalid: true })
+        {
+            return result;
+        }
+        else
+        {
+            result = await this.QgNetProxyHttpClient.GetOneAsync();
+            await this.SetProxyResultAsync(result);
+
+            return result;
+        }
     }
 
     private async Task SetProxyResultAsync(QgNetProxyResult? result)

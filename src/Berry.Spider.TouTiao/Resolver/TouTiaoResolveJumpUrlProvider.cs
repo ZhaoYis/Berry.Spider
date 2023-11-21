@@ -53,6 +53,8 @@ public class TouTiaoResolveJumpUrlProvider : IResolveJumpUrlProvider
             jumpToUrl = "";
         }
 
+        //TODO：做url规则验证，符合url规范的才返回了
+        
         return Task.FromResult(jumpToUrl);
     }
 }
