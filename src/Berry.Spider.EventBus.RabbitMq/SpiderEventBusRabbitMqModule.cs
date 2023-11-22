@@ -132,10 +132,10 @@ public class SpiderEventBusRabbitMqModule : AbpModule
                 o.DatabaseName = "cap";
                 o.ReceivedCollection = "cap.received";
                 o.PublishedCollection = "cap.published";
-                //o.LockCollection = "cap.lock";
+                o.LockCollection = "cap.lock";
             });
 
-            //opt.UseStorageLock = true;
+            opt.UseStorageLock = true;
 
             return true;
         }
