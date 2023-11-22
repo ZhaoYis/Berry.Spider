@@ -7,6 +7,6 @@ public class SpiderWeixinModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        var configuration = context.Services.GetConfiguration();
+        base.ConfigureServices(context);
     }
 }

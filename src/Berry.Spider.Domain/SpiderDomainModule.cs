@@ -10,5 +10,6 @@ public class SpiderDomainModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        base.ConfigureServices(context);
     }
 }

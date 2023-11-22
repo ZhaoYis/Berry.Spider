@@ -12,6 +12,6 @@ public class SpiderProxyModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddTransient<ISpiderProxyFactory, SpiderProxyFactory>();
+        context.Services.AddSingleton<ISpiderProxyFactory, SpiderProxyFactory>();
     }
 }
