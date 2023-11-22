@@ -31,6 +31,12 @@ jobs:
         env:
           ENVIRONMENT: ${{ env.ASPNETCORE_ENVIRONMENT }}
 
+      - name: Remove pdb files 
+        run: |
+          cd ${{ github.workspace }}/publish/Berry.Spider.Consumers
+          DEL *.pdb
+        shell: pwsh
+
       - name: Get current date
         run: echo "::set-output name=date::$(date +'%Y%m%d')"
         id: date
