@@ -2,7 +2,7 @@
 
 namespace Berry.Spider;
 
-public interface ISpiderPushEto : ISpiderEto, ITraceCode
+public interface ISpiderPushEto : ISpiderEto, ITraceCode, ISourceIdentityId
 {
     /// <summary>
     /// 关键字

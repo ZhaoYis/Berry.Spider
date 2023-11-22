@@ -10,14 +10,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
+using Volo.Abp.Timing;
 
 namespace Berry.Spider.TouTiao;
 
 /// <summary>
 /// 今日头条：优质_问答
 /// </summary>
-[SpiderService(new[]
-    {SpiderSourceFrom.TouTiao_HighQuality_Question, SpiderSourceFrom.TouTiao_HighQuality_Question_Ext_NO_1})]
+[SpiderService(new[] {SpiderSourceFrom.TouTiao_HighQuality_Question, SpiderSourceFrom.TouTiao_HighQuality_Question_Ext_NO_1})]
 public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpider4HighQualityQuestionProvider>,
     ISpiderProvider
 {
@@ -29,8 +29,9 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
     private IEventBusPublisher DistributedEventBus { get; }
     private IRedisService RedisService { get; }
     private SpiderOptions Options { get; }
+    private IClock Clock { get; }
 
-    private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=question&dvpf=pc";
+    private string HomePage => "https://so.toutiao.com/search?wid_ct={0}&keyword={1}&pd=question&dvpf=pc&page_num=0&source=input";
 
     public TouTiaoSpider4HighQualityQuestionProvider(ILogger<TouTiaoSpider4HighQualityQuestionProvider> logger,
         IWebElementLoadProvider provider,
@@ -40,7 +41,8 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
         ISpiderContentKeywordRepository keywordRepository,
         IEventBusPublisher eventBus,
         IRedisService redisService,
-        IOptionsSnapshot<SpiderOptions> options) : base(logger)
+        IOptionsSnapshot<SpiderOptions> options,
+        IClock clock) : base(logger)
     {
         this.WebElementLoadProvider = provider;
         this.ResolveJumpUrlProvider = serviceProvider.GetRequiredService<TouTiaoResolveJumpUrlProvider>();
@@ -50,6 +52,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
         this.DistributedEventBus = eventBus;
         this.RedisService = redisService;
         this.Options = options.Value;
+        this.Clock = clock;
     }
 
     /// <summary>
@@ -58,9 +61,10 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
     /// <returns></returns>
     public async Task PushAsync(SpiderPushToQueueDto dto)
     {
-        var eto = dto.SourceFrom.TryCreateEto(EtoType.Push, dto.SourceFrom, dto.Keyword, dto.TraceCode);
+        string identityId = dto.GetIdentityId();
+        var eto = dto.SourceFrom.TryCreateEto(EtoType.Push, dto.SourceFrom, dto.Keyword, dto.TraceCode, identityId);
 
-        await this.CheckAsync(dto.Keyword, dto.SourceFrom, async () =>
+        await this.CheckAsync(identityId, dto.SourceFrom, async () =>
             {
                 string topicName = eto.TryGetRoutingKey();
                 await this.DistributedEventBus.PublishAsync(topicName, eto);
@@ -91,24 +95,28 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
     /// <returns></returns>
     public async Task HandlePushEventAsync<T>(T eventData) where T : class, ISpiderPushEto
     {
-        string targetUrl = string.Format(this.HomePage, eventData.Keyword);
-        await this.WebElementLoadProvider.InvokeAsync(
-            targetUrl,
-            drv => drv.FindElement(By.CssSelector(".s-result-list")),
-            async root =>
+        try
+        {
+            //关键字采集唯一性验证
+            if (this.Options.IsEnablePushUniqVerif)
             {
-                if (root == null) return;
+                bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PUSH, eventData.IdentityId);
+                if (!result) return;
+            }
 
-                var resultContent = root.TryFindElements(By.CssSelector(".result-content"));
-                if (resultContent is {Count: > 0})
+            string targetUrl = string.Format(this.HomePage, this.Clock.Now.ToTimestamp(), eventData.Keyword);
+            await this.WebElementLoadProvider.InvokeAsync(
+                targetUrl,
+                drv => drv.FindElement(By.CssSelector(".s-result-list")),
+                async root =>
                 {
-                    this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
+                    if (root == null) return;
+
+                    var resultContent = root.TryFindElements(By.CssSelector(".result-content"));
+                    if (resultContent is null or {Count: 0}) return;
 
                     ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
-                    await Parallel.ForEachAsync(resultContent, new ParallelOptions
-                    {
-                        MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
-                    }, async (element, token) =>
+                    foreach (IWebElement element in resultContent)
                     {
                         //TODO:只取 大家都在问 的部分
 
@@ -138,12 +146,16 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                                 });
                             }
                         }
-                    });
+                    }
 
-                    if (childPageDataItems.Any())
+                    if (childPageDataItems is {Count: > 0})
                     {
+                        this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
+                            eventData.Keyword, childPageDataItems.Count);
+
                         var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom,
-                            eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode);
+                            eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode,
+                            eventData.IdentityId);
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
 
                         //保存采集到的标题
@@ -155,8 +167,12 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                             await this.SpiderKeywordRepository.InsertManyAsync(list);
                         }
                     }
-                }
-            });
+                });
+        }
+        catch (Exception exception)
+        {
+            this.Logger.LogException(exception);
+        }
     }
 
     /// <summary>
@@ -167,6 +183,13 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
     {
         try
         {
+            //关键字采集唯一性验证
+            if (this.Options.IsEnablePullUniqVerif)
+            {
+                bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PULL, eventData.IdentityId);
+                if (!result) return;
+            }
+
             ConcurrentDictionary<string, List<string>> contentItems = new ConcurrentDictionary<string, List<string>>();
             foreach (var item in eventData.Items)
             {
@@ -178,59 +201,52 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                         if (root == null) return;
 
                         var resultContent = root.TryFindElements(By.CssSelector(".list"));
-                        if (resultContent is {Count: > 0})
+                        if (resultContent is null or {Count: 0}) return;
+
+                        foreach (IWebElement element in resultContent)
                         {
-                            await Parallel.ForEachAsync(resultContent, new ParallelOptions
+                            var answerList = element.TryFindElements(By.TagName("div"));
+                            if (answerList is null or {Count: 0}) continue;
+
+                            var realAnswerList = answerList
+                                .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))
+                                .ToList();
+                            if (realAnswerList is null or {Count: 0}) continue;
+
+                            ImmutableList<string> answerContentItems = ImmutableList.Create<string>();
+                            foreach (IWebElement answer in realAnswerList)
                             {
-                                MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
-                            }, async (element, token) =>
-                            {
-                                var answerList = element.TryFindElements(By.TagName("div"));
-                                if (answerList is {Count: > 0})
+                                if (!string.IsNullOrWhiteSpace(answer.Text))
                                 {
-                                    var realAnswerList = answerList
-                                        .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))
-                                        .ToList();
-
-                                    if (realAnswerList.Any())
+                                    if (this.Options.HighQualityAnswerOptions.IsEnable)
                                     {
-                                        ImmutableList<string> answerContentItems = ImmutableList.Create<string>();
-                                        await Parallel.ForEachAsync(realAnswerList, new ParallelOptions
+                                        //TODO：后续优化为计算真实字符数（中文、英文、符号、表情等混合时）
+                                        if (answer.Text.Length.Between(
+                                                this.Options.HighQualityAnswerOptions.MinLength,
+                                                this.Options.HighQualityAnswerOptions.MaxLength))
                                         {
-                                            MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
-                                        }, (answer, cancellationToken) =>
-                                        {
-                                            if (!string.IsNullOrWhiteSpace(answer.Text))
-                                            {
-                                                if (this.Options.HighQualityAnswerOptions.IsEnable)
-                                                {
-                                                    //TODO：后续优化为计算真实字符数（中文、英文、符号、表情等混合时）
-                                                    if (answer.Text.Length.Between(
-                                                            this.Options.HighQualityAnswerOptions.MinLength,
-                                                            this.Options.HighQualityAnswerOptions.MaxLength))
-                                                    {
-                                                        answerContentItems = answerContentItems.Add(answer.Text);
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    answerContentItems = answerContentItems.Add(answer.Text);
-                                                }
-                                            }
-
-                                            return ValueTask.CompletedTask;
-                                        });
-
-                                        //去重
-                                        List<string> todoSaveContentItems = answerContentItems
-                                            .Where(c => !string.IsNullOrEmpty(c)).Distinct().ToList();
-                                        contentItems.TryAdd(item.Title, todoSaveContentItems);
+                                            answerContentItems = answerContentItems.Add(answer.Text);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        answerContentItems = answerContentItems.Add(answer.Text);
                                     }
                                 }
-                            });
+                            }
+
+                            //去重
+                            List<string> todoSaveContentItems = answerContentItems
+                                .Where(c => !string.IsNullOrEmpty(c)).Distinct().ToList();
+                            contentItems.TryAdd(item.Title, todoSaveContentItems);
                         }
+
+                        await Task.CompletedTask;
                     }
                 );
+
+                //修养生息20ms
+                await Task.Delay(20);
             }
 
             //检查落库最小记录数
@@ -240,7 +256,8 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                     await this.SpiderDomainService.BuildHighQualityContentAsync(eventData.Title, eventData.SourceFrom,
                         contentItems, traceCode: eventData.TraceCode);
                 await this.SpiderRepository.InsertAsync(spiderContent);
-                this.Logger.LogInformation("落库成功，标题：" + spiderContent.Title + "，共计：" + contentItems.Count + "条记录");
+                this.Logger.LogInformation("落库成功关键字：{0}，标题：{0}，共计：{1}行记录", eventData.Keyword, spiderContent.Title,
+                    contentItems.Count);
             }
         }
         catch (Exception exception)

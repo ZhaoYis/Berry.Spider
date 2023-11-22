@@ -18,4 +18,9 @@ public class SpiderPushBaseEto : ISpiderPushEto
     /// 关键字
     /// </summary>
     public string Keyword { get; set; } = null!;
+
+    /// <summary>
+    /// 入队组合资源唯一标识
+    /// </summary>
+    public string IdentityId { get; set; } = null!;
 }

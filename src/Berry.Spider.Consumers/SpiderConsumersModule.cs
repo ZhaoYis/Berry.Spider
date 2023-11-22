@@ -59,6 +59,7 @@ public class SpiderConsumersModule : AbpModule
 
         //搜狗
         context.Services.AddTransient<SogouSpider4RelatedSearchEventHandler>();
+        context.Services.AddTransient<SogouSpider4WenWenEventHandler>();
 
         //百度
         context.Services.AddTransient<BaiduSpider4RelatedSearchEventHandler>();

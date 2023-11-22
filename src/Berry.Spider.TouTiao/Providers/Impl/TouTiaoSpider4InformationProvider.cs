@@ -15,7 +15,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：资讯
 /// </summary>
-[SpiderService(new[] { SpiderSourceFrom.TouTiao_Information })]
+[SpiderService(new[] {SpiderSourceFrom.TouTiao_Information})]
 public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4InformationProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -49,9 +49,10 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     /// <returns></returns>
     public async Task PushAsync(SpiderPushToQueueDto dto)
     {
-        var eto = dto.SourceFrom.TryCreateEto(EtoType.Push, dto.SourceFrom, dto.Keyword, dto.TraceCode);
+        string identityId = dto.GetIdentityId();
+        var eto = dto.SourceFrom.TryCreateEto(EtoType.Push, dto.SourceFrom, dto.Keyword, dto.TraceCode, identityId);
 
-        await this.CheckAsync(dto.Keyword, dto.SourceFrom, async () =>
+        await this.CheckAsync(identityId, dto.SourceFrom, async () =>
             {
                 string topicName = eto.TryGetRoutingKey();
                 await this.DistributedEventBus.PublishAsync(topicName, eto);
@@ -82,76 +83,97 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     /// <returns></returns>
     public async Task HandlePushEventAsync<T>(T eventData) where T : class, ISpiderPushEto
     {
-        string targetUrl = string.Format(this.HomePage, eventData.Keyword);
-        await this.WebElementLoadProvider.InvokeAsync(
-            targetUrl,
-            drv => drv.FindElement(By.CssSelector(".s-result-list")),
-            async root =>
+        try
+        {
+            //关键字采集唯一性验证
+            if (this.Options.IsEnablePushUniqVerif)
             {
-                if (root == null) return;
+                bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PUSH, eventData.IdentityId);
+                if (!result) return;
+            }
 
-                var resultContent = root.TryFindElements(By.CssSelector(".result-content"));
-                if (resultContent is { Count: > 0 })
+            string targetUrl = string.Format(this.HomePage, eventData.Keyword);
+            await this.WebElementLoadProvider.InvokeAsync(
+                targetUrl,
+                drv => drv.FindElement(By.CssSelector(".s-result-list")),
+                async root =>
                 {
-                    this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
+                    if (root == null) return;
+
+                    var resultContent = root.TryFindElements(By.CssSelector(".result-content"));
+                    if (resultContent is null or {Count: 0}) return;
 
                     ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
-                    await Parallel.ForEachAsync(resultContent, new ParallelOptions
+                    foreach (IWebElement element in resultContent)
+                    {
+                        var a = element.TryFindElement(By.TagName("a"));
+                        if (a != null)
                         {
-                            MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
-                        },
-                        async (element, token) =>
-                        {
-                            var a = element.TryFindElement(By.TagName("a"));
-                            if (a != null)
+                            string text = a.Text;
+                            string href = a.GetAttribute("href");
+
+                            //执行相似度检测
+                            double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
+                            if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
                             {
-                                string text = a.Text;
-                                string href = a.GetAttribute("href");
-
-                                //执行相似度检测
-                                double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
-                                if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
+                                if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
                                 {
-                                    if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
-                                    {
-                                        return;
-                                    }
-                                }
-
-                                string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
-                                if (!string.IsNullOrEmpty(realHref))
-                                {
-                                    childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
-                                    {
-                                        Title = text,
-                                        Href = realHref
-                                    });
+                                    return;
                                 }
                             }
-                        });
 
-                    if (childPageDataItems.Any())
+                            string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
+                            if (!string.IsNullOrEmpty(realHref))
+                            {
+                                childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
+                                {
+                                    Title = text,
+                                    Href = realHref
+                                });
+                            }
+                        }
+                    }
+
+                    if (childPageDataItems is {Count: > 0})
                     {
-                        var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom, eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode);
+                        this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
+                            eventData.Keyword, childPageDataItems.Count);
+
+                        var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom,
+                            eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode,
+                            eventData.IdentityId);
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
 
                         //保存采集到的标题
                         if (eto is ISpiderPullEto pullEto)
                         {
-                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom, eventData.TraceCode)).ToList();
+                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item =>
+                                    new SpiderContent_Keyword(item.Title, pullEto.SourceFrom, eventData.TraceCode))
+                                .ToList();
                             await this.SpiderKeywordRepository.InsertManyAsync(list);
                         }
                     }
-                }
-            });
+                });
+        }
+        catch (Exception exception)
+        {
+            this.Logger.LogException(exception);
+        }
     }
 
     /// <summary>
     /// 执行根据一级页面采集到的地址获取二级页面具体目标数据任务
     /// </summary>
     /// <returns></returns>
-    public Task HandlePullEventAsync<T>(T eventData) where T : class, ISpiderPullEto
+    public async Task HandlePullEventAsync<T>(T eventData) where T : class, ISpiderPullEto
     {
+        //关键字采集唯一性验证
+        if (this.Options.IsEnablePullUniqVerif)
+        {
+            bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PULL, eventData.IdentityId);
+            if (!result) return;
+        }
+
         throw new NotImplementedException();
     }
 }

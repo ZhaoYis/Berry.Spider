@@ -20,17 +20,18 @@ public class CustomSubscribeFilter : SubscribeFilter
     /// <summary>
     /// 订阅方法执行前
     /// </summary>
-    public override async Task OnSubscribeExecutingAsync(ExecutingContext context)
+    public override Task OnSubscribeExecutingAsync(ExecutingContext context)
     {
-        bool tryGetIsSucc = context.DeliverMessage.Headers.TryGetValue(Headers.MessageId, out string? messageId);
-        if (tryGetIsSucc && !string.IsNullOrEmpty(messageId))
-        {
-            bool result = await _redisService.SetAsync(Headers.MessageId, messageId);
-            if (!result)
-            {
-                throw new BusinessException($"消息{messageId}已被处理.");
-            }
-        }
+        // bool tryGetIsSucc = context.DeliverMessage.Headers.TryGetValue(Headers.MessageId, out string? messageId);
+        // if (tryGetIsSucc && !string.IsNullOrEmpty(messageId))
+        // {
+        //     bool result = await _redisService.SetAsync(Headers.MessageId, messageId);
+        //     if (!result)
+        //     {
+        //         throw new BusinessException($"消息{messageId}已被处理.");
+        //     }
+        // }
+        return Task.CompletedTask;
     }
 
     /// <summary>

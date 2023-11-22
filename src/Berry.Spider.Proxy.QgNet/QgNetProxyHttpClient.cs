@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using System.Net.Http.Json;
+using Microsoft.Extensions.Logging;
 
 namespace Berry.Spider.Proxy.QgNet;
 
@@ -7,10 +8,13 @@ public class QgNetProxyHttpClient
 {
     private QgNetProxyOptions Options { get; }
     private HttpClient Client { get; }
+    private ILogger<QgNetProxyHttpClient> Logger { get; }
 
-    public QgNetProxyHttpClient(IOptionsSnapshot<QgNetProxyOptions> options, HttpClient httpClient)
+    public QgNetProxyHttpClient(IOptionsSnapshot<QgNetProxyOptions> options, HttpClient httpClient,
+        ILogger<QgNetProxyHttpClient> logger)
     {
         this.Options = options.Value;
+        this.Logger = logger;
 
         this.Client = httpClient;
         this.Client.BaseAddress = new Uri(this.Options.ProxyPoolApiHost);
@@ -22,28 +26,22 @@ public class QgNetProxyHttpClient
     /// <returns></returns>
     public async Task<QgNetProxyResult?> GetOneAsync()
     {
-        // 参数名	    是否必选	    类型	        描述
-        // Key	        是	        String	    申请的Key值
-        // Num	        否	        Integer	    申请的数量;默认1个
-        // KeepAlive	否	        Integer	    生存周期;默认动态独享24小时,动态共享默认购买的套餐存活周期时长
-        // AreaId	    否	        Integer	    区域ID;默认随机
-        // ISP	        否	        Integer	    运营商ID;默认随机
-        // Detail	    否	        Integer	    详情0(关闭) 1(开启) ，默认为 0
-        // Distinct	    否	        Integer	    去重0(关闭) 1(开启) ，默认为 0
-
         try
         {
-            var result =
-                await this.Client.GetFromJsonAsync<QgNetResult<List<QgNetProxyResult>>>(
-                    $"/allocate?Key={this.Options.AuthKey}&Detail=1&Distinct=1&Num=1");
+            var result = await this.Client.GetFromJsonAsync<QgNetResult<List<QgNetProxyResult>>>($"/get?key={this.Options.AuthKey}&distinct=true&pool=1");
             if (result is { IsSuccess: true })
             {
                 List<QgNetProxyResult> data = result.Data;
                 return data.First();
             }
+            else
+            {
+                this.Logger.LogError("代理IP获取失败：" + result?.Code);
+            }
         }
         catch (Exception e)
         {
+            this.Logger.LogException(e);
             return default;
         }
 
@@ -58,12 +56,10 @@ public class QgNetProxyHttpClient
     {
         try
         {
-            var result =
-                await this.Client.GetFromJsonAsync<QgNetProxyQuotaResult>(
-                    $"/info/quota?Key={this.Options.AuthKey}");
+            var result = await this.Client.GetFromJsonAsync<QgNetResult<QgNetProxyQuotaResult>>($"/balance?key={this.Options.AuthKey}&pool=1");
             if (result is { IsSuccess: true })
             {
-                return result;
+                return result.Data;
             }
         }
         catch (Exception e)

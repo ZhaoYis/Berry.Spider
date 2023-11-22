@@ -39,10 +39,12 @@ public class WebElementLoadProvider : IWebElementLoadProvider
 
             //获取跳转后url
             string title = driver.Title;
+            string page = driver.PageSource;
             string url = driver.Url;
-
             string current = driver.CurrentWindowHandle;
-            this.Logger.LogInformation("当前窗口句柄：{0}，采集关键字：{1}", current, title);
+
+            if (string.IsNullOrEmpty(title)) return;
+            this.Logger.LogInformation("[Void]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
 
             // 隐式等待
             //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -55,9 +57,8 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             {
                 PollingInterval = TimeSpan.FromSeconds(5),
             };
-            wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
-
-            var page = driver.PageSource;
+            wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException),
+                typeof(NotFoundException));
 
             try
             {
@@ -100,10 +101,12 @@ public class WebElementLoadProvider : IWebElementLoadProvider
 
             //获取跳转后url
             string title = driver.Title;
+            string page = driver.PageSource;
             string url = driver.Url;
-
             string current = driver.CurrentWindowHandle;
-            this.Logger.LogInformation("当前窗口句柄：{0}，采集关键字：{1}", current, title);
+
+            if (string.IsNullOrEmpty(title)) return default;
+            this.Logger.LogInformation("[T]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
 
             // 隐式等待
             //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -116,18 +119,16 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             {
                 PollingInterval = TimeSpan.FromSeconds(5),
             };
-            wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
-
-            var page = driver.PageSource;
+            wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException),
+                typeof(NotFoundException));
 
             IWebElement? webElement = wait.Until(selector);
-            T? result = await executor.Invoke(webElement);
+            T result = await executor.Invoke(webElement);
             return result;
         }
         catch (Exception exception)
         {
             this.Logger.LogException(exception);
-
             return await Task.FromResult(default(T));
         }
         finally
@@ -151,9 +152,10 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             //获取跳转后url
             string title = driver.Title;
             string url = driver.Url;
-
             string current = driver.CurrentWindowHandle;
-            this.Logger.LogInformation("当前窗口句柄：{0}，采集关键字：{1}", current, title);
+
+            if (string.IsNullOrEmpty(title)) return string.Empty;
+            this.Logger.LogInformation("[AC]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
 
             // 隐式等待
             //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);

@@ -54,9 +54,10 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     /// <returns></returns>
     public async Task PushAsync(SpiderPushToQueueDto dto)
     {
-        var eto = dto.SourceFrom.TryCreateEto(EtoType.Push, dto.SourceFrom, dto.Keyword, dto.TraceCode);
+        string identityId = dto.GetIdentityId();
+        var eto = dto.SourceFrom.TryCreateEto(EtoType.Push, dto.SourceFrom, dto.Keyword, dto.TraceCode, identityId);
 
-        await this.CheckAsync(dto.Keyword, dto.SourceFrom, async () =>
+        await this.CheckAsync(identityId, dto.SourceFrom, async () =>
             {
                 string topicName = eto.TryGetRoutingKey();
                 await this.DistributedEventBus.PublishAsync(topicName, eto);
@@ -86,24 +87,28 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     /// </summary>
     public async Task HandlePushEventAsync<T>(T eventData) where T : class, ISpiderPushEto
     {
-        string targetUrl = string.Format(this.HomePage, eventData.Keyword);
-        await this.WebElementLoadProvider.InvokeAsync(
-            targetUrl,
-            drv => drv.FindElement(By.Id("rs_new")),
-            async root =>
+        try
+        {
+            //关键字采集唯一性验证
+            if (this.Options.IsEnablePushUniqVerif)
             {
-                if (root == null) return;
+                bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PUSH, eventData.IdentityId);
+                if (!result) return;
+            }
 
-                var resultContent = root.TryFindElements(By.TagName("a"));
-                if (resultContent is {Count: > 0})
+            string targetUrl = string.Format(this.HomePage, eventData.Keyword);
+            await this.WebElementLoadProvider.InvokeAsync(
+                targetUrl,
+                drv => drv.FindElement(By.Id("rs_new")),
+                async root =>
                 {
-                    this.Logger.LogInformation("总共采集到记录：" + resultContent.Count);
+                    if (root == null) return;
+
+                    var resultContent = root.TryFindElements(By.TagName("a"));
+                    if (resultContent is null or {Count: 0}) return;
 
                     ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
-                    await Parallel.ForEachAsync(resultContent, new ParallelOptions
-                    {
-                        MaxDegreeOfParallelism = GlobalConstants.ParallelMaxDegreeOfParallelism
-                    }, async (element, token) =>
+                    foreach (IWebElement element in resultContent)
                     {
                         string text = element.Text;
                         string href = element.GetAttribute("href");
@@ -127,12 +132,16 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                                 Href = realHref
                             });
                         }
-                    });
+                    }
 
-                    if (childPageDataItems.Any())
+                    if (childPageDataItems is {Count: > 0})
                     {
+                        this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
+                            eventData.Keyword, childPageDataItems.Count);
+
                         var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom,
-                            eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode);
+                            eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode,
+                            eventData.IdentityId);
 
                         //保存采集到的标题
                         if (eto is ISpiderPullEto pullEto)
@@ -146,8 +155,12 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                             await this.SpiderKeywordRepository.InsertManyAsync(list);
                         }
                     }
-                }
-            });
+                });
+        }
+        catch (Exception exception)
+        {
+            this.Logger.LogException(exception);
+        }
     }
 
     /// <summary>

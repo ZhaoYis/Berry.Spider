@@ -33,5 +33,10 @@ namespace Berry.Spider
         /// 二级页面地址信息
         /// </summary>
         public List<ChildPageDataItem> Items { get; set; } = new List<ChildPageDataItem>();
+
+        /// <summary>
+        /// 入队组合资源唯一标识
+        /// </summary>
+        public string IdentityId { get; set; } = null!;
     }
 }

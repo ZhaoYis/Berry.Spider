@@ -1,0 +1,71 @@
+mongod --config "C:\Software\MongoDB\bin\mongod-27017.cfg" --install --serviceName "MongoDB-27017"  --serviceDisplayName "MongoDB-27017"
+mongod --config "C:\Software\MongoDB\bin\mongod-27018.cfg" --install --serviceName "MongoDB-27018"  --serviceDisplayName "MongoDB-27018"
+mongod --config "C:\Software\MongoDB\bin\mongod-27019.cfg" --install --serviceName "MongoDB-27019"  --serviceDisplayName "MongoDB-27019"
+mongod --config "C:\Software\MongoDB\bin\mongod-27020.cfg" --install --serviceName "MongoDB-27020"  --serviceDisplayName "MongoDB-27020"
+mongod --config "C:\Software\MongoDB\bin\mongod-27021.cfg" --install --serviceName "MongoDB-27021"  --serviceDisplayName "MongoDB-27021"
+
+#arbiterOnly 是否为仲裁节点，myReplicaSet为复制集名称
+#配置了外网访问的话，localhost需要调整为真实机器IP
+config = {_id: 'myReplicaSet', members: [{_id: 0, host: 'localhost:27017'},{_id: 1, host: 'localhost:27018'},{_id: 2, host: 'localhost:27019'},{_id: 3, host: 'localhost:27020'},{_id: 4, host: 'localhost:27021',"arbiterOnly":true}]}
+
+#初始化
+rs.initiate(config)
+#重新配置
+rs.reconfig(config, {force:true})
+rs.status()
+
+#https://slproweb.com/products/Win32OpenSSL.html
+openssl rand -base64 512 > C:\Software\MongoDB\mongodb.key
+
+mongosh --host 127.0.0.1 --port 27019
+db.auth("root","1qaz2wsx.com")
+use admin
+db.createUser({user: "root",pwd: "1qaz2wsx.com",roles: [ { role: "root",db: "admin" } ]})
+db.auth('root','1qaz2wsx.com')
+
+
+###################################### mongod1.conf ######################################
+
+# for documentation of all options, see:
+#   http://docs.mongodb.org/manual/reference/configuration-options/
+
+# Where and how to store data.
+storage:
+  dbPath: C:\Software\MongoDB\data-27017
+  journal:
+    enabled: true
+#  engine:
+#  wiredTiger:
+
+# where to write logging data.
+systemLog:
+  destination: file
+  logAppend: true
+  path:  C:\Software\MongoDB\log-27017\mongod.log
+
+# network interfaces
+net:
+  port: 27017
+  bindIp: 0.0.0.0
+
+
+#processManagement:
+
+security:
+  authorization: enabled
+  keyFile: C:\Software\MongoDB\mongodb.key
+
+#operationProfiling:
+
+#replication:
+
+replication:
+  replSetName: myReplicaSet
+  
+#sharding:
+
+## Enterprise-Only Options:
+
+#auditLog:
+
+#snmp:

@@ -39,7 +39,7 @@ public class QgNetHttpProxy : IHttpProxy
             QgNetProxyQuotaResult? quotaResult = await this.Cache.GetAsync(CacheKey);
             if (quotaResult != null)
             {
-                return quotaResult.Available > 0;
+                return quotaResult.Balance > 0;
             }
             else
             {
@@ -51,7 +51,7 @@ public class QgNetHttpProxy : IHttpProxy
                         AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10)
                     });
 
-                    return quotaResult.Available > 0;
+                    return quotaResult.Balance > 0;
                 }
             }
         }
@@ -69,8 +69,8 @@ public class QgNetHttpProxy : IHttpProxy
 
         if (qgNetProxyResult != null)
         {
-            this.Logger.LogInformation($"获取到qg.net代理IP信息：{qgNetProxyResult.Host}");
-            return qgNetProxyResult.Host;
+            this.Logger.LogInformation($"获取到qg.net代理IP信息：{qgNetProxyResult.Server}");
+            return qgNetProxyResult.Server;
         }
 
         return string.Empty;

@@ -7,15 +7,17 @@ public class TouTiaoSpider4InformationCompositionPushEto : SpiderPushBaseEto
 {
     public const string RoutingKeyString = "Berry.TouTiao.InformationComposition.Push";
     public const string QueueNameString = "TouTiao.InformationComposition.Push";
-    
+
     public TouTiaoSpider4InformationCompositionPushEto()
     {
     }
 
-    public TouTiaoSpider4InformationCompositionPushEto(SpiderSourceFrom from, string keyword, string? traceCode) : this()
+    public TouTiaoSpider4InformationCompositionPushEto(SpiderSourceFrom from, string keyword, string? traceCode,
+        string identityId) : this()
     {
         this.SourceFrom = from;
         this.Keyword = keyword;
         this.TraceCode = traceCode;
+        this.IdentityId = identityId;
     }
 }

@@ -14,13 +14,15 @@ public class TouTiaoSpider4InformationPullEto : SpiderPullBaseEto
     public TouTiaoSpider4InformationPullEto() : base(SpiderSourceFrom.TouTiao_Information)
     {
     }
-    
-    public TouTiaoSpider4InformationPullEto(SpiderSourceFrom from, string keyword, string title, List<ChildPageDataItem> items, string? traceCode) : this()
+
+    public TouTiaoSpider4InformationPullEto(SpiderSourceFrom from, string keyword, string title,
+        List<ChildPageDataItem> items, string? traceCode, string identityId) : this()
     {
         this.SourceFrom = from;
         this.Keyword = keyword;
         this.Title = title;
         this.Items = items;
         this.TraceCode = traceCode;
+        this.IdentityId = identityId;
     }
 }
