@@ -8,11 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MySql.Data" Version="8.1.0" />
-      <PackageReference Include="Quartz.Serialization.Json" Version="3.7.0" />
-      <PackageReference Include="Volo.Abp.BackgroundJobs.Quartz" Version="7.4.0" />
-      <PackageReference Include="Volo.Abp.Core" Version="7.4.0" />
-      <PackageReference Include="Volo.Abp.Ddd.Application" Version="7.4.0" />
+      <PackageReference Include="MySql.Data" Version="8.2.0" />
+      <PackageReference Include="Quartz.Serialization.Json" Version="3.8.0" />
+      <PackageReference Include="Volo.Abp.BackgroundJobs.Quartz" Version="7.4.2" />
+      <PackageReference Include="Volo.Abp.Core" Version="7.4.2" />
+      <PackageReference Include="Volo.Abp.Ddd.Application" Version="7.4.2" />
     </ItemGroup>
 
     <ItemGroup>
