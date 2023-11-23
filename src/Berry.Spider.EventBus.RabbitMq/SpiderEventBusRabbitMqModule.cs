@@ -92,7 +92,7 @@ public class SpiderEventBusRabbitMqModule : AbpModule
     private void ConfigureConsul(CapOptions opt, IConfiguration configuration)
     {
         ConsulOptions? consulOptions = configuration.GetSection(nameof(ConsulOptions)).Get<ConsulOptions>();
-        if (consulOptions is {IsEnabled: true})
+        if (consulOptions is { IsEnabled: true })
         {
             string nodeId = Guid.NewGuid().ToString("N");
             string nodeName = "Consumer_" + nodeId;
@@ -102,7 +102,7 @@ public class SpiderEventBusRabbitMqModule : AbpModule
                 d.DiscoveryServerPort = consulOptions.DiscoveryServerPort;
                 d.NodeId = nodeId;
                 d.NodeName = nodeName;
-                d.CustomTags = new[] {"Berry_Spider_Consumer"};
+                d.CustomTags = new[] { "Berry_Spider_Consumer" };
             });
         }
     }
@@ -124,7 +124,7 @@ public class SpiderEventBusRabbitMqModule : AbpModule
     private bool UseMongoDb(CapOptions opt, IConfiguration configuration)
     {
         MongoDBOptions? mongoDbOptions = configuration.GetSection(nameof(MongoDBOptions)).Get<MongoDBOptions>();
-        if (mongoDbOptions is not null and {IsEnabled: true})
+        if (mongoDbOptions is not null and { IsEnabled: true })
         {
             opt.UseMongoDB(o =>
             {
@@ -135,7 +135,7 @@ public class SpiderEventBusRabbitMqModule : AbpModule
                 o.LockCollection = "cap.lock";
             });
 
-            opt.UseStorageLock = true;
+            opt.UseStorageLock = mongoDbOptions.UseStorageLock;
 
             return true;
         }
