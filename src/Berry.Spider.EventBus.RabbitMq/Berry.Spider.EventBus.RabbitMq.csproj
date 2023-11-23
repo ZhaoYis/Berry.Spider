@@ -8,10 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="DotNetCore.CAP.Dashboard" Version="7.2.2" />
-      <PackageReference Include="DotNetCore.CAP.MongoDB" Version="7.2.2" />
-      <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="7.2.2" />
-      <PackageReference Include="Volo.Abp.Core" Version="7.4.2" />
+      <PackageReference Include="DotNetCore.CAP.Dashboard" Version="7.2.3-preview-217174309" />
+      <PackageReference Include="DotNetCore.CAP.MongoDB" Version="7.2.3-preview-217174309" />
+      <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="7.2.3-preview-217174309" />
+      <PackageReference Include="Volo.Abp.Core" Version="8.0.0-rc.1" />
     </ItemGroup>
 
     <ItemGroup>
