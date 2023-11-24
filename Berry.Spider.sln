@@ -28,16 +28,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{093F9BD9-59EE-49FA-87D2-96AB2995EE26}"
 	ProjectSection(SolutionItems) = preProject
 		doc\agile_config.docker-compose.yml = doc\agile_config.docker-compose.yml
-		doc\HOW.README.md = doc\HOW.README.md
 		appsettings.demo.json = appsettings.demo.json
+		doc\consul.txt = doc\consul.txt
+		doc\dede.sql = doc\dede.sql
+		doc\example.json = doc\example.json
+		doc\HOW.README.md = doc\HOW.README.md
 		doc\mongo.docker-compose.yml = doc\mongo.docker-compose.yml
 		doc\NSSM.README.md = doc\NSSM.README.md
+		doc\prometheus.yml = doc\prometheus.yml
 		README.md = README.md
 		doc\Selenium.README.md = doc\Selenium.README.md
-		doc\example.json = doc\example.json
-		doc\prometheus.yml = doc\prometheus.yml
-		doc\dede.sql = doc\dede.sql
-		doc\consul.txt = doc\consul.txt
 		doc\user-agent.json = doc\user-agent.json
 		doc\Windows单机MongoDB集群.txt = doc\Windows单机MongoDB集群.txt
 	EndProjectSection
@@ -114,15 +114,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Segmenter", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Segmenter.JiebaNet", "src\Berry.Spider.Segmenter.JiebaNet\Berry.Spider.Segmenter.JiebaNet.csproj", "{BA719205-A123-4BC9-96D0-03995B7B0480}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Tools.JsonFileToDb", "src\Berry.Spider.Tools.JsonFileToDb\Berry.Spider.Tools.JsonFileToDb.csproj", "{942A6652-1798-4EA1-9DCD-9C157DDFC455}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Tools.JsonFileToDb", "src\Berry.Spider.Tools.JsonFileToDb\Berry.Spider.Tools.JsonFileToDb.csproj", "{942A6652-1798-4EA1-9DCD-9C157DDFC455}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.XxlJob", "src\Berry.Spider.XxlJob\Berry.Spider.XxlJob.csproj", "{9F8BEAD1-2544-4026-AC86-ACFD7C64ADF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.XxlJob", "src\Berry.Spider.XxlJob\Berry.Spider.XxlJob.csproj", "{9F8BEAD1-2544-4026-AC86-ACFD7C64ADF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.XxlJob.JobHandler", "src\Berry.Spider.XxlJob.JobHandler\Berry.Spider.XxlJob.JobHandler.csproj", "{DF88E972-68A0-499B-94CF-BB2CD9E814D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.XxlJob.JobHandler", "src\Berry.Spider.XxlJob.JobHandler\Berry.Spider.XxlJob.JobHandler.csproj", "{DF88E972-68A0-499B-94CF-BB2CD9E814D5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "openai", "openai", "{8EDFD47D-2AAD-4E4E-A69A-0BB63CDF0BE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.OpenAI", "src\Berry.Spider.OpenAI\Berry.Spider.OpenAI.csproj", "{504266C7-EE1B-4CA0-B28E-172F5CF99575}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.OpenAI", "src\Berry.Spider.OpenAI\Berry.Spider.OpenAI.csproj", "{504266C7-EE1B-4CA0-B28E-172F5CF99575}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{2DDD493D-A876-439B-99E6-6DE345680322}"
 EndProject
@@ -131,9 +131,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\consumer_build.yml = .github\workflows\consumer_build.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.OpenAI.Application", "src\Berry.Spider.OpenAI.Application\Berry.Spider.OpenAI.Application.csproj", "{48522D07-6C12-4BEC-AC15-900C292738D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.OpenAI.Application", "src\Berry.Spider.OpenAI.Application\Berry.Spider.OpenAI.Application.csproj", "{48522D07-6C12-4BEC-AC15-900C292738D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.OpenAI.Contracts", "src\Berry.Spider.OpenAI.Contracts\Berry.Spider.OpenAI.Contracts.csproj", "{52BC6990-012B-41F1-A2DB-D2AD603428B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.OpenAI.Contracts", "src\Berry.Spider.OpenAI.Contracts\Berry.Spider.OpenAI.Contracts.csproj", "{52BC6990-012B-41F1-A2DB-D2AD603428B7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mongodb_cluster_with-keyfile-auth", "mongodb_cluster_with-keyfile-auth", "{1E60F977-205B-4A44-BF54-1B6CE4E980CD}"
 	ProjectSection(SolutionItems) = preProject
@@ -162,21 +162,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{8D89
 		doc\mongodb_cluster_with-keyfile-auth\scripts\README.md = doc\mongodb_cluster_with-keyfile-auth\scripts\README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Weixin", "src\Berry.Spider.Weixin\Berry.Spider.Weixin.csproj", "{DA156CAA-0882-4F35-B93F-C8058A7C13A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Weixin", "src\Berry.Spider.Weixin\Berry.Spider.Weixin.csproj", "{DA156CAA-0882-4F35-B93F-C8058A7C13A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Weixin.Work", "src\Berry.Spider.Weixin.Work\Berry.Spider.Weixin.Work.csproj", "{C8DF288D-2A85-4EAE-92FD-0E6E2A022526}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Weixin.Work", "src\Berry.Spider.Weixin.Work\Berry.Spider.Weixin.Work.csproj", "{C8DF288D-2A85-4EAE-92FD-0E6E2A022526}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.EventBus.MongoDB", "src\Berry.Spider.EventBus.MongoDB\Berry.Spider.EventBus.MongoDB.csproj", "{1E1198B3-D130-4D19-B266-DA0050E250BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.EventBus.MongoDB", "src\Berry.Spider.EventBus.MongoDB\Berry.Spider.EventBus.MongoDB.csproj", "{1E1198B3-D130-4D19-B266-DA0050E250BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Tools.ServDetector", "src\Berry.Spider.Tools.ServDetector\Berry.Spider.Tools.ServDetector.csproj", "{A35D4820-CFE2-42EC-BB9B-BF9358F77DE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Tools.ServDetector", "src\Berry.Spider.Tools.ServDetector\Berry.Spider.Tools.ServDetector.csproj", "{A35D4820-CFE2-42EC-BB9B-BF9358F77DE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Admin", "host\Berry.Spider.Admin\Berry.Spider.Admin.csproj", "{C88BEA3F-00BC-4FA9-9E89-E008680FE484}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Admin", "host\Berry.Spider.Admin\Berry.Spider.Admin.csproj", "{C88BEA3F-00BC-4FA9-9E89-E008680FE484}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.HttpApi.StaticClient", "host\Berry.Spider.HttpApi.StaticClient\Berry.Spider.HttpApi.StaticClient.csproj", "{D209E7CF-8B3C-4940-B829-F70969816E49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.HttpApi.StaticClient", "host\Berry.Spider.HttpApi.StaticClient\Berry.Spider.HttpApi.StaticClient.csproj", "{D209E7CF-8B3C-4940-B829-F70969816E49}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "desktop", "desktop", "{60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Toolkit.Core", "desktop\Berry.Spider.Toolkit.Core\Berry.Spider.Toolkit.Core.csproj", "{D3731F94-F964-4C30-AB0C-D999C255C685}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Toolkit", "desktop\Berry.Spider.Toolkit\Berry.Spider.Toolkit.csproj", "{E8E6CE44-3ADA-4E3E-9E4C-6075B32D3D6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -368,10 +368,10 @@ Global
 		{D209E7CF-8B3C-4940-B829-F70969816E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D209E7CF-8B3C-4940-B829-F70969816E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D209E7CF-8B3C-4940-B829-F70969816E49}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D3731F94-F964-4C30-AB0C-D999C255C685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D3731F94-F964-4C30-AB0C-D999C255C685}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D3731F94-F964-4C30-AB0C-D999C255C685}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D3731F94-F964-4C30-AB0C-D999C255C685}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8E6CE44-3ADA-4E3E-9E4C-6075B32D3D6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8E6CE44-3ADA-4E3E-9E4C-6075B32D3D6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8E6CE44-3ADA-4E3E-9E4C-6075B32D3D6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8E6CE44-3ADA-4E3E-9E4C-6075B32D3D6D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -436,7 +436,7 @@ Global
 		{A35D4820-CFE2-42EC-BB9B-BF9358F77DE6} = {523AD30F-FF86-456E-874E-456979B4141F}
 		{C88BEA3F-00BC-4FA9-9E89-E008680FE484} = {A62EA0AB-0556-4384-8F50-B4C713DE74EB}
 		{D209E7CF-8B3C-4940-B829-F70969816E49} = {A62EA0AB-0556-4384-8F50-B4C713DE74EB}
-		{D3731F94-F964-4C30-AB0C-D999C255C685} = {60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}
+		{E8E6CE44-3ADA-4E3E-9E4C-6075B32D3D6D} = {60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}
