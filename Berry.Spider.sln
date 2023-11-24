@@ -174,6 +174,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Admin", "host\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.HttpApi.StaticClient", "host\Berry.Spider.HttpApi.StaticClient\Berry.Spider.HttpApi.StaticClient.csproj", "{D209E7CF-8B3C-4940-B829-F70969816E49}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "desktop", "desktop", "{60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Toolkit.Core", "desktop\Berry.Spider.Toolkit.Core\Berry.Spider.Toolkit.Core.csproj", "{D3731F94-F964-4C30-AB0C-D999C255C685}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -364,6 +368,10 @@ Global
 		{D209E7CF-8B3C-4940-B829-F70969816E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D209E7CF-8B3C-4940-B829-F70969816E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D209E7CF-8B3C-4940-B829-F70969816E49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3731F94-F964-4C30-AB0C-D999C255C685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3731F94-F964-4C30-AB0C-D999C255C685}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3731F94-F964-4C30-AB0C-D999C255C685}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3731F94-F964-4C30-AB0C-D999C255C685}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -428,6 +436,7 @@ Global
 		{A35D4820-CFE2-42EC-BB9B-BF9358F77DE6} = {523AD30F-FF86-456E-874E-456979B4141F}
 		{C88BEA3F-00BC-4FA9-9E89-E008680FE484} = {A62EA0AB-0556-4384-8F50-B4C713DE74EB}
 		{D209E7CF-8B3C-4940-B829-F70969816E49} = {A62EA0AB-0556-4384-8F50-B4C713DE74EB}
+		{D3731F94-F964-4C30-AB0C-D999C255C685} = {60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}
