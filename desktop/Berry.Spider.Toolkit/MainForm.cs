@@ -12,8 +12,8 @@ namespace Berry.Spider.Toolkit
         }
 
         /// <summary>
-        /// Ñ¡ÔñÆô¶¯Ó¦ÓÃ
-        /// </summary>¡¢
+        /// é€‰æ‹©å¯åŠ¨åº”ç”¨
+        /// </summary>ã€
         private void mbtn_select_app_Click(object sender, EventArgs e)
         {
             if (this.mfile_open_app.ShowDialog() == DialogResult.OK)
@@ -24,14 +24,14 @@ namespace Berry.Spider.Toolkit
         }
 
         /// <summary>
-        /// Æô¶¯
+        /// å¯åŠ¨
         /// </summary>
         private void mbtn_start_Click(object sender, EventArgs e)
         {
             string filePath = this.mtxt_app_path.Text;
             if (string.IsNullOrEmpty(filePath))
             {
-                MessageBox.Show("ÇëÑ¡ÔñĞèÒªÆô¶¯µÄÓ¦ÓÃ..", "¾¯¸æ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("è¯·é€‰æ‹©éœ€è¦å¯åŠ¨çš„åº”ç”¨..", "è­¦å‘Š", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             int totalCount = (int)this.mnum_run_app_count.Value;
@@ -44,7 +44,7 @@ namespace Berry.Spider.Toolkit
         }
 
         /// <summary>
-        /// Í£Ö¹ËùÓĞ
+        /// åœæ­¢æ‰€æœ‰
         /// </summary>
         private void mbtn_stop_all_Click(object sender, EventArgs e)
         {
@@ -59,9 +59,9 @@ namespace Berry.Spider.Toolkit
         }
 
         /// <summary>
-        /// ÍË³öÓ¦ÓÃ
+        /// é€€å‡ºåº”ç”¨
         /// </summary>
-        private void ÍË³öToolStripMenuItem_Click(object sender, EventArgs e)
+        private void é€€å‡ºToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.GetCurrentProcess().Kill();
         }
