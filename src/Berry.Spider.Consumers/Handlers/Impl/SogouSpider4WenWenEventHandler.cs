@@ -7,7 +7,7 @@ namespace Berry.Spider.Consumers;
 /// <summary>
 /// 搜狗：问问
 /// </summary>
-public class SogouSpider4WenWenEventHandler : ICapSubscribe
+public class SogouSpider4WenWenEventHandler : ISogouSpider4WenWenEventHandler, ICapSubscribe
 {
     private SogouSpider4WenWenProvider Provider { get; }
 

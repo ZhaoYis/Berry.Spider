@@ -7,7 +7,7 @@ namespace Berry.Spider.Consumers;
 /// <summary>
 /// 百度：相关搜索
 /// </summary>
-public class BaiduSpider4RelatedSearchEventHandler : ICapSubscribe
+public class BaiduSpider4RelatedSearchEventHandler : IBaiduSpider4RelatedSearchEventHandler, ICapSubscribe
 {
     private BaiduSpider4RelatedSearchProvider Provider { get; }
 

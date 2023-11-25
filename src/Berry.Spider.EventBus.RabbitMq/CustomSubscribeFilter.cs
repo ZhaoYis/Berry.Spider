@@ -31,7 +31,7 @@ public class CustomSubscribeFilter : SubscribeFilter
         //         throw new BusinessException($"消息{messageId}已被处理.");
         //     }
         // }
-        return Task.CompletedTask;
+        return base.OnSubscribeExecutingAsync(context);
     }
 
     /// <summary>
@@ -39,7 +39,7 @@ public class CustomSubscribeFilter : SubscribeFilter
     /// </summary>
     public override Task OnSubscribeExecutedAsync(ExecutedContext context)
     {
-        return Task.CompletedTask;
+        return base.OnSubscribeExecutedAsync(context);
     }
 
     /// <summary>
@@ -49,6 +49,6 @@ public class CustomSubscribeFilter : SubscribeFilter
     {
         //忽略异常
         context.ExceptionHandled = true;
-        return Task.CompletedTask;
+        return base.OnSubscribeExceptionAsync(context);
     }
 }

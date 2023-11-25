@@ -50,18 +50,18 @@ public class SpiderConsumersModule : AbpModule
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         //今日头条
-        context.Services.AddTransient<TouTiaoSpider4QuestionEventHandler>();
-        context.Services.AddTransient<TouTiaoSpider4QuestionExtNo1EventHandler>();
-        context.Services.AddTransient<TouTiaoSpider4HighQualityQuestionEventHandler>();
-        context.Services.AddTransient<TouTiaoSpider4HighQualityQuestionExtNo1EventHandler>();
-        context.Services.AddTransient<TouTiaoSpider4InformationEventHandler>();
-        context.Services.AddTransient<TouTiaoSpider4InformationCompositionEventHandler>();
+        context.Services.AddTransient<ITouTiaoSpider4QuestionEventHandler, TouTiaoSpider4QuestionEventHandler>();
+        context.Services.AddTransient<ITouTiaoSpider4QuestionExtNo1EventHandler, TouTiaoSpider4QuestionExtNo1EventHandler>();
+        context.Services.AddTransient<ITouTiaoSpider4HighQualityQuestionEventHandler, TouTiaoSpider4HighQualityQuestionEventHandler>();
+        context.Services.AddTransient<ITouTiaoSpider4HighQualityQuestionExtNo1EventHandler, TouTiaoSpider4HighQualityQuestionExtNo1EventHandler>();
+        context.Services.AddTransient<ITouTiaoSpider4InformationEventHandler, TouTiaoSpider4InformationEventHandler>();
+        context.Services.AddTransient<ITouTiaoSpider4InformationCompositionEventHandler, TouTiaoSpider4InformationCompositionEventHandler>();
 
         //搜狗
-        context.Services.AddTransient<SogouSpider4RelatedSearchEventHandler>();
-        context.Services.AddTransient<SogouSpider4WenWenEventHandler>();
+        context.Services.AddTransient<ISogouSpider4RelatedSearchEventHandler, SogouSpider4RelatedSearchEventHandler>();
+        context.Services.AddTransient<ISogouSpider4WenWenEventHandler, SogouSpider4WenWenEventHandler>();
 
         //百度
-        context.Services.AddTransient<BaiduSpider4RelatedSearchEventHandler>();
+        context.Services.AddTransient<IBaiduSpider4RelatedSearchEventHandler, BaiduSpider4RelatedSearchEventHandler>();
     }
 }

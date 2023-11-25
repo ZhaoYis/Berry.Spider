@@ -7,7 +7,7 @@ namespace Berry.Spider.Consumers;
 /// <summary>
 /// 今日头条：优质_问答_扩展_01
 /// </summary>
-public class TouTiaoSpider4HighQualityQuestionExtNo1EventHandler : ICapSubscribe
+public class TouTiaoSpider4HighQualityQuestionExtNo1EventHandler : ITouTiaoSpider4HighQualityQuestionExtNo1EventHandler, ICapSubscribe
 {
     private TouTiaoSpider4HighQualityQuestionProvider Provider { get; }
 
