@@ -13,4 +13,16 @@ public class ConsumerOptions
     /// Default is false
     /// </summary>
     public bool EnableConsumerPrefetch { get; set; }
+
+    /// <summary>
+    /// Sent or received succeed message after time span of due, then the message will be deleted at due time.
+    /// Default is 1*24*3600 seconds.
+    /// </summary>
+    public int SucceedMessageExpiredAfter { get; set; } = 1 * 24 * 3600;
+
+    /// <summary>
+    /// Sent or received failed message after time span of due, then the message will be deleted at due time.
+    /// Default is 3*24*3600 seconds.
+    /// </summary>
+    public int FailedMessageExpiredAfter { get; set; } = 3 * 24 * 3600;
 }

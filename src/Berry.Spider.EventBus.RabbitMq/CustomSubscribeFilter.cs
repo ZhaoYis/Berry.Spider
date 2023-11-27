@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Berry.Spider.FreeRedis;
 using DotNetCore.CAP.Filter;
 using DotNetCore.CAP.Messages;

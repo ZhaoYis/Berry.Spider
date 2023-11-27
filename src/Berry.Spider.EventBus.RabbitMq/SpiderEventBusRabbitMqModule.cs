@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Berry.Spider.Contracts;
 using DotNetCore.CAP;
 using DotNetCore.CAP.Internal;
@@ -78,12 +80,11 @@ public class SpiderEventBusRabbitMqModule : AbpModule
             //如果设置为 true，则每个消费者组都会根据 ConsumerThreadCount 设置的值创建单独的线程进行处理。
             // opt.UseDispatchingPerGroup = true;
             opt.EnableConsumerPrefetch = consumerOptions.EnableConsumerPrefetch;
+            //失败消息的过期时间（秒）
+            opt.FailedMessageExpiredAfter = consumerOptions.FailedMessageExpiredAfter;
+            //成功消息的过期时间（秒）
+            opt.SucceedMessageExpiredAfter = consumerOptions.SucceedMessageExpiredAfter;
         }
-
-        //失败消息的过期时间（秒）
-        opt.FailedMessageExpiredAfter = 30 * 24 * 3600;
-        //成功消息的过期时间（秒）
-        opt.SucceedMessageExpiredAfter = 7 * 24 * 3600;
     }
 
     /// <summary>
