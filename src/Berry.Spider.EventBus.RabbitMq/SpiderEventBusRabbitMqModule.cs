@@ -113,16 +113,29 @@ public class SpiderEventBusRabbitMqModule : AbpModule
     /// </summary>
     private void ConfigureDatabase(CapOptions opt, IConfiguration configuration)
     {
-        if (!this.UseMongoDb(opt, configuration))
+        this.UseMySQLDb(opt, configuration);
+    }
+
+    /// <summary>
+    /// 使用mysql作为底板
+    /// </summary>
+    private void UseMySQLDb(CapOptions opt, IConfiguration configuration)
+    {
+        string? connectionString = configuration.GetConnectionString("EventBus");
+        if (!string.IsNullOrEmpty(connectionString))
         {
-            this.UsePostgreSQL(opt, configuration);
+            opt.UseMySql(o => { o.ConnectionString = connectionString; });
+        }
+        else
+        {
+            throw new ApplicationException("消息队列数据库底板未配置");
         }
     }
 
     /// <summary>
     /// 使用MongoDB作为底板
     /// </summary>
-    private bool UseMongoDb(CapOptions opt, IConfiguration configuration)
+    private void UseMongoDb(CapOptions opt, IConfiguration configuration)
     {
         MongoDBOptions? mongoDbOptions = configuration.GetSection(nameof(MongoDBOptions)).Get<MongoDBOptions>();
         if (mongoDbOptions is not null and { IsEnabled: true })
@@ -137,19 +150,18 @@ public class SpiderEventBusRabbitMqModule : AbpModule
             });
 
             opt.UseStorageLock = mongoDbOptions.UseStorageLock;
-
-            return true;
         }
-
-        return false;
+        else
+        {
+            throw new ApplicationException("消息队列数据库底板未配置");
+        }
     }
 
     /// <summary>
     /// 使用PostgreSQL作为底板
     /// </summary>
-    private bool UsePostgreSQL(CapOptions opt, IConfiguration configuration)
+    private void UsePostgreSQL(CapOptions opt, IConfiguration configuration)
     {
         //TODO
-        return false;
     }
 }
