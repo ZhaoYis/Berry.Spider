@@ -6,7 +6,7 @@ using Berry.Spider.Domain.Shared;
 
 namespace Berry.Spider.Domain;
 
-public class SpiderContentBase : EntityBase, ITraceCode
+public class SpiderContentBase : EntityBase, ITraceCode, ISourceIdentityId
 {
     /// <summary>
     /// 已采集
@@ -73,6 +73,11 @@ public class SpiderContentBase : EntityBase, ITraceCode
     /// </summary>
     public string? TraceCode { get; set; }
 
+    /// <summary>
+    /// 当前采集关键字唯一标识
+    /// </summary>
+    public string? IdentityId { get; set; }
+
     protected SpiderContentBase()
     {
     }
@@ -103,6 +108,17 @@ public class SpiderContentBase : EntityBase, ITraceCode
         if (!string.IsNullOrEmpty(traceCode))
         {
             this.TraceCode = traceCode;
+        }
+    }
+
+    /// <summary>
+    /// 当前采集关键字唯一标识
+    /// </summary>
+    public void SetIdentityIdIfNotNull(string? identityId)
+    {
+        if (!string.IsNullOrEmpty(identityId))
+        {
+            this.IdentityId = identityId;
         }
     }
 }

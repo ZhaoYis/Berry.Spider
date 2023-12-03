@@ -122,10 +122,10 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                             string text = a.Text;
                             string href = a.GetAttribute("href");
 
-                            //执行相似度检测
-                            double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
                             if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
                             {
+                                //执行相似度检测
+                                double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
                                 if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
                                 {
                                     return;
@@ -233,12 +233,11 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
             //去重
             List<string> todoSaveContentItems = contentItems.Where(c => !string.IsNullOrEmpty(c)).Distinct().ToList();
             SpiderContent? spiderContent = await this.SpiderDomainService.BuildContentAsync(eventData.Title,
-                eventData.SourceFrom, todoSaveContentItems, traceCode: eventData.TraceCode);
+                eventData.SourceFrom, todoSaveContentItems, traceCode: eventData.TraceCode, identityId: eventData.IdentityId);
             if (spiderContent != null)
             {
                 await this.SpiderRepository.InsertAsync(spiderContent);
-                this.Logger.LogInformation("落库成功关键字：{0}，标题：{0}，共计：{1}行记录", eventData.Keyword, spiderContent.Title,
-                    contentItems.Count);
+                this.Logger.LogInformation("落库成功关键字：{0}，标题：{0}，共计：{1}行记录", eventData.Keyword, spiderContent.Title, contentItems.Count);
             }
         }
         catch (Exception exception)

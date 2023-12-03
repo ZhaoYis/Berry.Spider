@@ -17,8 +17,7 @@ namespace Berry.Spider.TouTiao;
 /// 今日头条：头条_资讯_作文板块
 /// </summary>
 [SpiderService(new[] {SpiderSourceFrom.TouTiao_Information_Composition})]
-public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiaoSpider4InformationCompositionProvider>,
-    ISpiderProvider
+public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiaoSpider4InformationCompositionProvider>, ISpiderProvider
 {
     private IGuidGenerator GuidGenerator { get; }
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -123,10 +122,10 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                             string text = a.Text;
                             string href = a.GetAttribute("href");
 
-                            //执行相似度检测
-                            double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
                             if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
                             {
+                                //执行相似度检测
+                                double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
                                 if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
                                 {
                                     return;
@@ -147,8 +146,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
 
                     if (childPageDataItems is {Count: > 0})
                     {
-                        this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
-                            eventData.Keyword, childPageDataItems.Count);
+                        this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(), eventData.Keyword, childPageDataItems.Count);
 
                         var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom,
                             eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode,
@@ -158,9 +156,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                         //保存采集到的标题
                         if (eto is ISpiderPullEto pullEto)
                         {
-                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item =>
-                                    new SpiderContent_Keyword(item.Title, pullEto.SourceFrom, eventData.TraceCode))
-                                .ToList();
+                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom, eventData.TraceCode)).ToList();
                             await this.SpiderKeywordRepository.InsertManyAsync(list);
                         }
                     }
@@ -205,9 +201,9 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                             string content = resultContent.Text;
                             if (!string.IsNullOrEmpty(content))
                             {
-                                SpiderContent_Composition spiderContent =
-                                    new SpiderContent_Composition(item.Title, content, groupId, eventData.SourceFrom);
+                                SpiderContent_Composition spiderContent = new SpiderContent_Composition(item.Title, content, groupId, eventData.SourceFrom);
                                 spiderContent.SetTraceCodeIfNotNull(eventData.TraceCode);
+                                spiderContent.SetIdentityIdIfNotNull(eventData.IdentityId);
                                 contentItems = contentItems.Add(spiderContent);
                             }
                         }
@@ -221,8 +217,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
             }
 
             //去重
-            List<SpiderContent_Composition> todoSaveContentItems =
-                contentItems.Where(c => !string.IsNullOrEmpty(c.Content)).ToList();
+            List<SpiderContent_Composition> todoSaveContentItems = contentItems.Where(c => !string.IsNullOrEmpty(c.Content)).ToList();
             await this.SpiderRepository.InsertManyAsync(todoSaveContentItems);
         }
         catch (Exception exception)

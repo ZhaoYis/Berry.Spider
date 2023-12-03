@@ -13,7 +13,7 @@ public static class ListExtensions
         string? originalTitle = null,
         List<string>? subTitleList = null)
     {
-        if (items.Count == 0) return default;
+        if (items.Count == 0) return "";
 
         items = items.Where(c => !string.IsNullOrWhiteSpace(c)).ToList();
 
@@ -119,7 +119,7 @@ public static class ListExtensions
     public static string BuildMainContent(this List<string> items, IImageResourceProvider provider,
         IStringBuilderObjectPoolProvider stringBuilderObjectPoolProvider, List<string>? subTitleList = null)
     {
-        if (items.Count == 0) return default;
+        if (items.Count == 0) return "";
 
         items = items.Where(c => !string.IsNullOrWhiteSpace(c)).ToList();
 
@@ -149,7 +149,7 @@ public static class ListExtensions
     public static string BuildSubTitleContent(this List<string> subTitleList,
         IStringBuilderObjectPoolProvider stringBuilderObjectPoolProvider)
     {
-        if (subTitleList.Count == 0) return default;
+        if (subTitleList.Count == 0) return "";
 
         string subTitleContent = stringBuilderObjectPoolProvider.Invoke(builder =>
         {

@@ -121,10 +121,10 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
                         string text = element.Text;
                         string href = element.GetAttribute("href");
 
-                        //执行相似度检测
-                        double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
                         if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
                         {
+                            //执行相似度检测
+                            double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
                             if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
                             {
                                 return;
@@ -140,8 +140,7 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
 
                     if (childPageDataItems is {Count: > 0})
                     {
-                        this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
-                            eventData.Keyword, childPageDataItems.Count);
+                        this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(), eventData.Keyword, childPageDataItems.Count);
 
                         var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom,
                             eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode,
@@ -244,10 +243,9 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
             {
                 SpiderContent_HighQualityQA spiderContent =
                     await this.SpiderDomainService.BuildHighQualityContentAsync(eventData.Title, eventData.SourceFrom,
-                        contentItems, traceCode: eventData.TraceCode);
+                        contentItems, traceCode: eventData.TraceCode, identityId: eventData.IdentityId);
                 await this.SpiderRepository.InsertAsync(spiderContent);
-                this.Logger.LogInformation("落库成功关键字：{0}，标题：{0}，共计：{1}行记录", eventData.Keyword, spiderContent.Title,
-                    contentItems.Count);
+                this.Logger.LogInformation("落库成功关键字：{0}，标题：{0}，共计：{1}行记录", eventData.Keyword, spiderContent.Title, contentItems.Count);
             }
         }
         catch (Exception exception)

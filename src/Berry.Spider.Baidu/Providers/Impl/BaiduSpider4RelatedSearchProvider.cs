@@ -113,10 +113,10 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                         string text = element.Text;
                         string href = element.GetAttribute("href");
 
-                        //执行相似度检测
-                        double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
                         if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
                         {
+                            //执行相似度检测
+                            double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
                             if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
                             {
                                 return;

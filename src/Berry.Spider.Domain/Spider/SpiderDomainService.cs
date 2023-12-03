@@ -41,8 +41,12 @@ public class SpiderDomainService : DomainService
     /// 统一构建落库实体内容
     /// </summary>
     /// <returns></returns>
-    public async Task<SpiderContent?> BuildContentAsync(string originalTitle, SpiderSourceFrom sourceFrom,
-        List<string> contentItems, List<string>? subTitleList = null, string? traceCode = null)
+    public async Task<SpiderContent?> BuildContentAsync(string originalTitle,
+        SpiderSourceFrom sourceFrom,
+        List<string> contentItems,
+        List<string>? subTitleList = null,
+        string? traceCode = null,
+        string? identityId = null)
     {
         if (contentItems.Count >= this.Options.MinRecords)
         {
@@ -68,7 +72,7 @@ public class SpiderDomainService : DomainService
                 mainContent = contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider, originalTitle, subTitleList);
             }
 
-            if (mainContent is { Length: > 0 })
+            if (mainContent is {Length: > 0})
             {
                 if (this.TitleTemplateOptions.IsEnableFormatTitle)
                 {
@@ -93,6 +97,7 @@ public class SpiderDomainService : DomainService
                 //组装数据
                 var content = new SpiderContent(originalTitle, mainContent.ToString(), sourceFrom);
                 content.SetTraceCodeIfNotNull(traceCode);
+                content.SetIdentityIdIfNotNull(identityId);
 
                 //TODO：根据配置决定是否需要进行分词操作
                 //TODO：或许可以重构成服务，其他使用的地方无需关注这些逻辑
@@ -117,7 +122,8 @@ public class SpiderDomainService : DomainService
     public Task<SpiderContent_HighQualityQA> BuildHighQualityContentAsync(string originalTitle,
         SpiderSourceFrom sourceFrom,
         IDictionary<string, List<string>> contentItems,
-        string? traceCode = null)
+        string? traceCode = null,
+        string? identityId = null)
     {
         ImmutableList<string> subTitleList = ImmutableList.Create<string>();
         string mainContent = this.StringBuilderObjectPoolProvider.Invoke(mainContentBuilder =>
@@ -135,20 +141,18 @@ public class SpiderDomainService : DomainService
                     .ToList();
 
                 StringBuilder itemContentBuilder = new StringBuilder();
-                for (int i = 0; i < answerContentItems.Count; i++)
+                itemContentBuilder.AppendFormat("<p id='{0}'><strong>{0}</strong></p>", title);
+                foreach (var itemContent in answerContentItems)
                 {
-                    string itemContent = answerContentItems[i];
-                    itemContentBuilder.AppendFormat("<p id='{0}'><strong>{0}</strong></p>", title);
                     itemContentBuilder.AppendFormat("<p>{0}</p>", itemContent);
-
-                    subTitleList = subTitleList.Add(title);
                 }
 
+                subTitleList = subTitleList.Add(title);
                 mainContentBuilder.Append(itemContentBuilder);
             }
         });
 
-        if (mainContent is { Length: > 0 })
+        if (mainContent is {Length: > 0})
         {
             //处理子标题
             if (this.Options.SubTitleOptions.IsEnable)
@@ -156,12 +160,12 @@ public class SpiderDomainService : DomainService
                 var opSubTitleList = subTitleList.Take(this.Options.SubTitleOptions.MaxRecords).ToList();
 
                 var subTitleContent = opSubTitleList.BuildSubTitleContent(this.StringBuilderObjectPoolProvider);
-                if (subTitleContent is { Length: > 0 })
+                if (subTitleContent is {Length: > 0})
                 {
                     mainContent = mainContent.Insert(0, subTitleContent);
                 }
             }
-            
+
             //处理原标题
             if (this.Options.MainTitleOptions.IsEnable)
             {
@@ -174,7 +178,8 @@ public class SpiderDomainService : DomainService
         //组装数据
         var content = new SpiderContent_HighQualityQA(originalTitle, mainContent.ToString(), sourceFrom);
         content.SetTraceCodeIfNotNull(traceCode);
-        
+        content.SetIdentityIdIfNotNull(identityId);
+
         return Task.FromResult(content);
     }
 }

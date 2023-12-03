@@ -112,10 +112,10 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                             string text = a.Text;
                             string href = a.GetAttribute("href");
 
-                            //执行相似度检测
-                            double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
                             if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
                             {
+                                //执行相似度检测
+                                double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
                                 if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
                                 {
                                     return;
@@ -136,8 +136,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
 
                     if (childPageDataItems is {Count: > 0})
                     {
-                        this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
-                            eventData.Keyword, childPageDataItems.Count);
+                        this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(), eventData.Keyword, childPageDataItems.Count);
 
                         var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom,
                             eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode,
@@ -147,9 +146,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                         //保存采集到的标题
                         if (eto is ISpiderPullEto pullEto)
                         {
-                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item =>
-                                    new SpiderContent_Keyword(item.Title, pullEto.SourceFrom, eventData.TraceCode))
-                                .ToList();
+                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom, eventData.TraceCode)).ToList();
                             await this.SpiderKeywordRepository.InsertManyAsync(list);
                         }
                     }

@@ -1,3 +1,4 @@
+using System.Text;
 using Berry.Spider.Core;
 using Berry.Spider.Domain.Shared;
 
@@ -33,13 +34,13 @@ public class SpiderPushToQueueDto : ITraceCode
     /// <returns></returns>
     public string GetIdentityId()
     {
-        return this.ToString().ToMd5();
+        return Convert.ToBase64String(Encoding.UTF8.GetBytes(this.ToString()));
     }
 
     /// <summary>Returns a string that represents the current object.</summary>
     /// <returns>A string that represents the current object.</returns>
     public override string ToString()
     {
-        return $"SourceFrom={SourceFrom.ToString()}-TraceCode={TraceCode}-Keyword={Keyword}";
+        return $"SourceFrom={this.SourceFrom.ToString()}&TraceCode={this.TraceCode}&Keyword={this.Keyword}";
     }
 }
