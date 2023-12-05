@@ -3,7 +3,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.Core;
 
-public interface IDriverOptionsProvider : ITransientDependency
+public interface IDriverOptionsProvider : ISingletonDependency
 {
     Task<ChromeOptions> BuildAsync(bool isUsedProxy = true);
 }

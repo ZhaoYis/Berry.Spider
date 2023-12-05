@@ -6,7 +6,7 @@ namespace Berry.Spider.Core;
 /// <summary>
 /// 人机验证断定拦截器
 /// </summary>
-public interface IHumanMachineVerificationInterceptorProvider : ITransientDependency
+public interface IHumanMachineVerificationInterceptorProvider : ISingletonDependency
 {
     Task InvokeAsync(IWebDriver webDriver);
 

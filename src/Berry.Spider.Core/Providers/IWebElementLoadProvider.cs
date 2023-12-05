@@ -3,7 +3,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.Core;
 
-public interface IWebElementLoadProvider : ITransientDependency
+public interface IWebElementLoadProvider : ISingletonDependency
 {
     Task InvokeAsync(string targetUrl, Func<IWebDriver, IWebElement?> selector, Func<IWebElement?, Task> executor);
 
