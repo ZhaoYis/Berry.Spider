@@ -50,9 +50,14 @@ public class TouTiaoResolveJumpUrlProvider : IResolveJumpUrlProvider
 
         if (!Url_Regex.Match(jumpToUrl).Success)
         {
-            jumpToUrl = "";
+            return Task.FromResult("");
         }
 
-        return Task.FromResult(jumpToUrl);
+        if (Toutiaoapi_Com_Regex.Match(jumpToUrl).Success || Toutiao_Com_Regex.Match(jumpToUrl).Success)
+        {
+            return Task.FromResult(jumpToUrl);
+        }
+
+        return Task.FromResult("");
     }
 }
