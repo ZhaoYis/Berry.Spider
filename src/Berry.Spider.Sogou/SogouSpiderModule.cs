@@ -20,6 +20,9 @@ public class SogouSpiderModule : AbpModule
         context.Services.AddSingleton<SogouSpider4RelatedSearchProvider>();
         context.Services.AddSingleton<SogouSpider4WenWenProvider>();
 
+        //注册解析真实跳转的Url地址解析器
+        context.Services.AddSingleton<SougouResolveJumpUrlProvider>();
+        
         //注入文本解析器
         context.Services.AddTransient<SogouRelatedSearchTextAnalysisProvider>();
         context.Services.AddTransient<SogouSpider4WenWenTextAnalysisProvider>();

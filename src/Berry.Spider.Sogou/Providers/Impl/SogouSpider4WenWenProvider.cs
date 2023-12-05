@@ -16,11 +16,12 @@ namespace Berry.Spider.Sogou;
 /// <summary>
 /// 搜狗：问问
 /// </summary>
-[SpiderService(new[] {SpiderSourceFrom.Sogou_WenWen})]
+[SpiderService(new[] { SpiderSourceFrom.Sogou_WenWen })]
 public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private ITextAnalysisProvider TextAnalysisProvider { get; }
+    private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
     private IEventBusPublisher DistributedEventBus { get; }
     private IRedisService RedisService { get; }
     private ISpiderContentHighQualityQARepository SpiderRepository { get; }
@@ -42,6 +43,7 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
     {
         this.WebElementLoadProvider = provider;
         this.TextAnalysisProvider = serviceProvider.GetRequiredService<SogouSpider4WenWenTextAnalysisProvider>();
+        this.ResolveJumpUrlProvider = serviceProvider.GetRequiredService<SougouResolveJumpUrlProvider>();
         this.DistributedEventBus = eventBus;
         this.RedisService = redisService;
         this.SpiderRepository = repository;
@@ -113,7 +115,7 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
                     if (root == null) return;
 
                     var resultContent = root.TryFindElements(By.TagName("a"));
-                    if (resultContent is null or {Count: 0}) return;
+                    if (resultContent is null or { Count: 0 }) return;
 
                     ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                     foreach (IWebElement element in resultContent)
@@ -131,14 +133,18 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
                             }
                         }
 
-                        childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
+                        string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
+                        if (!string.IsNullOrEmpty(realHref))
                         {
-                            Title = text,
-                            Href = href
-                        });
+                            childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
+                            {
+                                Title = text,
+                                Href = realHref
+                            });
+                        }
                     }
 
-                    if (childPageDataItems is {Count: > 0})
+                    if (childPageDataItems is { Count: > 0 })
                     {
                         this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(), eventData.Keyword, childPageDataItems.Count);
 
@@ -190,17 +196,17 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
                         if (root == null) return;
 
                         var resultContent = root.TryFindElements(By.CssSelector(".replay-info"));
-                        if (resultContent is null or {Count: 0}) return;
+                        if (resultContent is null or { Count: 0 }) return;
 
                         foreach (IWebElement element in resultContent)
                         {
                             var answerList = element.TryFindElements(By.TagName("pre"));
-                            if (answerList is null or {Count: 0}) continue;
+                            if (answerList is null or { Count: 0 }) continue;
 
                             var realAnswerList = answerList
                                 .Where(c => c.GetAttribute("class").Contains("answer_con"))
                                 .ToList();
-                            if (realAnswerList is null or {Count: 0}) continue;
+                            if (realAnswerList is null or { Count: 0 }) continue;
 
                             ImmutableList<string> answerContentItems = ImmutableList.Create<string>();
                             foreach (IWebElement answer in realAnswerList)
