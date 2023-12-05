@@ -120,7 +120,7 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
                     ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                     foreach (IWebElement element in resultContent)
                     {
-                        string text = element.Text;
+                        string text = element.Text.Replace("-", "").Replace("搜狗问问", "");
                         string href = element.GetAttribute("href");
 
                         if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
