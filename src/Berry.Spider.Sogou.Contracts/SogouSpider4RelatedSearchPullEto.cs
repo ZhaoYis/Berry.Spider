@@ -8,8 +8,8 @@ namespace Berry.Spider.Sogou;
 [SpiderEventName(EtoType.Pull, RoutingKeyString, SpiderSourceFrom.Sogou_Related_Search)]
 public class SogouSpider4RelatedSearchPullEto : SpiderPullBaseEto
 {
-    public const string RoutingKeyString = "Berry.Sogou.RelatedSearch.Pull";
-    public const string QueueNameString = "Sogou.RelatedSearch.Pull";
+    public const string RoutingKeyString = "Sogou.RelatedSearch.Pull";
+    public const string QueueNameString = "Berry.Sogou.RelatedSearch.Pull";
 
     public SogouSpider4RelatedSearchPullEto() : base(SpiderSourceFrom.Sogou_Related_Search)
     {

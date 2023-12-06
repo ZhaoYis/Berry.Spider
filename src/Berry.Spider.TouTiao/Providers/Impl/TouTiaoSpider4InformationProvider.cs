@@ -15,7 +15,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：资讯
 /// </summary>
-[SpiderService(new[] {SpiderSourceFrom.TouTiao_Information})]
+[SpiderService(new[] { SpiderSourceFrom.TouTiao_Information })]
 public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4InformationProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -95,13 +95,14 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
             string targetUrl = string.Format(this.HomePage, eventData.Keyword);
             await this.WebElementLoadProvider.InvokeAsync(
                 targetUrl,
+                eventData.Keyword,
                 drv => drv.FindElement(By.CssSelector(".s-result-list")),
-                async root =>
+                async (root, keyword) =>
                 {
                     if (root == null) return;
 
                     var resultContent = root.TryFindElements(By.CssSelector(".result-content"));
-                    if (resultContent is null or {Count: 0}) return;
+                    if (resultContent is null or { Count: 0 }) return;
 
                     ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                     foreach (IWebElement element in resultContent)
@@ -109,13 +110,13 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                         var a = element.TryFindElement(By.TagName("a"));
                         if (a != null)
                         {
-                            string text = a.Text;
+                            string text = a.Text.Trim();
                             string href = a.GetAttribute("href");
 
                             if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
                             {
                                 //执行相似度检测
-                                double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
+                                double sim = StringHelper.Sim(eventData.Keyword, text);
                                 if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
                                 {
                                     return;
@@ -134,7 +135,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                         }
                     }
 
-                    if (childPageDataItems is {Count: > 0})
+                    if (childPageDataItems is { Count: > 0 })
                     {
                         this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(), eventData.Keyword, childPageDataItems.Count);
 

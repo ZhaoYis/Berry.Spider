@@ -17,8 +17,8 @@ public class SogouSpiderModule : AbpModule
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         //注入搜狗爬虫提供者
-        context.Services.AddSingleton<SogouSpider4RelatedSearchProvider>();
-        context.Services.AddSingleton<SogouSpider4WenWenProvider>();
+        context.Services.AddTransient<SogouSpider4RelatedSearchProvider>();
+        context.Services.AddTransient<SogouSpider4WenWenProvider>();
 
         //注册解析真实跳转的Url地址解析器
         context.Services.AddSingleton<SougouResolveJumpUrlProvider>();

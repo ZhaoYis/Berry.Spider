@@ -5,8 +5,8 @@ namespace Berry.Spider.TouTiao;
 [SpiderEventName(EtoType.Push, RoutingKeyString, SpiderSourceFrom.TouTiao_HighQuality_Question)]
 public class TouTiaoSpider4HighQualityQuestionPushEto : SpiderPushBaseEto
 {
-    public const string RoutingKeyString = "Berry.TouTiao.HighQualityQuestion.Push";
-    public const string QueueNameString = "TouTiao.HighQualityQuestion.Push";
+    public const string RoutingKeyString = "TouTiao.HighQualityQuestion.Push";
+    public const string QueueNameString = "Berry.TouTiao.HighQualityQuestion.Push";
 
     public TouTiaoSpider4HighQualityQuestionPushEto()
     {

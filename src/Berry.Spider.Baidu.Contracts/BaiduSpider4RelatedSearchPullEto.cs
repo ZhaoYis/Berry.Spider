@@ -8,8 +8,8 @@ namespace Berry.Spider.Baidu;
 [SpiderEventName(EtoType.Pull, RoutingKeyString, SpiderSourceFrom.Baidu_Related_Search)]
 public class BaiduSpider4RelatedSearchPullEto : SpiderPullBaseEto
 {
-    public const string RoutingKeyString = "Berry.Baidu.RelatedSearch.Pull";
-    public const string QueueNameString = "Baidu.RelatedSearch.Pull";
+    public const string RoutingKeyString = "Baidu.RelatedSearch.Pull";
+    public const string QueueNameString = "Berry.Baidu.RelatedSearch.Pull";
 
     public BaiduSpider4RelatedSearchPullEto() : base(SpiderSourceFrom.Baidu_Related_Search)
     {

@@ -59,7 +59,7 @@ public class MmonlyFileDownloadJob : AsyncBackgroundJob<MmonlyFileDownloadArgs>,
         try
         {
             await this.WebElementLoadProvider.InvokeAsync(
-                pageUrl,
+                pageUrl, "",
                 drv =>
                 {
                     try
@@ -71,7 +71,7 @@ public class MmonlyFileDownloadJob : AsyncBackgroundJob<MmonlyFileDownloadArgs>,
                         return null;
                     }
                 },
-                async root =>
+                async (root, keyword) =>
                 {
                     if (root == null) return;
 
@@ -118,8 +118,9 @@ public class MmonlyFileDownloadJob : AsyncBackgroundJob<MmonlyFileDownloadArgs>,
     {
         try
         {
-            int result = await this.WebElementLoadProvider.InvokeAsync<int>(
+            int result = await this.WebElementLoadProvider.InvokeAndReturnAsync<int>(
                 url,
+                "",
                 drv =>
                 {
                     try
@@ -130,7 +131,7 @@ public class MmonlyFileDownloadJob : AsyncBackgroundJob<MmonlyFileDownloadArgs>,
                     {
                         return null;
                     }
-                }, root =>
+                }, (root, keyword) =>
                 {
                     if (root == null) return Task.FromResult(0);
 

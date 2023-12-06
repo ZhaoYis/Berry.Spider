@@ -19,7 +19,7 @@ public static class SpiderEventNameAttributeExtensions
             {
                 if (EventNameAttributesCache.ContainsKey(eventNameAttribute.SourceFrom))
                 {
-                    var list = EventNameAttributesCache[eventNameAttribute.SourceFrom];
+                    var list = EventNameAttributesCache[eventNameAttribute.SourceFrom] ?? new List<EventNameCacheItem>();
                     list.Add(new EventNameCacheItem(type, eventNameAttribute));
 
                     EventNameAttributesCache[eventNameAttribute.SourceFrom] = list;
@@ -61,7 +61,7 @@ public static class SpiderEventNameAttributeExtensions
     public static object TryCreateEto(this SpiderSourceFrom from, EtoType type, params object?[]? args)
     {
         Type? etoObjType = from.GetEtoType(type);
-        if (etoObjType is { })
+        if (etoObjType is not null)
         {
             object? instance = Activator.CreateInstance(etoObjType, args);
             return instance ?? new object();
@@ -86,7 +86,7 @@ public static class SpiderEventNameAttributeExtensions
     {
         if (EventNameAttributesCache.TryGetValue(from, out List<EventNameCacheItem>? value))
         {
-            return value.Select(e => e.EventNameAttribute).ToList();
+            if (value != null) return value.Select(e => e.EventNameAttribute).ToList();
         }
 
         return default;
@@ -96,9 +96,12 @@ public static class SpiderEventNameAttributeExtensions
     {
         if (EventNameAttributesCache.TryGetValue(from, out List<EventNameCacheItem>? value))
         {
-            return value.Where(e => e.EventNameAttribute.EtoType == type)
-                .Select(e => e.ObjType)
-                .FirstOrDefault();
+            if (value != null)
+            {
+                return value.Where(e => e.EventNameAttribute.EtoType == type)
+                    .Select(e => e.ObjType)
+                    .FirstOrDefault();
+            }
         }
 
         return default;

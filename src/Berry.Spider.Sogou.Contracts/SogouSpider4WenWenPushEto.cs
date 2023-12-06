@@ -5,8 +5,8 @@ namespace Berry.Spider.Sogou;
 [SpiderEventName(EtoType.Push, RoutingKeyString, SpiderSourceFrom.Sogou_WenWen)]
 public class SogouSpider4WenWenPushEto : SpiderPushBaseEto
 {
-    public const string RoutingKeyString = "Berry.Sogou.WenWen.Push";
-    public const string QueueNameString = "Sogou.WenWen.Push";
+    public const string RoutingKeyString = "Sogou.WenWen.Push";
+    public const string QueueNameString = "Berry.Sogou.WenWen.Push";
 
     public SogouSpider4WenWenPushEto()
     {

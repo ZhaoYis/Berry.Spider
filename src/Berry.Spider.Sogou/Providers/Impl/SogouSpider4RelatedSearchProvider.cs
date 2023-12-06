@@ -15,7 +15,7 @@ namespace Berry.Spider.Sogou;
 /// <summary>
 /// 搜狗：相关推荐
 /// </summary>
-[SpiderService(new[] {SpiderSourceFrom.Sogou_Related_Search})]
+[SpiderService(new[] { SpiderSourceFrom.Sogou_Related_Search })]
 public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4RelatedSearchProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -94,32 +94,29 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
                 if (!result) return;
             }
 
-            //获取url地址
-            string realUrl = await this.WebElementLoadProvider.AutoClickAsync(this.HomePage, eventData.Keyword,
+            await this.WebElementLoadProvider.AutoClickAndInvokeAsync(
+                this.HomePage,
+                eventData.Keyword,
                 By.Id("query"),
-                By.Id("stb"));
-            if (string.IsNullOrWhiteSpace(realUrl)) return;
-
-            await this.WebElementLoadProvider.InvokeAsync(
-                realUrl,
+                By.Id("stb"),
                 drv => drv.FindElement(By.Id("hint_container")),
-                async root =>
+                async (root, keyword) =>
                 {
                     if (root == null) return;
 
                     var resultContent = root.TryFindElements(By.TagName("a"));
-                    if (resultContent is null or {Count: 0}) return;
+                    if (resultContent is null or { Count: 0 }) return;
 
                     ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                     foreach (IWebElement element in resultContent)
                     {
-                        string text = element.Text;
+                        string text = element.Text.Trim();
                         string href = element.GetAttribute("href");
 
                         if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
                         {
                             //执行相似度检测
-                            double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
+                            double sim = StringHelper.Sim(eventData.Keyword, text);
                             if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
                             {
                                 return;
@@ -133,7 +130,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
                         });
                     }
 
-                    if (childPageDataItems is {Count: > 0})
+                    if (childPageDataItems is { Count: > 0 })
                     {
                         this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
                             eventData.Keyword, childPageDataItems.Count);

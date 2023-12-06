@@ -15,7 +15,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：问答
 /// </summary>
-[SpiderService(new[] {SpiderSourceFrom.TouTiao_Question, SpiderSourceFrom.TouTiao_Question_Ext_NO_1})]
+[SpiderService(new[] { SpiderSourceFrom.TouTiao_Question, SpiderSourceFrom.TouTiao_Question_Ext_NO_1 })]
 public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4QuestionProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -103,13 +103,14 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
             string targetUrl = string.Format(this.HomePage, eventData.Keyword);
             await this.WebElementLoadProvider.InvokeAsync(
                 targetUrl,
+                eventData.Keyword,
                 drv => drv.FindElement(By.CssSelector(".s-result-list")),
-                async root =>
+                async (root, keyword) =>
                 {
                     if (root == null) return;
 
                     var resultContent = root.TryFindElements(By.CssSelector(".result-content"));
-                    if (resultContent is null or {Count: 0}) return;
+                    if (resultContent is null or { Count: 0 }) return;
 
                     ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                     foreach (IWebElement element in resultContent)
@@ -119,13 +120,13 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                         var a = element.TryFindElement(By.TagName("a"));
                         if (a != null)
                         {
-                            string text = a.Text;
+                            string text = a.Text.Trim();
                             string href = a.GetAttribute("href");
 
                             if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
                             {
                                 //执行相似度检测
-                                double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
+                                double sim = StringHelper.Sim(eventData.Keyword, text);
                                 if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
                                 {
                                     return;
@@ -144,7 +145,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                         }
                     }
 
-                    if (childPageDataItems is {Count: > 0})
+                    if (childPageDataItems is { Count: > 0 })
                     {
                         this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
                             eventData.Keyword, childPageDataItems.Count);
@@ -187,48 +188,42 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
             }
 
             ImmutableList<string> contentItems = ImmutableList.Create<string>();
-            foreach (var item in eventData.Items)
-            {
-                await this.WebElementLoadProvider.InvokeAsync(
-                    item.Href,
-                    drv => drv.FindElement(By.CssSelector(".s-container")),
-                    async root =>
+            await this.WebElementLoadProvider.BatchInvokeAsync(
+                eventData.Items.ToDictionary(k => k.Title, v => v.Href),
+                drv => drv.FindElement(By.CssSelector(".s-container")),
+                async (root, keyword) =>
+                {
+                    if (root == null) return;
+
+                    var resultContent = root.TryFindElements(By.CssSelector(".list"));
+                    if (resultContent is null or { Count: 0 }) return;
+
+                    foreach (IWebElement element in resultContent)
                     {
-                        if (root == null) return;
+                        var answerList = element.TryFindElements(By.TagName("div"));
+                        if (answerList is null or { Count: 0 }) continue;
 
-                        var resultContent = root.TryFindElements(By.CssSelector(".list"));
-                        if (resultContent is null or {Count: 0}) return;
+                        var realAnswerList = answerList
+                            .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))
+                            .ToList();
+                        if (realAnswerList is null or { Count: 0 }) continue;
 
-                        foreach (IWebElement element in resultContent)
+                        foreach (IWebElement answer in realAnswerList)
                         {
-                            var answerList = element.TryFindElements(By.TagName("div"));
-                            if (answerList is null or {Count: 0}) continue;
-
-                            var realAnswerList = answerList
-                                .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))
-                                .ToList();
-                            if (realAnswerList is null or {Count: 0}) continue;
-
-                            foreach (IWebElement answer in realAnswerList)
+                            if (!string.IsNullOrWhiteSpace(answer.Text))
                             {
-                                if (!string.IsNullOrWhiteSpace(answer.Text))
+                                //解析内容
+                                var list = await this.TextAnalysisProvider.InvokeAsync(answer.Text);
+                                if (list.Count > 0)
                                 {
-                                    //解析内容
-                                    var list = await this.TextAnalysisProvider.InvokeAsync(answer.Text);
-                                    if (list.Count > 0)
-                                    {
-                                        contentItems = contentItems.AddRange(list);
-                                        this.Logger.LogInformation("总共解析到记录：{0}", list.Count);
-                                    }
+                                    contentItems = contentItems.AddRange(list);
+                                    this.Logger.LogInformation("总共解析到记录：{0}", list.Count);
                                 }
                             }
                         }
                     }
-                );
-
-                //修养生息20ms
-                await Task.Delay(20);
-            }
+                }
+            );
 
             //去重
             List<string> todoSaveContentItems = contentItems.Where(c => !string.IsNullOrEmpty(c)).Distinct().ToList();

@@ -15,7 +15,7 @@ namespace Berry.Spider.Baidu;
 /// <summary>
 /// 百度：相关推荐
 /// </summary>
-[SpiderService(new[] {SpiderSourceFrom.Baidu_Related_Search})]
+[SpiderService(new[] { SpiderSourceFrom.Baidu_Related_Search })]
 public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4RelatedSearchProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -99,24 +99,25 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
             string targetUrl = string.Format(this.HomePage, eventData.Keyword);
             await this.WebElementLoadProvider.InvokeAsync(
                 targetUrl,
+                eventData.Keyword,
                 drv => drv.FindElement(By.Id("rs_new")),
-                async root =>
+                async (root, keyword) =>
                 {
                     if (root == null) return;
 
                     var resultContent = root.TryFindElements(By.TagName("a"));
-                    if (resultContent is null or {Count: 0}) return;
+                    if (resultContent is null or { Count: 0 }) return;
 
                     ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                     foreach (IWebElement element in resultContent)
                     {
-                        string text = element.Text;
+                        string text = element.Text.Trim();
                         string href = element.GetAttribute("href");
 
                         if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
                         {
                             //执行相似度检测
-                            double sim = StringHelper.Sim(eventData.Keyword, text.Trim());
+                            double sim = StringHelper.Sim(eventData.Keyword, text);
                             if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
                             {
                                 return;
@@ -134,7 +135,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                         }
                     }
 
-                    if (childPageDataItems is {Count: > 0})
+                    if (childPageDataItems is { Count: > 0 })
                     {
                         this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
                             eventData.Keyword, childPageDataItems.Count);

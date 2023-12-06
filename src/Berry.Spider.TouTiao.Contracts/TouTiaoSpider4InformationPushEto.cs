@@ -5,8 +5,8 @@ namespace Berry.Spider.TouTiao;
 [SpiderEventName(EtoType.Push, RoutingKeyString, SpiderSourceFrom.TouTiao_Information)]
 public class TouTiaoSpider4InformationPushEto : SpiderPushBaseEto
 {
-    public const string RoutingKeyString = "Berry.TouTiao.Information.Push";
-    public const string QueueNameString = "TouTiao.Information.Push";
+    public const string RoutingKeyString = "TouTiao.Information.Push";
+    public const string QueueNameString = "Berry.TouTiao.Information.Push";
 
     public TouTiaoSpider4InformationPushEto()
     {

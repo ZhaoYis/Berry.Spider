@@ -8,8 +8,8 @@ namespace Berry.Spider.Sogou;
 [SpiderEventName(EtoType.Pull, RoutingKeyString, SpiderSourceFrom.Sogou_WenWen)]
 public class SogouSpider4WenWenPullEto : SpiderPullBaseEto
 {
-    public const string RoutingKeyString = "Berry.Sogou.WenWen.Pull";
-    public const string QueueNameString = "Sogou.WenWen.Pull";
+    public const string RoutingKeyString = "Sogou.WenWen.Pull";
+    public const string QueueNameString = "Berry.Sogou.WenWen.Pull";
 
     public SogouSpider4WenWenPullEto() : base(SpiderSourceFrom.Sogou_WenWen)
     {

@@ -63,6 +63,7 @@ public class SpiderEventBusRabbitMqModule : AbpModule
                 };
 
                 o.PublishConfirms = rabbitMqOptions.PublishConfirms;
+                o.ExchangeName = RabbitMQOptions.DefaultExchangeName;
             });
         }
     }
