@@ -7,8 +7,6 @@ namespace Berry.Spider.Proxy.QgNet;
 
 public class QgNetHttpProxy : IHttpProxy
 {
-    private const string CacheKey = "QgNetProxyQuotaResultCacheKey";
-
     private QgNetProxyHttpClient QgNetProxyHttpClient { get; }
     private QgNetProxyPoolContext QgNetProxyPoolContext { get; }
     private IDistributedCache<QgNetProxyQuotaResult> Cache { get; }
@@ -36,7 +34,7 @@ public class QgNetHttpProxy : IHttpProxy
     {
         if (this.Options.IsEnable)
         {
-            QgNetProxyQuotaResult? quotaResult = await this.Cache.GetAsync(CacheKey);
+            QgNetProxyQuotaResult? quotaResult = await this.Cache.GetAsync(CacheKeyHelper.QgNetProxyQuotaResultCacheKey);
             if (quotaResult != null)
             {
                 return quotaResult.Balance > 0;
@@ -46,7 +44,7 @@ public class QgNetHttpProxy : IHttpProxy
                 quotaResult = await this.QgNetProxyHttpClient.GetQuotaResultAsync();
                 if (quotaResult != null)
                 {
-                    await this.Cache.SetAsync(CacheKey, quotaResult, new DistributedCacheEntryOptions
+                    await this.Cache.SetAsync(CacheKeyHelper.QgNetProxyQuotaResultCacheKey, quotaResult, new DistributedCacheEntryOptions
                     {
                         AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10)
                     });

@@ -5,8 +5,6 @@ namespace Berry.Spider.Proxy.QgNet;
 
 public class QgNetProxyPoolContext
 {
-    private const string CacheKey = "QgNetProxyResultCacheKey";
-
     private QgNetProxyHttpClient QgNetProxyHttpClient { get; }
     private IDistributedCache<QgNetProxyResult> Cache { get; }
 
@@ -18,7 +16,7 @@ public class QgNetProxyPoolContext
 
     public async Task<QgNetProxyResult?> GetAsync()
     {
-        QgNetProxyResult? result = await this.Cache.GetAsync(CacheKey);
+        QgNetProxyResult? result = await this.Cache.GetAsync(CacheKeyHelper.QgNetProxyResultCacheKey);
 
         //检查当前IP是否有效，无效则重新获取一个
         if (result is { IsInvalid: true })
@@ -38,7 +36,7 @@ public class QgNetProxyPoolContext
     {
         if (result == null) return;
 
-        await this.Cache.SetAsync(CacheKey, result, new DistributedCacheEntryOptions
+        await this.Cache.SetAsync(CacheKeyHelper.QgNetProxyResultCacheKey, result, new DistributedCacheEntryOptions
         {
             AbsoluteExpiration = DateTime.Parse(result.Deadline)
         });

@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 
-namespace Berry.Spider.Core.Helpers;
+namespace Berry.Spider.Core;
 
 public static class DnsHelper
 {
