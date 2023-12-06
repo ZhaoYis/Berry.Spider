@@ -202,6 +202,14 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             //点击按钮
             driver.FindElement(submitBtn).Click();
 
+            //获取跳转后url
+            string title = driver.Title;
+            string url = driver.Url;
+            string current = driver.CurrentWindowHandle;
+
+            if (string.IsNullOrEmpty(title)) return;
+            this.Logger.LogInformation("[ACI]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
+
             driver.Navigate().GoToUrl(driver.Url);
             WebDriverWait wait = new WebDriverWait(driver, timeout: TimeSpan.FromSeconds(30))
             {
