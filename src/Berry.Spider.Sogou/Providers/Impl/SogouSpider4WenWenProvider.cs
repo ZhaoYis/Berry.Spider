@@ -68,6 +68,8 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
             },
             bloomCheck: this.Options.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.KeywordCheckOptions.RedisCheck);
+        
+        await Task.Delay(1000);
     }
 
     /// <summary>

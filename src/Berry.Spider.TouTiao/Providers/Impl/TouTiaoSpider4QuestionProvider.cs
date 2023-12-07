@@ -67,6 +67,8 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
             },
             bloomCheck: this.Options.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.KeywordCheckOptions.RedisCheck);
+        
+        await Task.Delay(1000);
     }
 
     /// <summary>
