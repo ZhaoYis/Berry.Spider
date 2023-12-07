@@ -162,6 +162,8 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             if (await this.InterceptorProvider.IsLockedAsync(targetUrl)) return string.Empty;
 
             using IWebDriver driver = await this.WebDriverProvider.GetAsync();
+            //隐式等待
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             //跳转
             driver.Navigate().GoToUrl(targetUrl);
             //获取输入框
@@ -176,9 +178,6 @@ public class WebElementLoadProvider : IWebElementLoadProvider
 
             if (string.IsNullOrEmpty(title)) return string.Empty;
             this.Logger.LogInformation("[AC]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
-
-            // 隐式等待
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
 
             //人机验证拦截
             if (await this.InterceptorProvider.LockedAsync(targetUrl, url)) return string.Empty;
