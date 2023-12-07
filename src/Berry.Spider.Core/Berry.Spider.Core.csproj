@@ -8,6 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="AspectCore.Core" Version="2.4.0" />
+      <PackageReference Include="AspectCore.Extensions.DependencyInjection" Version="2.4.0" />
       <PackageReference Include="DotNetCore.NPOI" Version="1.2.3" />
       <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="8.0.0" />
       <PackageReference Include="Selenium.WebDriver" Version="4.15.0" />

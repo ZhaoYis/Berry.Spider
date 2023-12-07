@@ -23,7 +23,9 @@ public class HumanMachineVerificationInterceptorProvider : IHumanMachineVerifica
 
     public async Task<bool> LockedAsync(string sourcePage, string lockedPage)
     {
+        if (!UrlHelper.IsUrl(sourcePage)) return false;
         string sourceHost = UrlHelper.GetHostString(sourcePage);
+
         foreach (string blackHost in this.Options.BlackHosts)
         {
             if (!lockedPage.Contains(blackHost)) continue;
@@ -46,6 +48,7 @@ public class HumanMachineVerificationInterceptorProvider : IHumanMachineVerifica
 
     public async Task<bool> IsLockedAsync(string sourcePage)
     {
+        if (!UrlHelper.IsUrl(sourcePage)) return false;
         string sourceHost = UrlHelper.GetHostString(sourcePage);
 
         string cacheKey = $"{DnsHelper.GetHostName()}:{sourceHost}";
