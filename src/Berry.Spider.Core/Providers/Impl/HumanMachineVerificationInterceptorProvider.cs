@@ -1,9 +1,7 @@
-﻿using System.Net;
-using Berry.Spider.Contracts;
+﻿using Berry.Spider.Contracts;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using OpenQA.Selenium;
 using Volo.Abp.Caching;
 
 namespace Berry.Spider.Core;
@@ -23,41 +21,44 @@ public class HumanMachineVerificationInterceptorProvider : IHumanMachineVerifica
         this.Options = options.Value;
     }
 
-    public async Task<bool> LockedAsync(IWebDriver webDriver)
+    public async Task<bool> LockedAsync(string sourcePage, string lockedPage)
     {
-        string url = webDriver.Url;
+        string sourceHost = UrlHelper.GetHostString(sourcePage);
         foreach (string blackHost in this.Options.BlackHosts)
         {
-            if (url.Contains(blackHost))
-            {
-                this.Logger.LogInformation($"命中了人机验证，只有等一会儿咯~");
-                //等一会儿吧~
-                string cacheKey = string.Format("{0}:{1}", "TODO：解析url", Dns.GetHostName());
-                await this.Cache.SetAsync(cacheKey, new HumanMachineVerificationInterceptorCacheItem
-                    {
-                        LockPageUrl = url
-                    }
-                    , new DistributedCacheEntryOptions
-                    {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(this.Options.LockExpiration)
-                    });
-                return true;
-            }
+            if (!lockedPage.Contains(blackHost)) continue;
+            this.Logger.LogInformation($"命中了人机验证，只有等一会儿咯~");
+
+            string cacheKey = $"{DnsHelper.GetHostName()}:{sourceHost}";
+            await this.Cache.SetAsync(cacheKey, new HumanMachineVerificationInterceptorCacheItem
+                {
+                    LockPageUrl = lockedPage
+                }
+                , new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(this.Options.LockExpiration)
+                });
+            return true;
         }
 
         return false;
     }
 
-    public async Task<bool> IsLockedAsync()
+    public async Task<bool> IsLockedAsync(string sourcePage)
     {
-        string cacheKey = string.Format("{0}:{1}", "TODO", Dns.GetHostName());
-        var val = await this.Cache.GetAsync(cacheKey);
-        return val != null && !string.IsNullOrEmpty(val.LockPageUrl);
-    }
-}
+        string sourceHost = UrlHelper.GetHostString(sourcePage);
 
-[CacheName("HMVI")]
-public class HumanMachineVerificationInterceptorCacheItem
-{
-    public string LockPageUrl { get; set; }
+        string cacheKey = $"{DnsHelper.GetHostName()}:{sourceHost}";
+        var cacheItem = await this.Cache.GetAsync(cacheKey);
+        return cacheItem is not null && !string.IsNullOrEmpty(cacheItem.LockPageUrl);
+    }
+
+    [CacheName("HMVI")]
+    public class HumanMachineVerificationInterceptorCacheItem
+    {
+        /// <summary>
+        /// 触发人机验证的页面地址
+        /// </summary>
+        public string LockPageUrl { get; set; }
+    }
 }
