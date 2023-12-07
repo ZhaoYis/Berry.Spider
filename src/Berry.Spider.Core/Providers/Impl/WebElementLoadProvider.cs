@@ -131,7 +131,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             this.Logger.LogInformation("[T]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
 
             //人机验证拦截
-            if (await this.InterceptorProvider.LockedAsync(targetUrl, url)) return await Task.FromResult(default(T));
+            if (await this.InterceptorProvider.LockedAsync(targetUrl, url)) return default(T);
 
             WebDriverWait wait = new WebDriverWait(driver, timeout: TimeSpan.FromSeconds(30))
             {
