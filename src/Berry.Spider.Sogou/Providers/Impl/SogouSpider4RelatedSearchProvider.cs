@@ -87,13 +87,6 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
     {
         try
         {
-            //关键字采集唯一性验证
-            if (this.Options.IsEnablePushUniqVerif)
-            {
-                bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PUSH, eventData.IdentityId);
-                if (!result) return;
-            }
-
             await this.WebElementLoadProvider.AutoClickAndInvokeAsync(
                 this.HomePage,
                 eventData.Keyword,
@@ -119,7 +112,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
                             double sim = StringHelper.Sim(eventData.Keyword, text);
                             if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
                             {
-                                return;
+                                continue;
                             }
                         }
 

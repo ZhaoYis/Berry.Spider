@@ -89,13 +89,6 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
     {
         try
         {
-            //关键字采集唯一性验证
-            if (this.Options.IsEnablePushUniqVerif)
-            {
-                bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PUSH, eventData.IdentityId);
-                if (!result) return;
-            }
-
             string targetUrl = string.Format(this.HomePage, eventData.Keyword);
             await this.WebElementLoadProvider.InvokeAsync(
                 targetUrl,
@@ -120,7 +113,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                             double sim = StringHelper.Sim(eventData.Keyword, text);
                             if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
                             {
-                                return;
+                                continue;
                             }
                         }
 

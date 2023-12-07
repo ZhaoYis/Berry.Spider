@@ -8,7 +8,7 @@ namespace Berry.Spider.Core;
 /// </summary>
 public interface IHumanMachineVerificationInterceptorProvider : ISingletonDependency
 {
-    Task InvokeAsync(IWebDriver webDriver);
+    Task<bool> LockedAsync(IWebDriver webDriver);
 
     Task<bool> IsLockedAsync();
 }

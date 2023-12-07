@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using System.Drawing;
 
 namespace Berry.Spider.Core;
 
@@ -21,12 +20,15 @@ public class WebElementLoadProvider : IWebElementLoadProvider
     }
 
     public async Task InvokeAsync(string targetUrl,
-        string keyword,
+        object state,
         Func<IWebDriver, IWebElement?> selector,
-        Func<IWebElement?, string, Task> executor)
+        Func<IWebElement?, object, Task> executor)
     {
         try
         {
+            //检查是否处于人机验证资源锁定阶段
+            // if (await this.InterceptorProvider.IsLockedAsync()) return;
+
             using IWebDriver driver = await this.WebDriverProvider.GetAsync();
             driver.Navigate().GoToUrl(targetUrl);
 
@@ -44,7 +46,10 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             // 设置Cookie
             // driver.Manage().Cookies.AddCookie(new Cookie("key", "value"));
             // 将窗口移动到主显示器的左上角
-            driver.Manage().Window.Position = new Point(0, 0);
+            //driver.Manage().Window.Position = new Point(0, 0);
+
+            //人机验证拦截
+            // if (await this.InterceptorProvider.LockedAsync(driver)) return;
 
             WebDriverWait wait = new WebDriverWait(driver, timeout: TimeSpan.FromSeconds(30))
             {
@@ -53,47 +58,58 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException), typeof(NotFoundException));
 
             IWebElement? webElement = wait.Until(selector);
-            await executor.Invoke(webElement, keyword);
+            await executor.Invoke(webElement, state);
         }
         catch (Exception exception)
         {
             this.Logger.LogException(exception);
-            await executor.Invoke(null, keyword);
+            await executor.Invoke(null, state);
         }
     }
 
     public async Task BatchInvokeAsync(IDictionary<string, string> keywordList,
         Func<IWebDriver, IWebElement?> selector,
-        Func<IWebElement?, string, Task> executor)
+        Func<IWebElement?, object, Task> executor)
     {
         try
         {
+            //检查是否处于人机验证资源锁定阶段
+            // if (await this.InterceptorProvider.IsLockedAsync()) return;
+
             using IWebDriver driver = await this.WebDriverProvider.GetAsync();
             foreach (KeyValuePair<string, string> pair in keywordList)
             {
-                string keyword = pair.Key;
-                string targetUrl = pair.Value;
-                driver.Navigate().GoToUrl(targetUrl);
-
-                //获取跳转后url
-                string title = driver.Title;
-                string page = driver.PageSource;
-                string url = driver.Url;
-                string current = driver.CurrentWindowHandle;
-
-                if (string.IsNullOrEmpty(title)) return;
-                this.Logger.LogInformation("[Void]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
-
-                WebDriverWait wait = new WebDriverWait(driver, timeout: TimeSpan.FromSeconds(30))
+                try
                 {
-                    PollingInterval = TimeSpan.FromSeconds(5),
-                };
-                wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException), typeof(NotFoundException));
+                    string keyword = pair.Key;
+                    string targetUrl = pair.Value;
+                    driver.Navigate().GoToUrl(targetUrl);
 
-                IWebElement? webElement = wait.Until(selector);
-                await executor.Invoke(webElement, keyword);
+                    //获取跳转后url
+                    string title = driver.Title;
+                    string page = driver.PageSource;
+                    string url = driver.Url;
+                    string current = driver.CurrentWindowHandle;
 
-                await Task.Delay(20);
+                    if (string.IsNullOrEmpty(title)) return;
+                    this.Logger.LogInformation("[Void]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
+
+                    //人机验证拦截
+                    // if (await this.InterceptorProvider.LockedAsync(driver)) return;
+
+                    WebDriverWait wait = new WebDriverWait(driver, timeout: TimeSpan.FromSeconds(30))
+                    {
+                        PollingInterval = TimeSpan.FromSeconds(5),
+                    };
+                    wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException), typeof(NotFoundException));
+
+                    IWebElement? webElement = wait.Until(selector);
+                    await executor.Invoke(webElement, keyword);
+                }
+                finally
+                {
+                    await Task.Delay(20);
+                }
             }
         }
         catch (Exception exception)
@@ -104,12 +120,15 @@ public class WebElementLoadProvider : IWebElementLoadProvider
     }
 
     public async Task<T?> InvokeAndReturnAsync<T>(string targetUrl,
-        string keyword,
+        object state,
         Func<IWebDriver, IWebElement?> selector,
-        Func<IWebElement?, string, Task<T>> executor)
+        Func<IWebElement?, object, Task<T>> executor)
     {
         try
         {
+            //检查是否处于人机验证资源锁定阶段
+            // if (await this.InterceptorProvider.IsLockedAsync()) return await Task.FromResult(default(T));
+
             using IWebDriver driver = await this.WebDriverProvider.GetAsync();
             driver.Navigate().GoToUrl(targetUrl);
 
@@ -127,7 +146,10 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             // 设置Cookie
             // driver.Manage().Cookies.AddCookie(new Cookie("key", "value"));
             // 将窗口移动到主显示器的左上角
-            driver.Manage().Window.Position = new Point(0, 0);
+            // driver.Manage().Window.Position = new Point(0, 0);
+
+            //人机验证拦截
+            // if (await this.InterceptorProvider.LockedAsync(driver)) return await Task.FromResult(default(T));
 
             WebDriverWait wait = new WebDriverWait(driver, timeout: TimeSpan.FromSeconds(30))
             {
@@ -136,28 +158,31 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException), typeof(NotFoundException));
 
             IWebElement? webElement = wait.Until(selector);
-            T result = await executor.Invoke(webElement, keyword);
+            T result = await executor.Invoke(webElement, state);
             return result;
         }
         catch (Exception exception)
         {
             this.Logger.LogException(exception);
-            await executor.Invoke(null, keyword);
+            await executor.Invoke(null, state);
             return await Task.FromResult(default(T));
         }
     }
 
     public async Task<string> AutoClickAsync(string targetUrl,
-        string keyword,
+        object state,
         By inputBox,
         By submitBtn)
     {
         try
         {
+            //检查是否处于人机验证资源锁定阶段
+            // if (await this.InterceptorProvider.IsLockedAsync()) return string.Empty;
+
             using IWebDriver driver = await this.WebDriverProvider.GetAsync();
             driver.Navigate().GoToUrl(targetUrl);
             //获取输入框
-            driver.FindElement(inputBox).SendKeys(keyword);
+            driver.FindElement(inputBox).SendKeys(state.ToString());
             //点击按钮
             driver.FindElement(submitBtn).Click();
 
@@ -174,7 +199,10 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             // 设置Cookie
             // driver.Manage().Cookies.AddCookie(new Cookie("key", "value"));
             // 将窗口移动到主显示器的左上角
-            driver.Manage().Window.Position = new Point(0, 0);
+            // driver.Manage().Window.Position = new Point(0, 0);
+
+            //人机验证拦截
+            // if (await this.InterceptorProvider.LockedAsync(driver)) return string.Empty;
 
             return url;
         }
@@ -187,18 +215,21 @@ public class WebElementLoadProvider : IWebElementLoadProvider
     }
 
     public async Task AutoClickAndInvokeAsync(string targetUrl,
-        string keyword,
+        object state,
         By inputBox,
         By submitBtn,
         Func<IWebDriver, IWebElement?> selector,
-        Func<IWebElement?, string, Task> executor)
+        Func<IWebElement?, object, Task> executor)
     {
         try
         {
+            //检查是否处于人机验证资源锁定阶段
+            // if (await this.InterceptorProvider.IsLockedAsync()) return;
+
             using IWebDriver driver = await this.WebDriverProvider.GetAsync();
             driver.Navigate().GoToUrl(targetUrl);
             //获取输入框
-            driver.FindElement(inputBox).SendKeys(keyword);
+            driver.FindElement(inputBox).SendKeys(state.ToString());
             //点击按钮
             driver.FindElement(submitBtn).Click();
 
@@ -210,6 +241,9 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             if (string.IsNullOrEmpty(title)) return;
             this.Logger.LogInformation("[ACI]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
 
+            //人机验证拦截
+            // if (await this.InterceptorProvider.LockedAsync(driver)) return;
+
             driver.Navigate().GoToUrl(driver.Url);
             WebDriverWait wait = new WebDriverWait(driver, timeout: TimeSpan.FromSeconds(30))
             {
@@ -218,12 +252,12 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException), typeof(NotFoundException));
 
             IWebElement? webElement = wait.Until(selector);
-            await executor.Invoke(webElement, keyword);
+            await executor.Invoke(webElement, state);
         }
         catch (Exception exception)
         {
             this.Logger.LogException(exception);
-            await executor.Invoke(null, keyword);
+            await executor.Invoke(null, state);
         }
     }
 }

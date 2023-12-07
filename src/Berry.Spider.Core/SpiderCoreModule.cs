@@ -64,7 +64,7 @@ public class SpiderCoreModule : AbpModule
             options.GlobalCacheEntryOptions.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30);
         });
         //分布式缓存Redis
-        Configure<RedisCacheOptions>(options => { options.InstanceName = Assembly.GetExecutingAssembly().FullName; });
+        // Configure<RedisCacheOptions>(options => { options.InstanceName = Assembly.GetExecutingAssembly().FullName; });
 
         //对象池
         context.Services.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();

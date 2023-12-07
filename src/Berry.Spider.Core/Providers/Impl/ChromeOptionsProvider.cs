@@ -26,8 +26,6 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         //https://www.cnblogs.com/gurenyumao/p/14721035.html
         ChromeOptions options = new ChromeOptions();
 
-        //窗口最大化运行
-        options.AddArgument("--start-maximized");
         //Chrome在root权限下跑
         options.AddArgument("--no-sandbox");
         //停用DNS预读
@@ -40,14 +38,21 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         options.AddArgument("--disable-gpu");
         //禁用弹出拦截
         options.AddArgument("--disable-popup-blocking");
+        
         //无界面运行(无窗口)，也叫无头浏览器，通常用于远程运行，在本地运行也可以通过该参数提升运行效率
         //在无头模式下运行，即没有UI或显示服务器依赖性。
         //https://developer.chrome.com/articles/new-headless/
         options.AddArgument("--headless");
+        //禁用GPU。解决GPU stall due to ReadPixels错误
+        //https://stackoverflow.com/questions/59047415/chrome-options-in-python-selenium-disable-gpu-vs-headless
+        options.AddArgument("--disable-gpu");
+        //禁用3D
+        options.AddArgument("--disable-3d-apis");
+        
         //设置浏览器以隐身模式(无痕模式运行)
         options.AddArgument("--incognito");
         //不发送 Http-Referer 头
-        options.AddArgument("--no-referrers");
+        // options.AddArgument("--no-referrers");
         //忽略与证书相关的错误
         options.AddArgument("--ignore-certificate-errors");
         //设置闪烁设置（imagesEnabled=不加载图片）

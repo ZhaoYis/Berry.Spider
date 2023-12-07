@@ -94,13 +94,6 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
     {
         try
         {
-            //关键字采集唯一性验证
-            if (this.Options.IsEnablePushUniqVerif)
-            {
-                bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PUSH, eventData.IdentityId);
-                if (!result) return;
-            }
-
             await this.WebElementLoadProvider.AutoClickAndInvokeAsync(
                 this.HomePage,
                 eventData.Keyword,
@@ -126,7 +119,7 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
                             double sim = StringHelper.Sim(eventData.Keyword, text);
                             if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
                             {
-                                return;
+                                continue;
                             }
                         }
 
@@ -175,13 +168,6 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
     {
         try
         {
-            //关键字采集唯一性验证
-            if (this.Options.IsEnablePullUniqVerif)
-            {
-                bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PULL, eventData.IdentityId);
-                if (!result) return;
-            }
-
             ConcurrentDictionary<string, List<string>> contentItems = new ConcurrentDictionary<string, List<string>>();
             await this.WebElementLoadProvider.BatchInvokeAsync(
                 eventData.Items.ToDictionary(k => k.Title, v => v.Href),
@@ -228,7 +214,7 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
                         //去重
                         List<string> todoSaveContentItems = answerContentItems
                             .Where(c => !string.IsNullOrEmpty(c)).Distinct().ToList();
-                        contentItems.TryAdd(keyword, todoSaveContentItems);
+                        contentItems.TryAdd(keyword.ToString(), todoSaveContentItems);
                     }
 
                     await Task.Delay(20);

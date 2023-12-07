@@ -95,13 +95,6 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     {
         try
         {
-            //关键字采集唯一性验证
-            if (this.Options.IsEnablePushUniqVerif)
-            {
-                bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PUSH, eventData.IdentityId);
-                if (!result) return;
-            }
-
             string targetUrl = string.Format(this.HomePage, eventData.Keyword);
             await this.WebElementLoadProvider.InvokeAsync(
                 targetUrl,
@@ -129,7 +122,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                                 double sim = StringHelper.Sim(eventData.Keyword, text);
                                 if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
                                 {
-                                    return;
+                                    continue;
                                 }
                             }
 
@@ -177,13 +170,6 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
     {
         try
         {
-            //关键字采集唯一性验证
-            if (this.Options.IsEnablePullUniqVerif)
-            {
-                bool result = await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY_PULL, eventData.IdentityId);
-                if (!result) return;
-            }
-
             string groupId = this.GuidGenerator.Create().ToString("N");
             ImmutableList<SpiderContent_Composition> contentItems = ImmutableList.Create<SpiderContent_Composition>();
             await this.WebElementLoadProvider.BatchInvokeAsync(
@@ -199,7 +185,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                         string content = resultContent.Text;
                         if (!string.IsNullOrEmpty(content))
                         {
-                            SpiderContent_Composition spiderContent = new SpiderContent_Composition(keyword, content, groupId, eventData.SourceFrom);
+                            SpiderContent_Composition spiderContent = new SpiderContent_Composition(keyword.ToString(), content, groupId, eventData.SourceFrom);
                             spiderContent.SetTraceCodeIfNotNull(eventData.TraceCode);
                             spiderContent.SetIdentityIdIfNotNull(eventData.IdentityId);
                             contentItems = contentItems.Add(spiderContent);
