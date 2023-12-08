@@ -1,6 +1,5 @@
-namespace Berry.Spider.Admin;
+namespace Berry.Spider.RealTime;
 
 public class NotifyMessageBase
 {
-    
 }

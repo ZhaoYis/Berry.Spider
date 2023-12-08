@@ -1,6 +1,6 @@
 using Volo.Abp.AspNetCore.SignalR;
 
-namespace Berry.Spider.Admin;
+namespace Berry.Spider.RealTime;
 
 /// <summary>
 /// 爬虫程序通知Hub
@@ -24,7 +24,7 @@ public class SpiderAppNotifyHub : AbpHub<ISpiderAppReceiveHub>, ISpiderAppNotify
     {
         await Clients.All.ReceiveSystemMessageAsync(new SystemReceiveDto
         {
-            Message = "hello，" + this.Clock.Now.ToString()
+            Message = "hello，" + this.Clock.Now.ToString("s")
         });
         await base.OnConnectedAsync();
     }
@@ -32,7 +32,7 @@ public class SpiderAppNotifyHub : AbpHub<ISpiderAppReceiveHub>, ISpiderAppNotify
     /// <summary>
     /// Called when a connection with the hub is terminated.
     /// </summary>
-    public override Task OnDisconnectedAsync(Exception exception)
+    public override Task OnDisconnectedAsync(Exception? exception)
     {
         return base.OnDisconnectedAsync(exception);
     }

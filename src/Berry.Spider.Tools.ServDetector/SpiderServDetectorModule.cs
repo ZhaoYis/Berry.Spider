@@ -1,4 +1,5 @@
 ﻿using Berry.Spider.FreeRedis;
+using Berry.Spider.RealTime;
 using Berry.Spider.Weixin.Work;
 using Volo.Abp;
 using Volo.Abp.Autofac;
@@ -13,7 +14,8 @@ namespace Berry.Spider.Tools.ServDetector;
     typeof(AbpBackgroundWorkersQuartzModule),
     //FreeRedis
     typeof(SpiderFreeRedisModule),
-    typeof(SpiderWeixinWorkModule)
+    typeof(SpiderWeixinWorkModule),
+    typeof(SpiderRealTimeAbstractionsModule)
 )]
 public class SpiderServDetectorModule : AbpModule
 {

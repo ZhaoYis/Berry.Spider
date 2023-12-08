@@ -31,6 +31,7 @@ public class Program
                 .ConfigureServices(services =>
                 {
                     services.AddHostedService<ServDetectorHostedService>();
+                    services.AddHostedService<ServMonitorHostedService>();
                 })
                 //集成AgileConfig
                 .UseAgileConfig()
@@ -46,7 +47,7 @@ public class Program
         }
         finally
         {
-            Log.CloseAndFlush();
+            await Log.CloseAndFlushAsync();
         }
     }
 }

@@ -1,6 +1,6 @@
 using Volo.Abp.AspNetCore.SignalR;
 
-namespace Berry.Spider.Admin;
+namespace Berry.Spider.RealTime;
 
 /// <summary>
 /// 爬虫监控服务Hub
@@ -15,5 +15,17 @@ public class SpiderMonitorNotifyHub : AbpHub<ISpiderMonitorReceiveHub>, ISpiderM
     public async Task SendToAllAsync(SpiderMonitorNotifyDto notify)
     {
         await Clients.All.ReceiveMessageAsync(new SpiderMonitorReceiveDto());
+    }
+
+    /// <summary>
+    /// Called when a new connection is established with the hub.
+    /// </summary>
+    public override async Task OnConnectedAsync()
+    {
+        await Clients.All.ReceiveSystemMessageAsync(new SystemReceiveDto
+        {
+            Message = "hello，" + this.Clock.Now.ToString()
+        });
+        await base.OnConnectedAsync();
     }
 }

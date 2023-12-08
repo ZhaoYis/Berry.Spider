@@ -5,6 +5,7 @@ using Berry.Spider.Admin.Data;
 using Berry.Spider.Admin.Localization;
 using Berry.Spider.Admin.Menus;
 using Berry.Spider.HttpApi.StaticClient;
+using Berry.Spider.RealTime;
 using Microsoft.AspNetCore.SignalR;
 using OpenIddict.Validation.AspNetCore;
 using Volo.Abp;
@@ -63,7 +64,6 @@ namespace Berry.Spider.Admin;
     typeof(AbpSwashbuckleModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpAspNetCoreMvcUiLeptonXLiteThemeModule),
-    typeof(AbpAspNetCoreSignalRModule),
 
     // Account module packages
     typeof(AbpAccountApplicationModule),
@@ -106,7 +106,8 @@ namespace Berry.Spider.Admin;
     typeof(AbpSettingManagementWebModule),
 
     //业务模块
-    typeof(SpiderHttpApiStaticClientModule)
+    typeof(SpiderHttpApiStaticClientModule),
+    typeof(SpiderRealTimeModule)
 )]
 public class AdminModule : AbpModule
 {
@@ -154,7 +155,6 @@ public class AdminModule : AbpModule
         ConfigureVirtualFiles(hostingEnvironment);
         ConfigureLocalization();
         ConfigureEfCore(context);
-        ConfigureSignalR(context);
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -261,11 +261,6 @@ public class AdminModule : AbpModule
         });
 
         Configure<AbpDbContextOptions>(options => { options.Configure(configurationContext => { configurationContext.UseMySQL(); }); });
-    }
-
-    private void ConfigureSignalR(ServiceConfigurationContext context)
-    {
-        // context.Services.AddTransient<SpiderAppNotifyHub>();
     }
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)

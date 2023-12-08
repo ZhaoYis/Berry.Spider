@@ -1,4 +1,4 @@
-namespace Berry.Spider.Admin;
+namespace Berry.Spider.RealTime;
 
 public class ReceiveMessageBase<T> where T : class
 {
