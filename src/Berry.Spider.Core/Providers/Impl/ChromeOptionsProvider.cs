@@ -58,7 +58,7 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         //设置浏览器以隐身模式(无痕模式运行)
         options.AddArgument("--incognito");
         //不发送 Http-Referer 头
-        // options.AddArgument("--no-referrers");
+        options.AddArgument("--no-referrers");
         //忽略与证书相关的错误
         options.AddArgument("--ignore-certificate-errors");
         //设置闪烁设置（imagesEnabled=不加载图片）
