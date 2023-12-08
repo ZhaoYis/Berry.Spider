@@ -5,6 +5,7 @@ using Berry.Spider.Admin.Data;
 using Berry.Spider.Admin.Localization;
 using Berry.Spider.Admin.Menus;
 using Berry.Spider.HttpApi.StaticClient;
+using Microsoft.AspNetCore.SignalR;
 using OpenIddict.Validation.AspNetCore;
 using Volo.Abp;
 using Volo.Abp.Uow;
@@ -17,6 +18,7 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite.Bundling;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
+using Volo.Abp.AspNetCore.SignalR;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.Autofac;
 using Volo.Abp.AutoMapper;
@@ -61,6 +63,7 @@ namespace Berry.Spider.Admin;
     typeof(AbpSwashbuckleModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpAspNetCoreMvcUiLeptonXLiteThemeModule),
+    typeof(AbpAspNetCoreSignalRModule),
 
     // Account module packages
     typeof(AbpAccountApplicationModule),
@@ -151,6 +154,7 @@ public class AdminModule : AbpModule
         ConfigureVirtualFiles(hostingEnvironment);
         ConfigureLocalization();
         ConfigureEfCore(context);
+        ConfigureSignalR(context);
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -162,7 +166,7 @@ public class AdminModule : AbpModule
     {
         Configure<AbpMultiTenancyOptions>(options => { options.IsEnabled = IsMultiTenant; });
     }
-    
+
     private void ConfigureUrls(IConfiguration configuration)
     {
         Configure<AppUrlOptions>(options => { options.Applications["MVC"].RootUrl = configuration["App:SelfUrl"]; });
@@ -257,6 +261,11 @@ public class AdminModule : AbpModule
         });
 
         Configure<AbpDbContextOptions>(options => { options.Configure(configurationContext => { configurationContext.UseMySQL(); }); });
+    }
+
+    private void ConfigureSignalR(ServiceConfigurationContext context)
+    {
+        // context.Services.AddTransient<SpiderAppNotifyHub>();
     }
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
