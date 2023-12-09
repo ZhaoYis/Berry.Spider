@@ -44,7 +44,7 @@ public class SpiderConsumersModule : AbpModule
         logger.LogInformation($"EnvironmentName => {hostEnvironment.EnvironmentName}");
 
         //注册服务
-        await context.AddBackgroundWorkerAsync<ServLifetimeCheckerWorker>();
+        // await context.AddBackgroundWorkerAsync<ServLifetimeCheckerWorker>();
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)

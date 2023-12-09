@@ -22,6 +22,6 @@ public class SpiderServDetectorModule : AbpModule
     public override async Task OnApplicationInitializationAsync(ApplicationInitializationContext context)
     {
         //注册服务
-        await context.AddBackgroundWorkerAsync<ServLifetimeCheckerWorker>();
+        // await context.AddBackgroundWorkerAsync<ServLifetimeCheckerWorker>();
     }
 }

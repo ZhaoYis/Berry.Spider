@@ -5,7 +5,6 @@ namespace Berry.Spider.RealTime;
 /// <summary>
 /// 爬虫监控服务Hub
 /// </summary>
-[HubRoute("/signalr-hubs/spider-monitor-notify")]
 public class SpiderMonitorNotifyHub : AbpHub<ISpiderMonitorReceiveHub>, ISpiderMonitorNotifyHub
 {
     /// <summary>
@@ -22,10 +21,10 @@ public class SpiderMonitorNotifyHub : AbpHub<ISpiderMonitorReceiveHub>, ISpiderM
     /// </summary>
     public override async Task OnConnectedAsync()
     {
+        await base.OnConnectedAsync();
         await Clients.All.ReceiveSystemMessageAsync(new SystemReceiveDto
         {
-            Message = "hello，" + this.Clock.Now.ToString()
+            Message = "hello，" + this.Clock.Now.ToString("s")
         });
-        await base.OnConnectedAsync();
     }
 }

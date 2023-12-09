@@ -1,11 +1,15 @@
 $(function () {
-    var connection = new signalR.HubConnectionBuilder().withUrl("/signalr-hubs/spider-app-notify").build();
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("/signalr-hubs/spider/app-notify")
+        .withAutomaticReconnect()
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
 
-    connection.on("ReceiveMessage", function (res) {
+    connection.on("ReceiveMessageAsync", function (res) {
         $('#MessageList').append('<li><strong><i class="fas fa-long-arrow-alt-right"></i> ' + res.message + '</strong></li>');
     });
 
-    connection.on("ReceiveSystemMessage", function (res) {
+    connection.on("ReceiveSystemMessageAsync", function (res) {
         $('#MessageList').append('<li><strong>系统消息：<i class="fas fa-long-arrow-alt-right"></i> ' + res.message + '</strong></li>');
     });
 

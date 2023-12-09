@@ -15,11 +15,10 @@ public class ServMonitorHostedService : IHostedService
         _logger = logger;
 
         _connection = new HubConnectionBuilder()
-            .WithUrl("https://localhost:44382/signalr-hubs/spider-monitor-notify")
+            .WithUrl("https://localhost:44382/signalr-hubs/spider/monitor-notify")
             .WithAutomaticReconnect()
-            .WithKeepAliveInterval(TimeSpan.MaxValue)
             .Build();
-        _connection.On<SystemReceiveDto>("ReceiveSystemMessage", async (msg) =>
+        _connection.On<SystemReceiveDto>("ReceiveSystemMessageAsync", async (msg) =>
         {
             Console.WriteLine(msg.Message);
         });
@@ -34,7 +33,7 @@ public class ServMonitorHostedService : IHostedService
                 await _connection.StartAsync(cancellationToken);
                 break;
             }
-            catch
+            catch(Exception e)
             {
                 await Task.Delay(1000, cancellationToken);
             }
