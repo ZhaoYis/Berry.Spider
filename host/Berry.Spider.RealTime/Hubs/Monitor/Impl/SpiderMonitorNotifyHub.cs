@@ -22,7 +22,7 @@ public class SpiderMonitorNotifyHub : AbpHub<ISpiderMonitorReceiveHub>, ISpiderM
     public override async Task OnConnectedAsync()
     {
         await base.OnConnectedAsync();
-        await Clients.All.ReceiveSystemMessageAsync(new SystemReceiveDto
+        await Clients.All.ReceiveSystemMessageAsync(new ReceiveSystemMessageDto
         {
             Message = "hello，" + this.Clock.Now.ToString("s")
         });

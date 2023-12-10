@@ -18,7 +18,7 @@ public class ServMonitorHostedService : IHostedService
             .WithUrl("https://localhost:44382/signalr-hubs/spider/monitor-notify")
             .WithAutomaticReconnect()
             .Build();
-        _connection.On<SystemReceiveDto>("ReceiveSystemMessageAsync", async (msg) =>
+        _connection.On<ReceiveSystemMessageDto>("ReceiveSystemMessageAsync", async (msg) =>
         {
             Console.WriteLine(msg.Message);
         });

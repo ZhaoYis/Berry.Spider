@@ -6,5 +6,5 @@ public interface ISystemReceiveHub
     /// 终端接收服务器发送的系统级别消息
     /// </summary>
     /// <returns></returns>
-    Task ReceiveSystemMessageAsync(SystemReceiveDto receive);
+    Task ReceiveSystemMessageAsync(ReceiveSystemMessageDto message);
 }
