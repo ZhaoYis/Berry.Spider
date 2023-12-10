@@ -26,6 +26,9 @@ public class SpiderEntityFrameworkCoreModule : AbpModule
             options.AddRepository<SpiderContent_Composition, SpiderContentCompositionRepository>();
             options.AddRepository<SpiderContent_Title, SpiderTitleContentRepository>();
             options.AddRepository<SpiderBasicInfo, SpiderBasicInfoRepository>();
+            
+            options.AddRepository<ServMachineInfo, ServMachineInfoRepository>();
+            options.AddRepository<ServMachineGroupInfo, ServMachineGroupInfoRepository>();
         });
 
         Configure<AbpDbContextOptions>(options =>

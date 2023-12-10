@@ -15,7 +15,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：资讯
 /// </summary>
-[SpiderService(new[] { SpiderSourceFrom.TouTiao_Information })]
+[SpiderService(new[] {SpiderSourceFrom.TouTiao_Information})]
 public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4InformationProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -59,8 +59,6 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
             },
             bloomCheck: this.Options.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.KeywordCheckOptions.RedisCheck);
-        
-        await Task.Delay(1000);
     }
 
     /// <summary>
@@ -97,7 +95,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                     if (root == null) return;
 
                     var resultContent = root.TryFindElements(By.CssSelector(".result-content"));
-                    if (resultContent is null or { Count: 0 }) return;
+                    if (resultContent is null or {Count: 0}) return;
 
                     ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                     foreach (IWebElement element in resultContent)
@@ -130,7 +128,7 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                         }
                     }
 
-                    if (childPageDataItems is { Count: > 0 })
+                    if (childPageDataItems is {Count: > 0})
                     {
                         this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(), eventData.Keyword, childPageDataItems.Count);
 

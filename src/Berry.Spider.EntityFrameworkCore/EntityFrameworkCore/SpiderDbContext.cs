@@ -9,7 +9,7 @@ namespace Berry.Spider.EntityFrameworkCore;
 [ConnectionStringName("Default")]
 public class SpiderDbContext : AbpDbContext<SpiderDbContext>
 {
-    private const string TableNamePrefix = "spider";
+    private const string TableNamePrefix = "spider_";
 
     public DbSet<SpiderContent> SpiderContents { get; set; }
     public DbSet<SpiderContent_Keyword> SpiderContentKeywords { get; set; }
@@ -29,7 +29,7 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
         //基础表
         builder.Entity<SpiderContent>(b =>
         {
-            b.ToTable($"{TableNamePrefix}_content");
+            b.ToTable($"{TableNamePrefix}content");
 
             //Configure the base properties
             b.ConfigureByConvention();
@@ -38,7 +38,7 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
         //作文
         builder.Entity<SpiderContent_Composition>(b =>
         {
-            b.ToTable($"{TableNamePrefix}_content_composition");
+            b.ToTable($"{TableNamePrefix}content_composition");
 
             //Configure the base properties
             b.ConfigureByConvention();
@@ -47,7 +47,7 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
         //优质问答
         builder.Entity<SpiderContent_HighQualityQA>(b =>
         {
-            b.ToTable($"{TableNamePrefix}_content_high_quality_qa");
+            b.ToTable($"{TableNamePrefix}content_high_quality_qa");
 
             //Configure the base properties
             b.ConfigureByConvention();
@@ -56,7 +56,7 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
         //根据关键字抓取的一级页面标题信息
         builder.Entity<SpiderContent_Keyword>(b =>
         {
-            b.ToTable($"{TableNamePrefix}_content_keyword");
+            b.ToTable($"{TableNamePrefix}content_keyword");
 
             //Configure the base properties
             b.ConfigureByConvention();
@@ -64,7 +64,7 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
 
         builder.Entity<SpiderContent_Title>(b =>
         {
-            b.ToTable($"{TableNamePrefix}_content_title");
+            b.ToTable($"{TableNamePrefix}content_title");
 
             //Configure the base properties
             b.ConfigureByConvention();
@@ -72,7 +72,7 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
 
         builder.Entity<SpiderBasicInfo>(b =>
         {
-            b.ToTable($"{TableNamePrefix}_basic_info");
+            b.ToTable($"{TableNamePrefix}basic_info");
 
             //Configure the base properties
             b.ConfigureByConvention();

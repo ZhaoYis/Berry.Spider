@@ -15,7 +15,7 @@ namespace Berry.Spider.Baidu;
 /// <summary>
 /// 百度：相关推荐
 /// </summary>
-[SpiderService(new[] { SpiderSourceFrom.Baidu_Related_Search })]
+[SpiderService(new[] {SpiderSourceFrom.Baidu_Related_Search})]
 public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4RelatedSearchProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -64,8 +64,6 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
             },
             bloomCheck: this.Options.KeywordCheckOptions.BloomCheck,
             duplicateCheck: this.Options.KeywordCheckOptions.RedisCheck);
-
-        await Task.Delay(1000);
     }
 
     /// <summary>
@@ -101,7 +99,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                     if (root == null) return;
 
                     var resultContent = root.TryFindElements(By.TagName("a"));
-                    if (resultContent is null or { Count: 0 }) return;
+                    if (resultContent is null or {Count: 0}) return;
 
                     ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                     foreach (IWebElement element in resultContent)
@@ -130,7 +128,7 @@ public class BaiduSpider4RelatedSearchProvider : ProviderBase<BaiduSpider4Relate
                         }
                     }
 
-                    if (childPageDataItems is { Count: > 0 })
+                    if (childPageDataItems is {Count: > 0})
                     {
                         this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
                             eventData.Keyword, childPageDataItems.Count);
