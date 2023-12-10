@@ -1,11 +1,13 @@
+using Berry.Spider.Core;
+
 namespace Berry.Spider.RealTime;
 
-public class ReceiveMessageBase<T> where T : class
+public class ReceiveMessageBase<T>
 {
     /// <summary>
     /// 消息类型编码
     /// </summary>
-    public int Code { get; set; }
+    public ReceiveMessageCode Code { get; set; }
 
     /// <summary>
     /// 业务数据

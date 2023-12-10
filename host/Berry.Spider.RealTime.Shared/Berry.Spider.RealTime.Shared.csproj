@@ -10,4 +10,8 @@
       <PackageReference Include="Volo.Abp.Core" Version="8.0.0-rc.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Berry.Spider.Core\Berry.Spider.Core.csproj" />
+    </ItemGroup>
+
 </Project>

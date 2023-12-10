@@ -7,4 +7,10 @@ public interface ISpiderMonitorNotifyHub
     /// </summary>
     /// <returns></returns>
     Task SendToAllAsync(SpiderMonitorNotifyDto notify);
+    
+    /// <summary>
+    /// 推送Agent客户端信息
+    /// </summary>
+    /// <returns></returns>
+    Task PushMonitorAgentClientInfoAsync(MonitorAgentClientInfoDto agentClientInfo);
 }

@@ -1,3 +1,4 @@
+using Berry.Spider.Core;
 using Berry.Spider.RealTime;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Hosting;
@@ -18,9 +19,26 @@ public class ServMonitorHostedService : IHostedService
             .WithUrl("https://localhost:44382/signalr-hubs/spider/monitor-notify")
             .WithAutomaticReconnect()
             .Build();
-        _connection.On<ReceiveSystemMessageDto>("ReceiveSystemMessageAsync", async (msg) =>
+
+        _connection.On<ReceiveSystemMessageDto>(typeof(ReceiveSystemMessageDto).GetMethodName(), async msg =>
         {
-            Console.WriteLine(msg.Message);
+            string? connectionId = _connection.ConnectionId;
+            if (msg.Code == ReceiveMessageCode.CONNECTION_SUCCESSFUL)
+            {
+                if (msg.Data == connectionId)
+                {
+                    MonitorAgentClientInfoDto agentClientInfo = new MonitorAgentClientInfoDto
+                    {
+                        Code = NotifyMessageCode.PUSH_MONITOR_CLIENT_INFO,
+                        Data = new MonitorClientInfo
+                        {
+                            MachineName = DnsHelper.GetHostName(),
+                            ConnectionId = _connection.ConnectionId
+                        }
+                    };
+                    await _connection.SendAsync(typeof(MonitorAgentClientInfoDto).GetMethodName(), agentClientInfo);
+                }
+            }
         });
     }
 
@@ -33,7 +51,7 @@ public class ServMonitorHostedService : IHostedService
                 await _connection.StartAsync(cancellationToken);
                 break;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 await Task.Delay(1000, cancellationToken);
             }
