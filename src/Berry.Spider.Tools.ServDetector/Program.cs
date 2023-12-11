@@ -31,7 +31,7 @@ public class Program
                 .ConfigureServices(services =>
                 {
                     services.AddHostedService<ServDetectorHostedService>();
-                    services.AddHostedService<ServMonitorHostedService>();
+                    services.AddHostedService<ServMonitorAgentHostedService>();
                 })
                 //集成AgileConfig
                 .UseAgileConfig()

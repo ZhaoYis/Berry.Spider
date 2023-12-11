@@ -22,17 +22,22 @@ $(function () {
     $('#SendMessageButton').click(function (e) {
         e.preventDefault();
 
-        // var targetUserName = $('#TargetUser').val();
-        // var message = $('#Message').val();
-        // $('#Message').val('');
-        //
-        // connection.invoke("SendMessage", targetUserName, message)
-        //     .then(function () {
-        //         $('#MessageList')
-        //             .append('<li><i class="fas fa-long-arrow-alt-left"></i> ' + abp.currentUser.userName + ': ' + message + '</li>');
-        //     })
-        //     .catch(function (err) {
-        //         return console.error(err.toString());
-        //     });
+        var targetUserName = $('#TargetUser').val();
+        var message = $('#Message').val();
+        $('#Message').val('');
+
+        var push = {
+            Code: 1000,//发送系统消息 --> NotifyMessageCode.PUSH_SYSTEM_MESSAGE
+            Data: message,
+            Message: message
+        };
+        connection.invoke("SendToAllAsync", push)
+            .then(function () {
+                $('#MessageList')
+                    .append('<li><i class="fas fa-long-arrow-alt-left"></i> ' + abp.currentUser.userName + ': ' + message + '</li>');
+            })
+            .catch(function (err) {
+                return console.error(err.toString());
+            });
     });
 });

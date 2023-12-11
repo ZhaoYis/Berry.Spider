@@ -1,3 +1,4 @@
+using Berry.Spider.Core;
 using Volo.Abp.AspNetCore.SignalR;
 
 namespace Berry.Spider.RealTime;
@@ -13,7 +14,12 @@ public class SpiderAppNotifyHub : AbpHub<ISpiderAppReceiveHub>, ISpiderAppNotify
     /// <returns></returns>
     public async Task SendToAllAsync(SpiderAppNotifyDto notify)
     {
-        await Clients.All.ReceiveMessageAsync(new SpiderAppReceiveDto());
+        await Clients.All.ReceiveSystemMessageAsync(new ReceiveSystemMessageDto
+        {
+            Code = notify.Code,
+            Data = notify.Data,
+            Message = notify.Message
+        });
     }
 
     /// <summary>
@@ -22,9 +28,13 @@ public class SpiderAppNotifyHub : AbpHub<ISpiderAppReceiveHub>, ISpiderAppNotify
     public override async Task OnConnectedAsync()
     {
         await base.OnConnectedAsync();
-        await Clients.All.ReceiveSystemMessageAsync(new ReceiveSystemMessageDto
+
+        //向当前连接节点发送连接成功消息
+        await Clients.Caller.ReceiveSystemMessageAsync(new ReceiveSystemMessageDto
         {
-            Message = "hello，" + this.Clock.Now.ToString("s")
+            Code = RealTimeMessageCode.CONNECTION_SUCCESSFUL,
+            Data = Context.ConnectionId,
+            Message = $"上线通知，您的用户编号为：{Context.ConnectionId}"
         });
     }
 

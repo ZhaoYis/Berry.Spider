@@ -7,7 +7,7 @@ public class ReceiveMessageBase<T>
     /// <summary>
     /// 消息类型编码
     /// </summary>
-    public ReceiveMessageCode Code { get; set; }
+    public RealTimeMessageCode Code { get; set; }
 
     /// <summary>
     /// 业务数据

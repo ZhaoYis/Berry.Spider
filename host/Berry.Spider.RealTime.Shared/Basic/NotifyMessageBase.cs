@@ -7,7 +7,7 @@ public class NotifyMessageBase<T>
     /// <summary>
     /// 通知类型编码
     /// </summary>
-    public NotifyMessageCode Code { get; set; }
+    public RealTimeMessageCode Code { get; set; }
 
     /// <summary>
     /// 业务数据

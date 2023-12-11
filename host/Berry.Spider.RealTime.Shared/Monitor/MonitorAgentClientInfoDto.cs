@@ -5,6 +5,10 @@ namespace Berry.Spider.RealTime;
 [InvokeMethodName("PushMonitorAgentClientInfoAsync")]
 public class MonitorAgentClientInfoDto : NotifyMessageBase<MonitorClientInfo>
 {
+    public MonitorAgentClientInfoDto()
+    {
+        this.Code = RealTimeMessageCode.CONNECTION_SUCCESSFUL;
+    }
 }
 
 public class MonitorClientInfo

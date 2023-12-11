@@ -6,12 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Berry.Spider.Tools.ServDetector;
 
-public class ServMonitorHostedService : IHostedService
+public class ServMonitorAgentHostedService : IHostedService
 {
-    private readonly ILogger<ServMonitorHostedService> _logger;
+    private readonly ILogger<ServMonitorAgentHostedService> _logger;
     private readonly HubConnection _connection;
 
-    public ServMonitorHostedService(ILogger<ServMonitorHostedService> logger)
+    public ServMonitorAgentHostedService(ILogger<ServMonitorAgentHostedService> logger)
     {
         _logger = logger;
 
@@ -22,22 +22,22 @@ public class ServMonitorHostedService : IHostedService
 
         _connection.On<ReceiveSystemMessageDto>(typeof(ReceiveSystemMessageDto).GetMethodName(), async msg =>
         {
-            string? connectionId = _connection.ConnectionId;
-            if (msg.Code == ReceiveMessageCode.CONNECTION_SUCCESSFUL)
+            if (msg.Code == RealTimeMessageCode.CONNECTION_SUCCESSFUL)
             {
-                if (msg.Data == connectionId)
+                MonitorAgentClientInfoDto agentClientInfo = new MonitorAgentClientInfoDto
                 {
-                    MonitorAgentClientInfoDto agentClientInfo = new MonitorAgentClientInfoDto
+                    Code = RealTimeMessageCode.CONNECTION_SUCCESSFUL,
+                    Data = new MonitorClientInfo
                     {
-                        Code = NotifyMessageCode.PUSH_MONITOR_CLIENT_INFO,
-                        Data = new MonitorClientInfo
-                        {
-                            MachineName = DnsHelper.GetHostName(),
-                            ConnectionId = _connection.ConnectionId
-                        }
-                    };
-                    await _connection.SendAsync(typeof(MonitorAgentClientInfoDto).GetMethodName(), agentClientInfo);
-                }
+                        MachineName = DnsHelper.GetHostName(),
+                        ConnectionId = _connection.ConnectionId
+                    }
+                };
+                await _connection.SendAsync(typeof(MonitorAgentClientInfoDto).GetMethodName(), agentClientInfo);
+            }
+            else if (msg.Code == RealTimeMessageCode.SYSTEM_MESSAGE)
+            {
+                Console.WriteLine(msg.Message);
             }
         });
     }
