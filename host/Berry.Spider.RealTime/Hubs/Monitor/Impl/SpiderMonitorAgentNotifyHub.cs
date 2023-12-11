@@ -4,17 +4,17 @@ using Volo.Abp.AspNetCore.SignalR;
 namespace Berry.Spider.RealTime;
 
 /// <summary>
-/// 爬虫程序通知Hub
+/// 爬虫监控Agent服务Hub
 /// </summary>
-public class SpiderAppNotifyHub : AbpHub<ISpiderAppReceiveHub>, ISpiderAppNotifyHub
+public class SpiderMonitorAgentNotifyHub : AbpHub<ISpiderMonitorReceiveHub>, ISpiderMonitorNotifyHub
 {
-    private const string GroupName = "App";
+    private const string GroupName = "Agent";
 
     /// <summary>
     /// 向所有客户端发送消息
     /// </summary>
     /// <returns></returns>
-    public async Task SendToAllAsync(SpiderAppNotifyDto notify)
+    public async Task SendToAllAsync(SpiderMonitorNotifyDto notify)
     {
         await this.Clients.Groups(new[] { GroupName }).ReceiveSystemMessageAsync(new ReceiveSystemMessageDto
         {
@@ -22,6 +22,19 @@ public class SpiderAppNotifyHub : AbpHub<ISpiderAppReceiveHub>, ISpiderAppNotify
             Data = notify.Data,
             Message = notify.Message
         });
+    }
+
+    /// <summary>
+    /// 推送Agent客户端信息
+    /// </summary>
+    /// <returns></returns>
+    public async Task PushMonitorAgentClientInfoAsync(MonitorAgentClientInfoDto agentClientInfo)
+    {
+        //TODO：机器上线
+        Console.WriteLine(agentClientInfo.Data.MachineName + "上线啦～");
+
+        //加到Agent组中
+        await this.Groups.AddToGroupAsync(Context.ConnectionId, GroupName);
     }
 
     /// <summary>
@@ -36,8 +49,6 @@ public class SpiderAppNotifyHub : AbpHub<ISpiderAppReceiveHub>, ISpiderAppNotify
             Data = Context.ConnectionId,
             Message = $"上线通知，您的用户编号为：{Context.ConnectionId}"
         });
-        //加到App组中
-        await this.Groups.AddToGroupAsync(Context.ConnectionId, GroupName);
     }
 
     /// <summary>

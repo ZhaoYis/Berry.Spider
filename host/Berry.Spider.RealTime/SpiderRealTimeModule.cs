@@ -27,7 +27,7 @@ public class SpiderRealTimeModule : AbpModule
             );
             
             options.Hubs.AddOrUpdate(
-                typeof(SpiderMonitorNotifyHub),
+                typeof(SpiderMonitorAgentNotifyHub),
                 config =>
                 {
                     config.RoutePattern = "/signalr-hubs/spider/monitor-notify";
