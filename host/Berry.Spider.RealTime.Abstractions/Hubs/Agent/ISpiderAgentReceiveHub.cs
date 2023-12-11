@@ -1,10 +1,10 @@
 namespace Berry.Spider.RealTime;
 
-public interface ISpiderMonitorReceiveHub : ISystemReceiveHub
+public interface ISpiderAgentReceiveHub : ISystemReceiveHub
 {
     /// <summary>
     /// 终端接收服务器消息
     /// </summary>
     /// <returns></returns>
-    Task ReceiveMessageAsync(SpiderMonitorReceiveDto receive);
+    Task ReceiveMessageAsync(SpiderAgentReceiveDto receive);
 }

@@ -6,7 +6,7 @@ namespace Berry.Spider.RealTime;
 /// <summary>
 /// 爬虫监控Agent服务Hub
 /// </summary>
-public class SpiderMonitorAgentNotifyHub : AbpHub<ISpiderMonitorReceiveHub>, ISpiderMonitorNotifyHub
+public class SpiderAgentNotifyHub : AbpHub<ISpiderAgentReceiveHub>, ISpiderAgentNotifyHub
 {
     private const string GroupName = "Agent";
 
@@ -14,7 +14,7 @@ public class SpiderMonitorAgentNotifyHub : AbpHub<ISpiderMonitorReceiveHub>, ISp
     /// 向所有客户端发送消息
     /// </summary>
     /// <returns></returns>
-    public async Task SendToAllAsync(SpiderMonitorNotifyDto notify)
+    public async Task SendToAllAsync(SpiderAgentNotifyDto notify)
     {
         await this.Clients.Groups(new[] { GroupName }).ReceiveSystemMessageAsync(new ReceiveSystemMessageDto
         {
@@ -28,7 +28,7 @@ public class SpiderMonitorAgentNotifyHub : AbpHub<ISpiderMonitorReceiveHub>, ISp
     /// 推送Agent客户端信息
     /// </summary>
     /// <returns></returns>
-    public async Task PushMonitorAgentClientInfoAsync(MonitorAgentClientInfoDto agentClientInfo)
+    public async Task PushAgentClientInfoAsync(AgentClientInfoDto agentClientInfo)
     {
         //TODO：机器上线
         Console.WriteLine(agentClientInfo.Data.MachineName + "上线啦～");

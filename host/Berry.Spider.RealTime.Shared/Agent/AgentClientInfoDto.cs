@@ -2,16 +2,16 @@ using Berry.Spider.Core;
 
 namespace Berry.Spider.RealTime;
 
-[InvokeMethodName("PushMonitorAgentClientInfoAsync")]
-public class MonitorAgentClientInfoDto : NotifyMessageBase<MonitorClientInfo>
+[InvokeMethodName("PushAgentClientInfoAsync")]
+public class AgentClientInfoDto : NotifyMessageBase<AgentClientInfo>
 {
-    public MonitorAgentClientInfoDto()
+    public AgentClientInfoDto()
     {
         this.Code = RealTimeMessageCode.CONNECTION_SUCCESSFUL;
     }
 }
 
-public class MonitorClientInfo
+public class AgentClientInfo
 {
     /// <summary>
     /// 机器名

@@ -6,17 +6,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Berry.Spider.Tools.ServDetector;
 
-public class ServMonitorAgentHostedService : IHostedService
+public class ServAgentHostedService : IHostedService
 {
-    private readonly ILogger<ServMonitorAgentHostedService> _logger;
+    private readonly ILogger<ServAgentHostedService> _logger;
     private readonly HubConnection _connection;
 
-    public ServMonitorAgentHostedService(ILogger<ServMonitorAgentHostedService> logger)
+    public ServAgentHostedService(ILogger<ServAgentHostedService> logger)
     {
         _logger = logger;
 
         _connection = new HubConnectionBuilder()
-            .WithUrl("https://localhost:44382/signalr-hubs/spider/monitor-notify")
+            .WithUrl("https://localhost:44382/signalr-hubs/spider/agent-notify")
             .WithAutomaticReconnect()
             .Build();
 
@@ -24,16 +24,16 @@ public class ServMonitorAgentHostedService : IHostedService
         {
             if (msg.Code == RealTimeMessageCode.CONNECTION_SUCCESSFUL)
             {
-                MonitorAgentClientInfoDto agentClientInfo = new MonitorAgentClientInfoDto
+                AgentClientInfoDto agentClientInfo = new AgentClientInfoDto
                 {
                     Code = RealTimeMessageCode.CONNECTION_SUCCESSFUL,
-                    Data = new MonitorClientInfo
+                    Data = new AgentClientInfo
                     {
                         MachineName = DnsHelper.GetHostName(),
                         ConnectionId = _connection.ConnectionId
                     }
                 };
-                await _connection.SendAsync(typeof(MonitorAgentClientInfoDto).GetMethodName(), agentClientInfo);
+                await _connection.SendAsync(typeof(AgentClientInfoDto).GetMethodName(), agentClientInfo);
             }
             else if (msg.Code == RealTimeMessageCode.SYSTEM_MESSAGE)
             {
