@@ -50,4 +50,8 @@
       <ProjectReference Include="..\Berry.Spider.Weixin.Work\Berry.Spider.Weixin.Work.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="HubHanlders\" />
+    </ItemGroup>
+
 </Project>

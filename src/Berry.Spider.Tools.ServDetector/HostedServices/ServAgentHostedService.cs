@@ -33,7 +33,7 @@ public class ServAgentHostedService : IHostedService
                         ConnectionId = _connection.ConnectionId
                     }
                 };
-                await _connection.SendAsync(typeof(AgentClientInfoDto).GetMethodName(), agentClientInfo);
+                await _connection.SendToAsync<AgentClientInfoDto>(agentClientInfo);
             }
             else if (msg.Code == RealTimeMessageCode.SYSTEM_MESSAGE)
             {
