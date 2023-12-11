@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Berry.Spider.RealTime.Abstractions\Berry.Spider.RealTime.Abstractions.csproj" />
+      <ProjectReference Include="..\Berry.Spider.RealTime.Integration\Berry.Spider.RealTime.Integration.csproj" />
     </ItemGroup>
 
 </Project>

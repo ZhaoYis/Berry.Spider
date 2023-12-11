@@ -6,7 +6,8 @@ namespace Berry.Spider.RealTime;
 
 [DependsOn(
     typeof(AbpAspNetCoreSignalRModule),
-    typeof(SpiderRealTimeAbstractionsModule)
+    typeof(SpiderRealTimeAbstractionsModule),
+    typeof(SpiderRealTimeIntegrationModule)
 )]
 public class SpiderRealTimeModule : AbpModule
 {

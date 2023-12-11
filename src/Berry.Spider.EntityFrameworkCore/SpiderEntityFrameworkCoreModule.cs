@@ -8,13 +8,13 @@ namespace Berry.Spider.EntityFrameworkCore;
 
 [DependsOn(
     typeof(SpiderDomainModule),
-    typeof(AbpEntityFrameworkCoreModule), typeof(AbpDapperModule))]
+    typeof(AbpEntityFrameworkCoreModule),
+    typeof(AbpDapperModule))]
 public class SpiderEntityFrameworkCoreModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         context.Services.AddAbpDbContext<SpiderDbContext>();
-
         //添加默认仓储
         context.Services.AddAbpDbContext<SpiderDbContext>(options =>
         {
@@ -26,7 +26,12 @@ public class SpiderEntityFrameworkCoreModule : AbpModule
             options.AddRepository<SpiderContent_Composition, SpiderContentCompositionRepository>();
             options.AddRepository<SpiderContent_Title, SpiderTitleContentRepository>();
             options.AddRepository<SpiderBasicInfo, SpiderBasicInfoRepository>();
-            
+        });
+
+        context.Services.AddAbpDbContext<SpiderBizDbContext>();
+        //添加默认仓储
+        context.Services.AddAbpDbContext<SpiderBizDbContext>(options =>
+        {
             options.AddRepository<ServMachineInfo, ServMachineInfoRepository>();
             options.AddRepository<ServMachineGroupInfo, ServMachineGroupInfoRepository>();
         });

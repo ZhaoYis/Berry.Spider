@@ -1,18 +1,14 @@
 using Berry.Spider.Core;
 
-namespace Berry.Spider.RealTime;
+namespace Berry.Spider.Biz;
 
-[InvokeMethodName("PushAgentClientInfoAsync")]
-public class AgentClientInfoDto : NotifyMessageBase<AgentClientInfo>
+public class ServMachineUpdateInput
 {
-    public AgentClientInfoDto()
-    {
-        this.Code = RealTimeMessageCode.CONNECTION_SUCCESSFUL;
-    }
-}
+    /// <summary>
+    /// 自定义业务ID
+    /// </summary>
+    public string BizNo { get; set; }
 
-public class AgentClientInfo
-{
     /// <summary>
     /// 机器名
     /// </summary>
@@ -34,7 +30,12 @@ public class AgentClientInfo
     public string MachineMacAddr { get; set; }
 
     /// <summary>
-    /// 连接ID
+    /// 状态
     /// </summary>
-    public string? ConnectionId { get; set; }
+    public MachineStatus Status { get; set; }
+
+    /// <summary>
+    /// 最后一次在线时间
+    /// </summary>
+    public DateTime? LastOnlineTime { get; set; }
 }

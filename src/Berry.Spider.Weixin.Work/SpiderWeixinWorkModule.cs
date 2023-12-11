@@ -22,7 +22,6 @@ public class SpiderWeixinWorkModule : AbpModule
             });
         }
 
-
         context.Services.Configure<WeixinWorkRobotOptions>(configuration.GetSection(nameof(WeixinWorkRobotOptions)));
     }
 }

@@ -184,6 +184,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.RealTime.Abstr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.RealTime.Shared", "host\Berry.Spider.RealTime.Shared\Berry.Spider.RealTime.Shared.csproj", "{5B632CDF-35AD-49AC-8497-D56EA27E53B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.RealTime.Integration", "host\Berry.Spider.RealTime.Integration\Berry.Spider.RealTime.Integration.csproj", "{6B12F8F0-5DC1-466B-82DC-0514A0C1B746}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -390,6 +392,10 @@ Global
 		{5B632CDF-35AD-49AC-8497-D56EA27E53B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B632CDF-35AD-49AC-8497-D56EA27E53B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B632CDF-35AD-49AC-8497-D56EA27E53B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B12F8F0-5DC1-466B-82DC-0514A0C1B746}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B12F8F0-5DC1-466B-82DC-0514A0C1B746}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B12F8F0-5DC1-466B-82DC-0514A0C1B746}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B12F8F0-5DC1-466B-82DC-0514A0C1B746}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -458,6 +464,7 @@ Global
 		{52A3AA6A-DABD-411A-A98C-2C25E8129720} = {A62EA0AB-0556-4384-8F50-B4C713DE74EB}
 		{760DE1B8-088F-440E-829B-42D2368072EB} = {A62EA0AB-0556-4384-8F50-B4C713DE74EB}
 		{5B632CDF-35AD-49AC-8497-D56EA27E53B6} = {A62EA0AB-0556-4384-8F50-B4C713DE74EB}
+		{6B12F8F0-5DC1-466B-82DC-0514A0C1B746} = {A62EA0AB-0556-4384-8F50-B4C713DE74EB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}

@@ -30,6 +30,9 @@ public class ServAgentHostedService : IHostedService
                     Data = new AgentClientInfo
                     {
                         MachineName = DnsHelper.GetHostName(),
+                        MachineCode = "TODO",
+                        MachineIpAddr = "TODO",
+                        MachineMacAddr = "TODO",
                         ConnectionId = _connection.ConnectionId
                     }
                 };

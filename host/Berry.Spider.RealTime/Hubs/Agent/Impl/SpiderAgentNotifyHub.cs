@@ -1,4 +1,5 @@
 using Berry.Spider.Core;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.AspNetCore.SignalR;
 
 namespace Berry.Spider.RealTime;
@@ -16,7 +17,7 @@ public class SpiderAgentNotifyHub : AbpHub<ISpiderAgentReceiveHub>, ISpiderAgent
     /// <returns></returns>
     public async Task SendToAllAsync(SpiderAgentNotifyDto notify)
     {
-        await this.Clients.Groups(new[] { GroupName }).ReceiveSystemMessageAsync(new ReceiveSystemMessageDto
+        await this.Clients.Groups(new[] {GroupName}).ReceiveSystemMessageAsync(new ReceiveSystemMessageDto
         {
             Code = notify.Code,
             Data = notify.Data,
@@ -30,11 +31,26 @@ public class SpiderAgentNotifyHub : AbpHub<ISpiderAgentReceiveHub>, ISpiderAgent
     /// <returns></returns>
     public async Task PushAgentClientInfoAsync(AgentClientInfoDto agentClientInfo)
     {
-        //TODO：机器上线
         Console.WriteLine(agentClientInfo.Data.MachineName + "上线啦～");
 
-        //加到Agent组中
-        await this.Groups.AddToGroupAsync(Context.ConnectionId, GroupName);
+        IServAgentIntegration? servAgentIntegration = this.ServiceProvider.GetService<IServAgentIntegration>();
+        if (servAgentIntegration is not null)
+        {
+            AgentClientInfo clientInfo = agentClientInfo.Data;
+            ServMachineOnlineDto machineOnlineDto = new ServMachineOnlineDto
+            {
+                MachineName = clientInfo.MachineName,
+                MachineCode = clientInfo.MachineCode,
+                MachineIpAddr = clientInfo.MachineIpAddr,
+                MachineMacAddr = clientInfo.MachineMacAddr
+            };
+            var succ = await servAgentIntegration.OnlineAsync(machineOnlineDto);
+            if (succ)
+            {
+                //加到Agent组中
+                await this.Groups.AddToGroupAsync(Context.ConnectionId, GroupName);
+            }
+        }
     }
 
     /// <summary>

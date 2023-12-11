@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Berry.Spider.Biz;
 using Berry.Spider.Common;
 using Berry.Spider.Domain;
 using Volo.Abp.AutoMapper;
@@ -30,5 +31,14 @@ public class SpiderApplicationAutoMapperProfile : Profile
             .Ignore(c => c.ConcurrencyStamp);
 
         CreateMap<ApplicationLifetimeData, ApplicationLifetimeDto>();
+
+        CreateMap<ServMachineInfo, ServMachineDto>();
+        CreateMap<ServMachineDto, ServMachineInfo>();
+        CreateMap<ServMachineOnlineDto, ServMachineInfo>()
+            .Ignore(c => c.Id)
+            .Ignore(c => c.BizNo)
+            .Ignore(c => c.Status)
+            .Ignore(c => c.LastOnlineTime)
+            .IgnoreFullAuditedObjectProperties();
     }
 }
