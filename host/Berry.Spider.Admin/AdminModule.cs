@@ -4,12 +4,10 @@ using Microsoft.OpenApi.Models;
 using Berry.Spider.Admin.Data;
 using Berry.Spider.Admin.Localization;
 using Berry.Spider.Admin.Menus;
-using Berry.Spider.HttpApi.StaticClient;
+using Berry.Spider.HttpApi;
 using Berry.Spider.RealTime;
-using Microsoft.AspNetCore.SignalR;
 using OpenIddict.Validation.AspNetCore;
 using Volo.Abp;
-using Volo.Abp.Uow;
 using Volo.Abp.Account;
 using Volo.Abp.Account.Web;
 using Volo.Abp.AspNetCore.Mvc;
@@ -19,7 +17,6 @@ using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.LeptonXLite.Bundling;
 using Volo.Abp.AspNetCore.Mvc.UI.Theme.Shared;
 using Volo.Abp.AspNetCore.Serilog;
-using Volo.Abp.AspNetCore.SignalR;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.Autofac;
 using Volo.Abp.AutoMapper;
@@ -28,6 +25,7 @@ using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.MySQL;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
+using Volo.Abp.Http.Client.Web;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.Identity.Web;
@@ -64,6 +62,7 @@ namespace Berry.Spider.Admin;
     typeof(AbpSwashbuckleModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpAspNetCoreMvcUiLeptonXLiteThemeModule),
+    typeof(AbpHttpClientWebModule),
 
     // Account module packages
     typeof(AbpAccountApplicationModule),
@@ -106,7 +105,8 @@ namespace Berry.Spider.Admin;
     typeof(AbpSettingManagementWebModule),
 
     //业务模块
-    typeof(SpiderHttpApiStaticClientModule),
+    typeof(SpiderHttpApiClientModule),
+    typeof(SpiderHttpApiModule),
     typeof(SpiderRealTimeModule)
 )]
 public class AdminModule : AbpModule
@@ -229,7 +229,7 @@ public class AdminModule : AbpModule
         services.AddAbpSwaggerGen(
             options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Admin API", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo {Title = "Admin API", Version = "v1"});
                 options.DocInclusionPredicate((docName, description) => true);
                 options.CustomSchemaIds(type => type.FullName);
             }
