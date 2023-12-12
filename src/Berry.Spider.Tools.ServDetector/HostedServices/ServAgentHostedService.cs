@@ -3,17 +3,21 @@ using Berry.Spider.RealTime;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Volo.Abp.Guids;
 
 namespace Berry.Spider.Tools.ServDetector;
 
 public class ServAgentHostedService : IHostedService
 {
     private readonly ILogger<ServAgentHostedService> _logger;
+    private readonly IGuidGenerator _guidGenerator;
     private readonly HubConnection _connection;
 
-    public ServAgentHostedService(ILogger<ServAgentHostedService> logger)
+    public ServAgentHostedService(ILogger<ServAgentHostedService> logger,
+        IGuidGenerator guidGenerator)
     {
         _logger = logger;
+        _guidGenerator = guidGenerator;
 
         _connection = new HubConnectionBuilder()
             .WithUrl("https://localhost:44382/signalr-hubs/spider/agent-notify")
@@ -30,9 +34,9 @@ public class ServAgentHostedService : IHostedService
                     Data = new AgentClientInfo
                     {
                         MachineName = DnsHelper.GetHostName(),
-                        MachineCode = "TODO",
-                        MachineIpAddr = "TODO",
-                        MachineMacAddr = "TODO",
+                        MachineCode = _guidGenerator.Create().ToString("N")[..10],
+                        MachineIpAddr = DnsHelper.GetIpV4s(),
+                        MachineMacAddr = DnsHelper.GetMacAddress(),
                         ConnectionId = _connection.ConnectionId
                     }
                 };
