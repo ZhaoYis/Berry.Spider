@@ -3,7 +3,7 @@ namespace Berry.Spider.RealTime;
 public class ServMachineOfflineDto
 {
     /// <summary>
-    /// 机器名
+    /// ConnectionId
     /// </summary>
-    public string MachineName { get; set; }
+    public string ConnectionId { get; set; }
 }

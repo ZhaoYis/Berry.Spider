@@ -39,4 +39,9 @@ public class ServMachineDto : FullAuditedEntityDto<int>
     /// 最后一次在线时间
     /// </summary>
     public DateTime? LastOnlineTime { get; set; }
+
+    /// <summary>
+    /// ConnectionId
+    /// </summary>
+    public string ConnectionId { get; set; }
 }

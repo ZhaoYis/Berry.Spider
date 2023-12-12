@@ -17,6 +17,12 @@ public interface IServMachineAppService : ICrudAppService<
     Task<ServMachineDto?> GetByMachineNameAsync(string machineName);
 
     /// <summary>
+    /// 根据机器ConnectionId获取机器信息
+    /// </summary>
+    /// <returns></returns>
+    Task<ServMachineDto?> GetByConnectionIdAsync(string connectionId);
+
+    /// <summary>
     /// 上线
     /// </summary>
     /// <returns></returns>

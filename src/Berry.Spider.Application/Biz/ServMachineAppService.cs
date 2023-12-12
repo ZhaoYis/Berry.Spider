@@ -35,24 +35,40 @@ public class ServMachineAppService : CrudAppService<
     }
 
     /// <summary>
+    /// 根据机器ConnectionId获取机器信息
+    /// </summary>
+    /// <returns></returns>
+    public async Task<ServMachineDto?> GetByConnectionIdAsync(string connectionId)
+    {
+        ServMachineInfo? servMachineInfo = await this.Repository.FindAsync(m => m.ConnectionId == connectionId);
+        if (servMachineInfo is not null)
+        {
+            ServMachineDto dto = this.ObjectMapper.Map<ServMachineInfo, ServMachineDto>(servMachineInfo);
+            return dto;
+        }
+
+        return default;
+    }
+
+    /// <summary>
     /// 上线
     /// </summary>
     /// <returns></returns>
     public async Task<bool> OnlineAsync(ServMachineOnlineDto online)
     {
-        ServMachineDto? servMachineDto = await this.GetByMachineNameAsync(online.MachineName);
-        if (servMachineDto is not null)
+        ServMachineInfo? servMachineInfo = await this.Repository.FindAsync(m => m.MachineName == online.MachineName);
+        if (servMachineInfo is not null)
         {
-            ServMachineInfo servMachineInfo = this.ObjectMapper.Map<ServMachineDto, ServMachineInfo>(servMachineDto);
             servMachineInfo.Status = MachineStatus.Online;
+            servMachineInfo.ConnectionId = online.ConnectionId;
             servMachineInfo.LastOnlineTime = this.Clock.Now;
 
             await this.Repository.UpdateAsync(servMachineInfo);
         }
         else
         {
-            ServMachineInfo servMachineInfo = this.ObjectMapper.Map<ServMachineOnlineDto, ServMachineInfo>(online);
-            servMachineInfo.BizNo = this.GuidGenerator.Create().ToString("N");
+            servMachineInfo = this.ObjectMapper.Map<ServMachineOnlineDto, ServMachineInfo>(online);
+            servMachineInfo.BizNo = this.GuidGenerator.Create().ToString("N")[..10];
             servMachineInfo.Status = MachineStatus.Online;
             servMachineInfo.LastOnlineTime = this.Clock.Now;
 
@@ -68,11 +84,11 @@ public class ServMachineAppService : CrudAppService<
     /// <returns></returns>
     public async Task<bool> OfflineAsync(ServMachineOfflineDto offline)
     {
-        ServMachineDto? servMachineDto = await this.GetByMachineNameAsync(offline.MachineName);
-        if (servMachineDto is not null)
+        ServMachineInfo? servMachineInfo = await this.Repository.FindAsync(m => m.ConnectionId == offline.ConnectionId);
+        if (servMachineInfo is not null)
         {
-            ServMachineInfo servMachineInfo = this.ObjectMapper.Map<ServMachineDto, ServMachineInfo>(servMachineDto);
             servMachineInfo.Status = MachineStatus.Offline;
+            servMachineInfo.ConnectionId = "";
 
             await this.Repository.UpdateAsync(servMachineInfo);
         }

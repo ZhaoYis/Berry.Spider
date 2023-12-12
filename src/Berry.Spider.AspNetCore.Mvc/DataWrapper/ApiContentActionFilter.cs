@@ -49,6 +49,8 @@ namespace Berry.Spider.AspNetCore.Mvc
                 {
                     objectResult.Value = ApiResponse.Succeed();
                 }
+
+                objectResult.DeclaredType = typeof(ApiResponse);
             }
 
             await next();

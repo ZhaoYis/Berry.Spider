@@ -17,7 +17,7 @@ public class ServMachineController : SpiderControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpPost, Route("online")]
-    public Task<bool> OnlineAsync(ServMachineOnlineDto online)
+    public Task<bool> OnlineAsync([FromBody] ServMachineOnlineDto online)
     {
         return this.ServMachineAppService.OnlineAsync(online);
     }
@@ -27,7 +27,7 @@ public class ServMachineController : SpiderControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpPost, Route("offline")]
-    public Task<bool> OfflineAsync(ServMachineOfflineDto offline)
+    public Task<bool> OfflineAsync([FromBody] ServMachineOfflineDto offline)
     {
         return this.ServMachineAppService.OfflineAsync(offline);
     }

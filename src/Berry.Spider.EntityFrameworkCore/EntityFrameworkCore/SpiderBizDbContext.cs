@@ -29,6 +29,7 @@ public class SpiderBizDbContext : AbpDbContext<SpiderBizDbContext>
             b.Property(p => p.MachineName).IsRequired().HasMaxLength(64);
             b.Property(p => p.MachineCode).IsRequired().HasMaxLength(64);
             b.Property(p => p.MachineIpAddr).IsRequired().HasMaxLength(128);
+            b.Property(p => p.ConnectionId).HasMaxLength(128);
             b.Property(p => p.MachineCode).HasMaxLength(128);
 
             b.HasIndex(i => i.MachineName);

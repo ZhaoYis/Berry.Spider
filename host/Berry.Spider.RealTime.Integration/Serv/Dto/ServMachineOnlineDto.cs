@@ -21,4 +21,9 @@ public class ServMachineOnlineDto
     /// 机器MAC地址
     /// </summary>
     public string MachineMacAddr { get; set; }
+
+    /// <summary>
+    /// ConnectionId
+    /// </summary>
+    public string ConnectionId { get; set; }
 }
