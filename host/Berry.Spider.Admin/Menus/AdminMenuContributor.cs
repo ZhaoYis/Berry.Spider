@@ -39,9 +39,9 @@ public class AdminMenuContributor : IMenuContributor
                 icon: "fa fa-book"
             ).AddItem(
                 new ApplicationMenuItem(
-                    AdminMenus.Tools.Sub.DataDistribution,
-                    l["Menu:Tools:Sub:DataDistribution"],
-                    url: "/Tools/DataDistribution"
+                    AdminMenus.Tools.Sub.ServNodes,
+                    l["Menu:Tools:Sub:ServNodes"],
+                    url: "/Tools/ServNodes"
                 )
             )
         );

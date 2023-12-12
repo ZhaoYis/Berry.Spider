@@ -14,7 +14,7 @@ public class AdminMenus
 
         public static class Sub
         {
-            public const string DataDistribution = Main + ".DataDistribution";
+            public const string ServNodes = Main + ".ServNodes";
         }
     }
 

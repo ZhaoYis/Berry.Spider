@@ -2,16 +2,15 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Berry.Spider.Admin.Localization
 @inject IHtmlLocalizer<AdminResource> L
-@using Volo.Abp.AspNetCore.Mvc.UI.Packages.SignalR
-@model Berry.Spider.Admin.Pages.Tools.DataDistribution.IndexModel
+@model Berry.Spider.Admin.Pages.Tools.IndexModel
 
 @section styles {
-    <abp-style src="/Pages/Tools/DataDistribution/Index.css"/>
+    <abp-style src="/Pages/Tools/ServNodes/Index.css"/>
 }
 
 @section scripts {
     <abp-script type="typeof(SignalRBrowserScriptContributor)"/>
-    <abp-script src="/Pages/Tools/DataDistribution/Index.js"/>
+    <abp-script src="/Pages/Tools/ServNodes/Index.js"/>
 }
 
 <abp-container>
