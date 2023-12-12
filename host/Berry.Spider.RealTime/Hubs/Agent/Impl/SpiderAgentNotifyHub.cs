@@ -6,6 +6,7 @@ namespace Berry.Spider.RealTime;
 /// <summary>
 /// 爬虫监控Agent服务Hub
 /// </summary>
+[HubRoute("/signalr-hubs/spider/agent-notify")]
 public class SpiderAgentNotifyHub : AbpHub<ISpiderAgentReceiveHub>, ISpiderAgentNotifyHub
 {
     private const string GroupName = "Agent";
