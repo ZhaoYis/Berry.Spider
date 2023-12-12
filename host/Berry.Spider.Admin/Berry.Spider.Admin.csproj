@@ -114,4 +114,8 @@
     <Folder Include="Services\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\client-proxies\app-proxy.js" />
+  </ItemGroup>
+
 </Project>
