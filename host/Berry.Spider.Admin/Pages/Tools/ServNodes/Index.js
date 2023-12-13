@@ -11,11 +11,27 @@ $(function () {
             ajax: abp.libs.datatables.createAjax(berry.spider.biz.servMachine.getList),
             columnDefs: [
                 {
+                    title: l('MachineCode'),
+                    data: "machineCode"
+                },
+                {
                     title: l('MachineName'),
                     data: "machineName"
                 },
                 {
-                    title: l('CreationTime'), data: "creationTime",
+                    title: l('MachineIpAddr'),
+                    data: "machineIpAddr"
+                },
+                {
+                    title: l('MachineMacAddr'),
+                    data: "machineMacAddr"
+                },
+                {
+                    title: l('Status'),
+                    data: "status"
+                },
+                {
+                    title: l('LastOnlineTime'), data: "lastOnlineTime",
                     render: function (data) {
                         return luxon
                             .DateTime

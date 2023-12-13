@@ -4,6 +4,8 @@ using Microsoft.OpenApi.Models;
 using Berry.Spider.Admin.Data;
 using Berry.Spider.Admin.Localization;
 using Berry.Spider.Admin.Menus;
+using Berry.Spider.Application;
+using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.HttpApi;
 using Berry.Spider.RealTime;
 using OpenIddict.Validation.AspNetCore;
@@ -25,7 +27,6 @@ using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.MySQL;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
-using Volo.Abp.Http.Client.Web;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
 using Volo.Abp.Identity.Web;
@@ -62,7 +63,6 @@ namespace Berry.Spider.Admin;
     typeof(AbpSwashbuckleModule),
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpAspNetCoreMvcUiLeptonXLiteThemeModule),
-    typeof(AbpHttpClientWebModule),
 
     // Account module packages
     typeof(AbpAccountApplicationModule),
@@ -105,8 +105,10 @@ namespace Berry.Spider.Admin;
     typeof(AbpSettingManagementWebModule),
 
     //业务模块
-    typeof(SpiderHttpApiClientModule),
     typeof(SpiderHttpApiModule),
+    typeof(SpiderHttpApiClientModule),
+    typeof(SpiderApplicationModule),/*TODO*/
+    typeof(SpiderEntityFrameworkCoreModule),/*TODO*/
     typeof(SpiderRealTimeModule)
 )]
 public class AdminModule : AbpModule
@@ -229,7 +231,7 @@ public class AdminModule : AbpModule
         services.AddAbpSwaggerGen(
             options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo {Title = "Admin API", Version = "v1"});
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Admin API", Version = "v1" });
                 options.DocInclusionPredicate((docName, description) => true);
                 options.CustomSchemaIds(type => type.FullName);
             }
