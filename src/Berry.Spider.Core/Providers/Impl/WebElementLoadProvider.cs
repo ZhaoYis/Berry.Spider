@@ -37,7 +37,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             string url = driver.Url;
             string current = driver.CurrentWindowHandle;
 
-            if (string.IsNullOrEmpty(title)) return;
+            if (string.IsNullOrEmpty(page)) return;
             this.Logger.LogInformation("[V]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
 
             //人机验证拦截
@@ -82,7 +82,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                     string url = driver.Url;
                     string current = driver.CurrentWindowHandle;
 
-                    if (string.IsNullOrEmpty(title)) return;
+                    if (string.IsNullOrEmpty(page)) return;
                     this.Logger.LogInformation("[BV]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
 
                     //人机验证拦截
@@ -127,7 +127,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             string url = driver.Url;
             string current = driver.CurrentWindowHandle;
 
-            if (string.IsNullOrEmpty(title)) return default;
+            if (string.IsNullOrEmpty(page)) return default;
             this.Logger.LogInformation("[T]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
 
             //人机验证拦截
@@ -173,10 +173,11 @@ public class WebElementLoadProvider : IWebElementLoadProvider
 
             //获取跳转后url
             string title = driver.Title;
+            string page = driver.PageSource;
             string url = driver.Url;
             string current = driver.CurrentWindowHandle;
 
-            if (string.IsNullOrEmpty(title)) return string.Empty;
+            if (string.IsNullOrEmpty(page)) return string.Empty;
             this.Logger.LogInformation("[AC]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
 
             //人机验证拦截
@@ -214,10 +215,11 @@ public class WebElementLoadProvider : IWebElementLoadProvider
 
             //获取跳转后url
             string title = driver.Title;
+            string page = driver.PageSource;
             string url = driver.Url;
             string current = driver.CurrentWindowHandle;
 
-            if (string.IsNullOrEmpty(title)) return;
+            if (string.IsNullOrEmpty(page)) return;
             this.Logger.LogInformation("[ACI]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
 
             //人机验证拦截
