@@ -14,10 +14,10 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Volo.Abp.Core" Version="8.0.0-rc.1" />
-      <PackageReference Include="Volo.Abp.Dapper" Version="8.0.0-rc.1" />
-      <PackageReference Include="Volo.Abp.EntityFrameworkCore" Version="8.0.0-rc.1" />
-      <PackageReference Include="Volo.Abp.EntityFrameworkCore.MySQL" Version="8.0.0-rc.1" />
+      <PackageReference Include="Volo.Abp.Core" Version="8.0.0" />
+      <PackageReference Include="Volo.Abp.Dapper" Version="8.0.0" />
+      <PackageReference Include="Volo.Abp.EntityFrameworkCore" Version="8.0.0" />
+      <PackageReference Include="Volo.Abp.EntityFrameworkCore.MySQL" Version="8.0.0" />
     </ItemGroup>
 
     <ItemGroup>
