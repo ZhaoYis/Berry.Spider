@@ -64,8 +64,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Tests", "test\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docker", ".docker", "{0B5B28FB-DC56-4BA8-AF99-1408EBB8A01C}"
 	ProjectSection(SolutionItems) = preProject
-		Dockerfile_ApiHost = Dockerfile_ApiHost
-		Dockerfile_Consumers = Dockerfile_Consumers
+		.docker\Dockerfile_ApiHost = .docker\Dockerfile_ApiHost
+		.docker\Dockerfile_Consumers = .docker\Dockerfile_Consumers
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.AspNetCore.Mvc", "src\Berry.Spider.AspNetCore.Mvc\Berry.Spider.AspNetCore.Mvc.csproj", "{4D46BB6D-E501-4404-B235-3874546A63EE}"
