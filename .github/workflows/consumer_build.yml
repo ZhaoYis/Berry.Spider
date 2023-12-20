@@ -67,7 +67,7 @@ jobs:
       - name: Upload to qiniu
         run: |
           .qshell/qshell.exe account ${{secrets.QINIU_AK}} ${{secrets.QINIU_SK}} ${{secrets.QINIU_USER_NAME}}
-          .qshell/qshell.exe rput berry-spider consumer-client/Berry.Spider.Consumers-v${{ github.run_number }}.zip ${{ github.workspace }}/publish/Berry.Spider.Consumers-v${{ github.run_number }}.zip --overwrite --resumable-api-v2
+          .qshell/qshell.exe rput berry-spider consumer-client/Berry.Spider.Consumers-v${{ github.run_number }}.zip ${{ github.workspace }}/publish/Berry.Spider.Consumers-v${{ github.run_number }}.zip --overwrite --resumable-api-v2 --callback-urls ${{secrets.QINIU_CALLBACK_URL}}
         shell: pwsh
       
       - name: Attach Artifact to Release

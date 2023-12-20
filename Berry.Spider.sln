@@ -183,6 +183,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".qshell", ".qshell", "{DE4B
 		.qshell\qshell.exe = .qshell\qshell.exe
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github_webhook", "github_webhook", "{19DFFC68-3B43-4FA5-99F3-723FE6280E4A}"
+	ProjectSection(SolutionItems) = preProject
+		doc\github_webhook\released.json = doc\github_webhook\released.json
+		doc\github_webhook\created.json = doc\github_webhook\created.json
+		doc\github_webhook\published.json = doc\github_webhook\published.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -442,6 +449,7 @@ Global
 		{C88BEA3F-00BC-4FA9-9E89-E008680FE484} = {A62EA0AB-0556-4384-8F50-B4C713DE74EB}
 		{D209E7CF-8B3C-4940-B829-F70969816E49} = {A62EA0AB-0556-4384-8F50-B4C713DE74EB}
 		{EE311A48-4361-47E2-9DD1-9F67044DA82E} = {60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}
+		{19DFFC68-3B43-4FA5-99F3-723FE6280E4A} = {093F9BD9-59EE-49FA-87D2-96AB2995EE26}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}
