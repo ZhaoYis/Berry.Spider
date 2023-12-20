@@ -3,7 +3,7 @@ name: Build and Release .NET Core Console App
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   build:
@@ -63,7 +63,12 @@ jobs:
         with:
           name: Berry.Spider.Consumers
           path: ${{ github.workspace }}/publish/Berry.Spider.Consumers-v${{ github.run_number }}.zip
-
+      
+      - name: Upload to qiniu
+        run: |
+          .qshell/qshell.exe account ${{secrets.QINIU_AK}} ${{secrets.QINIU_SK}} ${{secrets.QINIU_USER_NAME}}
+          .qshell/qshell.exe rput berry-spider Berry.Spider.Consumers-v${{ github.run_number }}.zip ${{ github.workspace }}/publish/Berry.Spider.Consumers-v${{ github.run_number }}.zip --overwrite --resumable-api-v2
+      
       - name: Attach Artifact to Release
         id: attach_artifact
         uses: actions/upload-release-asset@v1
