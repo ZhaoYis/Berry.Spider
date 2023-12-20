@@ -1,7 +1,6 @@
-using System.Text.Json;
 using Berry.Spider.AspNetCore.Mvc;
+using Berry.Spider.Webhook;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Volo.Abp.AspNetCore.Mvc;
 
 namespace Berry.Spider.Webhooks;
@@ -13,23 +12,19 @@ namespace Berry.Spider.Webhooks;
 [Route("api/services/github/webhooks")]
 public class GithubWebhookController : AbpControllerBase
 {
-    [HttpPost, Route("receive")]
-    public async Task ReceiveAsync([FromBody] object body)
-    {
-        this.Logger.LogInformation("--------webhooks receive---------");
-        string jsonBody = JsonSerializer.Serialize(body);
-        this.Logger.LogInformation(jsonBody);
+    private IGithubWebhookHandler GithubWebhookHandler { get; }
 
-        await Task.CompletedTask;
+    public GithubWebhookController(IGithubWebhookHandler githubWebhookHandler)
+    {
+        this.GithubWebhookHandler = githubWebhookHandler;
     }
 
-    [HttpGet, Route("qiniu")]
-    public async Task QiNiuReceiveAsync([FromQuery] string key, [FromQuery] string fname)
+    /// <summary>
+    /// 处理消息
+    /// </summary>
+    [HttpPost, Route("receive")]
+    public async Task ReceiveAsync([FromBody] GithubWebhookDto body)
     {
-        this.Logger.LogInformation("--------qiniu webhooks receive---------");
-        this.Logger.LogInformation("key=" + key);
-        this.Logger.LogInformation("fname=" + fname);
-
-        await Task.CompletedTask;
+        await this.GithubWebhookHandler.HandleAsync(body);
     }
 }

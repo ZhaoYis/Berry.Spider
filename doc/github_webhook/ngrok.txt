@@ -1,0 +1,7 @@
+手册：
+https://ngrok.com/docs/getting-started/
+
+启动：
+brew install ngrok/ngrok/ngrok
+ngrok config add-authtoken xxx
+ngrok http http://localhost:44306

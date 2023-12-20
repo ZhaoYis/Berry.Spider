@@ -19,4 +19,8 @@
       <ProjectReference Include="..\Berry.Spider.EventBus.MongoDB\Berry.Spider.EventBus.MongoDB.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Webhook\Providers\" />
+    </ItemGroup>
+
 </Project>

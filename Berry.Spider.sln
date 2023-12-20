@@ -188,6 +188,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github_webhook", "github_we
 		doc\github_webhook\released.json = doc\github_webhook\released.json
 		doc\github_webhook\created.json = doc\github_webhook\created.json
 		doc\github_webhook\published.json = doc\github_webhook\published.json
+		doc\github_webhook\ngrok.txt = doc\github_webhook\ngrok.txt
 	EndProjectSection
 EndProject
 Global
