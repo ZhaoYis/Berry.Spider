@@ -178,6 +178,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "desktop", "desktop", "{60E0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Toolkit", "desktop\Berry.Spider.Toolkit\Berry.Spider.Toolkit.csproj", "{EE311A48-4361-47E2-9DD1-9F67044DA82E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".qshell", ".qshell", "{DE4BD68A-8AF6-4403-89FA-63A7B7FF1DA9}"
+	ProjectSection(SolutionItems) = preProject
+		.qshell\qshell.exe = .qshell\qshell.exe
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
