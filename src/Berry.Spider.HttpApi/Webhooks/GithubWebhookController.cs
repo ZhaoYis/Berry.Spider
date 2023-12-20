@@ -22,4 +22,14 @@ public class GithubWebhookController : AbpControllerBase
 
         await Task.CompletedTask;
     }
+
+    [HttpGet, Route("qiniu")]
+    public async Task QiNiuReceiveAsync([FromQuery] string key, [FromQuery] string fname)
+    {
+        this.Logger.LogInformation("--------qiniu webhooks receive---------");
+        this.Logger.LogInformation("key=" + key);
+        this.Logger.LogInformation("fname=" + fname);
+
+        await Task.CompletedTask;
+    }
 }
