@@ -31,7 +31,7 @@ jobs:
         env:
           ENVIRONMENT: ${{ env.ASPNETCORE_ENVIRONMENT }}
 
-      - name: Remove pdb files 
+      - name: Remove pdb files
         run: |
           cd ${{ github.workspace }}/publish/Berry.Spider.Consumers
           DEL *.pdb
@@ -75,6 +75,12 @@ jobs:
           asset_name: Berry.Spider.Consumers-v${{ github.run_number }}.zip
           asset_content_type: application/zip
 
+      - name: Upload to qiniu
+        run: |
+          .qshell/qshell.exe account ${{secrets.QINIU_AK}} ${{secrets.QINIU_SK}} ${{secrets.QINIU_USER_NAME}}
+          .qshell/qshell.exe rput berry-spider consumer-client/Berry.Spider.Consumers-v${{ github.run_number }}.zip ${{ github.workspace }}/publish/Berry.Spider.Consumers-v${{ github.run_number }}.zip --overwrite --resumable-api-v2
+        shell: pwsh
+      
       - name: WeChat Work notification by text
         uses: chf007/action-wechat-work@master
         env:

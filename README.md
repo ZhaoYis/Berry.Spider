@@ -10,6 +10,7 @@
 - [CAP](https://github.com/dotnetcore/cap)
 - [FreeRedis](https://github.com/2881099/FreeRedis)
 - [jieba.NET](https://github.com/anderscui/jieba.NET)
+- [ToolGood.Words](https://github.com/toolgood/ToolGood.Words)
 - [Refit](https://github.com/reactiveui/refit)
 - [Betalgo.OpenAI](https://github.com/betalgo/openai)
 - [RabbitMQ](https://www.rabbitmq.com)

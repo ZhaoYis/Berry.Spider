@@ -64,8 +64,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Tests", "test\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docker", ".docker", "{0B5B28FB-DC56-4BA8-AF99-1408EBB8A01C}"
 	ProjectSection(SolutionItems) = preProject
-		Dockerfile_ApiHost = Dockerfile_ApiHost
-		Dockerfile_Consumers = Dockerfile_Consumers
+		.docker\Dockerfile_ApiHost = .docker\Dockerfile_ApiHost
+		.docker\Dockerfile_Consumers = .docker\Dockerfile_Consumers
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.AspNetCore.Mvc", "src\Berry.Spider.AspNetCore.Mvc\Berry.Spider.AspNetCore.Mvc.csproj", "{4D46BB6D-E501-4404-B235-3874546A63EE}"
@@ -185,6 +185,19 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.RealTime.Integration", "host\Berry.Spider.RealTime.Integration\Berry.Spider.RealTime.Integration.csproj", "{6B12F8F0-5DC1-466B-82DC-0514A0C1B746}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.HttpApi.Client", "host\Berry.Spider.HttpApi.Client\Berry.Spider.HttpApi.Client.csproj", "{0325B644-9957-40E3-BCB0-F34500A1F7F8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".qshell", ".qshell", "{DE4BD68A-8AF6-4403-89FA-63A7B7FF1DA9}"
+	ProjectSection(SolutionItems) = preProject
+		.qshell\qshell.exe = .qshell\qshell.exe
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github_webhook", "github_webhook", "{19DFFC68-3B43-4FA5-99F3-723FE6280E4A}"
+	ProjectSection(SolutionItems) = preProject
+		doc\github_webhook\released.json = doc\github_webhook\released.json
+		doc\github_webhook\created.json = doc\github_webhook\created.json
+		doc\github_webhook\published.json = doc\github_webhook\published.json
+		doc\github_webhook\ngrok.txt = doc\github_webhook\ngrok.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -459,6 +472,7 @@ Global
 		{A35D4820-CFE2-42EC-BB9B-BF9358F77DE6} = {523AD30F-FF86-456E-874E-456979B4141F}
 		{C88BEA3F-00BC-4FA9-9E89-E008680FE484} = {A62EA0AB-0556-4384-8F50-B4C713DE74EB}
 		{EE311A48-4361-47E2-9DD1-9F67044DA82E} = {60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}
+		{19DFFC68-3B43-4FA5-99F3-723FE6280E4A} = {093F9BD9-59EE-49FA-87D2-96AB2995EE26}
 		{E35B6922-6E69-4756-915D-E25C57546C4F} = {523AD30F-FF86-456E-874E-456979B4141F}
 		{52A3AA6A-DABD-411A-A98C-2C25E8129720} = {A62EA0AB-0556-4384-8F50-B4C713DE74EB}
 		{760DE1B8-088F-440E-829B-42D2368072EB} = {A62EA0AB-0556-4384-8F50-B4C713DE74EB}

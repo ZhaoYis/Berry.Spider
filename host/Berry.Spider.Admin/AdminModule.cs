@@ -102,6 +102,7 @@ namespace Berry.Spider.Admin;
     typeof(AbpSettingManagementApplicationModule),
     typeof(AbpSettingManagementEntityFrameworkCoreModule),
     typeof(AbpSettingManagementHttpApiModule),
+    typeof(AbpSettingManagementWebModule)
     typeof(AbpSettingManagementWebModule),
 
     //业务模块
