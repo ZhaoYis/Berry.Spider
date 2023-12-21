@@ -105,7 +105,6 @@
   </ItemGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
     <ProjectReference Include="..\..\src\Berry.Spider.Application\Berry.Spider.Application.csproj" />
     <ProjectReference Include="..\..\src\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\..\src\Berry.Spider.HttpApi\Berry.Spider.HttpApi.csproj" />
@@ -114,8 +113,6 @@
   </ItemGroup>
 
   <ItemGroup>
-=======
->>>>>>> main
     <Folder Include="Migrations\" />
     <Folder Include="Services\" />
   </ItemGroup>
@@ -156,14 +153,6 @@
     <PackageReference Include="Volo.Abp.SettingManagement.Web" Version="8.0.0" />
     <PackageReference Include="Volo.Abp.AuditLogging.EntityFrameworkCore" Version="8.0.0" />
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Berry.Spider.Application\Berry.Spider.Application.csproj" />
-    <ProjectReference Include="..\..\src\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\..\src\Berry.Spider.HttpApi\Berry.Spider.HttpApi.csproj" />
-    <ProjectReference Include="..\Berry.Spider.HttpApi.Client\Berry.Spider.HttpApi.Client.csproj" />
-    <ProjectReference Include="..\Berry.Spider.RealTime\Berry.Spider.RealTime.csproj" />
-  </ItemGroup>
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
