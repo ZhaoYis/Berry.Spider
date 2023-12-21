@@ -4,7 +4,6 @@ using Microsoft.OpenApi.Models;
 using Berry.Spider.Admin.Data;
 using Berry.Spider.Admin.Localization;
 using Berry.Spider.Admin.Menus;
-using Berry.Spider.HttpApi.StaticClient;
 using OpenIddict.Validation.AspNetCore;
 using Volo.Abp;
 using Volo.Abp.Uow;
@@ -100,10 +99,7 @@ namespace Berry.Spider.Admin;
     typeof(AbpSettingManagementApplicationModule),
     typeof(AbpSettingManagementEntityFrameworkCoreModule),
     typeof(AbpSettingManagementHttpApiModule),
-    typeof(AbpSettingManagementWebModule),
-
-    //业务模块
-    typeof(SpiderHttpApiStaticClientModule)
+    typeof(AbpSettingManagementWebModule)
 )]
 public class AdminModule : AbpModule
 {
