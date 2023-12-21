@@ -14,8 +14,8 @@ public class SpiderEntityFrameworkCoreModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddAbpDbContext<SpiderDbContext>();
         //添加默认仓储
+        context.Services.AddAbpDbContext<SpiderDbContext>();
         context.Services.AddAbpDbContext<SpiderDbContext>(options =>
         {
             options.AddDefaultRepositories(includeAllEntities: true);
@@ -28,10 +28,11 @@ public class SpiderEntityFrameworkCoreModule : AbpModule
             options.AddRepository<SpiderBasicInfo, SpiderBasicInfoRepository>();
         });
 
-        context.Services.AddAbpDbContext<SpiderBizDbContext>();
         //添加默认仓储
+        context.Services.AddAbpDbContext<SpiderBizDbContext>();
         context.Services.AddAbpDbContext<SpiderBizDbContext>(options =>
         {
+            options.AddRepository<SpiderAppInfo, SpiderAppInfoRepository>();
             options.AddRepository<ServMachineInfo, ServMachineInfoRepository>();
             options.AddRepository<ServMachineGroupInfo, ServMachineGroupInfoRepository>();
         });

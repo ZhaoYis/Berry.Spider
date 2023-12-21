@@ -11,7 +11,7 @@ public class GithubWebhookDto : INotification
 {
     [JsonPropertyName("action")] public GithubWebhookAction Action { get; set; }
 
-    [JsonPropertyName("release")] public GithubWebhookReleaseDto Release { get; set; }
+    [JsonPropertyName("release")] public GithubWebhookReleaseDto? Release { get; set; }
 }
 
 public class GithubWebhookReleaseDto
