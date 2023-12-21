@@ -12,11 +12,11 @@ namespace Berry.Spider.Webhooks;
 [Route("api/services/github/webhooks")]
 public class GithubWebhookController : AbpControllerBase
 {
-    private IGithubWebhookHandler GithubWebhookHandler { get; }
+    private IGithubWebhookService GithubWebhookService { get; }
 
-    public GithubWebhookController(IGithubWebhookHandler githubWebhookHandler)
+    public GithubWebhookController(IGithubWebhookService githubWebhookService)
     {
-        this.GithubWebhookHandler = githubWebhookHandler;
+        this.GithubWebhookService = githubWebhookService;
     }
 
     /// <summary>
@@ -25,6 +25,6 @@ public class GithubWebhookController : AbpControllerBase
     [HttpPost, Route("receive")]
     public async Task ReceiveAsync([FromBody] GithubWebhookDto body)
     {
-        await this.GithubWebhookHandler.HandleAsync(body);
+        await this.GithubWebhookService.HandleAsync(body);
     }
 }

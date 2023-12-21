@@ -20,5 +20,9 @@ public class SpiderApplicationModule : AbpModule
         {
             options.AddMaps<SpiderApplicationModule>(validate: true);
         });
+        
+        context.Services.AddMediatR(cfg => {
+            cfg.RegisterServicesFromAssembly(typeof(SpiderApplicationModule).Assembly);
+        });
     }
 }
