@@ -12,6 +12,9 @@
     "SMI:GroupCode": "Group Code",
     "SMI:Status": "Status",
     "SMI:LastOnlineTime": "Last Online Time",
+    "SMI:Actions": "Actions",
+    "SMI:DeployAppNode": "Deploy Node",
+    "SMI:RestartAllAppNode": "Restart All Node",
     "Enum:SMI:MachineStatus.0": "None",
     "Enum:SMI:MachineStatus.10": "Online",
     "Enum:SMI:MachineStatus.20": "Offline"

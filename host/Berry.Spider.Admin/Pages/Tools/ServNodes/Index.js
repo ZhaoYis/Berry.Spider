@@ -11,6 +11,34 @@ $(function () {
             ajax: abp.libs.datatables.createAjax(berry.spider.biz.servMachine.getList),
             columnDefs: [
                 {
+                    title: l('SMI:Actions'),
+                    rowAction: {
+                        items: [
+                            {
+                                text: l('SMI:DeployAppNode'),
+                                action: function (data) {
+                                    ///...
+                                }
+                            },
+                            {
+                                text: l('SMI:RestartAllAppNode'),
+                                confirmMessage: function (data) {
+                                    return "Are you sure to restart all node?" + data.record.machineCode;
+                                },
+                                iconClass: "fas fa-trash-restore",
+                                action: function (data) {
+                                    berry.spider.biz.servMachine
+                                        .restartAllAppNode(data.record.bizNo)
+                                        .then(function () {
+                                            abp.notify.info("Successfully restarted!");
+                                            data.table.ajax.reload();
+                                        });
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
                     title: l('SMI:MachineCode'),
                     data: "machineCode"
                 },
@@ -30,6 +58,11 @@ $(function () {
                     title: l('SMI:Status'),
                     data: "status",
                     render: function (data) {
+                        if (data === 10) {
+                            return '<i class="fa fa-dot-circle"></i>' + l('Enum:SMI:MachineStatus.' + data);
+                        } else if (data === 20) {
+                            return '<i class="fa fa-dot-circle-o"></i>' + l('Enum:SMI:MachineStatus.' + data);
+                        }
                         return l('Enum:SMI:MachineStatus.' + data);
                     }
                 },

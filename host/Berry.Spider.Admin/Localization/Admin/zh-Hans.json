@@ -12,6 +12,9 @@
     "SMI:GroupCode": "分组编码",
     "SMI:Status": "状态",
     "SMI:LastOnlineTime": "最后一次上线时间",
+    "SMI:Actions": "操作",
+    "SMI:DeployAppNode": "节点部署",
+    "SMI:RestartAllAppNode": "重启所有节点",
     "Enum:SMI:MachineStatus.0": "未知",
     "Enum:SMI:MachineStatus.10": "在线",
     "Enum:SMI:MachineStatus.20": "离线"
