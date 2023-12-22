@@ -15,7 +15,7 @@ namespace Berry.Spider.Sogou;
 /// <summary>
 /// 搜狗：相关推荐
 /// </summary>
-[SpiderService(new[] {SpiderSourceFrom.Sogou_Related_Search})]
+[SpiderService(new[] { SpiderSourceFrom.Sogou_Related_Search })]
 public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4RelatedSearchProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -73,7 +73,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
         string key = GlobalConstants.SPIDER_KEYWORDS_KEY;
         if (this.Options.KeywordCheckOptions.OnlyCurrentCategory)
         {
-            key += $":{from.ToString()}";
+            key += $":{from.GetName()}";
         }
 
         bool result = await this.RedisService.SetAsync(key, keyword);
@@ -98,7 +98,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
                     if (root == null) return;
 
                     var resultContent = root.TryFindElements(By.TagName("a"));
-                    if (resultContent is null or {Count: 0}) return;
+                    if (resultContent is null or { Count: 0 }) return;
 
                     ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                     foreach (IWebElement element in resultContent)
@@ -123,10 +123,10 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
                         });
                     }
 
-                    if (childPageDataItems is {Count: > 0})
+                    if (childPageDataItems is { Count: > 0 })
                     {
                         this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
-                            eventData.Keyword, childPageDataItems.Count);
+                            eventData.Keyword, childPageDataItems.Count.ToString());
 
                         var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom,
                             eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode,

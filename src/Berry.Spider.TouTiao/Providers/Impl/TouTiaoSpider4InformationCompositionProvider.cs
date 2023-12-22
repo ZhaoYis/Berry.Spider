@@ -80,7 +80,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
         string key = GlobalConstants.SPIDER_KEYWORDS_KEY;
         if (this.Options.KeywordCheckOptions.OnlyCurrentCategory)
         {
-            key += $":{from.ToString()}";
+            key += $":{from.GetName()}";
         }
 
         bool result = await this.RedisService.SetAsync(key, keyword);
@@ -140,7 +140,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
 
                     if (childPageDataItems is {Count: > 0})
                     {
-                        this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(), eventData.Keyword, childPageDataItems.Count);
+                        this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(), eventData.Keyword, childPageDataItems.Count.ToString());
 
                         var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom,
                             eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode,

@@ -22,7 +22,7 @@ public class SpiderAppNotifyHub : AbpHub<ISpiderAppReceiveHub>, ISpiderAppNotify
     /// <returns></returns>
     public async Task SendToAllAsync(SpiderAppNotifyDto notify)
     {
-        await this.Clients.Groups(new[] { MachineGroupCode.App.ToString() }).ReceiveSystemMessageAsync(new ReceiveSystemMessageDto
+        await this.Clients.Groups(new[] { MachineGroupCode.App.GetName() }).ReceiveSystemMessageAsync(new ReceiveSystemMessageDto
         {
             Code = notify.Code,
             Data = notify.Data,
@@ -45,14 +45,14 @@ public class SpiderAppNotifyHub : AbpHub<ISpiderAppReceiveHub>, ISpiderAppNotify
             MachineCode = clientInfo.MachineCode,
             MachineIpAddr = clientInfo.MachineIpAddr,
             MachineMacAddr = clientInfo.MachineMacAddr,
-            GroupCode = MachineGroupCode.App.ToString(),
+            GroupCode = MachineGroupCode.App.GetName(),
             ConnectionId = Context.ConnectionId
         };
         var apiResp = await _servAgentIntegration.OnlineAsync(machineOnlineDto);
         if (apiResp.IsSuccessful)
         {
             //加到Agent组中
-            await this.Groups.AddToGroupAsync(Context.ConnectionId, MachineGroupCode.App.ToString());
+            await this.Groups.AddToGroupAsync(Context.ConnectionId, MachineGroupCode.App.GetName());
         }
     }
 
@@ -69,7 +69,7 @@ public class SpiderAppNotifyHub : AbpHub<ISpiderAppReceiveHub>, ISpiderAppNotify
             Message = $"上线通知，您的用户编号为：{Context.ConnectionId}"
         });
         //加到App组中
-        await this.Groups.AddToGroupAsync(Context.ConnectionId, MachineGroupCode.App.ToString());
+        await this.Groups.AddToGroupAsync(Context.ConnectionId, MachineGroupCode.App.GetName());
     }
 
     /// <summary>
@@ -80,11 +80,11 @@ public class SpiderAppNotifyHub : AbpHub<ISpiderAppReceiveHub>, ISpiderAppNotify
         ServMachineOfflineDto machineOfflineDto = new ServMachineOfflineDto
         {
             ConnectionId = Context.ConnectionId,
-            GroupCode = MachineGroupCode.App.ToString()
+            GroupCode = MachineGroupCode.App.GetName()
         };
         var apiResp = await _servAgentIntegration.OfflineAsync(machineOfflineDto);
         
         //从组中移除Agent
-        await this.Groups.RemoveFromGroupAsync(Context.ConnectionId, MachineGroupCode.App.ToString());
+        await this.Groups.RemoveFromGroupAsync(Context.ConnectionId, MachineGroupCode.App.GetName());
     }
 }
