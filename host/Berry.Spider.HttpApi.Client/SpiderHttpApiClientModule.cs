@@ -15,12 +15,14 @@ public class SpiderHttpApiClientModule : AbpModule
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         //Dynamic C# API Client Proxies.
+        //abp generate-proxy -t csharp -u http://localhost:44306
         // context.Services.AddHttpClientProxies(
         //     typeof(SpiderContractsModule).Assembly,
         //     RemoteServiceName
         // );
 
         //Static C# API Client Proxies.
+        //abp generate-proxy -t js -u http://localhost:44306
         context.Services.AddStaticHttpClientProxies(
             typeof(SpiderContractsModule).Assembly,
             RemoteServiceName

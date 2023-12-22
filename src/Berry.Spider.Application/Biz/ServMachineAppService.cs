@@ -56,26 +56,13 @@ public class ServMachineAppService : CrudAppService<
     /// <returns></returns>
     public async Task<bool> OnlineAsync(ServMachineOnlineDto online)
     {
-        ServMachineInfo? servMachineInfo = await this.Repository.FindAsync(m => m.MachineName == online.MachineName);
-        if (servMachineInfo is not null)
-        {
-            servMachineInfo.Status = MachineStatus.Online;
-            servMachineInfo.ConnectionId = online.ConnectionId;
-            servMachineInfo.LastOnlineTime = this.Clock.Now;
+        ServMachineInfo servMachineInfo = this.ObjectMapper.Map<ServMachineOnlineDto, ServMachineInfo>(online);
+        servMachineInfo.BizNo = this.GuidGenerator.Create().ToString("N")[..10];
+        servMachineInfo.Status = MachineStatus.Online;
+        servMachineInfo.LastOnlineTime = this.Clock.Now;
 
-            await this.Repository.UpdateAsync(servMachineInfo);
-        }
-        else
-        {
-            servMachineInfo = this.ObjectMapper.Map<ServMachineOnlineDto, ServMachineInfo>(online);
-            servMachineInfo.BizNo = this.GuidGenerator.Create().ToString("N")[..10];
-            servMachineInfo.Status = MachineStatus.Online;
-            servMachineInfo.LastOnlineTime = this.Clock.Now;
-
-            await this.Repository.InsertAsync(servMachineInfo);
-        }
-
-        return true;
+        var res = await this.Repository.InsertAsync(servMachineInfo);
+        return res.Id > 0;
     }
 
     /// <summary>
@@ -88,7 +75,7 @@ public class ServMachineAppService : CrudAppService<
         if (servMachineInfo is not null)
         {
             servMachineInfo.Status = MachineStatus.Offline;
-            servMachineInfo.ConnectionId = "";
+            servMachineInfo.IsDeleted = true;
 
             await this.Repository.UpdateAsync(servMachineInfo);
         }

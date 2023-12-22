@@ -9,15 +9,13 @@ namespace Berry.Spider.RealTime;
 [HubRoute("/signalr-hubs/spider/app-notify")]
 public class SpiderAppNotifyHub : AbpHub<ISpiderAppReceiveHub>, ISpiderAppNotifyHub
 {
-    private const string GroupName = "App";
-
     /// <summary>
     /// 向所有客户端发送消息
     /// </summary>
     /// <returns></returns>
     public async Task SendToAllAsync(SpiderAppNotifyDto notify)
     {
-        await this.Clients.Groups(new[] { GroupName }).ReceiveSystemMessageAsync(new ReceiveSystemMessageDto
+        await this.Clients.Groups(new[] { MachineGroupCode.App.ToString() }).ReceiveSystemMessageAsync(new ReceiveSystemMessageDto
         {
             Code = notify.Code,
             Data = notify.Data,
@@ -38,7 +36,7 @@ public class SpiderAppNotifyHub : AbpHub<ISpiderAppReceiveHub>, ISpiderAppNotify
             Message = $"上线通知，您的用户编号为：{Context.ConnectionId}"
         });
         //加到App组中
-        await this.Groups.AddToGroupAsync(Context.ConnectionId, GroupName);
+        await this.Groups.AddToGroupAsync(Context.ConnectionId, MachineGroupCode.App.ToString());
     }
 
     /// <summary>
@@ -49,6 +47,6 @@ public class SpiderAppNotifyHub : AbpHub<ISpiderAppReceiveHub>, ISpiderAppNotify
         //TODO：机器下线
 
         //从组中移除Agent
-        await this.Groups.RemoveFromGroupAsync(Context.ConnectionId, GroupName);
+        await this.Groups.RemoveFromGroupAsync(Context.ConnectionId, MachineGroupCode.App.ToString());
     }
 }

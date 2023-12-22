@@ -150,6 +150,23 @@
 
   })();
 
+  // controller berry.spider.webhooks.githubWebhook
+
+  (function(){
+
+    abp.utils.createNamespace(window, 'berry.spider.webhooks.githubWebhook');
+
+    berry.spider.webhooks.githubWebhook.receive = function(body, ajaxParams) {
+      return abp.ajax($.extend(true, {
+        url: abp.appPath + 'api/services/github/webhooks/receive',
+        type: 'POST',
+        dataType: null,
+        data: JSON.stringify(body)
+      }, ajaxParams));
+    };
+
+  })();
+
   // controller berry.spider.openAI.spiderOpenAI
 
   (function(){

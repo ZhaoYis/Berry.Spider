@@ -9,8 +9,6 @@ namespace Berry.Spider.RealTime;
 [HubRoute("/signalr-hubs/spider/agent-notify")]
 public class SpiderAgentNotifyHub : AbpHub<ISpiderAgentReceiveHub>, ISpiderAgentNotifyHub
 {
-    private const string GroupName = "Agent";
-
     private readonly IServAgentIntegration _servAgentIntegration;
 
     public SpiderAgentNotifyHub(IServAgentIntegration servAgentIntegration)
@@ -24,7 +22,7 @@ public class SpiderAgentNotifyHub : AbpHub<ISpiderAgentReceiveHub>, ISpiderAgent
     /// <returns></returns>
     public async Task SendToAllAsync(SpiderAgentNotifyDto notify)
     {
-        await this.Clients.Groups(new[] { GroupName }).ReceiveSystemMessageAsync(new ReceiveSystemMessageDto
+        await this.Clients.Groups(new[] { MachineGroupCode.Agent.ToString() }).ReceiveSystemMessageAsync(new ReceiveSystemMessageDto
         {
             Code = notify.Code,
             Data = notify.Data,
@@ -47,13 +45,14 @@ public class SpiderAgentNotifyHub : AbpHub<ISpiderAgentReceiveHub>, ISpiderAgent
             MachineCode = clientInfo.MachineCode,
             MachineIpAddr = clientInfo.MachineIpAddr,
             MachineMacAddr = clientInfo.MachineMacAddr,
+            GroupCode = MachineGroupCode.Agent.ToString(),
             ConnectionId = Context.ConnectionId
         };
         var apiResp = await _servAgentIntegration.OnlineAsync(machineOnlineDto);
         if (apiResp.IsSuccessful)
         {
             //加到Agent组中
-            await this.Groups.AddToGroupAsync(Context.ConnectionId, GroupName);
+            await this.Groups.AddToGroupAsync(Context.ConnectionId, MachineGroupCode.Agent.ToString());
         }
     }
 
@@ -78,10 +77,11 @@ public class SpiderAgentNotifyHub : AbpHub<ISpiderAgentReceiveHub>, ISpiderAgent
     {
         ServMachineOfflineDto machineOfflineDto = new ServMachineOfflineDto
         {
-            ConnectionId = Context.ConnectionId
+            ConnectionId = Context.ConnectionId,
+            GroupCode = MachineGroupCode.Agent.ToString()
         };
         var apiResp = await _servAgentIntegration.OfflineAsync(machineOfflineDto);
         //从组中移除Agent
-        await this.Groups.RemoveFromGroupAsync(Context.ConnectionId, GroupName);
+        await this.Groups.RemoveFromGroupAsync(Context.ConnectionId, MachineGroupCode.Agent.ToString());
     }
 }

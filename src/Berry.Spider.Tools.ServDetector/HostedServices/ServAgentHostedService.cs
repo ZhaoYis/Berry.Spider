@@ -10,14 +10,11 @@ namespace Berry.Spider.Tools.ServDetector;
 public class ServAgentHostedService : IHostedService
 {
     private readonly ILogger<ServAgentHostedService> _logger;
-    private readonly IGuidGenerator _guidGenerator;
     private readonly HubConnection _connection;
 
-    public ServAgentHostedService(ILogger<ServAgentHostedService> logger,
-        IGuidGenerator guidGenerator)
+    public ServAgentHostedService(ILogger<ServAgentHostedService> logger)
     {
         _logger = logger;
-        _guidGenerator = guidGenerator;
 
         _connection = new HubConnectionBuilder()
             .WithUrl("https://localhost:44382/signalr-hubs/spider/agent-notify")
@@ -34,7 +31,7 @@ public class ServAgentHostedService : IHostedService
                     Data = new AgentClientInfo
                     {
                         MachineName = DnsHelper.GetHostName(),
-                        MachineCode = _guidGenerator.Create().ToString("N")[..10],
+                        MachineCode = $"{MachineGroupCode.Agent.ToString()}_{Guid.NewGuid().ToString("N")[..10]}",
                         MachineIpAddr = DnsHelper.GetIpV4s(),
                         MachineMacAddr = DnsHelper.GetMacAddress(),
                         ConnectionId = _connection.ConnectionId

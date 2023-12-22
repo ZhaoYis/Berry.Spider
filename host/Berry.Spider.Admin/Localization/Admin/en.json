@@ -5,6 +5,15 @@
     "Welcome_Text": "This is a minimalist, single layer application startup template for the ABP Framework.",
     "Menu:Home": "Home",
     "Menu:Tools:Main": "Tools",
-    "Menu:Tools:Sub:ServNodes": "Serv Nodes"
+    "Menu:Tools:Sub:ServNodes": "Serv Nodes",
+    "SMI:MachineCode": "Machine Code",
+    "SMI:MachineName": "Machine Name",
+    "SMI:MachineIpAddr": "Machine Ip Addr",
+    "SMI:GroupCode": "Group Code",
+    "SMI:Status": "Status",
+    "SMI:LastOnlineTime": "Last Online Time",
+    "Enum:SMI:MachineStatus.0": "None",
+    "Enum:SMI:MachineStatus.10": "Online",
+    "Enum:SMI:MachineStatus.20": "Offline"
   }
 }

@@ -44,6 +44,7 @@ public class SpiderBizDbContext : AbpDbContext<SpiderBizDbContext>
         {
             b.ToTable($"{TableNamePrefix}serv_machine_info");
             b.Property(p => p.BizNo).IsRequired().HasMaxLength(32);
+            b.Property(p => p.GroupCode).IsRequired().HasMaxLength(32);
             b.Property(p => p.MachineName).IsRequired().HasMaxLength(64);
             b.Property(p => p.MachineCode).IsRequired().HasMaxLength(64);
             b.Property(p => p.MachineIpAddr).IsRequired().HasMaxLength(128);
@@ -51,6 +52,7 @@ public class SpiderBizDbContext : AbpDbContext<SpiderBizDbContext>
             b.Property(p => p.MachineCode).HasMaxLength(128);
 
             b.HasIndex(i => i.BizNo);
+            b.HasIndex(i => i.GroupCode);
             b.HasIndex(i => i.MachineName);
 
             //Configure the base properties

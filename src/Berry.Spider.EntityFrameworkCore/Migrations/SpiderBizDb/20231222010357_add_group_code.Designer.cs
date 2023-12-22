@@ -3,6 +3,7 @@ using System;
 using Berry.Spider.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Volo.Abp.EntityFrameworkCore;
 
@@ -11,9 +12,11 @@ using Volo.Abp.EntityFrameworkCore;
 namespace Berry.Spider.EntityFrameworkCore.Migrations.SpiderBizDb
 {
     [DbContext(typeof(SpiderBizDbContext))]
-    partial class SpiderBizDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231222010357_add_group_code")]
+    partial class add_group_code
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

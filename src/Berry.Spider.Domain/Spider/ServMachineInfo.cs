@@ -28,6 +28,11 @@ public class ServMachineInfo : FullAuditedEntity<int>
     public string MachineCode { get; set; }
 
     /// <summary>
+    /// 分组编码
+    /// </summary>
+    public string GroupCode { get; set; }
+
+    /// <summary>
     /// 机器IP地址
     /// </summary>
     public string MachineIpAddr { get; set; }

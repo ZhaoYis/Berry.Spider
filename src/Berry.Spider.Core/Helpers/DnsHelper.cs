@@ -47,6 +47,6 @@ public static class DnsHelper
             macList.Add(macAddress);
         }
 
-        return string.Join(",", macList);
+        return string.Join(",", macList.Where(mac => !string.IsNullOrEmpty(mac)));
     }
 }
