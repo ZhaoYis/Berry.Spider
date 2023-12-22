@@ -81,6 +81,7 @@ public class SpiderAgentNotifyHub : AbpHub<ISpiderAgentReceiveHub>, ISpiderAgent
             GroupCode = MachineGroupCode.Agent.ToString()
         };
         var apiResp = await _servAgentIntegration.OfflineAsync(machineOfflineDto);
+        
         //从组中移除Agent
         await this.Groups.RemoveFromGroupAsync(Context.ConnectionId, MachineGroupCode.Agent.ToString());
     }

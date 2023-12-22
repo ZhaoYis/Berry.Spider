@@ -7,4 +7,10 @@ public interface ISpiderAppNotifyHub
     /// </summary>
     /// <returns></returns>
     Task SendToAllAsync(SpiderAppNotifyDto notify);
+    
+    /// <summary>
+    /// 推送App客户端信息
+    /// </summary>
+    /// <returns></returns>
+    Task PushAppClientInfoAsync(AppClientInfoDto appClientInfo);
 }

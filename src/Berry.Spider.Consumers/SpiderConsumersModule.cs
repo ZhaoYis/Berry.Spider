@@ -3,6 +3,7 @@ using Berry.Spider.Baidu;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.EventBus.RabbitMq;
 using Berry.Spider.FreeRedis;
+using Berry.Spider.RealTime;
 using Berry.Spider.Segmenter.JiebaNet;
 using Berry.Spider.Sogou;
 using Berry.Spider.TouTiao;
@@ -24,6 +25,7 @@ namespace Berry.Spider.Consumers;
     typeof(SpiderEntityFrameworkCoreModule),
     typeof(SpiderEventBusRabbitMqModule),
     typeof(SpiderSegmenterJiebaNetModule),
+    typeof(SpiderRealTimeAbstractionsModule),
     //FreeRedis
     typeof(SpiderFreeRedisModule),
     //今日头条模块

@@ -65,7 +65,11 @@ public class Program
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             }));
 
-            await Host.CreateDefaultBuilder(args).ConfigureServices(services => { services.AddHostedService<SpiderConsumersHostedService>(); })
+            await Host.CreateDefaultBuilder(args).ConfigureServices(services =>
+                {
+                    services.AddHostedService<ServAppHostedService>();
+                    services.AddHostedService<SpiderConsumersHostedService>();
+                })
                 //机密配置文件
                 .AddAppSettingsSecretsJson()
                 //集成AgileConfig

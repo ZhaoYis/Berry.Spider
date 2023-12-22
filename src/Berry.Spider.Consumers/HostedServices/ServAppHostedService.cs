@@ -1,22 +1,25 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Berry.Spider.Core;
 using Berry.Spider.RealTime;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Berry.Spider.Tools.ServDetector;
+namespace Berry.Spider.Consumers;
 
-public class ServAgentHostedService : IHostedService
+public class ServAppHostedService : IHostedService
 {
-    private readonly ILogger<ServAgentHostedService> _logger;
+    private readonly ILogger<ServAppHostedService> _logger;
     private readonly HubConnection _connection;
 
-    public ServAgentHostedService(ILogger<ServAgentHostedService> logger)
+    public ServAppHostedService(ILogger<ServAppHostedService> logger)
     {
         _logger = logger;
 
         _connection = new HubConnectionBuilder()
-            .WithUrl("https://localhost:44382/signalr-hubs/spider/agent-notify")
+            .WithUrl("https://localhost:44382/signalr-hubs/spider/app-notify")
             .WithAutomaticReconnect()
             .Build();
 
@@ -24,19 +27,19 @@ public class ServAgentHostedService : IHostedService
         {
             if (msg.Code == RealTimeMessageCode.CONNECTION_SUCCESSFUL)
             {
-                AgentClientInfoDto agentClientInfo = new AgentClientInfoDto
+                AppClientInfoDto appClientInfo = new AppClientInfoDto
                 {
                     Code = RealTimeMessageCode.CONNECTION_SUCCESSFUL,
-                    Data = new AgentClientInfo
+                    Data = new AppClientInfo
                     {
                         MachineName = DnsHelper.GetHostName(),
-                        MachineCode = $"{MachineGroupCode.Agent.ToString()}_{Guid.NewGuid().ToString("N")[..10]}",
+                        MachineCode = $"{MachineGroupCode.App.ToString()}_{Guid.NewGuid().ToString("N")[..10]}",
                         MachineIpAddr = DnsHelper.GetIpV4s(),
                         MachineMacAddr = DnsHelper.GetMacAddress(),
                         ConnectionId = _connection.ConnectionId
                     }
                 };
-                await _connection.SendToAsync<AgentClientInfoDto>(agentClientInfo);
+                await _connection.SendToAsync<AppClientInfoDto>(appClientInfo);
             }
             else if (msg.Code == RealTimeMessageCode.SYSTEM_MESSAGE)
             {

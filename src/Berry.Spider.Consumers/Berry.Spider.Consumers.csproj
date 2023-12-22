@@ -12,6 +12,7 @@
 
     <ItemGroup>
         <PackageReference Include="AgileConfig.Client" Version="1.7.1" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.0" />
         <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.1-dev-00561" />
         <PackageReference Include="Volo.Abp.Autofac" Version="8.0.0" />
         <PackageReference Include="Volo.Abp.BackgroundWorkers" Version="8.0.0" />
@@ -36,6 +37,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\host\Berry.Spider.RealTime.Abstractions\Berry.Spider.RealTime.Abstractions.csproj" />
       <ProjectReference Include="..\Berry.Spider.Baidu\Berry.Spider.Baidu.csproj" />
       <ProjectReference Include="..\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj" />
       <ProjectReference Include="..\Berry.Spider.EventBus.RabbitMq\Berry.Spider.EventBus.RabbitMq.csproj" />
