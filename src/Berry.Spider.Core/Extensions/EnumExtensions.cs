@@ -9,8 +9,8 @@ namespace Berry.Spider.Core;
 /// </summary>
 public static class EnumExtensions
 {
-    private static readonly ConcurrentDictionary<Type, string> EnumDescriptionCache = new();
-    private static readonly ConcurrentDictionary<Type, string> EnumNameCache = new();
+    private static readonly ConcurrentDictionary<Type, string?> EnumDescriptionCache = new();
+    private static readonly ConcurrentDictionary<Type, string?> EnumNameCache = new();
 
     /// <summary>
     /// 获取枚举描述信息
