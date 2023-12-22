@@ -1,17 +1,23 @@
+using System.Collections.Concurrent;
 using System.Reflection;
 
 namespace Berry.Spider.Core;
 
 public static class InvokeMethodNameAttributeExtensions
 {
+    private static readonly ConcurrentDictionary<Type, string> Cache = new();
+
     public static string GetMethodName(this Type type)
     {
-        if (type.IsDefined(typeof(InvokeMethodNameAttribute)))
+        return Cache.GetOrAdd(type, () =>
         {
-            var attr = type.GetCustomAttribute<InvokeMethodNameAttribute>();
-            return attr?.MethodName ?? type.Name;
-        }
+            if (type.IsDefined(typeof(InvokeMethodNameAttribute)))
+            {
+                var attr = type.GetCustomAttribute<InvokeMethodNameAttribute>();
+                return attr?.MethodName ?? type.Name;
+            }
 
-        return type.Name;
+            return type.Name;
+        });
     }
 }
