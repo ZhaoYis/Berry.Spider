@@ -16,6 +16,7 @@ $(function () {
                         items: [
                             {
                                 text: l('SMI:DeployAppNode'),
+                                iconClass: "fas fa-building",
                                 action: function (data) {
                                     ///...
                                 }
@@ -59,9 +60,9 @@ $(function () {
                     data: "status",
                     render: function (data) {
                         if (data === 10) {
-                            return '<i class="fa fa-dot-circle"></i>' + l('Enum:SMI:MachineStatus.' + data);
+                            return '<i class="fa fa-dot-circle text-success">' + l('Enum:SMI:MachineStatus.' + data) + '</i>';
                         } else if (data === 20) {
-                            return '<i class="fa fa-dot-circle-o"></i>' + l('Enum:SMI:MachineStatus.' + data);
+                            return '<i class="fa fa-dot-circle-o text-danger">' + l('Enum:SMI:MachineStatus.' + data) + '</i>';
                         }
                         return l('Enum:SMI:MachineStatus.' + data);
                     }

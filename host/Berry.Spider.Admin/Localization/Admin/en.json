@@ -11,7 +11,7 @@
     "SMI:MachineIpAddr": "Machine Ip Addr",
     "SMI:GroupCode": "Group Code",
     "SMI:Status": "Status",
-    "SMI:LastOnlineTime": "Last Online Time",
+    "SMI:LastOnlineTime": "Online Time",
     "SMI:Actions": "Actions",
     "SMI:DeployAppNode": "Deploy Node",
     "SMI:RestartAllAppNode": "Restart All Node",

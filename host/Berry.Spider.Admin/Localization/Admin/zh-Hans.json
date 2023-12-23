@@ -11,7 +11,7 @@
     "SMI:MachineIpAddr": "机器IP地址",
     "SMI:GroupCode": "分组编码",
     "SMI:Status": "状态",
-    "SMI:LastOnlineTime": "最后一次上线时间",
+    "SMI:LastOnlineTime": "上线时间",
     "SMI:Actions": "操作",
     "SMI:DeployAppNode": "节点部署",
     "SMI:RestartAllAppNode": "重启所有节点",
