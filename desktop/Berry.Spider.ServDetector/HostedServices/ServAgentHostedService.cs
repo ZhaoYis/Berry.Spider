@@ -16,7 +16,7 @@ public class ServAgentHostedService : IHostedService
         _logger = logger;
 
         _connection = new HubConnectionBuilder()
-            .WithUrl("https://localhost:44382/signalr-hubs/spider/agent-notify")
+            .WithUrl("https://localhost:44334/signalr-hubs/spider/agent-notify")
             .WithAutomaticReconnect()
             .Build();
 
