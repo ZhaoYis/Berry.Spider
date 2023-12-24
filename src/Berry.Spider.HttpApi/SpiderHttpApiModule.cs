@@ -8,24 +8,16 @@ using Volo.Abp.Modularity;
 namespace Berry.Spider;
 
 [DependsOn(
-    //头条模块服务
-    typeof(TouTiaoSpiderContractsModule),
-    //百度模块服务
-    typeof(BaiduSpiderContractsModule),
-    //搜狗模块服务
-    typeof(SogouSpiderContractsModule),
-    //爬虫模块服务
-    typeof(SpiderContractsModule),
-    typeof(AbpAspNetCoreMvcModule))]
+    typeof(AbpAspNetCoreMvcModule),
+    typeof(TouTiaoSpiderApplicationContractsModule),
+    typeof(BaiduSpiderApplicationContractsModule),
+    typeof(SogouSpiderApplicationContractsModule),
+    typeof(SpiderApplicationContractsModule)
+)]
 public class SpiderHttpApiModule : AbpModule
 {
-    public override Task PreConfigureServicesAsync(ServiceConfigurationContext context)
+    public override void PreConfigureServices(ServiceConfigurationContext context)
     {
-        PreConfigure<IMvcBuilder>(mvcBuilder =>
-        {
-            mvcBuilder.AddApplicationPartIfNotExists(typeof(SpiderHttpApiModule).Assembly);
-        });
-
-        return Task.CompletedTask;
+        PreConfigure<IMvcBuilder>(mvcBuilder => { mvcBuilder.AddApplicationPartIfNotExists(typeof(SpiderHttpApiModule).Assembly); });
     }
 }

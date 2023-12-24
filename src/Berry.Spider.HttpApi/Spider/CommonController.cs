@@ -2,13 +2,16 @@ using Berry.Spider.Common;
 using Berry.Spider.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
+using Volo.Abp;
 
 namespace Berry.Spider;
 
 /// <summary>
 /// 公共服务
 /// </summary>
+[Area(GlobalConstants.ModelName)]
 [Route("api/services/common")]
+[RemoteService(Name = GlobalConstants.RemoteServiceName)]
 public class CommonController : SpiderControllerBase
 {
     /// <summary>

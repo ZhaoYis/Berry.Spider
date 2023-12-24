@@ -1,14 +1,18 @@
 ﻿using Berry.Spider.Abstractions;
+using Berry.Spider.Baidu;
 using Berry.Spider.Core;
 using Microsoft.AspNetCore.Mvc;
+using Volo.Abp;
 
 namespace Berry.Spider;
 
 /// <summary>
 /// 百度爬虫服务
 /// </summary>
+[Area(GlobalConstants.ModelName)]
 [Route("api/services/spider/baidu")]
-public class BaiduSpiderController : SpiderControllerBase
+[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+public class BaiduSpiderController : SpiderControllerBase, IBaiduSpiderAppService
 {
     private IServiceProvider Provider { get; }
 

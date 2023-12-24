@@ -1,8 +1,8 @@
-using Volo.Abp.DependencyInjection;
+using Volo.Abp.Application.Services;
 
 namespace Berry.Spider.Webhook;
 
-public interface IGithubWebhookService : ITransientDependency
+public interface IGithubWebhookService : IApplicationService
 {
     /// <summary>
     /// 处理webhook消息

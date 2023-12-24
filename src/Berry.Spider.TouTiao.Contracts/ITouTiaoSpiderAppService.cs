@@ -4,5 +4,4 @@ namespace Berry.Spider.TouTiao;
 
 public interface ITouTiaoSpiderAppService : IApplicationService
 {
-    
 }

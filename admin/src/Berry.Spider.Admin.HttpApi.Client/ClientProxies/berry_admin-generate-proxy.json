@@ -1,0 +1,52 @@
+{
+  "modules": {
+    "berry_admin": {
+      "rootPath": "berry_admin",
+      "remoteServiceName": "BerrySpiderAdminHttpApi",
+      "controllers": {
+        "Berry.Spider.Admin.TestAdminController": {
+          "controllerName": "TestAdmin",
+          "controllerGroupName": "TestAdmin",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "Berry.Spider.Admin.TestAdminController",
+          "interfaces": [
+            {
+              "type": "Berry.Spider.Admin.ITestAppService",
+              "name": "ITestAppService",
+              "methods": [
+                {
+                  "name": "GetAsync",
+                  "parametersOnMethod": [],
+                  "returnValue": {
+                    "type": "System.Int32",
+                    "typeSimple": "number"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "GetAsync": {
+              "uniqueName": "GetAsync",
+              "name": "GetAsync",
+              "httpMethod": "GET",
+              "url": "api/berry_admin/test-admin",
+              "supportedVersions": [],
+              "parametersOnMethod": [],
+              "parameters": [],
+              "returnValue": {
+                "type": "System.Int32",
+                "typeSimple": "number"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.Admin.ITestAppService"
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {}
+}

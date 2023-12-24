@@ -4,5 +4,4 @@ namespace Berry.Spider.Baidu;
 
 public interface IBaiduSpiderAppService : IApplicationService
 {
-
 }

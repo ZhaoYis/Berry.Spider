@@ -15,7 +15,6 @@ using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc.AntiForgery;
 using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
-using Volo.Abp.Json;
 using Volo.Abp.Modularity;
 using Volo.Abp.Swashbuckle;
 
@@ -31,15 +30,10 @@ namespace Berry.Spider.HttpApi.Host;
     typeof(SpiderEventBusRabbitMqModule),
     typeof(SpiderEventBusMongoDBModule),
     typeof(SpiderSegmenterJiebaNetModule),
-    //今日头条模块
-    typeof(TouTiaoSpiderModule),
-    //百度模块
-    typeof(BaiduSpiderModule),
-    //搜狗模块
-    typeof(SogouSpiderModule),
-    //爬虫模块
+    typeof(TouTiaoSpiderApplicationModule),
+    typeof(BaiduSpiderApplicationModule),
+    typeof(SogouSpiderApplicationModule),
     typeof(SpiderApplicationModule),
-    //OpenAI
     typeof(SpiderOpenAIApplicationModule)
 )]
 public class SpiderHttpApiHostModule : AbpModule
@@ -52,7 +46,7 @@ public class SpiderHttpApiHostModule : AbpModule
         context.Services.AddAbpSwaggerGen(
             options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Spider API", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo {Title = "Spider API", Version = "v1"});
                 options.DocInclusionPredicate((docName, description) => true);
                 options.CustomSchemaIds(type => type.FullName);
             });
@@ -65,10 +59,10 @@ public class SpiderHttpApiHostModule : AbpModule
             {
                 builder
                     .WithOrigins(
-                        configuration["App:CorsOrigins"]
+                        configuration["App:CorsOrigins"]?
                             .Split(",", StringSplitOptions.RemoveEmptyEntries)
                             .Select(o => o.RemovePostFix("/"))
-                            .ToArray()
+                            .ToArray() ?? Array.Empty<string>()
                     )
                     .WithAbpExposedHeaders()
                     .SetIsOriginAllowedToAllowWildcardSubdomains()
@@ -78,10 +72,10 @@ public class SpiderHttpApiHostModule : AbpModule
             });
         });
 
-        Configure<AbpJsonOptions>(opt =>
-        {
-            opt.OutputDateTimeFormat = "yyyy-MM-dd HH:mm:ss:fff";
-        });
+        // Configure<AbpJsonOptions>(opt =>
+        // {
+        //     opt.OutputDateTimeFormat = "yyyy-MM-dd HH:mm:ss:fff";
+        // });
     }
 
     public override Task OnApplicationInitializationAsync(ApplicationInitializationContext context)
@@ -108,7 +102,7 @@ public class SpiderHttpApiHostModule : AbpModule
         app.UseSwagger();
         app.UseAbpSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Support APP API");
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Spider API");
             options.DocExpansion(DocExpansion.None);
         });
         app.UseAbpSerilogEnrichers();

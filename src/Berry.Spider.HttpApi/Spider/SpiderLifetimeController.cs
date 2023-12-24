@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
+using Volo.Abp;
 
 namespace Berry.Spider;
 
 /// <summary>
 /// 爬虫状态服务
 /// </summary>
+[Area(GlobalConstants.ModelName)]
 [Route("api/services/spider-lifetime")]
-public class SpiderLifetimeController : SpiderControllerBase
+[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+public class SpiderLifetimeController : SpiderControllerBase, ISpiderLifetimeAppService
 {
     private readonly ISpiderLifetimeAppService _spiderLifetimeAppService;
 

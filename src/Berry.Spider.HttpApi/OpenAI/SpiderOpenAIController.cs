@@ -1,13 +1,16 @@
 using Berry.Spider.OpenAI.Contracts;
 using Microsoft.AspNetCore.Mvc;
+using Volo.Abp;
 
 namespace Berry.Spider.OpenAI;
 
 /// <summary>
 /// OpenAI爬虫服务
 /// </summary>
+[Area(GlobalConstants.ModelName)]
 [Route("api/services/spider/openai")]
-public class SpiderOpenAIController : SpiderControllerBase
+[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+public class SpiderOpenAIController : SpiderControllerBase, ISpiderOpenAIAppService
 {
     private readonly ISpiderOpenAIAppService _spiderOpenAiAppService;
 

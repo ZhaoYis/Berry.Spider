@@ -8,7 +8,7 @@ namespace Berry.Spider.OpenAI.Application;
 
 [DependsOn(
     typeof(SpiderCoreModule),
-    typeof(SpiderOpenAIContractsModule),
+    typeof(SpiderOpenAIApplicationContractsModule),
     typeof(SpiderDomainModule),
     typeof(AbpDddApplicationModule),
     //OpenAI模块

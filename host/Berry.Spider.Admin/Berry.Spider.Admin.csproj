@@ -108,6 +108,7 @@
     <ProjectReference Include="..\..\src\Berry.Spider.Application\Berry.Spider.Application.csproj" />
     <ProjectReference Include="..\..\src\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\..\src\Berry.Spider.HttpApi\Berry.Spider.HttpApi.csproj" />
+    <ProjectReference Include="..\..\src\Berry.Spider.RealTime\Berry.Spider.RealTime.csproj" />
     <ProjectReference Include="..\Berry.Spider.HttpApi.Client\Berry.Spider.HttpApi.Client.csproj" />
     <ProjectReference Include="..\Berry.Spider.RealTime\Berry.Spider.RealTime.csproj" />
   </ItemGroup>

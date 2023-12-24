@@ -1,8 +1,8 @@
-using Volo.Abp.DependencyInjection;
+using Volo.Abp.Application.Services;
 
 namespace Berry.Spider;
 
-public interface ISpiderLifetimeAppService : ITransientDependency
+public interface ISpiderLifetimeAppService : IApplicationService
 {
     /// <summary>
     /// 获取爬虫服务状态

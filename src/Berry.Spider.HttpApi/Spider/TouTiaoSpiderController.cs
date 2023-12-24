@@ -1,14 +1,18 @@
 ﻿using Berry.Spider.Abstractions;
 using Berry.Spider.Core;
+using Berry.Spider.TouTiao;
 using Microsoft.AspNetCore.Mvc;
+using Volo.Abp;
 
 namespace Berry.Spider;
 
 /// <summary>
 /// 今日头条爬虫服务
 /// </summary>
+[Area(GlobalConstants.ModelName)]
 [Route("api/services/spider/toutiao")]
-public class TouTiaoSpiderController : SpiderControllerBase
+[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+public class TouTiaoSpiderController : SpiderControllerBase, ITouTiaoSpiderAppService
 {
     private IServiceProvider Provider { get; }
 

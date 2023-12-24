@@ -1,6 +1,7 @@
 using Berry.Spider.AspNetCore.Mvc;
 using Berry.Spider.Webhook;
 using Microsoft.AspNetCore.Mvc;
+using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc;
 
 namespace Berry.Spider.Webhooks;
@@ -10,7 +11,8 @@ namespace Berry.Spider.Webhooks;
 /// </summary>
 [DisableDataWrapper]
 [Route("api/services/github/webhooks")]
-public class GithubWebhookController : AbpControllerBase
+[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+public class GithubWebhookController : AbpControllerBase, IGithubWebhookService
 {
     private IGithubWebhookService GithubWebhookService { get; }
 
@@ -20,10 +22,10 @@ public class GithubWebhookController : AbpControllerBase
     }
 
     /// <summary>
-    /// 处理消息
+    /// 处理webhook消息
     /// </summary>
     [HttpPost, Route("receive")]
-    public async Task ReceiveAsync([FromBody] GithubWebhookDto body)
+    public async Task HandleAsync(GithubWebhookDto body)
     {
         await this.GithubWebhookService.HandleAsync(body);
     }

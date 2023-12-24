@@ -2,6 +2,9 @@
 
 public static class GlobalConstants
 {
+    public const string ModelName = "berry_spider";
+    public const string RemoteServiceName = "BerrySpiderHttpApi";
+
     public static int ParallelMaxDegreeOfParallelism
     {
         get

@@ -4,5 +4,4 @@ namespace Berry.Spider.Sogou;
 
 public interface ISogouSpiderAppService : IApplicationService
 {
-
 }

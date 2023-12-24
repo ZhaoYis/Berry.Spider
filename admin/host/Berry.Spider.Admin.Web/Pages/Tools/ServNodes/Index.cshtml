@@ -1,0 +1,18 @@
+@page
+@inject IHtmlLocalizer<AdminResource> L
+@using Berry.Spider.Admin.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@model Berry.Spider.Admin.Pages.Tools.IndexModel
+
+@section styles {
+    <abp-style src="/Pages/Tools/ServNodes/Index.css"/>
+}
+
+@section scripts {
+    <abp-script src="/client-proxies/berry_spider-proxy.js"/>
+    <abp-script src="/Pages/Tools/ServNodes/Index.js"/>
+}
+
+<abp-card-body>
+    <abp-table striped-rows="true" id="ServNodesTable"></abp-table>
+</abp-card-body>

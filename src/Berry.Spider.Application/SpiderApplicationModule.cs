@@ -9,7 +9,7 @@ namespace Berry.Spider.Application;
 [DependsOn(
     typeof(SpiderDomainModule),
     typeof(AbpDddApplicationModule),
-    typeof(SpiderContractsModule),
+    typeof(SpiderApplicationContractsModule),
     typeof(AbpAutoMapperModule))]
 public class SpiderApplicationModule : AbpModule
 {

@@ -1,0 +1,950 @@
+{
+  "modules": {
+    "berry_spider": {
+      "rootPath": "berry_spider",
+      "remoteServiceName": "BerrySpiderHttpApi",
+      "controllers": {
+        "Berry.Spider.BaiduSpiderController": {
+          "controllerName": "BaiduSpider",
+          "controllerGroupName": "BaiduSpider",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "Berry.Spider.BaiduSpiderController",
+          "interfaces": [
+            {
+              "type": "Berry.Spider.Baidu.IBaiduSpiderAppService",
+              "name": "IBaiduSpiderAppService",
+              "methods": []
+            }
+          ],
+          "actions": {
+            "PushAsyncByPush": {
+              "uniqueName": "PushAsyncByPush",
+              "name": "PushAsync",
+              "httpMethod": "POST",
+              "url": "api/services/spider/baidu/push-from-file",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "push",
+                  "typeAsString": "Berry.Spider.PushFromFileBasicDto, Berry.Spider.Contracts",
+                  "type": "Berry.Spider.PushFromFileBasicDto",
+                  "typeSimple": "Berry.Spider.PushFromFileBasicDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "push",
+                  "name": "push",
+                  "jsonName": null,
+                  "type": "Berry.Spider.PushFromFileBasicDto",
+                  "typeSimple": "Berry.Spider.PushFromFileBasicDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.BaiduSpiderController"
+            }
+          }
+        },
+        "Berry.Spider.CommonController": {
+          "controllerName": "Common",
+          "controllerGroupName": "Common",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "Berry.Spider.CommonController",
+          "interfaces": [],
+          "actions": {
+            "TxtDeDuplicationAsyncByPush": {
+              "uniqueName": "TxtDeDuplicationAsyncByPush",
+              "name": "TxtDeDuplicationAsync",
+              "httpMethod": "POST",
+              "url": "api/services/common/de-duplication",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "push",
+                  "typeAsString": "Berry.Spider.Common.DeDuplicationTxtFile, Berry.Spider.Contracts",
+                  "type": "Berry.Spider.Common.DeDuplicationTxtFile",
+                  "typeSimple": "Berry.Spider.Common.DeDuplicationTxtFile",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "push",
+                  "name": "push",
+                  "jsonName": null,
+                  "type": "Berry.Spider.Common.DeDuplicationTxtFile",
+                  "typeSimple": "Berry.Spider.Common.DeDuplicationTxtFile",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Microsoft.AspNetCore.Mvc.FileContentResult",
+                "typeSimple": "Microsoft.AspNetCore.Mvc.FileContentResult"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.CommonController"
+            }
+          }
+        },
+        "Berry.Spider.SogouSpiderController": {
+          "controllerName": "SogouSpider",
+          "controllerGroupName": "SogouSpider",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "Berry.Spider.SogouSpiderController",
+          "interfaces": [
+            {
+              "type": "Berry.Spider.Sogou.ISogouSpiderAppService",
+              "name": "ISogouSpiderAppService",
+              "methods": []
+            }
+          ],
+          "actions": {
+            "PushAsyncByPush": {
+              "uniqueName": "PushAsyncByPush",
+              "name": "PushAsync",
+              "httpMethod": "POST",
+              "url": "api/services/spider/sogou/push-from-file",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "push",
+                  "typeAsString": "Berry.Spider.PushFromFileBasicDto, Berry.Spider.Contracts",
+                  "type": "Berry.Spider.PushFromFileBasicDto",
+                  "typeSimple": "Berry.Spider.PushFromFileBasicDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "push",
+                  "name": "push",
+                  "jsonName": null,
+                  "type": "Berry.Spider.PushFromFileBasicDto",
+                  "typeSimple": "Berry.Spider.PushFromFileBasicDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.SogouSpiderController"
+            }
+          }
+        },
+        "Berry.Spider.SpiderLifetimeController": {
+          "controllerName": "SpiderLifetime",
+          "controllerGroupName": "SpiderLifetime",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "Berry.Spider.SpiderLifetimeController",
+          "interfaces": [
+            {
+              "type": "Berry.Spider.ISpiderLifetimeAppService",
+              "name": "ISpiderLifetimeAppService",
+              "methods": [
+                {
+                  "name": "GetSpiderStatusAsync",
+                  "parametersOnMethod": [],
+                  "returnValue": {
+                    "type": "System.Collections.Generic.List<Berry.Spider.ApplicationLifetimeDto>",
+                    "typeSimple": "[Berry.Spider.ApplicationLifetimeDto]"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "GetSpiderStatusAsync": {
+              "uniqueName": "GetSpiderStatusAsync",
+              "name": "GetSpiderStatusAsync",
+              "httpMethod": "GET",
+              "url": "api/services/spider-lifetime/get-status",
+              "supportedVersions": [],
+              "parametersOnMethod": [],
+              "parameters": [],
+              "returnValue": {
+                "type": "System.Collections.Generic.List<Berry.Spider.ApplicationLifetimeDto>",
+                "typeSimple": "[Berry.Spider.ApplicationLifetimeDto]"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.ISpiderLifetimeAppService"
+            }
+          }
+        },
+        "Berry.Spider.SpiderPubAndRecController": {
+          "controllerName": "SpiderPubAndRec",
+          "controllerGroupName": "SpiderPubAndRec",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "Berry.Spider.SpiderPubAndRecController",
+          "interfaces": [
+            {
+              "type": "Berry.Spider.ISpiderPubAndRecAppService",
+              "name": "ISpiderPubAndRecAppService",
+              "methods": [
+                {
+                  "name": "ClearTodoTaskAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "from",
+                      "typeAsString": "Berry.Spider.Core.SpiderSourceFrom, Berry.Spider.Core",
+                      "type": "Berry.Spider.Core.SpiderSourceFrom",
+                      "typeSimple": "Berry.Spider.Core.SpiderSourceFrom",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "ClearTodoTaskAsyncByFrom": {
+              "uniqueName": "ClearTodoTaskAsyncByFrom",
+              "name": "ClearTodoTaskAsync",
+              "httpMethod": "POST",
+              "url": "api/services/spiderPubAndRec/clearTodoTask",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "from",
+                  "typeAsString": "Berry.Spider.Core.SpiderSourceFrom, Berry.Spider.Core",
+                  "type": "Berry.Spider.Core.SpiderSourceFrom",
+                  "typeSimple": "Berry.Spider.Core.SpiderSourceFrom",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "from",
+                  "name": "from",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.ISpiderPubAndRecAppService"
+            }
+          }
+        },
+        "Berry.Spider.TouTiaoSpiderController": {
+          "controllerName": "TouTiaoSpider",
+          "controllerGroupName": "TouTiaoSpider",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "Berry.Spider.TouTiaoSpiderController",
+          "interfaces": [
+            {
+              "type": "Berry.Spider.TouTiao.ITouTiaoSpiderAppService",
+              "name": "ITouTiaoSpiderAppService",
+              "methods": []
+            }
+          ],
+          "actions": {
+            "PushAsyncByPush": {
+              "uniqueName": "PushAsyncByPush",
+              "name": "PushAsync",
+              "httpMethod": "POST",
+              "url": "api/services/spider/toutiao/push-from-file",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "push",
+                  "typeAsString": "Berry.Spider.PushFromFileBasicDto, Berry.Spider.Contracts",
+                  "type": "Berry.Spider.PushFromFileBasicDto",
+                  "typeSimple": "Berry.Spider.PushFromFileBasicDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "push",
+                  "name": "push",
+                  "jsonName": null,
+                  "type": "Berry.Spider.PushFromFileBasicDto",
+                  "typeSimple": "Berry.Spider.PushFromFileBasicDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.TouTiaoSpiderController"
+            }
+          }
+        },
+        "Berry.Spider.OpenAI.SpiderOpenAIController": {
+          "controllerName": "SpiderOpenAI",
+          "controllerGroupName": "SpiderOpenAI",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "Berry.Spider.OpenAI.SpiderOpenAIController",
+          "interfaces": [
+            {
+              "type": "Berry.Spider.OpenAI.Contracts.ISpiderOpenAIAppService",
+              "name": "ISpiderOpenAIAppService",
+              "methods": [
+                {
+                  "name": "TextGenerationAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "input",
+                      "typeAsString": "Berry.Spider.OpenAI.Contracts.TextGenerationInput, Berry.Spider.OpenAI.Contracts",
+                      "type": "Berry.Spider.OpenAI.Contracts.TextGenerationInput",
+                      "typeSimple": "Berry.Spider.OpenAI.Contracts.TextGenerationInput",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Berry.Spider.OpenAI.Contracts.TextGenerationDto",
+                    "typeSimple": "Berry.Spider.OpenAI.Contracts.TextGenerationDto"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "TextGenerationAsyncByInput": {
+              "uniqueName": "TextGenerationAsyncByInput",
+              "name": "TextGenerationAsync",
+              "httpMethod": "POST",
+              "url": "api/services/spider/openai/text-generation",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Berry.Spider.OpenAI.Contracts.TextGenerationInput, Berry.Spider.OpenAI.Contracts",
+                  "type": "Berry.Spider.OpenAI.Contracts.TextGenerationInput",
+                  "typeSimple": "Berry.Spider.OpenAI.Contracts.TextGenerationInput",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "Berry.Spider.OpenAI.Contracts.TextGenerationInput",
+                  "typeSimple": "Berry.Spider.OpenAI.Contracts.TextGenerationInput",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Berry.Spider.OpenAI.Contracts.TextGenerationDto",
+                "typeSimple": "Berry.Spider.OpenAI.Contracts.TextGenerationDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.OpenAI.Contracts.ISpiderOpenAIAppService"
+            }
+          }
+        },
+        "Berry.Spider.Biz.ServMachineController": {
+          "controllerName": "ServMachine",
+          "controllerGroupName": "ServMachine",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "Berry.Spider.Biz.ServMachineController",
+          "interfaces": [
+            {
+              "type": "Berry.Spider.Biz.IServMachineAppService",
+              "name": "IServMachineAppService",
+              "methods": [
+                {
+                  "name": "GetByMachineNameAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "machineName",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Berry.Spider.Biz.ServMachineDto",
+                    "typeSimple": "Berry.Spider.Biz.ServMachineDto"
+                  }
+                },
+                {
+                  "name": "GetByConnectionIdAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "connectionId",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Berry.Spider.Biz.ServMachineDto",
+                    "typeSimple": "Berry.Spider.Biz.ServMachineDto"
+                  }
+                },
+                {
+                  "name": "OnlineAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "online",
+                      "typeAsString": "Berry.Spider.Biz.ServMachineOnlineDto, Berry.Spider.Contracts",
+                      "type": "Berry.Spider.Biz.ServMachineOnlineDto",
+                      "typeSimple": "Berry.Spider.Biz.ServMachineOnlineDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Boolean",
+                    "typeSimple": "boolean"
+                  }
+                },
+                {
+                  "name": "OfflineAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "offline",
+                      "typeAsString": "Berry.Spider.Biz.ServMachineOfflineDto, Berry.Spider.Contracts",
+                      "type": "Berry.Spider.Biz.ServMachineOfflineDto",
+                      "typeSimple": "Berry.Spider.Biz.ServMachineOfflineDto",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Boolean",
+                    "typeSimple": "boolean"
+                  }
+                },
+                {
+                  "name": "GetAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "System.Int32, System.Private.CoreLib",
+                      "type": "System.Int32",
+                      "typeSimple": "number",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Berry.Spider.Biz.ServMachineDto",
+                    "typeSimple": "Berry.Spider.Biz.ServMachineDto"
+                  }
+                },
+                {
+                  "name": "GetListAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "input",
+                      "typeAsString": "Berry.Spider.GetListInput, Berry.Spider.Contracts",
+                      "type": "Berry.Spider.GetListInput",
+                      "typeSimple": "Berry.Spider.GetListInput",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Volo.Abp.Application.Dtos.PagedResultDto<Berry.Spider.Biz.ServMachineDto>",
+                    "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Berry.Spider.Biz.ServMachineDto>"
+                  }
+                },
+                {
+                  "name": "CreateAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "input",
+                      "typeAsString": "Berry.Spider.Biz.ServMachineCreateInput, Berry.Spider.Contracts",
+                      "type": "Berry.Spider.Biz.ServMachineCreateInput",
+                      "typeSimple": "Berry.Spider.Biz.ServMachineCreateInput",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Berry.Spider.Biz.ServMachineDto",
+                    "typeSimple": "Berry.Spider.Biz.ServMachineDto"
+                  }
+                },
+                {
+                  "name": "UpdateAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "System.Int32, System.Private.CoreLib",
+                      "type": "System.Int32",
+                      "typeSimple": "number",
+                      "isOptional": false,
+                      "defaultValue": null
+                    },
+                    {
+                      "name": "input",
+                      "typeAsString": "Berry.Spider.Biz.ServMachineUpdateInput, Berry.Spider.Contracts",
+                      "type": "Berry.Spider.Biz.ServMachineUpdateInput",
+                      "typeSimple": "Berry.Spider.Biz.ServMachineUpdateInput",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Berry.Spider.Biz.ServMachineDto",
+                    "typeSimple": "Berry.Spider.Biz.ServMachineDto"
+                  }
+                },
+                {
+                  "name": "DeleteAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "id",
+                      "typeAsString": "System.Int32, System.Private.CoreLib",
+                      "type": "System.Int32",
+                      "typeSimple": "number",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Void",
+                    "typeSimple": "System.Void"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "GetByMachineNameAsyncByMachineName": {
+              "uniqueName": "GetByMachineNameAsyncByMachineName",
+              "name": "GetByMachineNameAsync",
+              "httpMethod": "GET",
+              "url": "api/services/serv-machine/getByMachineName",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "machineName",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "machineName",
+                  "name": "machineName",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Berry.Spider.Biz.ServMachineDto",
+                "typeSimple": "Berry.Spider.Biz.ServMachineDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.Biz.IServMachineAppService"
+            },
+            "GetByConnectionIdAsyncByConnectionId": {
+              "uniqueName": "GetByConnectionIdAsyncByConnectionId",
+              "name": "GetByConnectionIdAsync",
+              "httpMethod": "GET",
+              "url": "api/services/serv-machine/getByConnectionId",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "connectionId",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "connectionId",
+                  "name": "connectionId",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Berry.Spider.Biz.ServMachineDto",
+                "typeSimple": "Berry.Spider.Biz.ServMachineDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.Biz.IServMachineAppService"
+            },
+            "OnlineAsyncByOnline": {
+              "uniqueName": "OnlineAsyncByOnline",
+              "name": "OnlineAsync",
+              "httpMethod": "POST",
+              "url": "api/services/serv-machine/online",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "online",
+                  "typeAsString": "Berry.Spider.Biz.ServMachineOnlineDto, Berry.Spider.Contracts",
+                  "type": "Berry.Spider.Biz.ServMachineOnlineDto",
+                  "typeSimple": "Berry.Spider.Biz.ServMachineOnlineDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "online",
+                  "name": "online",
+                  "jsonName": null,
+                  "type": "Berry.Spider.Biz.ServMachineOnlineDto",
+                  "typeSimple": "Berry.Spider.Biz.ServMachineOnlineDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Boolean",
+                "typeSimple": "boolean"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.Biz.IServMachineAppService"
+            },
+            "OfflineAsyncByOffline": {
+              "uniqueName": "OfflineAsyncByOffline",
+              "name": "OfflineAsync",
+              "httpMethod": "POST",
+              "url": "api/services/serv-machine/offline",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "offline",
+                  "typeAsString": "Berry.Spider.Biz.ServMachineOfflineDto, Berry.Spider.Contracts",
+                  "type": "Berry.Spider.Biz.ServMachineOfflineDto",
+                  "typeSimple": "Berry.Spider.Biz.ServMachineOfflineDto",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "offline",
+                  "name": "offline",
+                  "jsonName": null,
+                  "type": "Berry.Spider.Biz.ServMachineOfflineDto",
+                  "typeSimple": "Berry.Spider.Biz.ServMachineOfflineDto",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Boolean",
+                "typeSimple": "boolean"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.Biz.IServMachineAppService"
+            },
+            "GetAsyncById": {
+              "uniqueName": "GetAsyncById",
+              "name": "GetAsync",
+              "httpMethod": "GET",
+              "url": "api/services/serv-machine/get",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Berry.Spider.Biz.ServMachineDto",
+                "typeSimple": "Berry.Spider.Biz.ServMachineDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<Berry.Spider.Biz.ServMachineDto,Berry.Spider.Biz.ServMachineDto,System.Int32,Berry.Spider.GetListInput>"
+            },
+            "GetListAsyncByInput": {
+              "uniqueName": "GetListAsyncByInput",
+              "name": "GetListAsync",
+              "httpMethod": "GET",
+              "url": "api/services/serv-machine/getList",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Berry.Spider.GetListInput, Berry.Spider.Contracts",
+                  "type": "Berry.Spider.GetListInput",
+                  "typeSimple": "Berry.Spider.GetListInput",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "SkipCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "MaxResultCount",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": "input"
+                }
+              ],
+              "returnValue": {
+                "type": "Volo.Abp.Application.Dtos.PagedResultDto<Berry.Spider.Biz.ServMachineDto>",
+                "typeSimple": "Volo.Abp.Application.Dtos.PagedResultDto<Berry.Spider.Biz.ServMachineDto>"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IReadOnlyAppService<Berry.Spider.Biz.ServMachineDto,Berry.Spider.Biz.ServMachineDto,System.Int32,Berry.Spider.GetListInput>"
+            },
+            "CreateAsyncByInput": {
+              "uniqueName": "CreateAsyncByInput",
+              "name": "CreateAsync",
+              "httpMethod": "POST",
+              "url": "api/services/serv-machine/create",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "input",
+                  "typeAsString": "Berry.Spider.Biz.ServMachineCreateInput, Berry.Spider.Contracts",
+                  "type": "Berry.Spider.Biz.ServMachineCreateInput",
+                  "typeSimple": "Berry.Spider.Biz.ServMachineCreateInput",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "Berry.Spider.Biz.ServMachineCreateInput",
+                  "typeSimple": "Berry.Spider.Biz.ServMachineCreateInput",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Berry.Spider.Biz.ServMachineDto",
+                "typeSimple": "Berry.Spider.Biz.ServMachineDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.ICreateAppService<Berry.Spider.Biz.ServMachineDto,Berry.Spider.Biz.ServMachineCreateInput>"
+            },
+            "UpdateAsyncByIdAndInput": {
+              "uniqueName": "UpdateAsyncByIdAndInput",
+              "name": "UpdateAsync",
+              "httpMethod": "PUT",
+              "url": "api/services/serv-machine/update",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                },
+                {
+                  "name": "input",
+                  "typeAsString": "Berry.Spider.Biz.ServMachineUpdateInput, Berry.Spider.Contracts",
+                  "type": "Berry.Spider.Biz.ServMachineUpdateInput",
+                  "typeSimple": "Berry.Spider.Biz.ServMachineUpdateInput",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                },
+                {
+                  "nameOnMethod": "input",
+                  "name": "input",
+                  "jsonName": null,
+                  "type": "Berry.Spider.Biz.ServMachineUpdateInput",
+                  "typeSimple": "Berry.Spider.Biz.ServMachineUpdateInput",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Body",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Berry.Spider.Biz.ServMachineDto",
+                "typeSimple": "Berry.Spider.Biz.ServMachineDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IUpdateAppService<Berry.Spider.Biz.ServMachineDto,System.Int32,Berry.Spider.Biz.ServMachineUpdateInput>"
+            },
+            "DeleteAsyncById": {
+              "uniqueName": "DeleteAsyncById",
+              "name": "DeleteAsync",
+              "httpMethod": "DELETE",
+              "url": "api/services/serv-machine/delete",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "id",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "id",
+                  "name": "id",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Void",
+                "typeSimple": "System.Void"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Volo.Abp.Application.Services.IDeleteAppService<System.Int32>"
+            }
+          }
+        }
+      }
+    }
+  },
+  "types": {}
+}

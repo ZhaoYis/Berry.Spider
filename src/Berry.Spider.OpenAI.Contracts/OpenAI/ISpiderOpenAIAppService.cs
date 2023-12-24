@@ -1,9 +1,8 @@
 using Volo.Abp.Application.Services;
-using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.OpenAI.Contracts;
 
-public interface ISpiderOpenAIAppService : IApplicationService, ITransientDependency
+public interface ISpiderOpenAIAppService : IApplicationService
 {
     /// <summary>
     /// 文档生成

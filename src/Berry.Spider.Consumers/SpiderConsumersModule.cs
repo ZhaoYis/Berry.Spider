@@ -29,11 +29,11 @@ namespace Berry.Spider.Consumers;
     //FreeRedis
     typeof(SpiderFreeRedisModule),
     //今日头条模块
-    typeof(TouTiaoSpiderModule),
+    typeof(TouTiaoSpiderApplicationModule),
     //搜狗模块
-    typeof(SogouSpiderModule),
+    typeof(SogouSpiderApplicationModule),
     //百度模块
-    typeof(BaiduSpiderModule)
+    typeof(BaiduSpiderApplicationModule)
 )]
 public class SpiderConsumersModule : AbpModule
 {

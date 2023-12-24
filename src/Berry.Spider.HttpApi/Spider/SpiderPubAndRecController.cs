@@ -1,10 +1,13 @@
 using Berry.Spider.Core;
 using Microsoft.AspNetCore.Mvc;
+using Volo.Abp;
 
 namespace Berry.Spider;
 
+[Area(GlobalConstants.ModelName)]
 [Route("api/services/spiderPubAndRec")]
-public class SpiderPubAndRecController : SpiderControllerBase
+[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+public class SpiderPubAndRecController : SpiderControllerBase, ISpiderPubAndRecAppService
 {
     private readonly ISpiderPubAndRecAppService _spiderPubAndRecAppService;
 

@@ -1,14 +1,18 @@
 ﻿using Berry.Spider.Abstractions;
 using Berry.Spider.Core;
+using Berry.Spider.Sogou;
 using Microsoft.AspNetCore.Mvc;
+using Volo.Abp;
 
 namespace Berry.Spider;
 
 /// <summary>
 /// 搜狗爬虫服务
 /// </summary>
+[Area(GlobalConstants.ModelName)]
 [Route("api/services/spider/sogou")]
-public class SogouSpiderController : SpiderControllerBase
+[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+public class SogouSpiderController : SpiderControllerBase, ISogouSpiderAppService
 {
     private IServiceProvider Provider { get; }
 
