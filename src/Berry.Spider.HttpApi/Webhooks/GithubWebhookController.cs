@@ -11,7 +11,7 @@ namespace Berry.Spider.Webhooks;
 /// </summary>
 [DisableDataWrapper]
 [Route("api/services/github/webhooks")]
-[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+[RemoteService(Name = AppGlobalConstants.RemoteServiceName)]
 public class GithubWebhookController : AbpControllerBase, IGithubWebhookService
 {
     private IGithubWebhookService GithubWebhookService { get; }

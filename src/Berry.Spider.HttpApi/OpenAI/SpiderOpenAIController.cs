@@ -7,9 +7,9 @@ namespace Berry.Spider.OpenAI;
 /// <summary>
 /// OpenAI爬虫服务
 /// </summary>
-[Area(GlobalConstants.ModelName)]
+[Area(AppGlobalConstants.ModelName)]
 [Route("api/services/spider/openai")]
-[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+[RemoteService(Name = AppGlobalConstants.RemoteServiceName)]
 public class SpiderOpenAIController : SpiderControllerBase, ISpiderOpenAIAppService
 {
     private readonly ISpiderOpenAIAppService _spiderOpenAiAppService;

@@ -9,9 +9,9 @@ namespace Berry.Spider;
 /// <summary>
 /// 百度爬虫服务
 /// </summary>
-[Area(GlobalConstants.ModelName)]
+[Area(AppGlobalConstants.ModelName)]
 [Route("api/services/spider/baidu")]
-[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+[RemoteService(Name = AppGlobalConstants.RemoteServiceName)]
 public class BaiduSpiderController : SpiderControllerBase, IBaiduSpiderAppService
 {
     private IServiceProvider Provider { get; }

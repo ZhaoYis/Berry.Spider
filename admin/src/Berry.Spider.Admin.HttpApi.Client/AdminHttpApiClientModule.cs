@@ -26,17 +26,17 @@ public class AdminHttpApiClientModule : AbpModule
     {
         //Dynamic C# API Client Proxies.
         // context.Services.AddHttpClientProxies(typeof(AdminApplicationContractsModule).Assembly,
-        //     GlobalConstants.RemoteServiceName
+        //     AdminGlobalConstants.RemoteServiceName
         // );
 
         //Static C# API Client Proxies.
         //abp generate-proxy -t csharp -u http://localhost:44346 --without-contracts -m berry_admin
         //web host：abp generate-proxy -t js -u http://localhost:44346 -m berry_admin
         context.Services.AddStaticHttpClientProxies(typeof(AdminApplicationContractsModule).Assembly,
-            GlobalConstants.RemoteServiceName
+            AdminGlobalConstants.RemoteServiceName
         );
 
-        Configure<DynamicJavaScriptProxyOptions>(options => { options.DisableModule(GlobalConstants.ModelName); });
+        Configure<DynamicJavaScriptProxyOptions>(options => { options.DisableModule(AdminGlobalConstants.ModelName); });
         //xxx-generate-proxy.json --> Build Action --> EmbeddedResource
         Configure<AbpVirtualFileSystemOptions>(options => { options.FileSets.AddEmbedded<AdminHttpApiClientModule>(); });
     }

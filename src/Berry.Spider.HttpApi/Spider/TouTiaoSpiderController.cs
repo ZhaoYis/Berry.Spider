@@ -9,9 +9,9 @@ namespace Berry.Spider;
 /// <summary>
 /// 今日头条爬虫服务
 /// </summary>
-[Area(GlobalConstants.ModelName)]
+[Area(AppGlobalConstants.ModelName)]
 [Route("api/services/spider/toutiao")]
-[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+[RemoteService(Name = AppGlobalConstants.RemoteServiceName)]
 public class TouTiaoSpiderController : SpiderControllerBase, ITouTiaoSpiderAppService
 {
     private IServiceProvider Provider { get; }

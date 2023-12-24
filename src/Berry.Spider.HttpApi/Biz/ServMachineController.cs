@@ -5,9 +5,9 @@ using Volo.Abp.Application.Dtos;
 
 namespace Berry.Spider.Biz;
 
-[Area(GlobalConstants.ModelName)]
+[Area(AppGlobalConstants.ModelName)]
 [Route("api/services/serv-machine")]
-[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+[RemoteService(Name = AppGlobalConstants.RemoteServiceName)]
 public class ServMachineController : SpiderControllerBase, IServMachineAppService
 {
     private IServMachineAppService ServMachineAppService { get; }

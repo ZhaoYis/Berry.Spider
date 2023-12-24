@@ -22,7 +22,7 @@ public class SpiderLifetimeAppService : ISpiderLifetimeAppService
     /// <returns></returns>
     public async Task<List<ApplicationLifetimeDto>> GetSpiderStatusAsync()
     {
-        var lifetimeDict = await _redisService.HGetAllAsync<string>(GlobalConstants.SPIDER_APPLICATION_LIFETIME_KEY);
+        var lifetimeDict = await _redisService.HGetAllAsync<string>(AppGlobalConstants.SPIDER_APPLICATION_LIFETIME_KEY);
         if (lifetimeDict is { Count: > 0 })
         {
             List<ApplicationLifetimeDto> applicationLifetimeList = new();

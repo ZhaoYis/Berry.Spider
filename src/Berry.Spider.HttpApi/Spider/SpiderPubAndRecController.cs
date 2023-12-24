@@ -4,9 +4,9 @@ using Volo.Abp;
 
 namespace Berry.Spider;
 
-[Area(GlobalConstants.ModelName)]
+[Area(AppGlobalConstants.ModelName)]
 [Route("api/services/spiderPubAndRec")]
-[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+[RemoteService(Name = AppGlobalConstants.RemoteServiceName)]
 public class SpiderPubAndRecController : SpiderControllerBase, ISpiderPubAndRecAppService
 {
     private readonly ISpiderPubAndRecAppService _spiderPubAndRecAppService;

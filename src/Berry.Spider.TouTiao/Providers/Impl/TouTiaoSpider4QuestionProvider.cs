@@ -75,7 +75,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
     /// <returns></returns>
     protected override async Task<bool> DuplicateCheckAsync(string keyword, SpiderSourceFrom from)
     {
-        string key = GlobalConstants.SPIDER_KEYWORDS_KEY;
+        string key = AppGlobalConstants.SPIDER_KEYWORDS_KEY;
         if (this.Options.KeywordCheckOptions.OnlyCurrentCategory)
         {
             key += $":{from.GetName()}";

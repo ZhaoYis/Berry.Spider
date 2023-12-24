@@ -9,9 +9,9 @@ namespace Berry.Spider;
 /// <summary>
 /// 公共服务
 /// </summary>
-[Area(GlobalConstants.ModelName)]
+[Area(AppGlobalConstants.ModelName)]
 [Route("api/services/common")]
-[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+[RemoteService(Name = AppGlobalConstants.RemoteServiceName)]
 public class CommonController : SpiderControllerBase
 {
     /// <summary>

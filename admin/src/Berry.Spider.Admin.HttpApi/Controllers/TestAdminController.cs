@@ -4,8 +4,8 @@ using Volo.Abp;
 
 namespace Berry.Spider.Admin;
 
-[Area(GlobalConstants.ModelName)]
-[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+[Area(AdminGlobalConstants.ModelName)]
+[RemoteService(Name = AdminGlobalConstants.RemoteServiceName)]
 public class TestAdminController : AdminController, ITestAppService
 {
     private ITestAppService _testAppService;

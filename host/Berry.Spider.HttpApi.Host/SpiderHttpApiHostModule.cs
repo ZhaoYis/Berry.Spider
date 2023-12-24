@@ -78,7 +78,7 @@ public class SpiderHttpApiHostModule : AbpModule
         // });
     }
 
-    public override Task OnApplicationInitializationAsync(ApplicationInitializationContext context)
+    public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
@@ -107,7 +107,5 @@ public class SpiderHttpApiHostModule : AbpModule
         });
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints();
-
-        return Task.CompletedTask;
     }
 }

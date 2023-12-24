@@ -3,7 +3,7 @@ using System.IO;
 using Berry.Spider.Admin.Localization;
 using Berry.Spider.Admin.MultiTenancy;
 using Berry.Spider.Admin.Web.Menus;
-using Berry.Spider.HttpApi;
+using Berry.Spider.HttpApi.Client;
 using Berry.Spider.RealTime;
 using Medallion.Threading;
 using Medallion.Threading.Redis;
@@ -66,6 +66,7 @@ namespace Berry.Spider.Admin.Web;
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule),
     typeof(AbpAspNetCoreSignalRModule),
+    
     typeof(SpiderHttpApiClientModule),
     typeof(SpiderHttpApiModule),
     typeof(SpiderRealTimeModule)

@@ -9,9 +9,9 @@ namespace Berry.Spider;
 /// <summary>
 /// 搜狗爬虫服务
 /// </summary>
-[Area(GlobalConstants.ModelName)]
+[Area(AppGlobalConstants.ModelName)]
 [Route("api/services/spider/sogou")]
-[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+[RemoteService(Name = AppGlobalConstants.RemoteServiceName)]
 public class SogouSpiderController : SpiderControllerBase, ISogouSpiderAppService
 {
     private IServiceProvider Provider { get; }

@@ -30,7 +30,7 @@ public class SyncToRedisAppService : ISyncToRedisAppService
         IEnumerable<SpiderContent> contents = await this.SpiderContentDapperRepository.GetAllAsync();
         foreach (SpiderContent content in contents)
         {
-            await this.RedisService.SetAsync(GlobalConstants.SPIDER_KEYWORDS_KEY, content.Title);
+            await this.RedisService.SetAsync(AppGlobalConstants.SPIDER_KEYWORDS_KEY, content.Title);
         }
     }
 }

@@ -45,6 +45,7 @@
         <PackageReference Include="Volo.Abp.TenantManagement.Web" Version="8.0.0"/>
         <PackageReference Include="Volo.Abp.SettingManagement.Web" Version="8.0.0"/>
         <ProjectReference Include="..\..\..\host\Berry.Spider.HttpApi.Client\Berry.Spider.HttpApi.Client.csproj" />
+        <ProjectReference Include="..\..\..\src\Berry.Spider.HttpApi.Client\Berry.Spider.HttpApi.Client.csproj" />
         <ProjectReference Include="..\..\..\src\Berry.Spider.HttpApi\Berry.Spider.HttpApi.csproj" />
         <ProjectReference Include="..\..\..\src\Berry.Spider.RealTime\Berry.Spider.RealTime.csproj" />
         <ProjectReference Include="..\..\src\Berry.Spider.Admin.Application.Contracts\Berry.Spider.Admin.Application.Contracts.csproj"/>

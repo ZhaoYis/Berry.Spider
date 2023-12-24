@@ -6,9 +6,9 @@ namespace Berry.Spider;
 /// <summary>
 /// 爬虫状态服务
 /// </summary>
-[Area(GlobalConstants.ModelName)]
+[Area(AppGlobalConstants.ModelName)]
 [Route("api/services/spider-lifetime")]
-[RemoteService(Name = GlobalConstants.RemoteServiceName)]
+[RemoteService(Name = AppGlobalConstants.RemoteServiceName)]
 public class SpiderLifetimeController : SpiderControllerBase, ISpiderLifetimeAppService
 {
     private readonly ISpiderLifetimeAppService _spiderLifetimeAppService;

@@ -10,7 +10,7 @@
 
 4、从以下位置下载最新程序包，并将程序包放在任意位置（不过建议还是放在D盘下，建议位置：D:/BerrySpider_Full文件夹下）
 
-链接: https://pan.baidu.com/s/1nohlmHxaY0FU8S3FrgJzQA 
+链接: https://pan.baidu.com/s/1nohlmHxaY0FU8S3FrgJzQA
 
 提取码: afjm
 
@@ -20,11 +20,11 @@
 
 6、配置系统（建议不要直接修改，有不清楚的可以先问下我）
 
-​	地址：http://124.223.62.114:15000/ui#/user/login
+​ 地址：http://124.223.62.114:15000/ui#/user/login
 
-​	账号：admin
+​ 账号：admin
 
-​	密码：1qaz2wsx.com
+​ 密码：1qaz2wsx.com
 
 ![Xnip2022-07-05_09-48-41.jpg](https://s2.loli.net/2022/07/05/1t2JaqlX7uMT6bg.jpg)
 
@@ -44,8 +44,8 @@
 
 7、消息队列管理面板
 
-​	地址：http://47.114.177.24:15672/#/queues
+​ 地址：http://47.114.177.24:15672/#/queues
 
-​	账号：spider
+​ 账号：spider
 
-​	密码：1q2w3E*.com
+​ 密码：1q2w3E*.com

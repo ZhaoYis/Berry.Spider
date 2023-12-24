@@ -1,12 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 
-namespace Berry.Spider.Admin;
+namespace Berry.Spider.ServDetector;
 
 public class Program
 {
@@ -19,7 +16,6 @@ public class Program
             .MinimumLevel.Information()
 #endif
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
             .Enrich.FromLogContext()
             .WriteTo.Async(c => c.File("Logs/logs-.txt", rollingInterval: RollingInterval.Hour))
 #if DEBUG
@@ -29,27 +25,24 @@ public class Program
 
         try
         {
-            Log.Information("Starting Berry.Spider.Admin.AuthServer.");
-            var builder = WebApplication.CreateBuilder(args);
-            builder.Host.AddAppSettingsSecretsJson()
-                .UseAutofac()
+            Log.Information("Starting console host.");
+
+            await Host.CreateDefaultBuilder(args)
+                .ConfigureServices(services =>
+                {
+                    services.AddHostedService<ServDetectorHostedService>();
+                    services.AddHostedService<ServAgentHostedService>();
+                })
                 //集成AgileConfig
                 .UseAgileConfig()
-                .UseSerilog();
-            await builder.AddApplicationAsync<AdminAuthServerModule>();
-            var app = builder.Build();
-            await app.InitializeApplicationAsync();
-            await app.RunAsync();
+                .UseSerilog()
+                .RunConsoleAsync();
+
             return 0;
         }
         catch (Exception ex)
         {
-            if (ex is HostAbortedException)
-            {
-                throw;
-            }
-
-            Log.Fatal(ex, "Berry.Spider.Admin.AuthServer terminated unexpectedly!");
+            Log.Fatal(ex, "Host terminated unexpectedly!");
             return 1;
         }
         finally
