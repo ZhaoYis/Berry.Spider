@@ -11,7 +11,10 @@ namespace Berry.Spider.HttpApi.Client;
 
 [DependsOn(
     typeof(AbpHttpClientModule),
-    typeof(SpiderApplicationContractsModule)
+    typeof(SpiderApplicationContractsModule),
+    typeof(TouTiaoSpiderApplicationContractsModule),
+    typeof(BaiduSpiderApplicationContractsModule),
+    typeof(SogouSpiderApplicationContractsModule)
 )]
 public class SpiderHttpApiClientModule : AbpModule
 {
