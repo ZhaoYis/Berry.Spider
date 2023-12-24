@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Berry.Spider.Admin.Localization;
 using Berry.Spider.Admin.MultiTenancy;
+using Berry.Spider.Admin.Permissions;
 using Microsoft.Extensions.Configuration;
 using Volo.Abp.Account.Localization;
 using Volo.Abp.Authorization.Permissions;
@@ -60,7 +61,7 @@ public class AdminMenuContributor : IMenuContributor
                     l["Menu:Tools:Sub:ServNodes"],
                     "/Tools/ServNodes"
                 )
-            )
+            ).RequirePermissions(AdminGlobalPermissions.Tools.ServNodes.Root) 
         );
 
         if (MultiTenancyConsts.IsEnabled)

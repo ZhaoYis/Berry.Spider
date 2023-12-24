@@ -17,6 +17,7 @@ $(function () {
                         items: [
                             {
                                 text: l('SMI:DeployAppNode'),
+                                visible: abp.auth.isGranted('Admin.Tools.ServNodes.DeployAppNode'),
                                 iconClass: "fas fa-building",
                                 action: function (data) {
                                     ///...
@@ -24,6 +25,7 @@ $(function () {
                             },
                             {
                                 text: l('SMI:RestartAllAppNode'),
+                                visible: abp.auth.isGranted('Admin.Tools.ServNodes.RestartAllAppNode'),
                                 confirmMessage: function (data) {
                                     return "Are you sure to restart all node?" + data.record.machineCode;
                                 },

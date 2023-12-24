@@ -3,9 +3,9 @@
     <Import Project="..\..\common.props"/>
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;netstandard2.1;net8.0</TargetFrameworks>
         <Nullable>enable</Nullable>
         <RootNamespace>Berry.Spider.Admin</RootNamespace>
+        <TargetFramework>net8.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>

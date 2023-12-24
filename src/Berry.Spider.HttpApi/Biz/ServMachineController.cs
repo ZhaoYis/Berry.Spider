@@ -60,7 +60,7 @@ public class ServMachineController : SpiderControllerBase, IServMachineAppServic
     [HttpGet, Route("get")]
     public Task<ServMachineDto> GetAsync(int id)
     {
-        throw new NotImplementedException();
+        return this.ServMachineAppService.GetAsync(id);
     }
 
     /// <summary>
