@@ -32,6 +32,8 @@ internal class Program
     {
         return Host.CreateDefaultBuilder(args)
             .AddAppSettingsSecretsJson()
+            //集成AgileConfig
+            .UseAgileConfig()
             .ConfigureLogging((context, logging) => logging.ClearProviders())
             .ConfigureServices((hostContext, services) => { services.AddHostedService<DbMigratorHostedService>(); });
     }

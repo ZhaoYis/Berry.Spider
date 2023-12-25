@@ -1,19 +1,15 @@
 using Berry.Spider.Contracts;
 using Berry.Spider.FreeRedis;
 using Berry.Spider.Proxy;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.ObjectPool;
-using System.Reflection;
 using Volo.Abp.Caching;
-using Volo.Abp.Caching.StackExchangeRedis;
 using Volo.Abp.Modularity;
 using Volo.Abp.TextTemplating.Scriban;
 
 namespace Berry.Spider.Core;
 
 [DependsOn(typeof(AbpCachingModule),
-    typeof(AbpCachingStackExchangeRedisModule),
     typeof(AbpTextTemplatingScribanModule),
     //FreeRedis
     typeof(SpiderFreeRedisModule),
@@ -55,16 +51,6 @@ public class SpiderCoreModule : AbpModule
 
         //注册解析真实跳转的Url地址解析器
         context.Services.AddSingleton<NormalResolveJumpUrlProvider>();
-
-        //分布式缓存
-        Configure<AbpDistributedCacheOptions>(options =>
-        {
-            options.KeyPrefix = "Berry:Spider:";
-            options.GlobalCacheEntryOptions.SlidingExpiration = TimeSpan.FromMinutes(10);
-            options.GlobalCacheEntryOptions.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30);
-        });
-        //分布式缓存Redis
-        // Configure<RedisCacheOptions>(options => { options.InstanceName = Assembly.GetExecutingAssembly().FullName; });
 
         //对象池
         context.Services.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
