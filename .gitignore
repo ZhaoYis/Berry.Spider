@@ -251,6 +251,8 @@ paket-files/
 .idea/
 *.sln.iml
 
-# Consumers
-src/Berry.Spider.Consumers.ConsoleApp/Logs/logs.txt
+# Logs
 host/Berry.Spider.HttpApi.Host/Logs/
+admin/host/Berry.Spider.Admin.HttpApi.Host/Logs/
+admin/host/Berry.Spider.Admin.Web/Logs/
+admin/host/Berry.Spider.Admin.AuthServer/Logs/

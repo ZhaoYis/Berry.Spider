@@ -59,7 +59,7 @@ public class AdminAuthServerModule : AbpModule
         {
             builder.AddValidation(options =>
             {
-                options.AddAudiences("Admin");
+                options.AddAudiences(new[] { "Admin", "Spider" });
                 options.UseLocalServer();
                 options.UseAspNetCore();
             });
@@ -69,7 +69,14 @@ public class AdminAuthServerModule : AbpModule
         {
             PreConfigure<AbpOpenIddictAspNetCoreOptions>(options => { options.AddDevelopmentEncryptionAndSigningCertificate = false; });
 
-            PreConfigure<OpenIddictServerBuilder>(serverBuilder => { serverBuilder.AddProductionEncryptionAndSigningCertificate("openiddict.pfx", "5a34da3c-e935-40d0-a952-1b155cb235a1"); });
+            PreConfigure<OpenIddictServerBuilder>(serverBuilder =>
+            {
+                serverBuilder.SetAuthorizationCodeLifetime(TimeSpan.FromMinutes(30));
+                serverBuilder.SetAccessTokenLifetime(TimeSpan.FromMinutes(30));
+                serverBuilder.SetIdentityTokenLifetime(TimeSpan.FromMinutes(30));
+                serverBuilder.SetRefreshTokenLifetime(TimeSpan.FromDays(14));
+                serverBuilder.AddProductionEncryptionAndSigningCertificate("openiddict.pfx", "5a34da3c-e935-40d0-a952-1b155cb235a1");
+            });
         }
     }
 

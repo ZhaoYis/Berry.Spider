@@ -66,7 +66,6 @@ namespace Berry.Spider.Admin.Web;
     typeof(AbpAspNetCoreSerilogModule),
     typeof(AbpSwashbuckleModule),
     typeof(AbpAspNetCoreSignalRModule),
-    
     typeof(SpiderHttpApiClientModule),
     typeof(SpiderHttpApiModule),
     typeof(SpiderRealTimeModule)
@@ -159,6 +158,7 @@ public class AdminWebModule : AbpModule
                 options.Scope.Add("email");
                 options.Scope.Add("phone");
                 options.Scope.Add("Admin");
+                options.Scope.Add("Spider");
             });
         /*
          * This configuration is used when the AuthServer is running on the internal network such as docker or k8s.
@@ -239,7 +239,7 @@ public class AdminWebModule : AbpModule
         services.AddAbpSwaggerGen(
             options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo {Title = "Admin API", Version = "v1"});
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Admin API", Version = "v1" });
                 options.DocInclusionPredicate((docName, description) => true);
                 options.CustomSchemaIds(type => type.FullName);
             }

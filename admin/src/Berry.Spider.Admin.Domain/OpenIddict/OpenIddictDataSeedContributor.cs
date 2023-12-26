@@ -62,7 +62,15 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
         {
             await _scopeManager.CreateAsync(new OpenIddictScopeDescriptor
             {
-                Name = "Admin", DisplayName = "Admin API", Resources = {"Admin"}
+                Name = "Admin", DisplayName = "Admin API", Resources = { "Admin", "Spider" }
+            });
+        }
+
+        if (await _openIddictScopeRepository.FindByNameAsync("Spider") == null)
+        {
+            await _scopeManager.CreateAsync(new OpenIddictScopeDescriptor
+            {
+                Name = "Spider", DisplayName = "Spider API", Resources = { "Admin", "Spider" }
             });
         }
     }
@@ -76,7 +84,8 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
             OpenIddictConstants.Permissions.Scopes.Phone,
             OpenIddictConstants.Permissions.Scopes.Profile,
             OpenIddictConstants.Permissions.Scopes.Roles,
-            "Admin"
+            "Admin",
+            "Spider"
         };
 
         var configurationSection = _configuration.GetSection("OpenIddict:Applications");
@@ -93,7 +102,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                 webClientId!,
                 OpenIddictConstants.ClientTypes.Confidential,
                 OpenIddictConstants.ConsentTypes.Implicit,
-                "Web Application",
+                "Web Admin Application",
                 configurationSection["Admin_Web:ClientSecret"] ?? "1q2w3e*",
                 new List<string> //Hybrid flow
                 {
@@ -147,7 +156,7 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
         Check.NotNullOrEmpty(grantTypes, nameof(grantTypes));
         Check.NotNullOrEmpty(scopes, nameof(scopes));
 
-        if (new[] {OpenIddictConstants.GrantTypes.AuthorizationCode, OpenIddictConstants.GrantTypes.Implicit}.All(
+        if (new[] { OpenIddictConstants.GrantTypes.AuthorizationCode, OpenIddictConstants.GrantTypes.Implicit }.All(
                 grantTypes.Contains))
         {
             application.Permissions.Add(OpenIddictConstants.Permissions.ResponseTypes.CodeIdToken);
