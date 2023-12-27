@@ -1,6 +1,12 @@
 $(function () {
     var l = abp.localization.getResource('Admin');
-    // abp.appPath = 'https://localhost:44346/';
+    var deployAppNodeModal = new abp.ModalManager({
+        viewUrl: '/Tools/ServNodes/DeployAppNodeModal'
+    });
+    deployAppNodeModal.onResult(function () {
+        abp.log.debug(arguments)
+        abp.log.debug("代理节点" + arguments[1].responseText.currentAgentBizNo + "部署成功");
+    });
 
     var dataTable = $('#ServNodesTable').DataTable(
         abp.libs.datatables.normalizeConfiguration({
@@ -20,7 +26,9 @@ $(function () {
                                 visible: abp.auth.isGranted('Admin.Tools.ServNodes.DeployAppNode'),
                                 iconClass: "fas fa-building",
                                 action: function (data) {
-                                    ///...
+                                    deployAppNodeModal.open({
+                                        agentBizNo: data.record.bizNo
+                                    });
                                 }
                             },
                             {

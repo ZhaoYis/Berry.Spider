@@ -2,6 +2,7 @@
 @inject IHtmlLocalizer<AdminResource> L
 @using Berry.Spider.Admin.Localization
 @using Microsoft.AspNetCore.Mvc.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Packages.SignalR
 @model Berry.Spider.Admin.Pages.Tools.IndexModel
 
 @section styles {
@@ -11,6 +12,7 @@
 @section scripts {
     <abp-script src="/client-proxies/berry_spider-proxy.js"/>
     <abp-script src="/Pages/Tools/ServNodes/Index.js"/>
+    <abp-script type="typeof(SignalRBrowserScriptContributor)"/>
 }
 
 <abp-card-body>

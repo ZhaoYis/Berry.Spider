@@ -1,0 +1,22 @@
+@page
+@inject IHtmlLocalizer<AdminResource> L
+@using Berry.Spider.Admin.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Volo.Abp.AspNetCore.Mvc.UI.Bootstrap.TagHelpers.Modal
+@model Berry.Spider.Admin.Web.Pages.Tools.ServNodes.DeployAppNodeModal
+
+@{
+    Layout = null;
+}
+
+<form method="post" action="@Url.Page("/Tools/ServNodes/DeployAppNodeModal")" data-check-form-on-close="false">
+    <abp-modal>
+        <abp-modal-header title="@L["DeployAppNodeModal:Title"].Value"></abp-modal-header>
+        <abp-modal-body>
+            <abp-select asp-for="Deploy.RunAppVersion" asp-items="@Model.Deploy.AppVersionList" label="@L["DeployAppNodeModal:RunAppVersion"].Value"/>
+            <abp-input asp-for="Deploy.RunAppCount" label="@L["DeployAppNodeModal:RunAppCount"].Value"/>
+            <abp-input asp-for="Deploy.CurrentAgentBizNo" readonly="true"/>
+        </abp-modal-body>
+        <abp-modal-footer buttons="@AbpModalButtons.Save | @AbpModalButtons.Cancel"></abp-modal-footer>
+    </abp-modal>
+</form>

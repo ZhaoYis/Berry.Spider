@@ -21,6 +21,9 @@
     "SMI:RestartAllAppNode": "重启所有节点",
     "Enum:SMI:MachineStatus.0": "未知",
     "Enum:SMI:MachineStatus.10": "在线",
-    "Enum:SMI:MachineStatus.20": "离线"
+    "Enum:SMI:MachineStatus.20": "离线",
+    "DeployAppNodeModal:Title": "部署爬虫节点",
+    "DeployAppNodeModal:RunAppVersion": "运行版本",
+    "DeployAppNodeModal:RunAppCount": "启动节点数量"
   }
 }

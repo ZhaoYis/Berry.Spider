@@ -60,7 +60,7 @@ public class AdminMenuContributor : IMenuContributor
                     AdminMenus.Tools.Sub.ServNodes,
                     l["Menu:Tools:Sub:ServNodes"],
                     "/Tools/ServNodes"
-                ).RequirePermissions(AdminGlobalPermissions.Tools.ServNodes.Root)
+                ).RequirePermissions(requiresAll: true, AdminGlobalPermissions.Tools.ServNodes.Root)
             )
         );
 

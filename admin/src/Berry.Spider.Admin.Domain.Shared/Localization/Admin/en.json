@@ -21,6 +21,9 @@
     "SMI:RestartAllAppNode": "Restart All Node",
     "Enum:SMI:MachineStatus.0": "None",
     "Enum:SMI:MachineStatus.10": "Online",
-    "Enum:SMI:MachineStatus.20": "Offline"
+    "Enum:SMI:MachineStatus.20": "Offline",
+    "DeployAppNodeModal:Title": "Deploy App Node",
+    "DeployAppNodeModal:RunAppVersion": "Run App Version Code",
+    "DeployAppNodeModal:RunAppCount": "Run App Count"
   }
 }
