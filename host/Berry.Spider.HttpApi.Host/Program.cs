@@ -13,7 +13,7 @@ public class Program
 {
     public static async Task<int> Main(string[] args)
     {
-        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "DEV";
+        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "PROD";
         var configuration = GetConfiguration(args);
         Log.Logger = new LoggerConfiguration()
 #if DEBUG
