@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using Berry.Spider.Admin.EntityFrameworkCore;
 using Berry.Spider.Admin.Localization;
 using Berry.Spider.Admin.MultiTenancy;
@@ -75,7 +77,26 @@ public class AdminAuthServerModule : AbpModule
                 serverBuilder.SetAccessTokenLifetime(TimeSpan.FromMinutes(30));
                 serverBuilder.SetIdentityTokenLifetime(TimeSpan.FromMinutes(30));
                 serverBuilder.SetRefreshTokenLifetime(TimeSpan.FromDays(14));
-                serverBuilder.AddProductionEncryptionAndSigningCertificate("openiddict.pfx", "5a34da3c-e935-40d0-a952-1b155cb235a1");
+                //serverBuilder.AddProductionEncryptionAndSigningCertificate("openiddict.pfx", "5a34da3c-e935-40d0-a952-1b155cb235a1");
+
+                //https://documentation.openiddict.com/configuration/encryption-and-signing-credentials.html
+                using (var algorithm = RSA.Create(keySizeInBits: 2048))
+                {
+                    var subject = new X500DistinguishedName("CN=Fabrikam Encryption Certificate");
+                    var request = new CertificateRequest(subject, algorithm, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                    request.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.DigitalSignature, critical: true));
+                    var certificate = request.CreateSelfSigned(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddYears(20));
+                    serverBuilder.AddSigningCertificate(certificate);
+                }
+
+                using (var algorithm = RSA.Create(keySizeInBits: 2048))
+                {
+                    var subject = new X500DistinguishedName("CN=Fabrikam Signing Certificate");
+                    var request = new CertificateRequest(subject, algorithm, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                    request.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.KeyEncipherment, critical: true));
+                    var certificate = request.CreateSelfSigned(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddYears(20));
+                    serverBuilder.AddEncryptionCertificate(certificate);
+                }
             });
         }
     }
