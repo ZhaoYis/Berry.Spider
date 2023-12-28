@@ -1,11 +1,12 @@
 using System.Text.Json;
 using Berry.Spider.Common;
 using Berry.Spider.FreeRedis;
+using Volo.Abp.Application.Services;
 using Volo.Abp.ObjectMapping;
 
 namespace Berry.Spider.Application.Spider;
 
-public class SpiderLifetimeAppService : ISpiderLifetimeAppService
+public class SpiderLifetimeAppService : ApplicationService, ISpiderLifetimeAppService
 {
     private readonly IRedisService _redisService;
     private readonly IObjectMapper _mapper;
