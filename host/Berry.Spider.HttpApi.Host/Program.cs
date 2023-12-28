@@ -13,6 +13,7 @@ public class Program
 {
     public static async Task<int> Main(string[] args)
     {
+        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "DEV";
         var configuration = GetConfiguration(args);
         Log.Logger = new LoggerConfiguration()
 #if DEBUG
@@ -66,8 +67,7 @@ public class Program
             builder.Host.AddAppSettingsSecretsJson()
                 //机密配置文件
                 .AddAppSettingsSecretsJson()
-                //集成AgileConfig
-                .UseAgileConfig()
+                .UseAgileConfig($"appsettings.{env}.json")
                 .UseAutofac()
                 .UseSerilog();
             await builder.AddApplicationAsync<SpiderHttpApiHostModule>();

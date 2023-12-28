@@ -12,6 +12,7 @@ public class Program
 {
     public static async Task<int> Main(string[] args)
     {
+        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "DEV";
         Log.Logger = new LoggerConfiguration()
 #if DEBUG
             .MinimumLevel.Debug()
@@ -33,8 +34,7 @@ public class Program
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.AddAppSettingsSecretsJson()
                 .UseAutofac()
-                //集成AgileConfig
-                .UseAgileConfig()
+                .UseAgileConfig($"appsettings.{env}.json")
                 .UseSerilog();
             await builder.AddApplicationAsync<AdminHttpApiHostModule>();
             var app = builder.Build();
