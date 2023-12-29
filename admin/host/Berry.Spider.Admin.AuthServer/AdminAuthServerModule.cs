@@ -74,20 +74,7 @@ public class AdminAuthServerModule : AbpModule
                 options.UpdateAbpClaimTypes = true;
                 options.AddDevelopmentEncryptionAndSigningCertificate = false;
             });
-
-            PreConfigure<OpenIddictServerBuilder>(serverBuilder =>
-            {
-                serverBuilder.SetAuthorizationCodeLifetime(TimeSpan.FromMinutes(30));
-                serverBuilder.SetAccessTokenLifetime(TimeSpan.FromMinutes(30));
-                serverBuilder.SetIdentityTokenLifetime(TimeSpan.FromMinutes(30));
-                serverBuilder.SetRefreshTokenLifetime(TimeSpan.FromDays(14));
-
-                string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "berry-authserver.dsx.plus.pfx");
-                serverBuilder.AddProductionEncryptionAndSigningCertificate(filePath, configuration["StringEncryption:SSLPassPhrase"]);
-            });
-        }
-        else
-        {
+            
             PreConfigure<OpenIddictServerBuilder>(serverBuilder =>
             {
                 //https://documentation.openiddict.com/configuration/encryption-and-signing-credentials.html
