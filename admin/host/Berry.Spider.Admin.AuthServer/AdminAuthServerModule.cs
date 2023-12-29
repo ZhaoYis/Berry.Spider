@@ -45,7 +45,8 @@ namespace Berry.Spider.Admin;
     typeof(AbpAccountHttpApiModule),
     typeof(AbpAspNetCoreMvcUiLeptonXLiteThemeModule),
     typeof(AdminEntityFrameworkCoreModule),
-    typeof(AbpAspNetCoreSerilogModule)
+    typeof(AbpAspNetCoreSerilogModule),
+    typeof(AbpOpenIddictAspNetCoreModule)
 )]
 public class AdminAuthServerModule : AbpModule
 {
