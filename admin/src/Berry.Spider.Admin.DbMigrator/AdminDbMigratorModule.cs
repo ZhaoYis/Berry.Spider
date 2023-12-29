@@ -16,6 +16,6 @@ public class AdminDbMigratorModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        Configure<AbpDistributedCacheOptions>(options => { options.KeyPrefix = "Admin:"; });
+        Configure<AbpDistributedCacheOptions>(options => { options.KeyPrefix = "Berry:Admin:"; });
     }
 }

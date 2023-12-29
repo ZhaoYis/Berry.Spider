@@ -62,7 +62,7 @@ public class AdminHttpApiHostModule : AbpModule
 
     private void ConfigureCache(IConfiguration configuration)
     {
-        Configure<AbpDistributedCacheOptions>(options => { options.KeyPrefix = "Admin:"; });
+        Configure<AbpDistributedCacheOptions>(options => { options.KeyPrefix = "Berry:Admin:"; });
     }
 
     private void ConfigureVirtualFileSystem(ServiceConfigurationContext context)

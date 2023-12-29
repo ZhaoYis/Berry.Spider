@@ -116,7 +116,7 @@ public class AdminWebModule : AbpModule
 
     private void ConfigureCache()
     {
-        Configure<AbpDistributedCacheOptions>(options => { options.KeyPrefix = "Admin:"; });
+        Configure<AbpDistributedCacheOptions>(options => { options.KeyPrefix = "Berry:Admin:"; });
     }
 
     private void ConfigureUrls(IConfiguration configuration)

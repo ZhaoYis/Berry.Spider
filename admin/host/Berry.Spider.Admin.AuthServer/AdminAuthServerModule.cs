@@ -162,7 +162,7 @@ public class AdminAuthServerModule : AbpModule
 
         Configure<AbpBackgroundJobOptions>(options => { options.IsJobExecutionEnabled = false; });
 
-        Configure<AbpDistributedCacheOptions>(options => { options.KeyPrefix = "Admin:"; });
+        Configure<AbpDistributedCacheOptions>(options => { options.KeyPrefix = "Berry:Admin:"; });
 
         var dataProtectionBuilder = context.Services.AddDataProtection().SetApplicationName("Admin");
         if (!hostingEnvironment.IsDev())
