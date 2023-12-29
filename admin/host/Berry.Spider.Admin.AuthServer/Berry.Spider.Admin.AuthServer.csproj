@@ -20,6 +20,10 @@
         <Content Remove="Logs\**"/>
         <EmbeddedResource Remove="Logs\**"/>
         <None Remove="Logs\**"/>
+        <None Remove="berry-authserver.dsx.plus.pfx" />
+        <Content Include="berry-authserver.dsx.plus.pfx">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>

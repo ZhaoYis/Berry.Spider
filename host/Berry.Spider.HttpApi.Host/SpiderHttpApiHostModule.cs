@@ -110,7 +110,7 @@ public class SpiderHttpApiHostModule : AbpModule
     private void ConfigureDataProtection(ServiceConfigurationContext context, IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
     {
         var dataProtectionBuilder = context.Services.AddDataProtection().SetApplicationName("Spider");
-        if (!hostingEnvironment.IsDevelopment())
+        if (!hostingEnvironment.IsDev())
         {
             var redis = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]!);
             dataProtectionBuilder.PersistKeysToStackExchangeRedis(redis, "Spider-Protection-Keys");
@@ -157,7 +157,7 @@ public class SpiderHttpApiHostModule : AbpModule
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
 
-        if (env.IsDevelopment())
+        if (env.IsDev())
         {
             app.UseDeveloperExceptionPage();
         }

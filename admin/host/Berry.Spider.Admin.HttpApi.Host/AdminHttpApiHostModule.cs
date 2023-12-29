@@ -69,7 +69,7 @@ public class AdminHttpApiHostModule : AbpModule
     {
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
-        if (hostingEnvironment.IsDevelopment())
+        if (hostingEnvironment.IsDev())
         {
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
@@ -175,7 +175,7 @@ public class AdminHttpApiHostModule : AbpModule
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
 
-        if (env.IsDevelopment())
+        if (env.IsDev())
         {
             app.UseDeveloperExceptionPage();
         }

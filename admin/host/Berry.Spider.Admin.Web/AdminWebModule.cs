@@ -214,7 +214,7 @@ public class AdminWebModule : AbpModule
 
     private void ConfigureVirtualFileSystem(IWebHostEnvironment hostingEnvironment)
     {
-        if (hostingEnvironment.IsDevelopment())
+        if (hostingEnvironment.IsDev())
         {
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
@@ -252,7 +252,7 @@ public class AdminWebModule : AbpModule
         IWebHostEnvironment hostingEnvironment)
     {
         var dataProtectionBuilder = context.Services.AddDataProtection().SetApplicationName("Admin");
-        if (!hostingEnvironment.IsDevelopment())
+        if (!hostingEnvironment.IsDev())
         {
             var redis = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]!);
             dataProtectionBuilder.PersistKeysToStackExchangeRedis(redis, "Admin-Protection-Keys");
@@ -275,14 +275,14 @@ public class AdminWebModule : AbpModule
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
 
-        if (env.IsDevelopment())
+        if (env.IsDev())
         {
             app.UseDeveloperExceptionPage();
         }
 
         app.UseAbpRequestLocalization();
 
-        if (!env.IsDevelopment())
+        if (!env.IsDev())
         {
             app.UseErrorPage();
         }

@@ -67,9 +67,13 @@ public class AdminAuthServerModule : AbpModule
             });
         });
 
-        if (!hostingEnvironment.IsDevelopment())
+        if (!hostingEnvironment.IsDev())
         {
-            PreConfigure<AbpOpenIddictAspNetCoreOptions>(options => { options.AddDevelopmentEncryptionAndSigningCertificate = false; });
+            PreConfigure<AbpOpenIddictAspNetCoreOptions>(options =>
+            {
+                options.UpdateAbpClaimTypes = true;
+                options.AddDevelopmentEncryptionAndSigningCertificate = false;
+            });
 
             PreConfigure<OpenIddictServerBuilder>(serverBuilder =>
             {
@@ -77,8 +81,14 @@ public class AdminAuthServerModule : AbpModule
                 serverBuilder.SetAccessTokenLifetime(TimeSpan.FromMinutes(30));
                 serverBuilder.SetIdentityTokenLifetime(TimeSpan.FromMinutes(30));
                 serverBuilder.SetRefreshTokenLifetime(TimeSpan.FromDays(14));
-                //serverBuilder.AddProductionEncryptionAndSigningCertificate("openiddict.pfx", "5a34da3c-e935-40d0-a952-1b155cb235a1");
-
+                
+                serverBuilder.AddProductionEncryptionAndSigningCertificate("berry-authserver.dsx.plus.pfx", configuration["StringEncryption:SSLPassPhrase"]);
+            });
+        }
+        else
+        {
+            PreConfigure<OpenIddictServerBuilder>(serverBuilder =>
+            {
                 //https://documentation.openiddict.com/configuration/encryption-and-signing-credentials.html
                 using (var algorithm = RSA.Create(keySizeInBits: 2048))
                 {
