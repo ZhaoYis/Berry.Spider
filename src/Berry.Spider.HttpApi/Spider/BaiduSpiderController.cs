@@ -25,7 +25,7 @@ public class BaiduSpiderController : SpiderControllerBase, IBaiduSpiderAppServic
     /// 将待爬取信息PUSH到消息队列中
     /// </summary>
     [HttpPost, Route("push-from-file"), DisableRequestSizeLimit]
-    public Task PushAsync(PushFromFileBasicDto push)
+    public Task PushAsync([FromForm] PushFromFileBasicDto push)
     {
         object o = this.Provider.GetImplService(push.SourceFrom);
         if (o is ISpiderProvider provider)

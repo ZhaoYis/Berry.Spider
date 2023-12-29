@@ -25,7 +25,7 @@ public class TouTiaoSpiderController : SpiderControllerBase, ITouTiaoSpiderAppSe
     /// 将待爬取信息PUSH到消息队列中
     /// </summary>
     [HttpPost, DisableRequestSizeLimit, Route("push-from-file")]
-    public Task PushAsync(PushFromFileBasicDto push)
+    public Task PushAsync([FromForm] PushFromFileBasicDto push)
     {
         object o = this.Provider.GetImplService(push.SourceFrom);
         if (o is ISpiderProvider provider)
