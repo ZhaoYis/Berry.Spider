@@ -65,7 +65,6 @@ public class Program
 
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.AddAppSettingsSecretsJson()
-                //机密配置文件
                 .AddAppSettingsSecretsJson()
                 .UseAgileConfig($"appsettings.{env}.json")
                 .UseAutofac()
