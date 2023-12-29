@@ -81,8 +81,9 @@ public class AdminAuthServerModule : AbpModule
                 serverBuilder.SetAccessTokenLifetime(TimeSpan.FromMinutes(30));
                 serverBuilder.SetIdentityTokenLifetime(TimeSpan.FromMinutes(30));
                 serverBuilder.SetRefreshTokenLifetime(TimeSpan.FromDays(14));
-                
-                serverBuilder.AddProductionEncryptionAndSigningCertificate("berry-authserver.dsx.plus.pfx", configuration["StringEncryption:SSLPassPhrase"]);
+
+                string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "berry-authserver.dsx.plus.pfx");
+                serverBuilder.AddProductionEncryptionAndSigningCertificate(filePath, configuration["StringEncryption:SSLPassPhrase"]);
             });
         }
         else
