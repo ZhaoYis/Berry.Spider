@@ -140,7 +140,7 @@ public class AdminAuthServerModule : AbpModule
             options.ApplicationName = "AuthServer";
         });
 
-        if (hostingEnvironment.IsDevelopment())
+        if (hostingEnvironment.IsDev())
         {
             Configure<AbpVirtualFileSystemOptions>(options =>
             {
@@ -165,7 +165,7 @@ public class AdminAuthServerModule : AbpModule
         Configure<AbpDistributedCacheOptions>(options => { options.KeyPrefix = "Admin:"; });
 
         var dataProtectionBuilder = context.Services.AddDataProtection().SetApplicationName("Admin");
-        if (!hostingEnvironment.IsDevelopment())
+        if (!hostingEnvironment.IsDev())
         {
             var redis = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]!);
             dataProtectionBuilder.PersistKeysToStackExchangeRedis(redis, "Admin-Protection-Keys");
@@ -204,14 +204,14 @@ public class AdminAuthServerModule : AbpModule
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
 
-        if (env.IsDevelopment())
+        if (env.IsDev())
         {
             app.UseDeveloperExceptionPage();
         }
 
         app.UseAbpRequestLocalization();
 
-        if (!env.IsDevelopment())
+        if (!env.IsDev())
         {
             app.UseErrorPage();
         }

@@ -132,7 +132,7 @@ public class AdminHttpApiHostModule : AbpModule
         IWebHostEnvironment hostingEnvironment)
     {
         var dataProtectionBuilder = context.Services.AddDataProtection().SetApplicationName("Admin");
-        if (!hostingEnvironment.IsDevelopment())
+        if (!hostingEnvironment.IsDev())
         {
             var redis = ConnectionMultiplexer.Connect(configuration["Redis:Configuration"]!);
             dataProtectionBuilder.PersistKeysToStackExchangeRedis(redis, "Admin-Protection-Keys");
