@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using Berry.Spider.Admin.EntityFrameworkCore;
 using Berry.Spider.Admin.Localization;
 using Berry.Spider.Admin.MultiTenancy;
@@ -13,7 +11,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
 using Volo.Abp;
 using Volo.Abp.Account;
@@ -74,27 +71,30 @@ public class AdminAuthServerModule : AbpModule
                 options.UpdateAbpClaimTypes = true;
                 options.AddDevelopmentEncryptionAndSigningCertificate = false;
             });
-            
+
             PreConfigure<OpenIddictServerBuilder>(serverBuilder =>
             {
-                //https://documentation.openiddict.com/configuration/encryption-and-signing-credentials.html
-                using (var algorithm = RSA.Create(keySizeInBits: 2048))
-                {
-                    var subject = new X500DistinguishedName("CN=Fabrikam Encryption Certificate");
-                    var request = new CertificateRequest(subject, algorithm, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-                    request.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.DigitalSignature, critical: true));
-                    var certificate = request.CreateSelfSigned(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddYears(20));
-                    serverBuilder.AddSigningCertificate(certificate);
-                }
+                serverBuilder.SetAuthorizationCodeLifetime(TimeSpan.FromMinutes(30));
+                serverBuilder.SetAccessTokenLifetime(TimeSpan.FromMinutes(30));
+                serverBuilder.SetIdentityTokenLifetime(TimeSpan.FromMinutes(30));
+                serverBuilder.SetRefreshTokenLifetime(TimeSpan.FromDays(14));
 
-                using (var algorithm = RSA.Create(keySizeInBits: 2048))
-                {
-                    var subject = new X500DistinguishedName("CN=Fabrikam Signing Certificate");
-                    var request = new CertificateRequest(subject, algorithm, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-                    request.CertificateExtensions.Add(new X509KeyUsageExtension(X509KeyUsageFlags.KeyEncipherment, critical: true));
-                    var certificate = request.CreateSelfSigned(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddYears(20));
-                    serverBuilder.AddEncryptionCertificate(certificate);
-                }
+                string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "berry-authserver.dsx.plus.pfx");
+                serverBuilder.AddProductionEncryptionAndSigningCertificate(filePath, configuration["StringEncryption:SSLPassPhrase"]);
+            });
+        }
+        else
+        {
+            PreConfigure<AbpOpenIddictAspNetCoreOptions>(options =>
+            {
+                options.UpdateAbpClaimTypes = true;
+                options.AddDevelopmentEncryptionAndSigningCertificate = true;
+            });
+
+            PreConfigure<OpenIddictServerBuilder>(serverBuilder =>
+            {
+                serverBuilder.AddDevelopmentEncryptionCertificate();
+                serverBuilder.AddDevelopmentSigningCertificate();
             });
         }
     }
