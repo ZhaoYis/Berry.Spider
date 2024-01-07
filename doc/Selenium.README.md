@@ -64,3 +64,14 @@ https://github.com/xuanye/DotXxlJob
 
 docker build -f Dockerfile_Consumers -t berry_consumers:v1.0.0 .
 docker run -d --name berry_consumers berry_consumers:v1.0.0
+
+docker build -f Dockerfile_SpiderApi -t berry_spider_api:v1.0.0 .
+docker build -f Dockerfile_AdminApi -t berry_spider_admin_api:v1.0.0 .
+docker build -f Dockerfile_AdminWeb -t berry_spider_admin_web:v1.0.0 .
+docker build -f Dockerfile_AuthServer -t berry_spider_authserver:v1.0.0 .
+
+docker run -d --name berry_spider_api berry_spider_api:v1.0.0
+
+docker login --username=zhaoy*****@163.com registry.cn-hangzhou.aliyuncs.com
+docker tag e142241b990b registry.cn-hangzhou.aliyuncs.com/berry-spider/crawler:1.0.0
+docker push registry.cn-hangzhou.aliyuncs.com/berry-spider/crawler:1.0.0

@@ -1,0 +1,50 @@
+﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY ["host/Berry.Spider.HttpApi.Host/Berry.Spider.HttpApi.Host.csproj", "host/Berry.Spider.HttpApi.Host/"]
+COPY ["src/Berry.Spider.Application/Berry.Spider.Application.csproj", "src/Berry.Spider.Application/"]
+COPY ["src/Berry.Spider.Contracts/Berry.Spider.Contracts.csproj", "src/Berry.Spider.Contracts/"]
+COPY ["src/Berry.Spider.Core/Berry.Spider.Core.csproj", "src/Berry.Spider.Core/"]
+COPY ["src/Berry.Spider.FreeRedis/Berry.Spider.FreeRedis.csproj", "src/Berry.Spider.FreeRedis/"]
+COPY ["src/Berry.Spider.Proxy/Berry.Spider.Proxy.csproj", "src/Berry.Spider.Proxy/"]
+COPY ["src/Berry.Spider.Proxy.Local/Berry.Spider.Proxy.Local.csproj", "src/Berry.Spider.Proxy.Local/"]
+COPY ["src/Berry.Spider.Proxy.Abstractions/Berry.Spider.Proxy.Abstractions.csproj", "src/Berry.Spider.Proxy.Abstractions/"]
+COPY ["src/Berry.Spider.Proxy.QgNet/Berry.Spider.Proxy.QgNet.csproj", "src/Berry.Spider.Proxy.QgNet/"]
+COPY ["src/Berry.Spider.Domain.Shared/Berry.Spider.Domain.Shared.csproj", "src/Berry.Spider.Domain.Shared/"]
+COPY ["src/Berry.Spider.Domain/Berry.Spider.Domain.csproj", "src/Berry.Spider.Domain/"]
+COPY ["src/Berry.Spider.Segmenter/Berry.Spider.Segmenter.csproj", "src/Berry.Spider.Segmenter/"]
+COPY ["src/Berry.Spider.EventBus.MongoDB/Berry.Spider.EventBus.MongoDB.csproj", "src/Berry.Spider.EventBus.MongoDB/"]
+COPY ["src/Berry.Spider.AspNetCore.Mvc/Berry.Spider.AspNetCore.Mvc.csproj", "src/Berry.Spider.AspNetCore.Mvc/"]
+COPY ["src/Berry.Spider.Baidu/Berry.Spider.Baidu.csproj", "src/Berry.Spider.Baidu/"]
+COPY ["src/Berry.Spider.Abstractions/Berry.Spider.Abstractions.csproj", "src/Berry.Spider.Abstractions/"]
+COPY ["src/Berry.Spider.Baidu.Contracts/Berry.Spider.Baidu.Contracts.csproj", "src/Berry.Spider.Baidu.Contracts/"]
+COPY ["src/Berry.Spider.EventBus/Berry.Spider.EventBus.csproj", "src/Berry.Spider.EventBus/"]
+COPY ["src/Berry.Spider.EntityFrameworkCore/Berry.Spider.EntityFrameworkCore.csproj", "src/Berry.Spider.EntityFrameworkCore/"]
+COPY ["src/Berry.Spider.EventBus.RabbitMq/Berry.Spider.EventBus.RabbitMq.csproj", "src/Berry.Spider.EventBus.RabbitMq/"]
+COPY ["src/Berry.Spider.HttpApi/Berry.Spider.HttpApi.csproj", "src/Berry.Spider.HttpApi/"]
+COPY ["src/Berry.Spider.OpenAI.Contracts/Berry.Spider.OpenAI.Contracts.csproj", "src/Berry.Spider.OpenAI.Contracts/"]
+COPY ["src/Berry.Spider.Sogou.Contracts/Berry.Spider.Sogou.Contracts.csproj", "src/Berry.Spider.Sogou.Contracts/"]
+COPY ["src/Berry.Spider.Sogou/Berry.Spider.Sogou.csproj", "src/Berry.Spider.Sogou/"]
+COPY ["src/Berry.Spider.TouTiao.Contracts/Berry.Spider.TouTiao.Contracts.csproj", "src/Berry.Spider.TouTiao.Contracts/"]
+COPY ["src/Berry.Spider.TouTiao/Berry.Spider.TouTiao.csproj", "src/Berry.Spider.TouTiao/"]
+COPY ["src/Berry.Spider.OpenAI.Application/Berry.Spider.OpenAI.Application.csproj", "src/Berry.Spider.OpenAI.Application/"]
+COPY ["src/Berry.Spider.OpenAI/Berry.Spider.OpenAI.csproj", "src/Berry.Spider.OpenAI/"]
+COPY ["src/Berry.Spider.Segmenter.JiebaNet/Berry.Spider.Segmenter.JiebaNet.csproj", "src/Berry.Spider.Segmenter.JiebaNet/"]
+COPY ["src/Berry.Spider.XxlJob.JobHandler/Berry.Spider.XxlJob.JobHandler.csproj", "src/Berry.Spider.XxlJob.JobHandler/"]
+COPY ["src/Berry.Spider.XxlJob/Berry.Spider.XxlJob.csproj", "src/Berry.Spider.XxlJob/"]
+RUN dotnet restore "host/Berry.Spider.HttpApi.Host/Berry.Spider.HttpApi.Host.csproj"
+COPY . .
+WORKDIR "/src/host/Berry.Spider.HttpApi.Host"
+RUN dotnet build "Berry.Spider.HttpApi.Host.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Berry.Spider.HttpApi.Host.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Berry.Spider.HttpApi.Host.dll"]

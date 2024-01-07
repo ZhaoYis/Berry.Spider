@@ -1,0 +1,23 @@
+﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY ["admin/host/Berry.Spider.Admin.AuthServer/Berry.Spider.Admin.AuthServer.csproj", "admin/host/Berry.Spider.Admin.AuthServer/"]
+COPY ["admin/src/Berry.Spider.Admin.Domain.Shared/Berry.Spider.Admin.Domain.Shared.csproj", "admin/src/Berry.Spider.Admin.Domain.Shared/"]
+COPY ["admin/src/Berry.Spider.Admin.Domain/Berry.Spider.Admin.Domain.csproj", "admin/src/Berry.Spider.Admin.Domain/"]
+COPY ["admin/src/Berry.Spider.Admin.EntityFrameworkCore/Berry.Spider.Admin.EntityFrameworkCore.csproj", "admin/src/Berry.Spider.Admin.EntityFrameworkCore/"]
+RUN dotnet restore "admin/host/Berry.Spider.Admin.AuthServer/Berry.Spider.Admin.AuthServer.csproj"
+COPY . .
+WORKDIR "/src/admin/host/Berry.Spider.Admin.AuthServer"
+RUN dotnet build "Berry.Spider.Admin.AuthServer.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Berry.Spider.Admin.AuthServer.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Berry.Spider.Admin.AuthServer.dll"]

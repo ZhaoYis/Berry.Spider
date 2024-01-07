@@ -62,12 +62,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Baidu", "src\B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Tests", "test\Berry.Spider.Tests\Berry.Spider.Tests.csproj", "{228C47BA-251A-4A0D-9380-643DF4D8EFE1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docker", ".docker", "{0B5B28FB-DC56-4BA8-AF99-1408EBB8A01C}"
-	ProjectSection(SolutionItems) = preProject
-		.docker\Dockerfile_ApiHost = .docker\Dockerfile_ApiHost
-		.docker\Dockerfile_Consumers = .docker\Dockerfile_Consumers
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.AspNetCore.Mvc", "src\Berry.Spider.AspNetCore.Mvc\Berry.Spider.AspNetCore.Mvc.csproj", "{4D46BB6D-E501-4404-B235-3874546A63EE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mmonly", "mmonly", "{D6F3C84D-94DF-49E9-85BB-1297B1994306}"
