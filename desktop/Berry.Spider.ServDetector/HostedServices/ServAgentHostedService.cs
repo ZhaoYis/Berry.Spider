@@ -43,6 +43,14 @@ public class ServAgentHostedService : IHostedService
                 Console.WriteLine(msg.Message);
             }
         });
+
+        _connection.On<SpiderAgentReceiveDto>(typeof(SpiderAgentReceiveDto).GetMethodName(), async msg =>
+        {
+            if (msg.Code == RealTimeMessageCode.NOTIFY_AGENT_TO_START_DEPLOYING_APP)
+            {
+                Console.WriteLine(msg.Message);
+            }
+        });
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
