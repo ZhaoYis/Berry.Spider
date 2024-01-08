@@ -17,4 +17,5 @@ namespace Berry.Spider;
 [ExposeServices(typeof(ISogouSpiderAppService), typeof(SogouSpiderClientProxy))]
 public partial class SogouSpiderClientProxy : ClientProxyBase<ISogouSpiderAppService>, ISogouSpiderAppService
 {
+    
 }

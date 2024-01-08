@@ -25,7 +25,7 @@ public class DeployAppNodeDto
     [DataType(DataType.Text)]
     [Display(Name = "DeployAppNodeModal:RunAppVersion")]
     [SelectItems(nameof(AppVersionList))]
-    public string RunAppVersion { get; set; }
+    public string RunAppVersionBizNo { get; set; }
 
     /// <summary>
     /// 启动App的数量

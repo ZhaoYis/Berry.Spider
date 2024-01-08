@@ -40,5 +40,7 @@ public class SpiderApplicationAutoMapperProfile : Profile
             .Ignore(c => c.Status)
             .Ignore(c => c.LastOnlineTime)
             .IgnoreFullAuditedObjectProperties();
+
+        CreateMap<SpiderAppInfo, SpiderAppInfoDto>();
     }
 }

@@ -17,4 +17,5 @@ namespace Berry.Spider;
 [ExposeServices(typeof(IBaiduSpiderAppService), typeof(BaiduSpiderClientProxy))]
 public partial class BaiduSpiderClientProxy : ClientProxyBase<IBaiduSpiderAppService>, IBaiduSpiderAppService
 {
+    
 }

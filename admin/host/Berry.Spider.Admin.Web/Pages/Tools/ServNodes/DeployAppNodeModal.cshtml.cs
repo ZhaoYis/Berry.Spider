@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Berry.Spider.Admin.Web.Pages.Tools.ServNodes.Models;
+using Berry.Spider.Biz;
 using Berry.Spider.Core;
 using Berry.Spider.RealTime;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.SignalR;
+using Volo.Abp;
 using Volo.Abp.AspNetCore.Mvc.UI.RazorPages;
 
 namespace Berry.Spider.Admin.Web.Pages.Tools.ServNodes;
@@ -15,10 +18,13 @@ namespace Berry.Spider.Admin.Web.Pages.Tools.ServNodes;
 public class DeployAppNodeModal : AbpPageModel
 {
     private IHubContext<SpiderAgentNotifyHub, ISpiderAgentReceiveHub> _hubContext;
+    private readonly ISpiderAppInfoService _spiderAppInfoService;
 
-    public DeployAppNodeModal(IHubContext<SpiderAgentNotifyHub, ISpiderAgentReceiveHub> hubContext)
+    public DeployAppNodeModal(IHubContext<SpiderAgentNotifyHub, ISpiderAgentReceiveHub> hubContext,
+        ISpiderAppInfoService spiderAppInfoService)
     {
         _hubContext = hubContext;
+        _spiderAppInfoService = spiderAppInfoService;
     }
 
     /// <summary>
@@ -29,27 +35,37 @@ public class DeployAppNodeModal : AbpPageModel
 
     public async Task OnGetAsync(string agentBizNo)
     {
-        this.Deploy = new DeployAppNodeDto
+        List<SpiderAppInfoDto> appInfoList = await _spiderAppInfoService.GetSpiderAppListAsync();
+        if (appInfoList is {Count: > 0})
         {
-            CurrentAgentBizNo = agentBizNo,
-            AppVersionList = new List<SelectListItem>
+            this.Deploy = new DeployAppNodeDto
             {
-                new SelectListItem("v20231227-100", "1", true),
-                new SelectListItem("v20231227-101", "2")
-            },
-            RunAppCount = 3
-        };
+                CurrentAgentBizNo = agentBizNo,
+                AppVersionList = appInfoList.Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.BizNo
+                }).ToList(),
+                RunAppCount = 3
+            };
+        }
+        else
+        {
+            throw new BusinessException(message: "暂无可用应用");
+        }
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
+        string runAppVersionBizNo = this.Deploy.RunAppVersionBizNo;
+        SpiderAppInfoDto appInfo = await _spiderAppInfoService.GetSpiderAppInfoAsync(runAppVersionBizNo);
+
         SpiderAgentReceiveDto agentReceiveDto = new SpiderAgentReceiveDto
         {
             Code = RealTimeMessageCode.NOTIFY_AGENT_TO_START_DEPLOYING_APP,
             Data = JsonSerializer.Serialize(new
             {
-                CurrentAgentBizNo = this.Deploy.CurrentAgentBizNo,
-                RunAppVersion = this.Deploy.RunAppVersion,
+                RunAppInfo = appInfo,
                 RunAppCount = this.Deploy.RunAppCount
             })
         };

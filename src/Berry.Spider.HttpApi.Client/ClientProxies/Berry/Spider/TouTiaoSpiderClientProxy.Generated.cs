@@ -17,4 +17,5 @@ namespace Berry.Spider;
 [ExposeServices(typeof(ITouTiaoSpiderAppService), typeof(TouTiaoSpiderClientProxy))]
 public partial class TouTiaoSpiderClientProxy : ClientProxyBase<ITouTiaoSpiderAppService>, ITouTiaoSpiderAppService
 {
+    
 }

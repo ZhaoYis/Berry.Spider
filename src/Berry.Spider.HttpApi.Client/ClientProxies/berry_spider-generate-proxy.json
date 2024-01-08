@@ -38,15 +38,39 @@
               "parameters": [
                 {
                   "nameOnMethod": "push",
-                  "name": "push",
+                  "name": "SourceFrom",
                   "jsonName": null,
-                  "type": "Berry.Spider.PushFromFileBasicDto",
-                  "typeSimple": "Berry.Spider.PushFromFileBasicDto",
+                  "type": "System.String",
+                  "typeSimple": "string",
                   "isOptional": false,
                   "defaultValue": null,
                   "constraintTypes": null,
-                  "bindingSourceId": "Body",
-                  "descriptorName": ""
+                  "bindingSourceId": "Form",
+                  "descriptorName": "push"
+                },
+                {
+                  "nameOnMethod": "push",
+                  "name": "File",
+                  "jsonName": null,
+                  "type": "Microsoft.AspNetCore.Http.IFormFile",
+                  "typeSimple": "Microsoft.AspNetCore.Http.IFormFile",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "FormFile",
+                  "descriptorName": "push"
+                },
+                {
+                  "nameOnMethod": "push",
+                  "name": "TraceCode",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Form",
+                  "descriptorName": "push"
                 }
               ],
               "returnValue": {
@@ -140,15 +164,39 @@
               "parameters": [
                 {
                   "nameOnMethod": "push",
-                  "name": "push",
+                  "name": "SourceFrom",
                   "jsonName": null,
-                  "type": "Berry.Spider.PushFromFileBasicDto",
-                  "typeSimple": "Berry.Spider.PushFromFileBasicDto",
+                  "type": "System.String",
+                  "typeSimple": "string",
                   "isOptional": false,
                   "defaultValue": null,
                   "constraintTypes": null,
-                  "bindingSourceId": "Body",
-                  "descriptorName": ""
+                  "bindingSourceId": "Form",
+                  "descriptorName": "push"
+                },
+                {
+                  "nameOnMethod": "push",
+                  "name": "File",
+                  "jsonName": null,
+                  "type": "Microsoft.AspNetCore.Http.IFormFile",
+                  "typeSimple": "Microsoft.AspNetCore.Http.IFormFile",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "FormFile",
+                  "descriptorName": "push"
+                },
+                {
+                  "nameOnMethod": "push",
+                  "name": "TraceCode",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Form",
+                  "descriptorName": "push"
                 }
               ],
               "returnValue": {
@@ -307,15 +355,39 @@
               "parameters": [
                 {
                   "nameOnMethod": "push",
-                  "name": "push",
+                  "name": "SourceFrom",
                   "jsonName": null,
-                  "type": "Berry.Spider.PushFromFileBasicDto",
-                  "typeSimple": "Berry.Spider.PushFromFileBasicDto",
+                  "type": "System.String",
+                  "typeSimple": "string",
                   "isOptional": false,
                   "defaultValue": null,
                   "constraintTypes": null,
-                  "bindingSourceId": "Body",
-                  "descriptorName": ""
+                  "bindingSourceId": "Form",
+                  "descriptorName": "push"
+                },
+                {
+                  "nameOnMethod": "push",
+                  "name": "File",
+                  "jsonName": null,
+                  "type": "Microsoft.AspNetCore.Http.IFormFile",
+                  "typeSimple": "Microsoft.AspNetCore.Http.IFormFile",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "FormFile",
+                  "descriptorName": "push"
+                },
+                {
+                  "nameOnMethod": "push",
+                  "name": "TraceCode",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "Form",
+                  "descriptorName": "push"
                 }
               ],
               "returnValue": {
@@ -940,6 +1012,132 @@
               },
               "allowAnonymous": null,
               "implementFrom": "Volo.Abp.Application.Services.IDeleteAppService<System.Int32>"
+            }
+          }
+        },
+        "Berry.Spider.Biz.SpiderAppInfoController": {
+          "controllerName": "SpiderAppInfo",
+          "controllerGroupName": "SpiderAppInfo",
+          "isRemoteService": true,
+          "isIntegrationService": false,
+          "apiVersion": null,
+          "type": "Berry.Spider.Biz.SpiderAppInfoController",
+          "interfaces": [
+            {
+              "type": "Berry.Spider.Biz.ISpiderAppInfoService",
+              "name": "ISpiderAppInfoService",
+              "methods": [
+                {
+                  "name": "GetSpiderAppListAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "top",
+                      "typeAsString": "System.Int32, System.Private.CoreLib",
+                      "type": "System.Int32",
+                      "typeSimple": "number",
+                      "isOptional": true,
+                      "defaultValue": 3
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "System.Collections.Generic.List<Berry.Spider.Biz.SpiderAppInfoDto>",
+                    "typeSimple": "[Berry.Spider.Biz.SpiderAppInfoDto]"
+                  }
+                },
+                {
+                  "name": "GetSpiderAppInfoAsync",
+                  "parametersOnMethod": [
+                    {
+                      "name": "bizNo",
+                      "typeAsString": "System.String, System.Private.CoreLib",
+                      "type": "System.String",
+                      "typeSimple": "string",
+                      "isOptional": false,
+                      "defaultValue": null
+                    }
+                  ],
+                  "returnValue": {
+                    "type": "Berry.Spider.Biz.SpiderAppInfoDto",
+                    "typeSimple": "Berry.Spider.Biz.SpiderAppInfoDto"
+                  }
+                }
+              ]
+            }
+          ],
+          "actions": {
+            "GetSpiderAppListAsyncByTop": {
+              "uniqueName": "GetSpiderAppListAsyncByTop",
+              "name": "GetSpiderAppListAsync",
+              "httpMethod": "GET",
+              "url": "api/services/app-info/getAppList",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "top",
+                  "typeAsString": "System.Int32, System.Private.CoreLib",
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": true,
+                  "defaultValue": 3
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "top",
+                  "name": "top",
+                  "jsonName": null,
+                  "type": "System.Int32",
+                  "typeSimple": "number",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "System.Collections.Generic.List<Berry.Spider.Biz.SpiderAppInfoDto>",
+                "typeSimple": "[Berry.Spider.Biz.SpiderAppInfoDto]"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.Biz.ISpiderAppInfoService"
+            },
+            "GetSpiderAppInfoAsyncByBizNo": {
+              "uniqueName": "GetSpiderAppInfoAsyncByBizNo",
+              "name": "GetSpiderAppInfoAsync",
+              "httpMethod": "GET",
+              "url": "api/services/app-info/getAppInfo",
+              "supportedVersions": [],
+              "parametersOnMethod": [
+                {
+                  "name": "bizNo",
+                  "typeAsString": "System.String, System.Private.CoreLib",
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null
+                }
+              ],
+              "parameters": [
+                {
+                  "nameOnMethod": "bizNo",
+                  "name": "bizNo",
+                  "jsonName": null,
+                  "type": "System.String",
+                  "typeSimple": "string",
+                  "isOptional": false,
+                  "defaultValue": null,
+                  "constraintTypes": null,
+                  "bindingSourceId": "ModelBinding",
+                  "descriptorName": ""
+                }
+              ],
+              "returnValue": {
+                "type": "Berry.Spider.Biz.SpiderAppInfoDto",
+                "typeSimple": "Berry.Spider.Biz.SpiderAppInfoDto"
+              },
+              "allowAnonymous": null,
+              "implementFrom": "Berry.Spider.Biz.ISpiderAppInfoService"
             }
           }
         }

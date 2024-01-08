@@ -30,8 +30,8 @@ public class AdminHttpApiClientModule : AbpModule
         // );
 
         //Static C# API Client Proxies.
-        //abp generate-proxy -t csharp -u http://localhost:44346 --without-contracts -m berry_admin
-        //web host：abp generate-proxy -t js -u http://localhost:44346 -m berry_admin
+        //abp generate-proxy -t csharp -u https://localhost:44346 --without-contracts -m berry_admin
+        //web host：abp generate-proxy -t js -u https://localhost:44346 -m berry_admin
         context.Services.AddStaticHttpClientProxies(typeof(AdminApplicationContractsModule).Assembly,
             AdminGlobalConstants.RemoteServiceName
         );

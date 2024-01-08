@@ -16,8 +16,8 @@
         url: abp.appPath + 'api/services/spider/baidu/push-from-file',
         type: 'POST',
         dataType: null,
-        data: JSON.stringify(push)
-      }, ajaxParams));
+        data: 'push.SourceFrom=' + push.sourceFrom + '&' + 'push.TraceCode=' + push.traceCode
+      }, $.extend(true, {}, { contentType: 'application/x-www-form-urlencoded; charset=UTF-8' }, ajaxParams)));
     };
 
   })();
@@ -49,8 +49,8 @@
         url: abp.appPath + 'api/services/spider/sogou/push-from-file',
         type: 'POST',
         dataType: null,
-        data: JSON.stringify(push)
-      }, ajaxParams));
+        data: 'push.SourceFrom=' + push.sourceFrom + '&' + 'push.TraceCode=' + push.traceCode
+      }, $.extend(true, {}, { contentType: 'application/x-www-form-urlencoded; charset=UTF-8' }, ajaxParams)));
     };
 
   })();
@@ -97,8 +97,8 @@
         url: abp.appPath + 'api/services/spider/toutiao/push-from-file',
         type: 'POST',
         dataType: null,
-        data: JSON.stringify(push)
-      }, ajaxParams));
+        data: 'push.SourceFrom=' + push.sourceFrom + '&' + 'push.TraceCode=' + push.traceCode
+      }, $.extend(true, {}, { contentType: 'application/x-www-form-urlencoded; charset=UTF-8' }, ajaxParams)));
     };
 
   })();
@@ -190,6 +190,28 @@
         url: abp.appPath + 'api/services/serv-machine/delete' + abp.utils.buildQueryString([{ name: 'id', value: id }]) + '',
         type: 'DELETE',
         dataType: null
+      }, ajaxParams));
+    };
+
+  })();
+
+  // controller berry.spider.biz.spiderAppInfo
+
+  (function(){
+
+    abp.utils.createNamespace(window, 'berry.spider.biz.spiderAppInfo');
+
+    berry.spider.biz.spiderAppInfo.getSpiderAppList = function(top, ajaxParams) {
+      return abp.ajax($.extend(true, {
+        url: abp.appPath + 'api/services/app-info/getAppList' + abp.utils.buildQueryString([{ name: 'top', value: top }]) + '',
+        type: 'GET'
+      }, ajaxParams));
+    };
+
+    berry.spider.biz.spiderAppInfo.getSpiderAppInfo = function(bizNo, ajaxParams) {
+      return abp.ajax($.extend(true, {
+        url: abp.appPath + 'api/services/app-info/getAppInfo' + abp.utils.buildQueryString([{ name: 'bizNo', value: bizNo }]) + '',
+        type: 'GET'
       }, ajaxParams));
     };
 
