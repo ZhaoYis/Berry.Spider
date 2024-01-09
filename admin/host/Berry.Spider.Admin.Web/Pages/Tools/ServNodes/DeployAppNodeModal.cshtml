@@ -14,6 +14,7 @@
         <abp-modal-header title="@L["DeployAppNodeModal:Title"].Value"></abp-modal-header>
         <abp-modal-body>
             <abp-input asp-for="Deploy.CurrentAgentBizNo"/>
+            <abp-input asp-for="Deploy.ConnectionId"/>
             <abp-select asp-for="Deploy.RunAppVersionBizNo" asp-items="@Model.Deploy.AppVersionList"/>
             <abp-input asp-for="Deploy.RunAppCount"/>
         </abp-modal-body>

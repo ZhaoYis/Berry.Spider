@@ -49,7 +49,7 @@ public class SpiderAppNotifyHub : AbpHub<ISpiderAppReceiveHub>, ISpiderAppNotify
             ConnectionId = Context.ConnectionId
         };
         var apiResp = await _servAgentIntegration.OnlineAsync(machineOnlineDto);
-        if (apiResp.IsSuccessful)
+        if (apiResp)
         {
             //加到Agent组中
             await this.Groups.AddToGroupAsync(Context.ConnectionId, MachineGroupCode.App.GetName());

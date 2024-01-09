@@ -1,4 +1,3 @@
-using Berry.Spider.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -31,7 +30,7 @@ public class ServMachineController : SpiderControllerBase, IServMachineAppServic
     /// 根据机器ConnectionId获取机器信息
     /// </summary>
     /// <returns></returns>
-    [HttpGet, Route("getByConnectionId"), DisableDataWrapper]
+    [HttpGet, Route("getByConnectionId")]
     public Task<ServMachineDto?> GetByConnectionIdAsync(string connectionId)
     {
         return this.ServMachineAppService.GetByConnectionIdAsync(connectionId);
@@ -41,7 +40,7 @@ public class ServMachineController : SpiderControllerBase, IServMachineAppServic
     /// 上线
     /// </summary>
     /// <returns></returns>
-    [HttpPost, Route("online"), DisableDataWrapper]
+    [HttpPost, Route("online")]
     public Task<bool> OnlineAsync([FromBody] ServMachineOnlineDto online)
     {
         return this.ServMachineAppService.OnlineAsync(online);
@@ -67,7 +66,7 @@ public class ServMachineController : SpiderControllerBase, IServMachineAppServic
     /// 获取机器列表
     /// </summary>
     /// <returns></returns>
-    [HttpGet, Route("getList"), DisableDataWrapper]
+    [HttpGet, Route("getList")]
     public Task<PagedResultDto<ServMachineDto>> GetListAsync(GetListInput input)
     {
         return this.ServMachineAppService.GetListAsync(input);

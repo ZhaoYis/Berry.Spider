@@ -33,14 +33,15 @@ public class DeployAppNodeModal : AbpPageModel
     [BindProperty]
     public DeployAppNodeDto Deploy { get; set; }
 
-    public async Task OnGetAsync(string agentBizNo)
+    public async Task OnGetAsync(string agentBizNo, string connectionId)
     {
         List<SpiderAppInfoDto> appInfoList = await _spiderAppInfoService.GetSpiderAppListAsync();
-        if (appInfoList is {Count: > 0})
+        if (appInfoList is { Count: > 0 })
         {
             this.Deploy = new DeployAppNodeDto
             {
                 CurrentAgentBizNo = agentBizNo,
+                ConnectionId = connectionId,
                 AppVersionList = appInfoList.Select(c => new SelectListItem
                 {
                     Text = c.Name,
@@ -69,7 +70,7 @@ public class DeployAppNodeModal : AbpPageModel
                 RunAppCount = this.Deploy.RunAppCount
             })
         };
-        await _hubContext.Clients.Groups(MachineGroupCode.Agent.GetName()).ReceiveMessageAsync(agentReceiveDto);
+        await _hubContext.Clients.Client(this.Deploy.ConnectionId).ReceiveMessageAsync(agentReceiveDto);
 
         return new JsonResult(this.Deploy);
     }

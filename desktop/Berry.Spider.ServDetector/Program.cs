@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Berry.Spider.Core;
+using Berry.Spider.Core.Commands;
+using Berry.Spider.ServDetector.Commands;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
@@ -30,10 +33,16 @@ public class Program
             await Host.CreateDefaultBuilder(args)
                 .ConfigureServices(services =>
                 {
+                    services.RegisterCommand(opt =>
+                    {
+                        opt.Commands.Add(RealTimeMessageCode.SYSTEM_MESSAGE.GetName(), typeof(SystemMessageCommand));
+                        opt.Commands.Add(RealTimeMessageCode.CONNECTION_SUCCESSFUL.GetName(), typeof(ConnectionSuccessfulCommand));
+                        opt.Commands.Add(RealTimeMessageCode.NOTIFY_AGENT_TO_START_DEPLOYING_APP.GetName(), typeof(NotifyAgentToStartDeployingAppCommand));
+                    });
+
                     services.AddHostedService<ServDetectorHostedService>();
                     services.AddHostedService<ServAgentHostedService>();
                 })
-                //集成AgileConfig
                 .UseAgileConfig()
                 .UseSerilog()
                 .RunConsoleAsync();

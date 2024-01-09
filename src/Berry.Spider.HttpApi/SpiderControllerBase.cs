@@ -6,7 +6,7 @@ namespace Berry.Spider;
 /// <summary>
 /// 自定义控制器基类
 /// </summary>
-[EnableDataWrapper]
+[DisableDataWrapper]
 public class SpiderControllerBase : AbpControllerBase
 {
 }

@@ -21,7 +21,7 @@ public class SpiderAppInfoController : SpiderControllerBase, ISpiderAppInfoServi
     /// </summary>
     /// <param name="top">最近N个</param>
     /// <returns></returns>
-    [HttpGet, Route("getAppList"), DisableDataWrapper]
+    [HttpGet, Route("getAppList")]
     public Task<List<SpiderAppInfoDto>> GetSpiderAppListAsync(int top = 3)
     {
         return _spiderAppInfoService.GetSpiderAppListAsync(top);
@@ -32,7 +32,7 @@ public class SpiderAppInfoController : SpiderControllerBase, ISpiderAppInfoServi
     /// </summary>
     /// <param name="bizNo">业务编码</param>
     /// <returns></returns>
-    [HttpGet, Route("getAppInfo"), DisableDataWrapper]
+    [HttpGet, Route("getAppInfo")]
     public Task<SpiderAppInfoDto> GetSpiderAppInfoAsync(string bizNo)
     {
         return _spiderAppInfoService.GetSpiderAppInfoAsync(bizNo);

@@ -15,6 +15,12 @@ public class DeployAppNodeDto
     public string CurrentAgentBizNo { get; set; }
 
     /// <summary>
+    /// 当前操作的代理节点链接ID
+    /// </summary>
+    [HiddenInput]
+    public string ConnectionId { get; set; }
+
+    /// <summary>
     /// App版本集合
     /// </summary>
     public List<SelectListItem> AppVersionList { get; set; }

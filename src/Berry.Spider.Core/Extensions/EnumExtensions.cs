@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace Berry.Spider.Core;
@@ -19,35 +20,25 @@ public static class EnumExtensions
     public static string GetDescription<T>(this T source)
     {
         Type enumType = typeof(T);
-        return EnumDescriptionCache.GetOrAdd(enumType, () =>
+        string name = source.GetName();
+        FieldInfo? fieldInfo = enumType.GetField(name);
+        if (fieldInfo != null)
         {
-            // 获取枚举常数名称。
-            string? name = Enum.GetName(enumType, source);
-            if (name != null)
+            if (Attribute.GetCustomAttribute(fieldInfo, typeof(DescriptionAttribute), false) is DescriptionAttribute attr)
             {
-                // 获取枚举字段。
-                FieldInfo? fieldInfo = enumType.GetField(name);
-                if (fieldInfo != null)
-                {
-                    // 获取描述的属性。
-                    if (Attribute.GetCustomAttribute(fieldInfo, typeof(DescriptionAttribute), false) is DescriptionAttribute attr)
-                    {
-                        return attr.Description;
-                    }
-                }
+                return attr.Description;
             }
+        }
 
-            return string.Empty;
-        });
+        return string.Empty;
     }
 
     /// <summary>
     /// 获取枚举字符串名称
     /// </summary>
     /// <returns></returns>
-    public static string GetName<T>(this T source)
+    public static string GetName<T>([NotNull] this T source)
     {
-        Type enumType = typeof(T);
-        return EnumNameCache.GetOrAdd(enumType, () => Enum.GetName(enumType, source));
+        return Enum.GetName(typeof(T), source);
     }
 }

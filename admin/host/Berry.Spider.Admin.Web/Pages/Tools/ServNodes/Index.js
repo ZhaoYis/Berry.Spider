@@ -27,7 +27,8 @@ $(function () {
                                 iconClass: "fas fa-building",
                                 action: function (data) {
                                     deployAppNodeModal.open({
-                                        agentBizNo: data.record.bizNo
+                                        agentBizNo: data.record.bizNo,
+                                        connectionId: data.record.connectionId,
                                     });
                                 }
                             },

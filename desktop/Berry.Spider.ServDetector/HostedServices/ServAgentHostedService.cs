@@ -1,6 +1,8 @@
 using Berry.Spider.Core;
+using Berry.Spider.Core.Commands;
 using Berry.Spider.RealTime;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -10,10 +12,13 @@ public class ServAgentHostedService : IHostedService
 {
     private readonly ILogger<ServAgentHostedService> _logger;
     private readonly HubConnection _connection;
+    private IServiceScopeFactory ServiceScopeFactory { get; }
 
-    public ServAgentHostedService(ILogger<ServAgentHostedService> logger)
+    public ServAgentHostedService(ILogger<ServAgentHostedService> logger,
+        IServiceScopeFactory factory)
     {
         _logger = logger;
+        ServiceScopeFactory = factory;
 
         _connection = new HubConnectionBuilder()
             .WithUrl("https://localhost:44334/signalr-hubs/spider/agent-notify")
@@ -46,9 +51,23 @@ public class ServAgentHostedService : IHostedService
 
         _connection.On<SpiderAgentReceiveDto>(typeof(SpiderAgentReceiveDto).GetMethodName(), async msg =>
         {
-            if (msg.Code == RealTimeMessageCode.NOTIFY_AGENT_TO_START_DEPLOYING_APP)
+            try
             {
-                Console.WriteLine(msg.Message);
+                using var scope = ServiceScopeFactory.CreateScope();
+                var commandSelector = scope.ServiceProvider.GetRequiredService<ICommandSelector>();
+                CommandLineArgs commandLineArgs = new CommandLineArgs
+                {
+                    Command = msg.Code.GetName(),
+                    Body = msg.Data
+                };
+                var commandType = commandSelector.Select(commandLineArgs);
+
+                var command = (IFixedCommand)scope.ServiceProvider.GetRequiredService(commandType);
+                await command.ExecuteAsync(commandLineArgs);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         });
     }
