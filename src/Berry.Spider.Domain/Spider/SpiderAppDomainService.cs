@@ -36,7 +36,7 @@ public class SpiderAppDomainService : DomainService
                 PublishedAt = publishedAt,
                 //七牛云对象存储key
                 //TODO：后续通过七牛云回调来处理，目前qshell暂时不支持
-                OssKey = $"consumer-client/Berry.Spider.Consumers-{version}"
+                OssKey = $"consumer-client/Berry.Spider.Consumers-{version}.zip"
             };
 
             await _spiderAppInfoRepository.InsertAsync(appInfo);
