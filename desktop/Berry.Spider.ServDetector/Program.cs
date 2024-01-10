@@ -33,6 +33,7 @@ public class Program
             await Host.CreateDefaultBuilder(args)
                 .ConfigureServices(services =>
                 {
+                    services.AddTransient<QiniuDownloadManager>();
                     services.RegisterCommand(opt =>
                     {
                         opt.Commands.Add(RealTimeMessageCode.SYSTEM_MESSAGE.GetName(), typeof(SystemMessageCommand));
