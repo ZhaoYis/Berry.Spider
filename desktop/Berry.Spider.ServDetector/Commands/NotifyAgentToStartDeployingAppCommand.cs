@@ -26,7 +26,7 @@ public class NotifyAgentToStartDeployingAppCommand : IFixedCommand, ITransientDe
     public async Task ExecuteAsync(CommandLineArgs commandLineArgs)
     {
         NotifyAgentToStartDeployingAppDto? dto = JsonSerializer.Deserialize<NotifyAgentToStartDeployingAppDto>(commandLineArgs.Body);
-        if (dto is not null and { RunAppCount: > 0 })
+        if (dto is not null and {RunAppCount: > 0})
         {
             string deployPath = Path.Combine(AppContext.BaseDirectory, "Download");
             if (!Directory.Exists(deployPath)) Directory.CreateDirectory(deployPath);
@@ -42,21 +42,20 @@ public class NotifyAgentToStartDeployingAppCommand : IFixedCommand, ITransientDe
                     process.Kill();
                 }
 
-                deployPath = easyConfigHelper.Get("Install", "Path");
+                //检查版本
+                string currentRunVersion = easyConfigHelper.Get("Install", "Version");
+                if (currentRunVersion == dto.RunAppInfo.TagName)
+                {
+                    deployPath = easyConfigHelper.Get("Install", "Path");
+                }
+                else
+                {
+                    deployPath = await this.DownloadPackageAsync(deployPath, dto.RunAppInfo);
+                }
             }
             else
             {
-                //下载部署包
-                deployPath = Path.Combine(deployPath, dto.RunAppInfo.Name);
-                if (!Directory.Exists(deployPath)) Directory.CreateDirectory(deployPath);
-
-                string downloadSourceUrl = dto.RunAppInfo.OssKey;
-                string fileName = Path.GetFileName(downloadSourceUrl);
-                string deployFileName = Path.Combine(deployPath, fileName);
-                await this.QiniuDownloadManager.DownloadPrivateFileAsync(downloadSourceUrl, deployFileName);
-
-                //解压
-                deployPath = ZipHelper.UnZip(deployFileName, deployPath);
+                deployPath = await this.DownloadPackageAsync(deployPath, dto.RunAppInfo);
             }
 
             //运行节点
@@ -70,10 +69,30 @@ public class NotifyAgentToStartDeployingAppCommand : IFixedCommand, ITransientDe
             //保存配置信息
             easyConfigHelper.Set("Install", new Dictionary<string, string>
             {
-                { "Path", deployPath },
-                { "Count", dto.RunAppCount.ToString() }
+                {"Path", deployPath},
+                {"Version", dto.RunAppInfo.TagName},
+                {"Count", dto.RunAppCount.ToString()}
             });
         }
+    }
+
+    /// <summary>
+    /// 下载部署包
+    /// </summary>
+    /// <returns></returns>
+    private async Task<string> DownloadPackageAsync(string downloadPath, SpiderAppInfoDto appInfo)
+    {
+        //下载部署包
+        string downloadFilePath = Path.Combine(downloadPath, appInfo.Name);
+        if (!Directory.Exists(downloadFilePath)) Directory.CreateDirectory(downloadFilePath);
+
+        string downloadSourceUrl = appInfo.OssKey;
+        string fileName = Path.GetFileName(downloadSourceUrl);
+        string deployFileName = Path.Combine(downloadFilePath, fileName);
+        await this.QiniuDownloadManager.DownloadPrivateFileAsync(downloadSourceUrl, deployFileName);
+
+        //解压
+        return ZipHelper.UnZip(deployFileName, downloadFilePath);
     }
 }
 
