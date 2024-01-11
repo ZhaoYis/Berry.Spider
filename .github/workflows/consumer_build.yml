@@ -21,13 +21,13 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Restore Dependencies
-        run: dotnet restore src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj
+        run: dotnet restore desktop/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj
 
       - name: Build Application
-        run: dotnet build src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release
+        run: dotnet build desktop/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release
 
       - name: Publish Application
-        run: dotnet publish src/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release -o ${{ github.workspace }}/publish/Berry.Spider.Consumers -r win-x64 --self-contained=false /p:PublishSingleFile=true /p:Environment=${{ env.ENVIRONMENT }}
+        run: dotnet publish desktop/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release -o ${{ github.workspace }}/publish/Berry.Spider.Consumers -r win-x64 --self-contained=false /p:PublishSingleFile=true /p:Environment=${{ env.ENVIRONMENT }}
         env:
           ENVIRONMENT: ${{ env.ASPNETCORE_ENVIRONMENT }}
 
