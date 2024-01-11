@@ -24,7 +24,7 @@ public class GithubWebhookReleasedHandler : INotificationHandler<GithubWebhookDt
 
     public async Task Handle(GithubWebhookDto body, CancellationToken cancellationToken)
     {
-        if (body.Action == GithubWebhookAction.Released)
+        if (body.Action == GithubWebhookAction.Released.GetName().ToLower())
         {
             this.Logger.LogInformation($"收到Github Webhook[{GithubWebhookAction.Released.GetName()}]消息，报文：{JsonSerializer.Serialize(body)}");
 

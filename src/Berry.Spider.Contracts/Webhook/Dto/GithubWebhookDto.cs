@@ -9,7 +9,7 @@ namespace Berry.Spider.Webhook;
 /// </summary>
 public class GithubWebhookDto : INotification
 {
-    [JsonPropertyName("action")] public GithubWebhookAction Action { get; set; }
+    [JsonPropertyName("action")] public string Action { get; set; }
 
     [JsonPropertyName("release")] public GithubWebhookReleaseDto? Release { get; set; }
 }
