@@ -34,6 +34,7 @@ public class SpiderAppDomainService : DomainService
                 TargetCommitish = targetCommitish,
                 CreatedAt = createdAt,
                 PublishedAt = publishedAt,
+                Version = version,
                 //七牛云对象存储key
                 //TODO：后续通过七牛云回调来处理，目前qshell暂时不支持
                 OssKey = $"consumer-client/Berry.Spider.Consumers-{version}.zip"
