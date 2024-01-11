@@ -17,5 +17,10 @@ public enum RealTimeMessageCode
     /// <summary>
     /// 通知Agent节点开始部署应用
     /// </summary>
-    [Description("通知Agent节点开始部署应用")] NOTIFY_AGENT_TO_START_DEPLOYING_APP = 1000
+    [Description("通知Agent节点开始部署应用")] NOTIFY_AGENT_TO_START_DEPLOYING_APP = 1000,
+
+    /// <summary>
+    /// 通知Agent节点重启所有应用
+    /// </summary>
+    [Description("通知Agent节点重启所有应用")] NOTIFY_AGENT_TO_RESTART_APP = 1100
 }

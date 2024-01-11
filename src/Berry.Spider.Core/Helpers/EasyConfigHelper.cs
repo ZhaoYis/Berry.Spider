@@ -45,22 +45,10 @@ public class EasyConfigHelper
 
     public void Set(string sectionName, string key, string value)
     {
-        if (this.ConfigDict.ContainsKey(sectionName))
+        this.Set(sectionName, new Dictionary<string, string>
         {
-            var section = this.ConfigDict[sectionName];
-            section[key] = value;
-            this.ConfigDict[sectionName] = section;
-        }
-        else
-        {
-            var section = new Dictionary<string, string>
-            {
-                [key] = value
-            };
-            this.ConfigDict[sectionName] = section;
-        }
-
-        this.SaveToFile();
+            { key, value }
+        });
     }
 
     public void Set(string sectionName, Dictionary<string, string> values)

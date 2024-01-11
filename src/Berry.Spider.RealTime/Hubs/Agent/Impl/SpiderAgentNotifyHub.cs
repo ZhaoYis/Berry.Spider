@@ -20,13 +20,27 @@ public class SpiderAgentNotifyHub : AbpHub<ISpiderAgentReceiveHub>, ISpiderAgent
     /// 向所有客户端发送消息
     /// </summary>
     /// <returns></returns>
-    public async Task SendToAllAsync(SpiderAgentNotifyDto notify)
+    public async Task SendToAllAsync(SpiderAgentNotifyToAllDto notifyToAll)
     {
         await this.Clients.Groups(new[] { MachineGroupCode.Agent.GetName() }).ReceiveSystemMessageAsync(new ReceiveSystemMessageDto
         {
-            Code = notify.Code,
-            Data = notify.Data,
-            Message = notify.Message
+            Code = notifyToAll.Code,
+            Data = notifyToAll.Data,
+            Message = notifyToAll.Message
+        });
+    }
+
+    /// <summary>
+    /// 向指定客户端发送消息
+    /// </summary>
+    /// <returns></returns>
+    public async Task SendToOneAsync(SpiderAgentNotifyToOneDto notifyToOne)
+    {
+        await this.Clients.Client(notifyToOne.ConnectionId).ReceiveMessageAsync(new SpiderAgentReceiveDto
+        {
+            Code = notifyToOne.Code,
+            Data = notifyToOne.Data,
+            Message = notifyToOne.Message
         });
     }
 
@@ -81,7 +95,7 @@ public class SpiderAgentNotifyHub : AbpHub<ISpiderAgentReceiveHub>, ISpiderAgent
             GroupCode = MachineGroupCode.Agent.GetName()
         };
         var apiResp = await _servAgentIntegration.OfflineAsync(machineOfflineDto);
-        
+
         //从组中移除Agent
         await this.Groups.RemoveFromGroupAsync(Context.ConnectionId, MachineGroupCode.Agent.GetName());
     }

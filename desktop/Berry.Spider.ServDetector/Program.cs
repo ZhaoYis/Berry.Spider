@@ -39,6 +39,7 @@ public class Program
                         opt.Commands.Add(RealTimeMessageCode.SYSTEM_MESSAGE.GetName(), typeof(SystemMessageCommand));
                         opt.Commands.Add(RealTimeMessageCode.CONNECTION_SUCCESSFUL.GetName(), typeof(ConnectionSuccessfulCommand));
                         opt.Commands.Add(RealTimeMessageCode.NOTIFY_AGENT_TO_START_DEPLOYING_APP.GetName(), typeof(NotifyAgentToStartDeployingAppCommand));
+                        opt.Commands.Add(RealTimeMessageCode.NOTIFY_AGENT_TO_RESTART_APP.GetName(), typeof(NotifyAgentToRestartAppCommand));
                     });
 
                     services.AddHostedService<ServDetectorHostedService>();

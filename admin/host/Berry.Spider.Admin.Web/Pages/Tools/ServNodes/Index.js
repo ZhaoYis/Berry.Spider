@@ -8,6 +8,17 @@ $(function () {
         abp.log.debug("代理节点" + arguments[1].responseText.currentAgentBizNo + "部署成功");
     });
 
+    var connection = new signalR.HubConnectionBuilder()
+        .withUrl("/signalr-hubs/spider/agent-notify")
+        .withAutomaticReconnect()
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
+    connection.start().then(function () {
+        console.log("conn to signalR..")
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
     var dataTable = $('#ServNodesTable').DataTable(
         abp.libs.datatables.normalizeConfiguration({
             serverSide: true,
@@ -36,15 +47,26 @@ $(function () {
                                 text: l('SMI:RestartAllAppNode'),
                                 visible: abp.auth.isGranted('Admin.Tools.ServNodes.RestartAllAppNode'),
                                 confirmMessage: function (data) {
-                                    return "Are you sure to restart all node?" + data.record.machineCode;
+                                    return "Are you sure to restart all node?";
                                 },
                                 iconClass: "fas fa-trash-restore",
                                 action: function (data) {
-                                    berry.spider.biz.servMachine
-                                        .restartAllAppNode(data.record.bizNo)
+                                    if (data.record.status === 20) {
+                                        abp.notify.error("Agent is not online!");
+                                        return;
+                                    }
+
+                                    var push = {
+                                        Code: 1100,//发送消息 --> RealTimeMessageCode.NOTIFY_AGENT_TO_RESTART_APP
+                                        ConnectionId: data.record.connectionId
+                                    };
+                                    connection.invoke("SendToOneAsync", push)
                                         .then(function () {
                                             abp.notify.info("Successfully restarted!");
                                             data.table.ajax.reload();
+                                        })
+                                        .catch(function (err) {
+                                            return console.error(err.toString());
                                         });
                                 }
                             }

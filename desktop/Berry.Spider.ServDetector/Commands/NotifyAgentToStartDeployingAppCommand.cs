@@ -10,6 +10,7 @@ namespace Berry.Spider.ServDetector.Commands;
 /// <summary>
 /// 通知Agent节点开始部署应用
 /// </summary>
+[CommandName(nameof(RealTimeMessageCode.NOTIFY_AGENT_TO_START_DEPLOYING_APP))]
 public class NotifyAgentToStartDeployingAppCommand : IFixedCommand, ITransientDependency
 {
     private const string AgentConfigName = "agent.ini";
