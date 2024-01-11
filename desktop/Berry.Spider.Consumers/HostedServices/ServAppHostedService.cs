@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Berry.Spider.Core;
 using Berry.Spider.RealTime;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -13,39 +14,45 @@ public class ServAppHostedService : IHostedService
 {
     private readonly ILogger<ServAppHostedService> _logger;
     private readonly HubConnection _connection;
+    private RealTimeOptions? RealTimeOptions { get; }
 
-    public ServAppHostedService(ILogger<ServAppHostedService> logger)
+    public ServAppHostedService(ILogger<ServAppHostedService> logger,
+        IConfiguration configuration)
     {
         _logger = logger;
+        RealTimeOptions = configuration.GetSection(nameof(RealTimeOptions)).Get<RealTimeOptions>();
 
-        _connection = new HubConnectionBuilder()
-            .WithUrl("https://localhost:44334/signalr-hubs/spider/app-notify")
-            .WithAutomaticReconnect()
-            .Build();
-
-        _connection.On<ReceiveSystemMessageDto>(typeof(ReceiveSystemMessageDto).GetMethodName(), async msg =>
+        if (RealTimeOptions is not null)
         {
-            if (msg.Code == RealTimeMessageCode.CONNECTION_SUCCESSFUL)
+            _connection = new HubConnectionBuilder()
+                .WithUrl(RealTimeOptions.AppEndpointUrl)
+                .WithAutomaticReconnect()
+                .Build();
+
+            _connection.On<ReceiveSystemMessageDto>(typeof(ReceiveSystemMessageDto).GetMethodName(), async msg =>
             {
-                AppClientInfoDto appClientInfo = new AppClientInfoDto
+                if (msg.Code == RealTimeMessageCode.CONNECTION_SUCCESSFUL)
                 {
-                    Code = RealTimeMessageCode.CONNECTION_SUCCESSFUL,
-                    Data = new AppClientInfo
+                    AppClientInfoDto appClientInfo = new AppClientInfoDto
                     {
-                        MachineName = DnsHelper.GetHostName(),
-                        MachineCode = $"{MachineGroupCode.App.GetName()}_{Guid.NewGuid().ToString("N")[..10]}",
-                        MachineIpAddr = DnsHelper.GetIpV4s(),
-                        MachineMacAddr = DnsHelper.GetMacAddress(),
-                        ConnectionId = _connection.ConnectionId
-                    }
-                };
-                await _connection.SendToAsync<AppClientInfoDto>(appClientInfo);
-            }
-            else if (msg.Code == RealTimeMessageCode.SYSTEM_MESSAGE)
-            {
-                Console.WriteLine(msg.Message);
-            }
-        });
+                        Code = RealTimeMessageCode.CONNECTION_SUCCESSFUL,
+                        Data = new AppClientInfo
+                        {
+                            MachineName = DnsHelper.GetHostName(),
+                            MachineCode = $"{MachineGroupCode.App.GetName()}_{Guid.NewGuid().ToString("N")[..10]}",
+                            MachineIpAddr = DnsHelper.GetIpV4s(),
+                            MachineMacAddr = DnsHelper.GetMacAddress(),
+                            ConnectionId = _connection.ConnectionId
+                        }
+                    };
+                    await _connection.SendToAsync<AppClientInfoDto>(appClientInfo);
+                }
+                else if (msg.Code == RealTimeMessageCode.SYSTEM_MESSAGE)
+                {
+                    Console.WriteLine(msg.Message);
+                }
+            });
+        }
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)

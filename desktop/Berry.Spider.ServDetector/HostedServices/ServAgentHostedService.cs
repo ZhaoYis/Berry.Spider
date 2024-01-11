@@ -2,6 +2,7 @@ using Berry.Spider.Core;
 using Berry.Spider.Core.Commands;
 using Berry.Spider.RealTime;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -13,63 +14,68 @@ public class ServAgentHostedService : IHostedService
     private readonly ILogger<ServAgentHostedService> _logger;
     private readonly HubConnection _connection;
     private IServiceScopeFactory ServiceScopeFactory { get; }
+    private RealTimeOptions? RealTimeOptions { get; }
 
     public ServAgentHostedService(ILogger<ServAgentHostedService> logger,
-        IServiceScopeFactory factory)
+        IServiceScopeFactory factory, IConfiguration configuration)
     {
         _logger = logger;
         ServiceScopeFactory = factory;
+        RealTimeOptions = configuration.GetSection(nameof(RealTimeOptions)).Get<RealTimeOptions>();
 
-        _connection = new HubConnectionBuilder()
-            .WithUrl("https://localhost:44334/signalr-hubs/spider/agent-notify")
-            .WithAutomaticReconnect()
-            .Build();
-
-        _connection.On<ReceiveSystemMessageDto>(typeof(ReceiveSystemMessageDto).GetMethodName(), async msg =>
+        if (RealTimeOptions is not null)
         {
-            if (msg.Code == RealTimeMessageCode.CONNECTION_SUCCESSFUL)
+            _connection = new HubConnectionBuilder()
+                .WithUrl(RealTimeOptions.AgentEndpointUrl)
+                .WithAutomaticReconnect()
+                .Build();
+
+            _connection.On<ReceiveSystemMessageDto>(typeof(ReceiveSystemMessageDto).GetMethodName(), async msg =>
             {
-                AgentClientInfoDto agentClientInfo = new AgentClientInfoDto
+                if (msg.Code == RealTimeMessageCode.CONNECTION_SUCCESSFUL)
                 {
-                    Code = RealTimeMessageCode.CONNECTION_SUCCESSFUL,
-                    Data = new AgentClientInfo
+                    AgentClientInfoDto agentClientInfo = new AgentClientInfoDto
                     {
-                        MachineName = DnsHelper.GetHostName(),
-                        MachineCode = $"{MachineGroupCode.Agent.GetName()}_{Guid.NewGuid().ToString("N")[..10]}",
-                        MachineIpAddr = DnsHelper.GetIpV4s(),
-                        MachineMacAddr = DnsHelper.GetMacAddress(),
-                        ConnectionId = _connection.ConnectionId
-                    }
-                };
-                await _connection.SendToAsync<AgentClientInfoDto>(agentClientInfo);
-            }
-            else if (msg.Code == RealTimeMessageCode.SYSTEM_MESSAGE)
-            {
-                Console.WriteLine(msg.Message);
-            }
-        });
-
-        _connection.On<SpiderAgentReceiveDto>(typeof(SpiderAgentReceiveDto).GetMethodName(), async msg =>
-        {
-            try
-            {
-                using var scope = ServiceScopeFactory.CreateScope();
-                var commandSelector = scope.ServiceProvider.GetRequiredService<ICommandSelector>();
-                CommandLineArgs commandLineArgs = new CommandLineArgs
+                        Code = RealTimeMessageCode.CONNECTION_SUCCESSFUL,
+                        Data = new AgentClientInfo
+                        {
+                            MachineName = DnsHelper.GetHostName(),
+                            MachineCode = $"{MachineGroupCode.Agent.GetName()}_{Guid.NewGuid().ToString("N")[..10]}",
+                            MachineIpAddr = DnsHelper.GetIpV4s(),
+                            MachineMacAddr = DnsHelper.GetMacAddress(),
+                            ConnectionId = _connection.ConnectionId
+                        }
+                    };
+                    await _connection.SendToAsync<AgentClientInfoDto>(agentClientInfo);
+                }
+                else if (msg.Code == RealTimeMessageCode.SYSTEM_MESSAGE)
                 {
-                    Command = msg.Code.GetName(),
-                    Body = msg.Data
-                };
-                var commandType = commandSelector.Select(commandLineArgs);
+                    Console.WriteLine(msg.Message);
+                }
+            });
 
-                var command = (IFixedCommand)scope.ServiceProvider.GetRequiredService(commandType);
-                await command.ExecuteAsync(commandLineArgs);
-            }
-            catch (Exception e)
+            _connection.On<SpiderAgentReceiveDto>(typeof(SpiderAgentReceiveDto).GetMethodName(), async msg =>
             {
-                Console.WriteLine(e);
-            }
-        });
+                try
+                {
+                    using var scope = ServiceScopeFactory.CreateScope();
+                    var commandSelector = scope.ServiceProvider.GetRequiredService<ICommandSelector>();
+                    CommandLineArgs commandLineArgs = new CommandLineArgs
+                    {
+                        Command = msg.Code.GetName(),
+                        Body = msg.Data
+                    };
+                    var commandType = commandSelector.Select(commandLineArgs);
+
+                    var command = (IFixedCommand)scope.ServiceProvider.GetRequiredService(commandType);
+                    await command.ExecuteAsync(commandLineArgs);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            });
+        }
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
