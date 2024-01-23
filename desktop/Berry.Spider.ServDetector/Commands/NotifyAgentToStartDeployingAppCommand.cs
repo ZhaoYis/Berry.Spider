@@ -26,7 +26,7 @@ public class NotifyAgentToStartDeployingAppCommand : IFixedCommand, ITransientDe
     public async Task ExecuteAsync(CommandLineArgs commandLineArgs)
     {
         NotifyAgentToStartDeployingAppDto? dto = JsonSerializer.Deserialize<NotifyAgentToStartDeployingAppDto>(commandLineArgs.Body);
-        if (dto is not null and {RunAppCount: > 0})
+        if (dto is not null and { RunAppCount: > 0 })
         {
             string deployPath = Path.Combine(AppContext.BaseDirectory, "Download");
             if (!Directory.Exists(deployPath)) Directory.CreateDirectory(deployPath);
@@ -40,6 +40,7 @@ public class NotifyAgentToStartDeployingAppCommand : IFixedCommand, ITransientDe
                 foreach (Process process in processes)
                 {
                     process.Kill();
+                    await process.WaitForExitAsync();
                 }
 
                 //检查版本
@@ -62,16 +63,16 @@ public class NotifyAgentToStartDeployingAppCommand : IFixedCommand, ITransientDe
             string deployAppPath = Path.Combine(deployPath, ProcessName, $"{ProcessName}.exe");
             for (int i = 0; i < dto.RunAppCount; i++)
             {
-                Process.Start(deployAppPath);
+                UserProcessHelper.StartProcessAndBypassUAC(deployAppPath, string.Empty, out UserProcessHelper.PROCESS_INFORMATION pInfo);
                 await Task.Delay(100);
             }
 
             //保存配置信息
             easyConfigHelper.Set("Install", new Dictionary<string, string>
             {
-                {"Path", deployPath},
-                {"Version", dto.RunAppInfo.TagName},
-                {"Count", dto.RunAppCount.ToString()}
+                { "Path", deployPath },
+                { "Version", dto.RunAppInfo.TagName },
+                { "Count", dto.RunAppCount.ToString() }
             });
         }
     }
