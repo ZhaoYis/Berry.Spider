@@ -217,7 +217,7 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
                         contentItems.TryAdd(keyword.ToString(), todoSaveContentItems);
                     }
 
-                    await Task.Delay(20);
+                    await Task.Delay(20).ConfigureAwait(false);
                 }
             );
 

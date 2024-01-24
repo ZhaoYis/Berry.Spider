@@ -35,7 +35,7 @@ public class NotifyAgentToRestartAppCommand : IFixedCommand, ITransientDependenc
             for (int i = 0; i < runAppCount; i++)
             {
                 Process.Start(deployAppPath);
-                await Task.Delay(100);
+                await Task.Delay(100).ConfigureAwait(false);
             }
         }
     }

@@ -76,7 +76,7 @@ public class ExcelFileToDbAppService : IExcelFileToDbAppService
             try
             {
                 await this.SpiderRepository.InsertManyAsync(spiderContentsPage, true);
-                await Task.Delay(2);
+                await Task.Delay(2).ConfigureAwait(false);
             }
             catch (Exception e)
             {

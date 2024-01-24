@@ -60,7 +60,7 @@ public class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
         TimeSpan processorTimeBeforeSpin = Process.GetCurrentProcess().TotalProcessorTime;
 
         //等待500ms
-        await Task.Delay(500);
+        await Task.Delay(500).ConfigureAwait(false);
 
         TimeSpan processorTimeAfterSpin = Process.GetCurrentProcess().TotalProcessorTime;
         DateTime endTime = DateTime.UtcNow;

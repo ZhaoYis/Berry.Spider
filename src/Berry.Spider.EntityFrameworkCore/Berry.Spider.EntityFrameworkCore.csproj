@@ -8,16 +8,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.1" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.1">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Volo.Abp.Core" Version="8.0.0" />
-      <PackageReference Include="Volo.Abp.Dapper" Version="8.0.0" />
-      <PackageReference Include="Volo.Abp.EntityFrameworkCore" Version="8.0.0" />
-      <PackageReference Include="Volo.Abp.EntityFrameworkCore.MySQL" Version="8.0.0" />
+      <PackageReference Include="Volo.Abp.Core" Version="8.0.2" />
+      <PackageReference Include="Volo.Abp.Dapper" Version="8.0.2" />
+      <PackageReference Include="Volo.Abp.EntityFrameworkCore" Version="8.0.2" />
+      <PackageReference Include="Volo.Abp.EntityFrameworkCore.MySQL" Version="8.0.2" />
     </ItemGroup>
 
     <ItemGroup>

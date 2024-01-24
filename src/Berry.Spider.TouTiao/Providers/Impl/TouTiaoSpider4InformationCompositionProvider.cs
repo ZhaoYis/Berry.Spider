@@ -192,7 +192,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                         }
                     }
 
-                    await Task.Delay(20);
+                    await Task.Delay(20).ConfigureAwait(false);
                 }
             );
 

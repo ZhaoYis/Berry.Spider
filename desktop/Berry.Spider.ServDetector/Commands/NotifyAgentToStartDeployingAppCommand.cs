@@ -64,7 +64,7 @@ public class NotifyAgentToStartDeployingAppCommand : IFixedCommand, ITransientDe
             for (int i = 0; i < dto.RunAppCount; i++)
             {
                 UserProcessHelper.StartProcessAndBypassUAC(deployAppPath, string.Empty, out UserProcessHelper.PROCESS_INFORMATION pInfo);
-                await Task.Delay(100);
+                await Task.Delay(100).ConfigureAwait(false);
             }
 
             //保存配置信息

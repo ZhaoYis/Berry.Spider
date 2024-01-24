@@ -221,7 +221,7 @@ public class TouTiaoSpider4HighQualityQuestionProvider : ProviderBase<TouTiaoSpi
                         contentItems.TryAdd(keyword.ToString(), todoSaveContentItems);
                     }
 
-                    await Task.Delay(20);
+                    await Task.Delay(20).ConfigureAwait(false);
                 }
             );
 

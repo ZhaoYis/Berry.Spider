@@ -27,8 +27,8 @@ public class FileHelper
             {
                 if (!string.IsNullOrWhiteSpace(row.Trim()))
                 {
-                    await _onInvoke.Invoke(row.Trim());
-                    await Task.Delay(1000);
+                    await _onInvoke.Invoke(row.Trim()).ConfigureAwait(false);
+                    await Task.Delay(1000).ConfigureAwait(false);
                 }
             }
         }

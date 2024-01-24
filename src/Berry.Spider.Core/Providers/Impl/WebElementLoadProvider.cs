@@ -98,7 +98,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                 }
                 finally
                 {
-                    await Task.Delay(20);
+                    await Task.Delay(20).ConfigureAwait(false);
                 }
             }
         }
