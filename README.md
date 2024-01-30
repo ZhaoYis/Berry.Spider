@@ -13,6 +13,7 @@
 - [ToolGood.Words](https://github.com/toolgood/ToolGood.Words)
 - [Refit](https://github.com/reactiveui/refit)
 - [Betalgo.OpenAI](https://github.com/betalgo/openai)
+- [IGeekFan.AspNetCore.Knife4jUI](https://github.com/luoyunchong/IGeekFan.AspNetCore.Knife4jUI)
 - [RabbitMQ](https://www.rabbitmq.com)
 - [Useragents.me](https://www.useragents.me)
 - [NSSM](http://www.nssm.cc/download)
