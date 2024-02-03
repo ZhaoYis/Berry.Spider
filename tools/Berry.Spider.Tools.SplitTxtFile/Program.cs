@@ -1,6 +1,14 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-string sourceFilePath = "1.txt";
+Console.WriteLine("请输入文件路径：");
+string? path = Console.ReadLine();
+while (string.IsNullOrEmpty(path) || !File.Exists(path))
+{
+    Console.WriteLine("请输入文件路径：");
+    path = Console.ReadLine();
+}
+
+string sourceFilePath = path;
 string sourceFileName = Path.GetFileName(sourceFilePath);
 List<string> rows = File.ReadAllLines(sourceFilePath).Distinct().ToList();
 int pageIndex = 0;
@@ -29,4 +37,10 @@ while (todoSaveList is { Count: > 0 })
     todoSaveList = rows.Skip(pageIndex * pagSize).Take(pagSize).ToList();
 
     Console.WriteLine($"{Path.GetFileName(fileName)} ---> 保存成功！");
+}
+
+Console.WriteLine("按Q退出：");
+while (Console.ReadKey().Key == ConsoleKey.Q)
+{
+    Environment.Exit(0);
 }
