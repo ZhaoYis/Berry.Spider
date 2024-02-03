@@ -221,6 +221,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.ServDetector",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Tools.SplitTxtFile", "tools\Berry.Spider.Tools.SplitTxtFile\Berry.Spider.Tools.SplitTxtFile.csproj", "{D130A554-9759-4210-BFCE-83863D9A122E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{0A317C5D-D895-4F58-A6F5-9B456C790F81}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile_AdminApi = Dockerfile_AdminApi
+		Dockerfile_AdminWeb = Dockerfile_AdminWeb
+		Dockerfile_AuthServer = Dockerfile_AuthServer
+		Dockerfile_SpiderApi = Dockerfile_SpiderApi
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
