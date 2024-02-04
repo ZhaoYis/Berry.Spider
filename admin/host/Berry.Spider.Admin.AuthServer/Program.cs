@@ -54,7 +54,9 @@ public class Program
 
         try
         {
-            Log.Information("Starting Berry.Spider.Admin.AuthServer.");
+            Log.Information("Starting Berry.Spider.Admin.AuthServer host.");
+            Log.Information($"ASPNETCORE_ENVIRONMENT = {env}");
+            
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.AddAppSettingsSecretsJson()
                 .UseAutofac()

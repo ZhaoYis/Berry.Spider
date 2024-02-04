@@ -1,8 +1,4 @@
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.RegularExpressions;
 using Berry.Spider.Consumers;
-using Berry.Spider.Core;
 using Berry.Spider.HttpApi.Host;
 using Serilog;
 using Serilog.Events;
@@ -13,8 +9,7 @@ public class Program
 {
     public static async Task<int> Main(string[] args)
     {
-        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "PROD";
-        var configuration = GetConfiguration(args);
+        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "DEV";
         Log.Logger = new LoggerConfiguration()
 #if DEBUG
             .MinimumLevel.Debug()
@@ -24,7 +19,6 @@ public class Program
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
             .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
-            .ReadFrom.Configuration(configuration)
             .Enrich.FromLogContext()
             .Enrich.With<ThreadIdEnricher>()
             //Debug
@@ -56,12 +50,8 @@ public class Program
 
         try
         {
-            Log.Information("Starting web host.");
-            Log.Information(JsonSerializer.Serialize(configuration.AsEnumerable().AsDictionary(), new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-            }));
+            Log.Information("Starting Berry.Spider.HttpApi host.");
+            Log.Information($"ASPNETCORE_ENVIRONMENT = {env}");
 
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.AddAppSettingsSecretsJson()
@@ -84,31 +74,5 @@ public class Program
         {
             await Log.CloseAndFlushAsync();
         }
-    }
-
-    private static IConfiguration GetConfiguration(string[] args)
-    {
-        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        if (args is { Length: > 0 })
-        {
-            string pattern = "^--environment=(.+)$";
-            var envArg = args.FirstOrDefault(arg => Regex.IsMatch(arg, pattern));
-            if (!string.IsNullOrWhiteSpace(envArg))
-            {
-                var envArgGroups = Regex.Match(envArg, pattern).Groups;
-                if (envArgGroups.Count == 2)
-                {
-                    env = envArgGroups[1].Value;
-                }
-            }
-        }
-
-        var builder = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", true)
-            .AddJsonFile($"appsettings.{env}.json", true)
-            .AddEnvironmentVariables()
-            .AddCommandLine(args);
-
-        return builder.Build();
     }
 }
