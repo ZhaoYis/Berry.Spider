@@ -1,21 +1,12 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["admin/host/Berry.Spider.Admin.HttpApi.Host/Berry.Spider.Admin.HttpApi.Host.csproj", "admin/host/Berry.Spider.Admin.HttpApi.Host/"]
-COPY ["admin/src/Berry.Spider.Admin.Application.Contracts/Berry.Spider.Admin.Application.Contracts.csproj", "admin/src/Berry.Spider.Admin.Application.Contracts/"]
-COPY ["admin/src/Berry.Spider.Admin.Domain.Shared/Berry.Spider.Admin.Domain.Shared.csproj", "admin/src/Berry.Spider.Admin.Domain.Shared/"]
-COPY ["admin/src/Berry.Spider.Admin.Application/Berry.Spider.Admin.Application.csproj", "admin/src/Berry.Spider.Admin.Application/"]
-COPY ["admin/src/Berry.Spider.Admin.Domain/Berry.Spider.Admin.Domain.csproj", "admin/src/Berry.Spider.Admin.Domain/"]
-COPY ["admin/src/Berry.Spider.Admin.EntityFrameworkCore/Berry.Spider.Admin.EntityFrameworkCore.csproj", "admin/src/Berry.Spider.Admin.EntityFrameworkCore/"]
-COPY ["admin/src/Berry.Spider.Admin.HttpApi/Berry.Spider.Admin.HttpApi.csproj", "admin/src/Berry.Spider.Admin.HttpApi/"]
-RUN dotnet restore "admin/host/Berry.Spider.Admin.HttpApi.Host/Berry.Spider.Admin.HttpApi.Host.csproj"
 COPY . .
 WORKDIR "/src/admin/host/Berry.Spider.Admin.HttpApi.Host"
-RUN dotnet build "Berry.Spider.Admin.HttpApi.Host.csproj" -c Release -o /app/build
+#RUN dotnet build "Berry.Spider.Admin.HttpApi.Host.csproj" -c Release -o /app/build
 
 FROM build AS publish
 RUN dotnet publish "Berry.Spider.Admin.HttpApi.Host.csproj" -c Release -o /app/publish /p:UseAppHost=false

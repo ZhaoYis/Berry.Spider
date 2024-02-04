@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Text.RegularExpressions;
 using Berry.Spider.Consumers;
 using Berry.Spider.HttpApi.Host;
 using Serilog;
@@ -9,7 +11,6 @@ public class Program
 {
     public static async Task<int> Main(string[] args)
     {
-        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "DEV";
         Log.Logger = new LoggerConfiguration()
 #if DEBUG
             .MinimumLevel.Debug()
@@ -51,12 +52,28 @@ public class Program
         try
         {
             Log.Information("Starting Berry.Spider.HttpApi host.");
-            Log.Information($"ASPNETCORE_ENVIRONMENT = {env}");
 
+            foreach (string arg in Environment.GetCommandLineArgs())
+            {
+                Match valuesMatch = Regex.Match(arg, "(?<key>\\w+)=(?<value>.*)");
+                if (valuesMatch.Success)
+                {
+                    string key = valuesMatch.Groups["key"].Value;
+                    string value = valuesMatch.Groups["value"].Value;
+                    Environment.SetEnvironmentVariable(key, value);
+                }
+            }
+
+            foreach (DictionaryEntry entry in Environment.GetEnvironmentVariables())
+            {
+                Log.Information("{EntryKey}={EntryValue}", entry.Key, entry.Value);
+            }
+
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "DEV";
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.AddAppSettingsSecretsJson()
-                .AddAppSettingsSecretsJson()
                 .UseAgileConfig($"appsettings.{env}.json")
+                .UseEnvironment(env)
                 .UseAutofac()
                 .UseSerilog();
             await builder.AddApplicationAsync<SpiderHttpApiHostModule>();

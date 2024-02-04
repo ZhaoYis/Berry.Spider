@@ -70,7 +70,10 @@ docker build -f Dockerfile_AdminApi -t berry_spider_admin_api:v1.0.0 .
 docker build -f Dockerfile_AdminWeb -t berry_spider_admin_web:v1.0.0 .
 docker build -f Dockerfile_AuthServer -t berry_spider_authserver:v1.0.0 .
 
-docker run -d --name berry_spider_api berry_spider_api:v1.0.0
+docker run -p 44316:44316 --name=berry_spider_api_v1.0.0 -itd --restart=always berry_spider_api:v1.0.0 \
+-e ASPNETCORE_ENVIRONMENT=PROD \
+-e ASPNETCORE_HTTP_PORTS=44316 \
+-e urls=http://0.0.0.0:44316
 
 docker login --username=zhaoy*****@163.com registry.cn-hangzhou.aliyuncs.com
 docker tag e142241b990b registry.cn-hangzhou.aliyuncs.com/berry-spider/crawler:1.0.0

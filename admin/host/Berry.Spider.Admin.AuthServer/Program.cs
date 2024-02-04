@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +14,6 @@ public class Program
 {
     public static async Task<int> Main(string[] args)
     {
-        var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "DEV";
         Log.Logger = new LoggerConfiguration()
 #if DEBUG
             .MinimumLevel.Debug()
@@ -55,12 +56,29 @@ public class Program
         try
         {
             Log.Information("Starting Berry.Spider.Admin.AuthServer host.");
-            Log.Information($"ASPNETCORE_ENVIRONMENT = {env}");
             
+            foreach (string arg in Environment.GetCommandLineArgs())
+            {
+                Match valuesMatch = Regex.Match(arg, "(?<key>\\w+)=(?<value>.*)");
+                if (valuesMatch.Success)
+                {
+                    string key = valuesMatch.Groups["key"].Value;
+                    string value = valuesMatch.Groups["value"].Value;
+                    Environment.SetEnvironmentVariable(key, value);
+                }
+            }
+
+            foreach (DictionaryEntry entry in Environment.GetEnvironmentVariables())
+            {
+                Log.Information("{EntryKey}={EntryValue}", entry.Key, entry.Value);
+            }
+
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "DEV";
             var builder = WebApplication.CreateBuilder(args);
             builder.Host.AddAppSettingsSecretsJson()
-                .UseAutofac()
                 .UseAgileConfig($"appsettings.{env}.json")
+                .UseEnvironment(env)
+                .UseAutofac()
                 .UseSerilog();
             await builder.AddApplicationAsync<AdminAuthServerModule>();
             var app = builder.Build();

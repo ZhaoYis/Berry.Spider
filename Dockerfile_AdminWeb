@@ -1,45 +1,12 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
-COPY ["admin/host/Berry.Spider.Admin.Web/Berry.Spider.Admin.Web.csproj", "admin/host/Berry.Spider.Admin.Web/"]
-COPY ["src/Berry.Spider.HttpApi.Client/Berry.Spider.HttpApi.Client.csproj", "src/Berry.Spider.HttpApi.Client/"]
-COPY ["src/Berry.Spider.Baidu.Contracts/Berry.Spider.Baidu.Contracts.csproj", "src/Berry.Spider.Baidu.Contracts/"]
-COPY ["src/Berry.Spider.Contracts/Berry.Spider.Contracts.csproj", "src/Berry.Spider.Contracts/"]
-COPY ["src/Berry.Spider.Core/Berry.Spider.Core.csproj", "src/Berry.Spider.Core/"]
-COPY ["src/Berry.Spider.FreeRedis/Berry.Spider.FreeRedis.csproj", "src/Berry.Spider.FreeRedis/"]
-COPY ["src/Berry.Spider.Proxy/Berry.Spider.Proxy.csproj", "src/Berry.Spider.Proxy/"]
-COPY ["src/Berry.Spider.Proxy.Local/Berry.Spider.Proxy.Local.csproj", "src/Berry.Spider.Proxy.Local/"]
-COPY ["src/Berry.Spider.Proxy.Abstractions/Berry.Spider.Proxy.Abstractions.csproj", "src/Berry.Spider.Proxy.Abstractions/"]
-COPY ["src/Berry.Spider.Proxy.QgNet/Berry.Spider.Proxy.QgNet.csproj", "src/Berry.Spider.Proxy.QgNet/"]
-COPY ["src/Berry.Spider.Domain.Shared/Berry.Spider.Domain.Shared.csproj", "src/Berry.Spider.Domain.Shared/"]
-COPY ["src/Berry.Spider.OpenAI.Contracts/Berry.Spider.OpenAI.Contracts.csproj", "src/Berry.Spider.OpenAI.Contracts/"]
-COPY ["src/Berry.Spider.Sogou.Contracts/Berry.Spider.Sogou.Contracts.csproj", "src/Berry.Spider.Sogou.Contracts/"]
-COPY ["src/Berry.Spider.TouTiao.Contracts/Berry.Spider.TouTiao.Contracts.csproj", "src/Berry.Spider.TouTiao.Contracts/"]
-COPY ["src/Berry.Spider.HttpApi/Berry.Spider.HttpApi.csproj", "src/Berry.Spider.HttpApi/"]
-COPY ["src/Berry.Spider.Abstractions/Berry.Spider.Abstractions.csproj", "src/Berry.Spider.Abstractions/"]
-COPY ["src/Berry.Spider.AspNetCore.Mvc/Berry.Spider.AspNetCore.Mvc.csproj", "src/Berry.Spider.AspNetCore.Mvc/"]
-COPY ["src/Berry.Spider.Baidu/Berry.Spider.Baidu.csproj", "src/Berry.Spider.Baidu/"]
-COPY ["src/Berry.Spider.Domain/Berry.Spider.Domain.csproj", "src/Berry.Spider.Domain/"]
-COPY ["src/Berry.Spider.Segmenter/Berry.Spider.Segmenter.csproj", "src/Berry.Spider.Segmenter/"]
-COPY ["src/Berry.Spider.EventBus/Berry.Spider.EventBus.csproj", "src/Berry.Spider.EventBus/"]
-COPY ["src/Berry.Spider.Sogou/Berry.Spider.Sogou.csproj", "src/Berry.Spider.Sogou/"]
-COPY ["src/Berry.Spider.TouTiao/Berry.Spider.TouTiao.csproj", "src/Berry.Spider.TouTiao/"]
-COPY ["src/Berry.Spider.RealTime/Berry.Spider.RealTime.csproj", "src/Berry.Spider.RealTime/"]
-COPY ["src/Berry.Spider.RealTime.Abstractions/Berry.Spider.RealTime.Abstractions.csproj", "src/Berry.Spider.RealTime.Abstractions/"]
-COPY ["src/Berry.Spider.RealTime.Shared/Berry.Spider.RealTime.Shared.csproj", "src/Berry.Spider.RealTime.Shared/"]
-COPY ["src/Berry.Spider.RealTime.Integration/Berry.Spider.RealTime.Integration.csproj", "src/Berry.Spider.RealTime.Integration/"]
-COPY ["admin/src/Berry.Spider.Admin.Application.Contracts/Berry.Spider.Admin.Application.Contracts.csproj", "admin/src/Berry.Spider.Admin.Application.Contracts/"]
-COPY ["admin/src/Berry.Spider.Admin.Domain.Shared/Berry.Spider.Admin.Domain.Shared.csproj", "admin/src/Berry.Spider.Admin.Domain.Shared/"]
-COPY ["admin/src/Berry.Spider.Admin.HttpApi.Client/Berry.Spider.Admin.HttpApi.Client.csproj", "admin/src/Berry.Spider.Admin.HttpApi.Client/"]
-COPY ["admin/src/Berry.Spider.Admin.HttpApi/Berry.Spider.Admin.HttpApi.csproj", "admin/src/Berry.Spider.Admin.HttpApi/"]
-RUN dotnet restore "admin/host/Berry.Spider.Admin.Web/Berry.Spider.Admin.Web.csproj"
 COPY . .
 WORKDIR "/src/admin/host/Berry.Spider.Admin.Web"
-RUN dotnet build "Berry.Spider.Admin.Web.csproj" -c Release -o /app/build
+#RUN dotnet build "Berry.Spider.Admin.Web.csproj" -c Release -o /app/build
 
 FROM build AS publish
 RUN dotnet publish "Berry.Spider.Admin.Web.csproj" -c Release -o /app/publish /p:UseAppHost=false
