@@ -10,6 +10,8 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Berry.Spider.Admin.Domain\Berry.Spider.Admin.Domain.csproj"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.1" />
         <PackageReference Include="Volo.Abp.EntityFrameworkCore.MySQL" Version="8.0.2" />
         <PackageReference Include="Volo.Abp.PermissionManagement.EntityFrameworkCore" Version="8.0.2" />
         <PackageReference Include="Volo.Abp.SettingManagement.EntityFrameworkCore" Version="8.0.2" />
