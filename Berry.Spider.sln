@@ -223,10 +223,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Tools.SplitTxt
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{0A317C5D-D895-4F58-A6F5-9B456C790F81}"
 	ProjectSection(SolutionItems) = preProject
-		Dockerfile_AdminApi = Dockerfile_AdminApi
-		Dockerfile_AdminWeb = Dockerfile_AdminWeb
-		Dockerfile_AuthServer = Dockerfile_AuthServer
-		Dockerfile_SpiderApi = Dockerfile_SpiderApi
+		Dockerfile_AdminApi_PROD = Dockerfile_AdminApi_PROD
+		Dockerfile_AdminWeb_PROD = Dockerfile_AdminWeb_PROD
+		Dockerfile_AuthServer_PROD = Dockerfile_AuthServer_PROD
+		Dockerfile_SpiderApi_PROD = Dockerfile_SpiderApi_PROD
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{9DE8432A-DE18-4F0F-AD29-29A505740C73}"
+	ProjectSection(SolutionItems) = preProject
+		deploy\cmd.txt = deploy\cmd.txt
+		deploy\app_start.sh = deploy\app_start.sh
 	EndProjectSection
 EndProject
 Global
