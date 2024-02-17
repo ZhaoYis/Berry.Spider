@@ -1,4 +1,4 @@
-using System.Text;
+using Berry.Spider.Contracts;
 
 namespace Berry.Spider.Core;
 
@@ -10,6 +10,7 @@ public static class ListExtensions
     /// <returns></returns>
     public static string BuildMainContent(this List<string> items,
         IStringBuilderObjectPoolProvider stringBuilderObjectPoolProvider,
+        SpiderOptions options,
         string? originalTitle = null,
         List<string>? subTitleList = null)
     {
@@ -20,7 +21,7 @@ public static class ListExtensions
         string mainContent = stringBuilderObjectPoolProvider.Invoke(builder =>
         {
             int _currentIndex = 0; //当前页
-            int _pageSize = 30; //每页记录数
+            int _pageSize = options.EverySectionRecords; //每页记录数
 
             if (subTitleList == null || subTitleList.Count == 0)
             {
@@ -37,9 +38,13 @@ public static class ListExtensions
                     //将原标题每隔一定记录加到最上面部分
                     for (int i = 0; i < items.Count; i++)
                     {
-                        if (i % _pageSize == 0)
+                        //分段标题
+                        if (options.SectionTitleOptions.IsEnable)
                         {
-                            builder.AppendFormat("<p><strong>{0}</strong></p>", originalTitle);
+                            if (i % _pageSize == 0)
+                            {
+                                builder.AppendFormat("<p><strong>{0}</strong></p>", originalTitle);
+                            }
                         }
 
                         string item = items[i];
@@ -51,9 +56,13 @@ public static class ListExtensions
             {
                 if (items.Count < _pageSize || (items.Count / 2) < (_pageSize / 2))
                 {
-                    //加一个小标题
-                    string subTitle = subTitleList.First();
-                    builder.AppendFormat("<p id='{0}'><strong>{0}</strong></p>", subTitle);
+                    //分段标题
+                    if (options.SectionTitleOptions.IsEnable)
+                    {
+                        //加一个小标题
+                        string subTitle = subTitleList.First();
+                        builder.AppendFormat("<p id='{0}'><strong>{0}</strong></p>", subTitle);
+                    }
 
                     for (int i = 0; i < items.Count; i++)
                     {
@@ -71,11 +80,15 @@ public static class ListExtensions
 
                         if (current.Count == _pageSize || current.Count < current.Count / 2)
                         {
-                            string subTitle = i + 1 > subTitleList.Count
-                                ? subTitleList.OrderBy(c => Guid.NewGuid()).First()
-                                : subTitleList[i];
-                            //加一个小标题
-                            builder.AppendFormat("<p id='{0}'><strong>{0}</strong></p>", subTitle);
+                            //分段标题
+                            if (options.SectionTitleOptions.IsEnable)
+                            {
+                                string subTitle = i + 1 > subTitleList.Count
+                                    ? subTitleList.OrderBy(c => Guid.NewGuid()).First()
+                                    : subTitleList[i];
+                                //加一个小标题
+                                builder.AppendFormat("<p id='{0}'><strong>{0}</strong></p>", subTitle);
+                            }
 
                             for (int j = 0; j < current.Count; j++)
                             {
@@ -91,11 +104,15 @@ public static class ListExtensions
                             {
                                 if (k + 1 == current.Count / 2)
                                 {
-                                    string subTitle = i + 1 > subTitleList.Count
-                                        ? subTitleList.OrderBy(c => Guid.NewGuid()).First()
-                                        : subTitleList[i];
-                                    //加一个小标题
-                                    builder.AppendFormat("<p id='{0}'><strong>{0}</strong></p>", subTitle);
+                                    //分段标题
+                                    if (options.SectionTitleOptions.IsEnable)
+                                    {
+                                        string subTitle = i + 1 > subTitleList.Count
+                                            ? subTitleList.OrderBy(c => Guid.NewGuid()).First()
+                                            : subTitleList[i];
+                                        //加一个小标题
+                                        builder.AppendFormat("<p id='{0}'><strong>{0}</strong></p>", subTitle);
+                                    }
                                 }
 
                                 string item = current[k];
@@ -117,7 +134,9 @@ public static class ListExtensions
     /// </summary>
     /// <returns></returns>
     public static string BuildMainContent(this List<string> items, IImageResourceProvider provider,
-        IStringBuilderObjectPoolProvider stringBuilderObjectPoolProvider, List<string>? subTitleList = null)
+        IStringBuilderObjectPoolProvider stringBuilderObjectPoolProvider,
+        SpiderOptions options,
+        List<string>? subTitleList = null)
     {
         if (items.Count == 0) return "";
 
@@ -155,13 +174,13 @@ public static class ListExtensions
         {
             builder.AppendLine("<h3>本文目录一览：</h3>");
             builder.AppendLine("<ul>");
-            
+
             for (int i = 0; i < subTitleList.Count; i++)
             {
                 string item = subTitleList[i];
                 builder.AppendFormat("<li style='margin-bottom: 3px;list-style: none'><a href='#{1}' title='{1}'>{0}、{1}</a></li>", i + 1, item);
             }
-            
+
             builder.AppendLine("</ul>");
         });
 
