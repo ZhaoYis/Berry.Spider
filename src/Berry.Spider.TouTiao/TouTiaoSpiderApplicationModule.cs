@@ -1,4 +1,3 @@
-using Berry.Spider.Abstractions;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +10,6 @@ namespace Berry.Spider.TouTiao;
     typeof(AbpDddApplicationModule),
     typeof(SpiderCoreModule),
     typeof(SpiderDomainModule),
-    typeof(SpiderAbstractionsModule),
     typeof(TouTiaoSpiderApplicationContractsModule)
 )]
 public class TouTiaoSpiderApplicationModule : AbpModule

@@ -1,6 +1,4 @@
-﻿using Berry.Spider.Contracts;
-using Berry.Spider.Core.Exceptions;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;

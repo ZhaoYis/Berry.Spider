@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Berry.Spider.Contracts;
+namespace Berry.Spider.Core;
 
 /// <summary>
 /// 关键字校验选项

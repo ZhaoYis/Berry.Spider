@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using System.Text;
-using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Segmenter;
 using Microsoft.Extensions.Options;

@@ -1,5 +1,4 @@
-﻿using OpenQA.Selenium;
-using Volo.Abp.DependencyInjection;
+﻿using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.Core;
 

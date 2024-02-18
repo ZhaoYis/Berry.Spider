@@ -1,4 +1,4 @@
-﻿namespace Berry.Spider.Core;
+﻿namespace Berry.Spider;
 
 /// <summary>
 /// 自定义分页请求参数

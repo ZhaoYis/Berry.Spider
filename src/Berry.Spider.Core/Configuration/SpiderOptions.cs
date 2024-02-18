@@ -1,4 +1,4 @@
-﻿namespace Berry.Spider.Contracts;
+﻿namespace Berry.Spider.Core;
 
 /// <summary>
 /// 爬虫配置选项

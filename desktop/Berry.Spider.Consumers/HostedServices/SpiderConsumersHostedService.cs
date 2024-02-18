@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using System.Threading;
 using System.Threading.Tasks;
-using Berry.Spider.Contracts;
+using Berry.Spider.Core;
 using Volo.Abp;
 using Volo.Abp.Threading;
 

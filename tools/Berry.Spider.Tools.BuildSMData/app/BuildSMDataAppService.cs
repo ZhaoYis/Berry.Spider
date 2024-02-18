@@ -1,4 +1,3 @@
-using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
 using Berry.Spider.EntityFrameworkCore;

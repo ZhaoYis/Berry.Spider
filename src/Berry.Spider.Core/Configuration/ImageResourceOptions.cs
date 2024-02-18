@@ -1,4 +1,4 @@
-namespace Berry.Spider.Contracts;
+namespace Berry.Spider.Core;
 
 /// <summary>
 /// 图片资源配置项

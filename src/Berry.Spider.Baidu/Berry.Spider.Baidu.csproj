@@ -13,7 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Berry.Spider.Abstractions\Berry.Spider.Abstractions.csproj" />
       <ProjectReference Include="..\Berry.Spider.Baidu.Contracts\Berry.Spider.Baidu.Contracts.csproj" />
       <ProjectReference Include="..\Berry.Spider.Core\Berry.Spider.Core.csproj" />
       <ProjectReference Include="..\Berry.Spider.Domain\Berry.Spider.Domain.csproj" />

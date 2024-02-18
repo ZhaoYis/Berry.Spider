@@ -1,4 +1,4 @@
-﻿using Berry.Spider.Abstractions;
+﻿using Berry.Spider.Application.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.TouTiao;
 using Microsoft.AspNetCore.Mvc;

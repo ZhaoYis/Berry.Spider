@@ -4,7 +4,7 @@ using Berry.Spider.Common;
 using Berry.Spider.Domain;
 using Volo.Abp.AutoMapper;
 
-namespace Berry.Spider;
+namespace Berry.Spider.Application;
 
 public class SpiderApplicationAutoMapperProfile : Profile
 {

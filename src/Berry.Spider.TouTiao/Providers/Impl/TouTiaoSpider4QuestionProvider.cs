@@ -1,6 +1,5 @@
 ﻿using System.Collections.Immutable;
-using Berry.Spider.Abstractions;
-using Berry.Spider.Contracts;
+using Berry.Spider.Application.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
 using Berry.Spider.EventBus;

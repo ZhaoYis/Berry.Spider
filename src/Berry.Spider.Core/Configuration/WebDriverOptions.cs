@@ -1,4 +1,4 @@
-﻿namespace Berry.Spider.Contracts;
+﻿namespace Berry.Spider.Core;
 
 /// <summary>
 /// WebDriver配置选项

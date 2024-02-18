@@ -3,7 +3,7 @@ using Berry.Spider.Biz;
 using Berry.Spider.Domain;
 using Volo.Abp.Application.Services;
 
-namespace Berry.Spider.Application;
+namespace Berry.Spider.Application.Biz;
 
 public class SpiderAppInfoService : ApplicationService, ISpiderAppInfoService
 {

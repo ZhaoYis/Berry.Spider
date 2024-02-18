@@ -1,4 +1,4 @@
-using Berry.Spider.Contracts;
+using Berry.Spider.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OpenAI.Extensions;

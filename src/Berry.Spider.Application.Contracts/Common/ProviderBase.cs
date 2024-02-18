@@ -1,7 +1,7 @@
 using Berry.Spider.Core;
 using Microsoft.Extensions.Logging;
 
-namespace Berry.Spider.Abstractions;
+namespace Berry.Spider.Application.Contracts;
 
 public abstract class ProviderBase<T>
 {

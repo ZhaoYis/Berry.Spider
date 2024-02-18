@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using Berry.Spider.Contracts;
+using Berry.Spider.Core;
 using DotNetCore.CAP;
 using DotNetCore.CAP.Internal;
 using DotNetCore.CAP.Messages;
