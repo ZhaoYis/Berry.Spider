@@ -14,6 +14,7 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="ShardingCore" Version="7.8.1.20" />
       <PackageReference Include="Volo.Abp.Core" Version="8.0.2" />
       <PackageReference Include="Volo.Abp.Dapper" Version="8.0.2" />
       <PackageReference Include="Volo.Abp.EntityFrameworkCore" Version="8.0.2" />

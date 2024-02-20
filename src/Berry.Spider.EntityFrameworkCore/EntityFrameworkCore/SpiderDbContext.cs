@@ -1,5 +1,8 @@
 using Berry.Spider.Domain;
 using Microsoft.EntityFrameworkCore;
+using ShardingCore.Core.VirtualRoutes.TableRoutes.RouteTails.Abstractions;
+using ShardingCore.Extensions;
+using ShardingCore.Sharding.Abstractions;
 using Volo.Abp.Data;
 using Volo.Abp.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.Modeling;
@@ -7,7 +10,7 @@ using Volo.Abp.EntityFrameworkCore.Modeling;
 namespace Berry.Spider.EntityFrameworkCore;
 
 [ConnectionStringName("Default")]
-public class SpiderDbContext : AbpDbContext<SpiderDbContext>
+public class SpiderDbContext : AbpDbContext<SpiderDbContext>, IShardingDbContext, IShardingTableDbContext
 {
     private const string TableNamePrefix = "spider_";
 
@@ -78,4 +81,38 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
             b.ConfigureByConvention();
         });
     }
+
+    #region 分表相关
+
+    /// <summary>无需实现</summary>
+    public IRouteTail RouteTail { get; set; }
+
+    private bool _createExecutor = false;
+    private IShardingDbContextExecutor _shardingDbContextExecutor;
+
+    /// <summary>获取分片执行者</summary>
+    /// <returns></returns>
+    public IShardingDbContextExecutor GetShardingExecutor()
+    {
+        if (!_createExecutor)
+        {
+            _shardingDbContextExecutor = this.CreateShardingDbContextExecutor();
+            _createExecutor = true;
+        }
+
+        return _shardingDbContextExecutor;
+    }
+
+    /// <summary>
+    /// 当前dbcontext是否是执行的dbcontext
+    /// </summary>
+    public bool IsExecutor => this.GetShardingExecutor() == default;
+
+    public override void Dispose()
+    {
+        _shardingDbContextExecutor?.Dispose();
+        base.Dispose();
+    }
+
+    #endregion
 }
