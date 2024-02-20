@@ -47,7 +47,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Berry.Spider.Contracts\Berry.Spider.Contracts.csproj" />
+      <ProjectReference Include="..\..\src\Berry.Spider.Application.Contracts\Berry.Spider.Application.Contracts.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.Core\Berry.Spider.Core.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.FreeRedis\Berry.Spider.FreeRedis.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.RealTime.Abstractions\Berry.Spider.RealTime.Abstractions.csproj" />

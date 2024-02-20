@@ -1,4 +1,4 @@
-﻿namespace Berry.Spider.Contracts;
+﻿namespace Berry.Spider.Core;
 
 /// <summary>
 /// 爬虫配置选项
@@ -14,6 +14,11 @@ public class SpiderOptions
     /// 落库每条记录每行最小字符数
     /// </summary>
     public int MinContentLength { get; set; }
+
+    /// <summary>
+    /// 内容需要分段时，每一段的记录数量。默认30条。
+    /// </summary>
+    public int EverySectionRecords { get; set; } = 30;
 
     /// <summary>
     /// 内容是否插入图片
@@ -54,6 +59,11 @@ public class SpiderOptions
     /// 内容子标题选项
     /// </summary>
     public SubTitleOptions SubTitleOptions { get; set; } = new();
+    
+    /// <summary>
+    /// 分段标题选项
+    /// </summary>
+    public SectionTitleOptions SectionTitleOptions { get; set; } = new();
     
     /// <summary>
     /// 监听服务配置选项

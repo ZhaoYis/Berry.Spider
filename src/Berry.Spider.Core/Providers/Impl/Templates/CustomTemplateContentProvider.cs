@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using Berry.Spider.Contracts;
 using Microsoft.Extensions.Options;
 using Volo.Abp;
 using Volo.Abp.DependencyInjection;

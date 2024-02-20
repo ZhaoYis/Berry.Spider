@@ -5,7 +5,7 @@ using Berry.Spider.Webhook;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Berry.Spider.Application;
+namespace Berry.Spider.Application.Webhook;
 
 /// <summary>
 /// 处理Released通知消息

@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Berry.Spider.Core.Helpers;
+namespace Berry.Spider.Core;
 
 /// <summary>
 /// 表达式目录树方式实现深拷贝（不适用集合，只适用于对象拷贝）

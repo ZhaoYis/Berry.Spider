@@ -1,4 +1,3 @@
-using Berry.Spider.Contracts;
 using Microsoft.Extensions.Options;
 using Volo.Abp.TextTemplating;
 using Volo.Abp.TextTemplating.Scriban;

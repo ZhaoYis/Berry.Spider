@@ -1,4 +1,3 @@
-using Berry.Spider.Contracts;
 using Berry.Spider.FreeRedis;
 using Berry.Spider.Proxy;
 using Microsoft.Extensions.DependencyInjection;

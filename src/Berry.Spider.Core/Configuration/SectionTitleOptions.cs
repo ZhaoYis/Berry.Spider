@@ -1,6 +1,6 @@
 namespace Berry.Spider.Core;
 
-public class ServLifetimeOptions
+public class SectionTitleOptions
 {
     /// <summary>
     /// 是否启用

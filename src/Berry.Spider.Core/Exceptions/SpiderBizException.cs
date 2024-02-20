@@ -1,4 +1,4 @@
-﻿namespace Berry.Spider.Core.Exceptions;
+﻿namespace Berry.Spider.Core;
 
 /// <summary>
 /// 爬虫业务异常

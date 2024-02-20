@@ -4,7 +4,7 @@ using Berry.Spider.Domain;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
-namespace Berry.Spider.Application;
+namespace Berry.Spider.Application.Biz;
 
 public class ServMachineAppService : CrudAppService<
     ServMachineInfo,

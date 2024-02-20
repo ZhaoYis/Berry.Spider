@@ -1,6 +1,6 @@
 ﻿using Volo.Abp.Application.Dtos;
 
-namespace Berry.Spider.Core;
+namespace Berry.Spider;
 
 /// <summary>
 /// 自定义分页结果集

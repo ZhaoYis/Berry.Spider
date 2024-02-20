@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using System.Text;
-using Berry.Spider.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Segmenter;
 using Microsoft.Extensions.Options;
@@ -59,20 +58,20 @@ public class SpiderDomainService : DomainService
                 if (this.Options.IsRandomInsertImage)
                 {
                     mainContent = this.Clock.Now.Hour % 2 == 0
-                        ? contentItems.BuildMainContent(this.ImageResourceProvider, this.StringBuilderObjectPoolProvider, subTitleList)
-                        : contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider, originalTitle, subTitleList);
+                        ? contentItems.BuildMainContent(this.ImageResourceProvider, this.StringBuilderObjectPoolProvider, this.Options, subTitleList)
+                        : contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider, this.Options, originalTitle, subTitleList);
                 }
                 else
                 {
-                    mainContent = contentItems.BuildMainContent(this.ImageResourceProvider, this.StringBuilderObjectPoolProvider, subTitleList);
+                    mainContent = contentItems.BuildMainContent(this.ImageResourceProvider, this.StringBuilderObjectPoolProvider, this.Options, subTitleList);
                 }
             }
             else
             {
-                mainContent = contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider, originalTitle, subTitleList);
+                mainContent = contentItems.BuildMainContent(this.StringBuilderObjectPoolProvider, this.Options, originalTitle, subTitleList);
             }
 
-            if (mainContent is {Length: > 0})
+            if (mainContent is { Length: > 0 })
             {
                 if (this.TitleTemplateOptions.IsEnableFormatTitle)
                 {
@@ -152,7 +151,7 @@ public class SpiderDomainService : DomainService
             }
         });
 
-        if (mainContent is {Length: > 0})
+        if (mainContent is { Length: > 0 })
         {
             //处理子标题
             if (this.Options.SubTitleOptions.IsEnable)
@@ -160,7 +159,7 @@ public class SpiderDomainService : DomainService
                 var opSubTitleList = subTitleList.Take(this.Options.SubTitleOptions.MaxRecords).ToList();
 
                 var subTitleContent = opSubTitleList.BuildSubTitleContent(this.StringBuilderObjectPoolProvider);
-                if (subTitleContent is {Length: > 0})
+                if (subTitleContent is { Length: > 0 })
                 {
                     mainContent = mainContent.Insert(0, subTitleContent);
                 }

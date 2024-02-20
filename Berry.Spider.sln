@@ -42,7 +42,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{093F9BD9-59E
 		doc\Windows单机MongoDB集群.txt = doc\Windows单机MongoDB集群.txt
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Contracts", "src\Berry.Spider.Contracts\Berry.Spider.Contracts.csproj", "{A0D6AA7D-9654-4185-945E-33B1831F73BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Application.Contracts", "src\Berry.Spider.Application.Contracts\Berry.Spider.Application.Contracts.csproj", "{A0D6AA7D-9654-4185-945E-33B1831F73BD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.HttpApi", "src\Berry.Spider.HttpApi\Berry.Spider.HttpApi.csproj", "{DD4DD90F-E46A-4941-8BA8-382632F6F4FC}"
 EndProject
@@ -75,8 +75,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Sogou.Contracts", "src\Berry.Spider.Sogou.Contracts\Berry.Spider.Sogou.Contracts.csproj", "{72A4FBDB-4041-4E76-BAC8-42EA1A484AB6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Sogou", "src\Berry.Spider.Sogou\Berry.Spider.Sogou.csproj", "{51945B87-9C9E-4586-9E07-979A6C5CA852}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Abstractions", "src\Berry.Spider.Abstractions\Berry.Spider.Abstractions.csproj", "{FAEB7938-3E68-4CD3-9354-ADEB4B3E234D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.Proxy.Abstractions", "src\Berry.Spider.Proxy.Abstractions\Berry.Spider.Proxy.Abstractions.csproj", "{33563F6C-5BD0-4CC3-A4F2-41497940A8E8}"
 EndProject
@@ -323,10 +321,6 @@ Global
 		{51945B87-9C9E-4586-9E07-979A6C5CA852}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51945B87-9C9E-4586-9E07-979A6C5CA852}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51945B87-9C9E-4586-9E07-979A6C5CA852}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FAEB7938-3E68-4CD3-9354-ADEB4B3E234D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FAEB7938-3E68-4CD3-9354-ADEB4B3E234D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FAEB7938-3E68-4CD3-9354-ADEB4B3E234D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FAEB7938-3E68-4CD3-9354-ADEB4B3E234D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{33563F6C-5BD0-4CC3-A4F2-41497940A8E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{33563F6C-5BD0-4CC3-A4F2-41497940A8E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33563F6C-5BD0-4CC3-A4F2-41497940A8E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -569,7 +563,6 @@ Global
 		{1A2DD5EB-65FC-4A67-98C0-FEDD84A31B6C} = {CDDA89D2-ADC0-4B62-987F-E091B699B6B9}
 		{4D8E87E7-C010-4FE9-83A9-A926CC0BE7C7} = {CDDA89D2-ADC0-4B62-987F-E091B699B6B9}
 		{76971481-C134-486F-9D0A-170E84235C09} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
-		{FAEB7938-3E68-4CD3-9354-ADEB4B3E234D} = {A367E6F6-AAE2-4ED0-B0C1-FB7BACE3CFC3}
 		{42778F3E-F144-44D2-82A8-45E65C6B5174} = {60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}
 		{B05E11D3-DC84-4047-88E7-21374C3897EC} = {60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}
 		{D130A554-9759-4210-BFCE-83863D9A122E} = {CDDA89D2-ADC0-4B62-987F-E091B699B6B9}

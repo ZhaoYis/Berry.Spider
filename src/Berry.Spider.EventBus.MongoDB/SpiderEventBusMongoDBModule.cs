@@ -1,4 +1,4 @@
-using Berry.Spider.Contracts;
+using Berry.Spider.Core;
 using Berry.Spider.EventBus.MongoDB.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

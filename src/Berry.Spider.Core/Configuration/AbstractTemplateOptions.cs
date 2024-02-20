@@ -1,6 +1,6 @@
 using Volo.Abp;
 
-namespace Berry.Spider.Contracts;
+namespace Berry.Spider.Core;
 
 /// <summary>
 /// 摘要模版选项

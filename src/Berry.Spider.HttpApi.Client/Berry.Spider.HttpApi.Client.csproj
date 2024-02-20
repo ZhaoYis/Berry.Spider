@@ -14,7 +14,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Berry.Spider.Baidu.Contracts\Berry.Spider.Baidu.Contracts.csproj" />
-      <ProjectReference Include="..\..\src\Berry.Spider.Contracts\Berry.Spider.Contracts.csproj" />
+      <ProjectReference Include="..\Berry.Spider.Application.Contracts\Berry.Spider.Application.Contracts.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.OpenAI.Contracts\Berry.Spider.OpenAI.Contracts.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.Sogou.Contracts\Berry.Spider.Sogou.Contracts.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.TouTiao.Contracts\Berry.Spider.TouTiao.Contracts.csproj" />

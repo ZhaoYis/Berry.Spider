@@ -1,4 +1,4 @@
-namespace Berry.Spider.Abstractions;
+namespace Berry.Spider.Application.Contracts;
 
 public interface ISpiderProvider
 {

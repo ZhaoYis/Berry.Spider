@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Berry.Spider.Contracts\Berry.Spider.Contracts.csproj" />
+      <ProjectReference Include="..\Berry.Spider.Application.Contracts\Berry.Spider.Application.Contracts.csproj" />
     </ItemGroup>
 
     <ItemGroup>
