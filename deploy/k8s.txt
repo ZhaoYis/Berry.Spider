@@ -1,0 +1,30 @@
+https://www.yuque.com/leifengyang/oncloud/ghnb83#AGHOX
+https://blog.csdn.net/qq_35909525/article/details/129401661
+
+1、kubectl apply -f cert-manager.yaml
+2、kubectl apply -f k8s-dashbord.yaml
+3、kubectl edit svc kubernetes-dashboard-web -n kubernetes-dashboard
+-- type: ClusterIP 改为 type: NodePort
+4、kubectl get svc -A |grep kubernetes-dashboard
+5、配置dashboard
+docker pull nginx/nginx-ingress
+
+-- https://github.com/nginxinc/nginx-ingress-helm-operator/blob/main/docs/manual-installation.md
+git clone https://github.com/nginxinc/nginx-ingress-helm-operator/ --branch v2.1.0
+cd nginx-ingress-helm-operator/
+
+make deploy IMG=nginx/nginx-ingress-operator:2.1.0
+-- Check that the Operator is running:
+kubectl get deployments -n nginx-ingress-operator-system
+
+kubectl apply -f scc.yaml
+kubectl apply -f crds
+
+kubectl apply -f nginx-ingress-controller.yaml
+kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-nginx-controller 8443:443
+
+6、创建账号和token
+kubectl apply -f k8s-service-account.yaml
+kubectl -n kubernetes-dashboard get sa
+kubectl create token -n kubernetes-dashboard admin-user
+

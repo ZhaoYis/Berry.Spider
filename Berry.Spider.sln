@@ -233,6 +233,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{9DE843
 	ProjectSection(SolutionItems) = preProject
 		deploy\cmd.txt = deploy\cmd.txt
 		deploy\app_start.sh = deploy\app_start.sh
+		deploy\cert-manager.yaml = deploy\cert-manager.yaml
+		deploy\k8s.txt = deploy\k8s.txt
+		deploy\k8s-dashbord.yaml = deploy\k8s-dashbord.yaml
+		deploy\k8s-service-account.yaml = deploy\k8s-service-account.yaml
+		deploy\nginx-ingress-controller.yaml = deploy\nginx-ingress-controller.yaml
+		deploy\scc.yaml = deploy\scc.yaml
 	EndProjectSection
 EndProject
 Global
