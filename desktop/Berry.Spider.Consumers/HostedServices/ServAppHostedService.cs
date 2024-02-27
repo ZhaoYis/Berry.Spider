@@ -12,17 +12,21 @@ namespace Berry.Spider.Consumers;
 
 public class ServAppHostedService : IHostedService
 {
-    private readonly ILogger<ServAppHostedService> _logger;
-    private readonly HubConnection _connection;
+    private ILogger<ServAppHostedService> _logger;
+    private HubConnection _connection;
     private RealTimeOptions? RealTimeOptions { get; }
 
-    public ServAppHostedService(ILogger<ServAppHostedService> logger,
-        IConfiguration configuration)
+    public ServAppHostedService(ILogger<ServAppHostedService> logger, IConfiguration configuration)
     {
         _logger = logger;
         RealTimeOptions = configuration.GetSection(nameof(RealTimeOptions)).Get<RealTimeOptions>();
 
-        if (RealTimeOptions is not null)
+        this.ApplicationRegisterHandler();
+    }
+
+    private void ApplicationRegisterHandler()
+    {
+        if (RealTimeOptions is not null and { IsEnabled: true })
         {
             _connection = new HubConnectionBuilder()
                 .WithUrl(RealTimeOptions.AppEndpointUrl)
@@ -57,7 +61,7 @@ public class ServAppHostedService : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        while (true)
+        while (RealTimeOptions is not null and { IsEnabled: true })
         {
             try
             {
@@ -73,6 +77,9 @@ public class ServAppHostedService : IHostedService
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
-        await _connection.DisposeAsync();
+        if (RealTimeOptions is not null and { IsEnabled: true })
+        {
+            await _connection.DisposeAsync();
+        }
     }
 }

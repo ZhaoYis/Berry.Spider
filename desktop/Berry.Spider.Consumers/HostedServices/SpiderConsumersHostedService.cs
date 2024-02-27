@@ -27,16 +27,8 @@ public class SpiderConsumersHostedService : IHostedService
         _hostEnvironment = hostEnvironment;
         _appLifetime = appLifetime;
 
-        SpiderOptions? spiderOptions = configuration.GetSection(nameof(SpiderOptions)).Get<SpiderOptions>();
-        if (spiderOptions is not null)
-        {
-            ServLifetimeOptions lifetimeOptions = spiderOptions.ServLifetimeOptions;
-            if (lifetimeOptions.IsEnable)
-            {
-                //注册应用程序启动、停止事件
-                ApplicationRegisterHandler();
-            }
-        }
+        //注册应用程序启动、停止事件
+        ApplicationRegisterHandler();
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
@@ -66,8 +58,12 @@ public class SpiderConsumersHostedService : IHostedService
 
     private void ApplicationRegisterHandler()
     {
-        _appLifetime.ApplicationStarted.Register(OnRegister);
-        _appLifetime.ApplicationStopping.Register(OnUnRegister);
+        SpiderOptions? spiderOptions = _configuration.GetSection(nameof(SpiderOptions)).Get<SpiderOptions>();
+        if (spiderOptions is not null and { ServLifetimeOptions: { IsEnable: true } })
+        {
+            _appLifetime.ApplicationStarted.Register(OnRegister);
+            _appLifetime.ApplicationStopping.Register(OnUnRegister);
+        }
     }
 
     private void OnRegister()
