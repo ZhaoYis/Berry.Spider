@@ -32,25 +32,32 @@ public class UserAgentsMeProvider : IUserAgentProvider
         Random random = new Random(Guid.NewGuid().GetHashCode());
 
         var cache = await _distributedCache.GetAsync(UserAgentsMeCacheKey);
-        if (cache is {UaPools: {Count: > 0}})
+        if (cache is { UaPools: { Count: > 0 } })
         {
             return cache.UaPools[random.Next(0, cache.UaPools.Count - 1)];
         }
         else
         {
-            var result = await _userAgentHttpClient.GetUserAgentsAsync();
-            if (result is {Count: > 0})
+            try
             {
-                await _distributedCache.SetAsync(UserAgentsMeCacheKey, new UserAgentCacheItem
+                var result = await _userAgentHttpClient.GetUserAgentsAsync();
+                if (result is { Count: > 0 })
                 {
-                    UaPools = result
-                }, new DistributedCacheEntryOptions
+                    await _distributedCache.SetAsync(UserAgentsMeCacheKey, new UserAgentCacheItem
+                    {
+                        UaPools = result
+                    }, new DistributedCacheEntryOptions
+                    {
+                        AbsoluteExpiration = DateTimeOffset.Now.AddDays(1)
+                    });
+                    return result[random.Next(0, result.Count - 1)];
+                }
+                else
                 {
-                    AbsoluteExpiration = DateTimeOffset.Now.AddDays(1)
-                });
-                return result[random.Next(0, result.Count - 1)];
+                    return UserAgentPoolHelper.RandomGetOne();
+                }
             }
-            else
+            catch (Exception e)
             {
                 return UserAgentPoolHelper.RandomGetOne();
             }
