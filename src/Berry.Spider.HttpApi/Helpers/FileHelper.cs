@@ -23,12 +23,15 @@ public class FileHelper
             {
                 await _file.CopyToAsync(stream);
             }
-            await foreach (string row in this.TryReadLinesAsync(filePath))
+
+            using (StreamReader reader = new StreamReader(filePath))
             {
-                if (!string.IsNullOrWhiteSpace(row.Trim()))
+                Random random = new Random(Guid.NewGuid().GetHashCode());
+                string? row = (await reader.ReadLineAsync())?.Trim();
+                while (!string.IsNullOrEmpty(row))
                 {
-                    await _onInvoke.Invoke(row.Trim()).ConfigureAwait(false);
-                    await Task.Delay(1000).ConfigureAwait(false);
+                    await _onInvoke.Invoke(row).ConfigureAwait(false);
+                    await Task.Delay(random.Next(1000, 1500)).ConfigureAwait(false);
                 }
             }
         }
@@ -44,10 +47,5 @@ public class FileHelper
                 File.Delete(filePath);
             }
         }
-    }
-
-    private IAsyncEnumerable<string> TryReadLinesAsync(string filePath)
-    {
-        return File.ReadLinesAsync(filePath);
     }
 }

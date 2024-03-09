@@ -26,4 +26,23 @@
       <ProjectReference Include="..\Berry.Spider.Proxy\Berry.Spider.Proxy.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Providers\Impl\UserAgents\user-agent.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="DefaultUserAgent.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>DefaultUserAgent.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="DefaultUserAgent.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>DefaultUserAgent.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

@@ -5,11 +5,19 @@ using System.Web;
 using Berry.Spider.Core;
 using Shouldly;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Berry.Spider.Tests;
 
 public class StringExtensions_UnitTest
 {
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public StringExtensions_UnitTest(ITestOutputHelper testOutputHelper)
+    {
+        _testOutputHelper = testOutputHelper;
+    }
+
     [Fact]
     public void Replace_Can_Be_Successful_Test()
     {

@@ -2,7 +2,7 @@ namespace Berry.Spider.Core;
 
 public class ListHelper
 {
-    private readonly Random _random = new Random();
+    private readonly Random _random = new Random(Guid.NewGuid().GetHashCode());
     private readonly List<string> _items;
     private readonly int _totalPage;
     private int _pageSize;
