@@ -32,6 +32,7 @@ public class FileHelper
                 {
                     await _onInvoke.Invoke(row).ConfigureAwait(false);
                     await Task.Delay(random.Next(1000, 1500)).ConfigureAwait(false);
+                    row = (await reader.ReadLineAsync())?.Trim();
                 }
             }
         }
