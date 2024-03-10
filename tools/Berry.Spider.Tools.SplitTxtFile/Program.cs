@@ -27,14 +27,14 @@ else
     Directory.CreateDirectory(saveFilePath);
 }
 
-List<string> todoSaveList = rows.Take(pagSize).ToList();
+List<string> todoSaveList = rows.Take(pagSize).Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
 while (todoSaveList is { Count: > 0 })
 {
     string fileName = Path.Combine(saveFilePath, $"{pageIndex}_{sourceFileName}");
     File.WriteAllLines(fileName, todoSaveList);
 
     pageIndex++;
-    todoSaveList = rows.Skip(pageIndex * pagSize).Take(pagSize).ToList();
+    todoSaveList = rows.Skip(pageIndex * pagSize).Take(pagSize).Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
 
     Console.WriteLine($"{Path.GetFileName(fileName)} ---> 保存成功！");
 }
