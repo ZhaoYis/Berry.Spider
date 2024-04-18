@@ -29,7 +29,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{093F9BD9-59E
 	ProjectSection(SolutionItems) = preProject
 		doc\agile_config.docker-compose.yml = doc\agile_config.docker-compose.yml
 		appsettings.demo.json = appsettings.demo.json
-		doc\consul.txt = doc\consul.txt
 		doc\dede.sql = doc\dede.sql
 		doc\example.json = doc\example.json
 		doc\HOW.README.md = doc\HOW.README.md
@@ -238,6 +237,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{9DE843
 		deploy\nginx-ingress-controller.yaml = deploy\nginx-ingress-controller.yaml
 		deploy\scc.yaml = deploy\scc.yaml
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gaetway", "gaetway", "{FD4BCC32-B2C8-4699-8C3C-8C1A86DC2B07}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "consul", "consul", "{D2C5F322-AD3A-46B4-894C-182D151ECC10}"
+	ProjectSection(SolutionItems) = preProject
+		doc\consul\consul_docker.txt = doc\consul\consul_docker.txt
+		doc\consul\consul.txt = doc\consul\consul.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ocelot", "ocelot", "{37E64CED-0D75-4C19-A5F4-7322FB6079B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Gateway.Ocelot.Host", "gaetway\ocelot\Berry.Spider.Gateway.Ocelot.Host\Berry.Spider.Gateway.Ocelot.Host.csproj", "{69FEF0BF-04F0-4F6F-9BD6-7C3062B7D5CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -485,6 +496,10 @@ Global
 		{D130A554-9759-4210-BFCE-83863D9A122E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D130A554-9759-4210-BFCE-83863D9A122E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D130A554-9759-4210-BFCE-83863D9A122E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69FEF0BF-04F0-4F6F-9BD6-7C3062B7D5CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69FEF0BF-04F0-4F6F-9BD6-7C3062B7D5CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69FEF0BF-04F0-4F6F-9BD6-7C3062B7D5CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69FEF0BF-04F0-4F6F-9BD6-7C3062B7D5CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -566,6 +581,9 @@ Global
 		{42778F3E-F144-44D2-82A8-45E65C6B5174} = {60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}
 		{B05E11D3-DC84-4047-88E7-21374C3897EC} = {60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}
 		{D130A554-9759-4210-BFCE-83863D9A122E} = {CDDA89D2-ADC0-4B62-987F-E091B699B6B9}
+		{D2C5F322-AD3A-46B4-894C-182D151ECC10} = {093F9BD9-59EE-49FA-87D2-96AB2995EE26}
+		{37E64CED-0D75-4C19-A5F4-7322FB6079B4} = {FD4BCC32-B2C8-4699-8C3C-8C1A86DC2B07}
+		{69FEF0BF-04F0-4F6F-9BD6-7C3062B7D5CF} = {37E64CED-0D75-4C19-A5F4-7322FB6079B4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}
