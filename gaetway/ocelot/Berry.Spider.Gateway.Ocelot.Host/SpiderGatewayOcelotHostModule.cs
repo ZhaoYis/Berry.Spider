@@ -32,6 +32,7 @@ public class SpiderGatewayOcelotHostModule : AbpModule
             .AddOcelot(configuration)
             //服务发现
             .AddConsul()
+            .AddConfigStoredInConsul()
             //缓存
             .AddCacheManager(x => { x.WithDictionaryHandle(); })
             //服务质量控制

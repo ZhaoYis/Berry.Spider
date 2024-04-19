@@ -4,6 +4,7 @@ using Berry.Spider.Baidu;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.EventBus.MongoDB;
 using Berry.Spider.EventBus.RabbitMq;
+using Berry.Spider.Hosting.Shared;
 using Berry.Spider.OpenAI.Application;
 using Berry.Spider.Segmenter.JiebaNet;
 using Berry.Spider.Sogou;
@@ -61,6 +62,9 @@ public class SpiderHttpApiHostModule : AbpModule
         ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context, configuration);
         Configure<AbpAntiForgeryOptions>(opt => { opt.AutoValidate = false; });
+
+        //Consul
+        context.Services.AddConsul();
     }
 
     private void ConfigureCache(IConfiguration configuration)
@@ -156,6 +160,7 @@ public class SpiderHttpApiHostModule : AbpModule
     {
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
+        var lifetime = context.ServiceProvider.GetRequiredService<IHostApplicationLifetime>();
 
         if (env.IsDev())
         {
@@ -165,7 +170,9 @@ public class SpiderHttpApiHostModule : AbpModule
         {
             app.UseHsts();
         }
-
+        
+        app.UseHealthChecks("/health/check");
+        
         app.UseHttpsRedirection();
         app.UseCorrelationId();
         app.UseStaticFiles();
@@ -182,11 +189,14 @@ public class SpiderHttpApiHostModule : AbpModule
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "Spider API");
             options.DocExpansion(DocExpansion.None);
-            
+
             var configuration = context.GetConfiguration();
             options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
             options.OAuthScopes("Spider");
         });
+
+        //Consul
+        app.UseConsul(lifetime);
 
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints();

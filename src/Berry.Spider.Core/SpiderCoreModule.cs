@@ -38,8 +38,6 @@ public class SpiderCoreModule : AbpModule
         context.Services.Configure<AbstractTemplateOptions>(configuration.GetSection(nameof(AbstractTemplateOptions)));
         //配置MongoDBOptions
         context.Services.Configure<MongoDBOptions>(configuration.GetSection(nameof(MongoDBOptions)));
-        //配置ConsulOptions
-        context.Services.Configure<ConsulOptions>(configuration.GetSection(nameof(ConsulOptions)));
         //配置OpenAIOptions
         context.Services.Configure<OpenAIOptions>(configuration.GetSection(nameof(OpenAIOptions)));
         //配置ConsumerOptions

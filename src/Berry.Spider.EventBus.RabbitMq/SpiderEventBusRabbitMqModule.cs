@@ -19,8 +19,6 @@ public class SpiderEventBusRabbitMqModule : AbpModule
         {
             //配置数据存储方式
             this.ConfigureDatabase(opt, configuration);
-            //注册节点到Consul
-            this.ConfigureConsul(opt, configuration);
             //配置消费者
             this.ConfigureConsumer(opt, configuration);
             //配置RabbitMQ
@@ -83,27 +81,6 @@ public class SpiderEventBusRabbitMqModule : AbpModule
             opt.FailedMessageExpiredAfter = consumerOptions.FailedMessageExpiredAfter;
             //成功消息的过期时间（秒）
             opt.SucceedMessageExpiredAfter = consumerOptions.SucceedMessageExpiredAfter;
-        }
-    }
-
-    /// <summary>
-    /// 注册节点到Consul
-    /// </summary>
-    private void ConfigureConsul(CapOptions opt, IConfiguration configuration)
-    {
-        ConsulOptions? consulOptions = configuration.GetSection(nameof(ConsulOptions)).Get<ConsulOptions>();
-        if (consulOptions is { IsEnabled: true })
-        {
-            string nodeId = Guid.NewGuid().ToString("N");
-            string nodeName = "Consumer_" + nodeId;
-            opt.UseConsulDiscovery(d =>
-            {
-                d.DiscoveryServerHostName = consulOptions.DiscoveryServerHostName;
-                d.DiscoveryServerPort = consulOptions.DiscoveryServerPort;
-                d.NodeId = nodeId;
-                d.NodeName = nodeName;
-                d.CustomTags = new[] { "Berry_Spider_Consumer" };
-            });
         }
     }
 

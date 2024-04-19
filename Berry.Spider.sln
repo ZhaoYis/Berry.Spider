@@ -250,6 +250,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ocelot", "ocelot", "{37E64C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Gateway.Ocelot.Host", "gaetway\ocelot\Berry.Spider.Gateway.Ocelot.Host\Berry.Spider.Gateway.Ocelot.Host.csproj", "{69FEF0BF-04F0-4F6F-9BD6-7C3062B7D5CF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.Hosting.Shared", "src\Berry.Spider.Hosting.Shared\Berry.Spider.Hosting.Shared.csproj", "{8A994FEB-C60A-4A57-B535-D24FEA8865A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -500,6 +502,10 @@ Global
 		{69FEF0BF-04F0-4F6F-9BD6-7C3062B7D5CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69FEF0BF-04F0-4F6F-9BD6-7C3062B7D5CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69FEF0BF-04F0-4F6F-9BD6-7C3062B7D5CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A994FEB-C60A-4A57-B535-D24FEA8865A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A994FEB-C60A-4A57-B535-D24FEA8865A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A994FEB-C60A-4A57-B535-D24FEA8865A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A994FEB-C60A-4A57-B535-D24FEA8865A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -584,6 +590,7 @@ Global
 		{D2C5F322-AD3A-46B4-894C-182D151ECC10} = {093F9BD9-59EE-49FA-87D2-96AB2995EE26}
 		{37E64CED-0D75-4C19-A5F4-7322FB6079B4} = {FD4BCC32-B2C8-4699-8C3C-8C1A86DC2B07}
 		{69FEF0BF-04F0-4F6F-9BD6-7C3062B7D5CF} = {37E64CED-0D75-4C19-A5F4-7322FB6079B4}
+		{8A994FEB-C60A-4A57-B535-D24FEA8865A0} = {8267A241-A968-48C0-929A-2BEF8E2A14AF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}
