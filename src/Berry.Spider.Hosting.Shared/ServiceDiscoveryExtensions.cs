@@ -4,7 +4,7 @@ namespace Berry.Spider.Hosting.Shared;
 
 public static class ServiceDiscoveryExtensions
 {
-    public static void AddConsul(this IServiceCollection service)
+    public static void AddConsulClient(this IServiceCollection service)
     {
         IConfiguration configuration = service.GetConfiguration();
         ConsulOptions? option = configuration.GetSection(nameof(ConsulOptions)).Get<ConsulOptions>();

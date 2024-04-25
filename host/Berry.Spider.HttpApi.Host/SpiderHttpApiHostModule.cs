@@ -64,7 +64,8 @@ public class SpiderHttpApiHostModule : AbpModule
         Configure<AbpAntiForgeryOptions>(opt => { opt.AutoValidate = false; });
 
         //Consul
-        context.Services.AddConsul();
+        context.Services.AddConsulClient();
+        context.Services.AddHealthChecks();
     }
 
     private void ConfigureCache(IConfiguration configuration)
@@ -150,7 +151,7 @@ public class SpiderHttpApiHostModule : AbpModule
             },
             options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Spider API", Version = "v1" });
+                options.SwaggerDoc("berry_spider_api", new OpenApiInfo { Title = "Spider API", Version = "v1" });
                 options.DocInclusionPredicate((docName, description) => true);
                 options.CustomSchemaIds(type => type.FullName);
             });
@@ -171,8 +172,6 @@ public class SpiderHttpApiHostModule : AbpModule
             app.UseHsts();
         }
         
-        app.UseHealthChecks("/health/check");
-        
         app.UseHttpsRedirection();
         app.UseCorrelationId();
         app.UseStaticFiles();
@@ -187,7 +186,7 @@ public class SpiderHttpApiHostModule : AbpModule
         app.UseSwagger();
         app.UseAbpSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Spider API");
+            options.SwaggerEndpoint("/swagger/berry_spider_api/swagger.json", "Spider API");
             options.DocExpansion(DocExpansion.None);
 
             var configuration = context.GetConfiguration();
@@ -199,6 +198,9 @@ public class SpiderHttpApiHostModule : AbpModule
         app.UseConsul(lifetime);
 
         app.UseAbpSerilogEnrichers();
-        app.UseConfiguredEndpoints();
+        app.UseConfiguredEndpoints(opt =>
+        {
+            opt.MapHealthChecks("/health/check");
+        });
     }
 }

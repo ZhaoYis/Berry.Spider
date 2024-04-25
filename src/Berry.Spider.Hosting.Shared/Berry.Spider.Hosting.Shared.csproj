@@ -8,8 +8,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Consul" Version="1.7.14.3"/>
         <PackageReference Include="Volo.Abp.Core" Version="8.0.2"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\Consul.DotNet\Consul\Consul.csproj" />
     </ItemGroup>
 
 </Project>

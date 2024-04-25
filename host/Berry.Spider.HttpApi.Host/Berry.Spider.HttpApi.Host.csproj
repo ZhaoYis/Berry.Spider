@@ -35,6 +35,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Ocelot\src\Ocelot.Cache.CacheManager\Ocelot.Cache.CacheManager.csproj" />
+      <ProjectReference Include="..\..\..\Ocelot\src\Ocelot.Provider.Consul\Ocelot.Provider.Consul.csproj" />
+      <ProjectReference Include="..\..\..\Ocelot\src\Ocelot.Provider.Polly\Ocelot.Provider.Polly.csproj" />
+      <ProjectReference Include="..\..\..\Ocelot\src\Ocelot\Ocelot.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.Application\Berry.Spider.Application.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.AspNetCore.Mvc\Berry.Spider.AspNetCore.Mvc.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.Baidu\Berry.Spider.Baidu.csproj" />

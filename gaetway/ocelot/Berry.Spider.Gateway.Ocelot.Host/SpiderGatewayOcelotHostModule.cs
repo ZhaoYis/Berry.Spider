@@ -32,17 +32,17 @@ public class SpiderGatewayOcelotHostModule : AbpModule
             .AddOcelot(configuration)
             //服务发现
             .AddConsul()
-            .AddConfigStoredInConsul()
+            //.AddConfigStoredInConsul()
             //缓存
             .AddCacheManager(x => { x.WithDictionaryHandle(); })
             //服务质量控制
-            .AddPolly()
+            .AddPolly();
             //委托处理程序
-            .AddDelegatingHandler<LoggerDelegatingHandler>(true);
+            //.AddDelegatingHandler<LoggerDelegatingHandler>(true);
 
         context.Services.AddAbpSwaggerGen(options =>
         {
-            options.SwaggerDoc("gateway", new OpenApiInfo { Title = "Berry.Spider网关服务", Version = "v1" });
+            options.SwaggerDoc("gateway_ocelot", new OpenApiInfo { Title = "Berry.Spider网关服务", Version = "v1" });
             options.DocInclusionPredicate((docName, description) => true);
             options.CustomSchemaIds(type => type.FullName);
         });
@@ -75,24 +75,23 @@ public class SpiderGatewayOcelotHostModule : AbpModule
         var app = context.GetApplicationBuilder();
         var env = context.GetEnvironment();
 
-        if (env.IsDevelopment())
+        if (env.IsDev())
         {
             app.UseDeveloperExceptionPage();
-
-            app.UseSwagger(c => { c.RouteTemplate = "/api-docs/{documentName}/swagger.json"; });
-            app.UseAbpSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/api-docs/gateway/swagger.json", "Berry.Spider.Gateway.Ocelot.Host v1");
-                c.SwaggerEndpoint("/api-docs/berry_spider_api/swagger.json", "Berry.Spider.HttApi.Host v1");
-
-                c.DocExpansion(DocExpansion.None);
-                c.RoutePrefix = string.Empty;
-            });
         }
         else
         {
             app.UseExceptionHandler("/Error");
         }
+
+        app.UseAbpSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/gateway_ocelot/swagger.json", "Berry.Spider.Gateway.Ocelot.Host v1");
+            c.SwaggerEndpoint("/swagger/berry_spider_api/swagger.json", "Berry.Spider.HttApi.Host v1");
+
+            c.DocExpansion(DocExpansion.None);
+            c.RoutePrefix = string.Empty;
+        });
 
         app.UseCorrelationId();
         app.UseHttpsRedirection();
@@ -101,7 +100,7 @@ public class SpiderGatewayOcelotHostModule : AbpModule
         app.UseCors(DefaultCorsPolicyName);
 
         app.UseOcelot().Wait();
-        
+
         app.UseAbpSerilogEnrichers();
         app.UseConfiguredEndpoints();
     }

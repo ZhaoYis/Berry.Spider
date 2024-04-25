@@ -60,7 +60,8 @@ public class Program
 
             var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "DEV";
             var builder = WebApplication.CreateBuilder(args);
-            builder.Host.AddAppSettingsSecretsJson()
+            builder.Host.UseEnvironment(env)
+                .AddAppSettingsSecretsJson()
                 .UseAgileConfig($"appsettings.{env}.json")
                 .UseAutofac()
                 .UseSerilog();

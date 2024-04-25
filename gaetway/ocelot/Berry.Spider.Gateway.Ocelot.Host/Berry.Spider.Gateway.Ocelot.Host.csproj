@@ -10,10 +10,6 @@
     <ItemGroup>
         <PackageReference Include="AgileConfig.Client" Version="1.7.2" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2"/>
-        <PackageReference Include="Ocelot" Version="23.2.2" />
-        <PackageReference Include="Ocelot.Cache.CacheManager" Version="23.2.2" />
-        <PackageReference Include="Ocelot.Provider.Consul" Version="23.2.2" />
-        <PackageReference Include="Ocelot.Provider.Polly" Version="23.2.2" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
         <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
@@ -30,6 +26,13 @@
       <Content Include="..\..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\..\Ocelot\src\Ocelot.Cache.CacheManager\Ocelot.Cache.CacheManager.csproj" />
+      <ProjectReference Include="..\..\..\..\Ocelot\src\Ocelot.Provider.Consul\Ocelot.Provider.Consul.csproj" />
+      <ProjectReference Include="..\..\..\..\Ocelot\src\Ocelot.Provider.Polly\Ocelot.Provider.Polly.csproj" />
+      <ProjectReference Include="..\..\..\..\Ocelot\src\Ocelot\Ocelot.csproj" />
     </ItemGroup>
 
 </Project>
