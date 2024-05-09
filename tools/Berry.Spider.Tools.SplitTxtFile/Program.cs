@@ -12,7 +12,7 @@ string sourceFilePath = path;
 string sourceFileName = Path.GetFileName(sourceFilePath);
 List<string> rows = File.ReadAllLines(sourceFilePath).Distinct().ToList();
 int pageIndex = 0;
-int pagSize = 50_000;
+int pagSize = 10_000;
 
 string saveFilePath = Path.Combine(AppContext.BaseDirectory, "Files");
 if (Directory.Exists(saveFilePath))
@@ -30,7 +30,7 @@ else
 List<string> todoSaveList = rows.Take(pagSize).Where(r => !string.IsNullOrWhiteSpace(r)).ToList();
 while (todoSaveList is { Count: > 0 })
 {
-    string fileName = Path.Combine(saveFilePath, $"{pageIndex}_{sourceFileName}");
+    string fileName = Path.Combine(saveFilePath, $"{pageIndex}_{pagSize}_{sourceFileName}");
     File.WriteAllLines(fileName, todoSaveList);
 
     pageIndex++;
