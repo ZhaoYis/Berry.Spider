@@ -1,0 +1,18 @@
+{
+  "providerId": "Microsoft.Tools.ServiceModel.Svcutil",
+  "version": "2.1.0",
+  "ExtendedData": {
+    "inputs": [
+      "http://www.naipan.com/api/weiyuanchuang?wsdl"
+    ],
+    "messageContract": true,
+    "namespaceMappings": [
+      "*, Berry.Spider.NaiPan.weiyuanchuang"
+    ],
+    "outputFile": "NaiPanWebService.cs",
+    "serializerMode": "XmlSerializer",
+    "sync": true,
+    "targetFramework": "net8.0",
+    "typeReuseMode": "All"
+  }
+}
