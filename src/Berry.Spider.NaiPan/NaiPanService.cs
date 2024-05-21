@@ -5,6 +5,8 @@ namespace Berry.Spider.NaiPan;
 
 public class NaiPanService : INaiPanService
 {
+    private static readonly weiyuanchuangPortTypeClient NaiPanClient = new(weiyuanchuangPortTypeClient.EndpointConfiguration.weiyuanchuangHttpSoap12Endpoint);
+
     private NaiPanOptions Options { get; }
 
     public NaiPanService(IOptionsSnapshot<NaiPanOptions> options)
@@ -20,13 +22,19 @@ public class NaiPanService : INaiPanService
     {
         if (this.Options is { IsEnabled: true })
         {
-            weiyuanchuangPortTypeClient client = new weiyuanchuangPortTypeClient(weiyuanchuangPortTypeClient.EndpointConfiguration.weiyuanchuangHttpSoap12Endpoint);
-
-            weiyuanchuangRequest request = new weiyuanchuangRequest(this.Options.Account, this.Options.Secret, content);
-            weiyuanchuangResponse response = await client.weiyuanchuangAsync(request);
-            if (response is not null)
+            try
             {
-                return response.@return;
+                weiyuanchuangRequest request = new weiyuanchuangRequest(this.Options.Account, this.Options.Secret, content);
+                weiyuanchuangResponse response = await NaiPanClient.weiyuanchuangAsync(request);
+                if (response is not null)
+                {
+                    return response.@return;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return content;
             }
         }
 
