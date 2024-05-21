@@ -3,6 +3,7 @@ using System.Text;
 using Berry.Spider.Core;
 using Berry.Spider.NaiPan;
 using Berry.Spider.Segmenter;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Volo.Abp.Domain.Services;
 using Volo.Abp.TextTemplating;
@@ -113,6 +114,7 @@ public class SpiderDomainService : DomainService
                 if (this.Options is { IsEnableNaiPan: true })
                 {
                     string res = await this.NaiPanService.GenerateAsync(content.Content);
+                    this.Logger.LogInformation("伪原创内容生成成功：{0}", res);
                     content.Content = res;
                 }
 
@@ -192,6 +194,7 @@ public class SpiderDomainService : DomainService
         if (this.Options is { IsEnableNaiPan: true })
         {
             string res = await this.NaiPanService.GenerateAsync(content.Content);
+            this.Logger.LogInformation("伪原创内容生成成功：{0}", res);
             content.Content = res;
         }
 
