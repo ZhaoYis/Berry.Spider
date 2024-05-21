@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using System.Text;
 using Berry.Spider.Core;
+using Berry.Spider.NaiPan;
 using Berry.Spider.Segmenter;
 using Microsoft.Extensions.Options;
 using Volo.Abp.Domain.Services;
@@ -16,6 +17,7 @@ public class SpiderDomainService : DomainService
     private IImageResourceProvider ImageResourceProvider { get; }
     private ITemplateRenderer TemplateRenderer { get; }
     private ISegmenterProvider SegmenterProvider { get; }
+    private INaiPanService NaiPanService { get; }
     private IStringBuilderObjectPoolProvider StringBuilderObjectPoolProvider { get; }
     private SpiderOptions Options { get; }
     private TitleTemplateContentOptions TitleTemplateOptions { get; }
@@ -107,6 +109,13 @@ public class SpiderDomainService : DomainService
                 //     content.Keywords = string.Join(" ", segments);
                 // }
 
+                //使用伪原创根据重新生成内容
+                if (this.Options is { IsEnableNaiPan: true })
+                {
+                    string res = await this.NaiPanService.GenerateAsync(content.Content);
+                    content.Content = res;
+                }
+
                 return content;
             }
         }
@@ -118,7 +127,7 @@ public class SpiderDomainService : DomainService
     /// 统一构建落库实体内容（优质问答）
     /// </summary>
     /// <returns></returns>
-    public Task<SpiderContent_HighQualityQA> BuildHighQualityContentAsync(string originalTitle,
+    public async Task<SpiderContent_HighQualityQA> BuildHighQualityContentAsync(string originalTitle,
         SpiderSourceFrom sourceFrom,
         IDictionary<string, List<string>> contentItems,
         string? traceCode = null,
@@ -179,6 +188,13 @@ public class SpiderDomainService : DomainService
         content.SetTraceCodeIfNotNull(traceCode);
         content.SetIdentityIdIfNotNull(identityId);
 
-        return Task.FromResult(content);
+        //使用伪原创根据重新生成内容
+        if (this.Options is { IsEnableNaiPan: true })
+        {
+            string res = await this.NaiPanService.GenerateAsync(content.Content);
+            content.Content = res;
+        }
+
+        return content;
     }
 }

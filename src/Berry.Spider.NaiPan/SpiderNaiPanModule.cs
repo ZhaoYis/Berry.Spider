@@ -10,6 +10,8 @@ public class SpiderNaiPanModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        Configure<NaiPanOptions>(context.Services.GetConfiguration().GetSection(nameof(NaiPanOptions)));
+
         context.Services.AddSingleton<INaiPanService, NaiPanService>();
     }
 }

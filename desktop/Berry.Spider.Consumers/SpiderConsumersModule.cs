@@ -2,6 +2,7 @@
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.EventBus.RabbitMq;
 using Berry.Spider.FreeRedis;
+using Berry.Spider.NaiPan;
 using Berry.Spider.RealTime;
 using Berry.Spider.Segmenter.JiebaNet;
 using Berry.Spider.Sogou;
@@ -25,6 +26,7 @@ namespace Berry.Spider.Consumers;
     typeof(SpiderSegmenterJiebaNetModule),
     typeof(SpiderRealTimeAbstractionsModule),
     typeof(SpiderFreeRedisModule),
+    typeof(SpiderNaiPanModule),
     typeof(TouTiaoSpiderApplicationModule),
     typeof(SogouSpiderApplicationModule),
     typeof(BaiduSpiderApplicationModule)

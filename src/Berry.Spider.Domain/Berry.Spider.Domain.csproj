@@ -15,6 +15,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Berry.Spider.Core\Berry.Spider.Core.csproj" />
       <ProjectReference Include="..\Berry.Spider.Domain.Shared\Berry.Spider.Domain.Shared.csproj" />
+      <ProjectReference Include="..\Berry.Spider.NaiPan\Berry.Spider.NaiPan.csproj" />
       <ProjectReference Include="..\Berry.Spider.Segmenter\Berry.Spider.Segmenter.csproj" />
     </ItemGroup>
 

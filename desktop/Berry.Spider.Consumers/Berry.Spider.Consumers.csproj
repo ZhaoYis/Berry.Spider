@@ -45,6 +45,7 @@
       <ProjectReference Include="..\..\src\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.EventBus.RabbitMq\Berry.Spider.EventBus.RabbitMq.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.FreeRedis\Berry.Spider.FreeRedis.csproj" />
+      <ProjectReference Include="..\..\src\Berry.Spider.NaiPan\Berry.Spider.NaiPan.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.RealTime.Abstractions\Berry.Spider.RealTime.Abstractions.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.RealTime.Shared\Berry.Spider.RealTime.Shared.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.Segmenter.JiebaNet\Berry.Spider.Segmenter.JiebaNet.csproj" />

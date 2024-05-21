@@ -29,16 +29,21 @@ public class SpiderOptions
     /// 落库时是否随机插入图片
     /// </summary>
     public bool IsRandomInsertImage { get; set; }
-    
+
     /// <summary>
     /// 关键字采集是否启用唯一性验证（Push模式）
     /// </summary>
     public bool IsEnablePushUniqVerif { get; set; }
-    
+
     /// <summary>
     /// 关键字采集是否启用唯一性验证（Pull模式）
     /// </summary>
     public bool IsEnablePullUniqVerif { get; set; }
+
+    /// <summary>
+    /// 是否使用naipan伪原创生成内容
+    /// </summary>
+    public bool IsEnableNaiPan { get; set; }
 
     /// <summary>
     /// 关键字校验选项
@@ -54,17 +59,17 @@ public class SpiderOptions
     /// 内容主标题选项
     /// </summary>
     public MainTitleOptions MainTitleOptions { get; set; } = new();
-    
+
     /// <summary>
     /// 内容子标题选项
     /// </summary>
     public SubTitleOptions SubTitleOptions { get; set; } = new();
-    
+
     /// <summary>
     /// 分段标题选项
     /// </summary>
     public SectionTitleOptions SectionTitleOptions { get; set; } = new();
-    
+
     /// <summary>
     /// 监听服务配置选项
     /// </summary>
