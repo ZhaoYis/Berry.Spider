@@ -13,10 +13,10 @@ jobs:
       ASPNETCORE_ENVIRONMENT: PROD
     
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
 
@@ -59,7 +59,7 @@ jobs:
         shell: pwsh
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: Berry.Spider.Consumers
           path: ${{ github.workspace }}/publish/Berry.Spider.Consumers-v${{ github.run_number }}.zip
@@ -80,7 +80,7 @@ jobs:
           .qshell/qshell.exe account ${{secrets.QINIU_AK}} ${{secrets.QINIU_SK}} ${{secrets.QINIU_USER_NAME}}
           .qshell/qshell.exe rput berry-spider consumer-client/Berry.Spider.Consumers-v${{ github.run_number }}.zip ${{ github.workspace }}/publish/Berry.Spider.Consumers-v${{ github.run_number }}.zip --overwrite --resumable-api-v2
         shell: pwsh
-      
+
       - name: WeChat Work notification by text
         uses: chf007/action-wechat-work@master
         env:
