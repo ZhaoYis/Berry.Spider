@@ -15,5 +15,5 @@ public interface IWeatherServce
     /// <param name="city">城市名称</param>
     /// <remarks>根据实际对接的天气服务商预定的编码来进行传递，然后再在具体服务中进行处理</remarks>
     /// <returns></returns>
-    Task<WeatherForecastDTO> GetWeatherForecastAsync(string province, string adcode, string city);
+    Task<List<WeatherForecastDTO>?> GetWeatherForecastAsync(string province, string adcode, string city);
 }

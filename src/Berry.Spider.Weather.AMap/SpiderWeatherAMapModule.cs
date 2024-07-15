@@ -1,5 +1,6 @@
 using Berry.Spider.Weather.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
+using Volo.Abp.AutoMapper;
 using Volo.Abp.Modularity;
 
 namespace Berry.Spider.Weather.AMap;
@@ -14,5 +15,6 @@ public class SpiderWeatherAMapModule : AbpModule
         Configure<AMapOptions>(configuration.GetSection($"{nameof(WeatherOptions)}:{nameof(AMapOptions)}"));
         context.Services.AddTransient<IWeatherServce, AMapWeatherServce>();
         context.Services.AddHttpClient<AMapHttpClient>();
+        Configure<AbpAutoMapperOptions>(options => { options.AddMaps<SpiderWeatherAMapModule>(); });
     }
 }

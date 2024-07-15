@@ -1,5 +1,6 @@
 using Berry.Spider.Weather.Abstractions;
 using Berry.Spider.Weather.Shared;
+using Volo.Abp.ObjectMapping;
 
 namespace Berry.Spider.Weather.AMap;
 
@@ -9,10 +10,12 @@ namespace Berry.Spider.Weather.AMap;
 public class AMapWeatherServce : IWeatherServce
 {
     private readonly AMapHttpClient _aMapHttpClient;
+    private readonly IObjectMapper _objectMapper;
 
-    public AMapWeatherServce(AMapHttpClient aMapHttpClient)
+    public AMapWeatherServce(AMapHttpClient aMapHttpClient, IObjectMapper objectMapper)
     {
         _aMapHttpClient = aMapHttpClient;
+        _objectMapper = objectMapper;
     }
 
     /// <summary>
@@ -23,10 +26,14 @@ public class AMapWeatherServce : IWeatherServce
     /// <param name="city">城市名称</param>
     /// <remarks>根据实际对接的天气服务商预定的编码来进行传递，然后再在具体服务中进行处理</remarks>
     /// <returns></returns>
-    public async Task<WeatherForecastDTO> GetWeatherForecastAsync(string province, string adcode, string city)
+    public async Task<List<WeatherForecastDTO>?> GetWeatherForecastAsync(string province, string adcode, string city)
     {
         AMapWeatherInfoDTO? result = await _aMapHttpClient.GetWeatherInfoAsync(adcode);
-        //TODO:对象转换
-        return null;
+        if (result is { Forecasts: { Count: > 0 } })
+        {
+            return _objectMapper.Map<List<ForecastDTO>, List<WeatherForecastDTO>>(result.Forecasts);
+        }
+
+        return default;
     }
 }
