@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Berry.Spider.Core.Converts;
 
 namespace Berry.Spider.Weather.AMap;
 
@@ -35,6 +36,7 @@ public class ForecastDTO
     /// 预报发布时间
     /// </summary>
     [JsonPropertyName("reporttime")]
+    [JsonConverter(typeof(CustomDateTimeConverter))]
     public DateTime Reporttime { get; set; }
 
     /// <summary>

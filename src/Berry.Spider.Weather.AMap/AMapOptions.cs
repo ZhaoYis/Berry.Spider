@@ -7,5 +7,5 @@ public class AMapOptions : WeatherOptions
     /// <summary>
     /// 高德key
     /// </summary>
-    public string Key { get; set; } = null!;
+    public List<string> Keys { get; set; } = null!;
 }

@@ -1,4 +1,5 @@
 using Berry.Spider.Weather.AMap;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Modularity;
 
 namespace Berry.Spider.Weather;
@@ -8,6 +9,6 @@ public class SpiderWeatherModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        base.ConfigureServices(context);
+        context.Services.AddTransient<IWeatherProvider, DefaultWeatherProvider>();
     }
 }

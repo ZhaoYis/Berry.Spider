@@ -2,6 +2,7 @@
 using Berry.Spider.Biz;
 using Berry.Spider.Common;
 using Berry.Spider.Domain;
+using Berry.Spider.Weather;
 using Volo.Abp.AutoMapper;
 
 namespace Berry.Spider.Application;
@@ -42,5 +43,10 @@ public class SpiderApplicationAutoMapperProfile : Profile
             .IgnoreFullAuditedObjectProperties();
 
         CreateMap<SpiderAppInfo, SpiderAppInfoDto>();
+
+        CreateMap<WeatherForecastByDate, WeatherForecast>()
+            .Ignore(c => c.Id)
+            .Ignore(c => c.ExtraProperties)
+            .Ignore(c => c.ConcurrencyStamp);
     }
 }

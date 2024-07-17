@@ -18,6 +18,8 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
     public DbSet<SpiderContent_Title> SpiderContentTitles { get; set; }
     public DbSet<SpiderBasicInfo> SpiderBasicInfos { get; set; }
 
+    public DbSet<WeatherForecast> WeatherForecasts { get; set; }
+
     public SpiderDbContext(DbContextOptions<SpiderDbContext> options) : base(options)
     {
     }
@@ -73,6 +75,14 @@ public class SpiderDbContext : AbpDbContext<SpiderDbContext>
         builder.Entity<SpiderBasicInfo>(b =>
         {
             b.ToTable($"{TableNamePrefix}basic_info");
+
+            //Configure the base properties
+            b.ConfigureByConvention();
+        });
+
+        builder.Entity<WeatherForecast>(b =>
+        {
+            b.ToTable($"{TableNamePrefix}weather_forecast");
 
             //Configure the base properties
             b.ConfigureByConvention();

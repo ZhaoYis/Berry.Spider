@@ -26,6 +26,7 @@ public class SpiderEntityFrameworkCoreModule : AbpModule
             options.AddRepository<SpiderContent_Composition, SpiderContentCompositionRepository>();
             options.AddRepository<SpiderContent_Title, SpiderTitleContentRepository>();
             options.AddRepository<SpiderBasicInfo, SpiderBasicInfoRepository>();
+            options.AddRepository<WeatherForecast, WeatherForecastRepository>();
         });
 
         //添加默认仓储

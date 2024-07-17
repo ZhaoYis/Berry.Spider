@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Berry.Spider.Core\Berry.Spider.Core.csproj" />
       <ProjectReference Include="..\Berry.Spider.Weather.Abstractions\Berry.Spider.Weather.Abstractions.csproj" />
     </ItemGroup>
 
