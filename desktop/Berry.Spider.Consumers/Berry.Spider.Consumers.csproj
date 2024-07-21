@@ -72,4 +72,19 @@
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Update="AMapAdcode.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>AMapAdcode.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="AMapAdcode.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>AMapAdcode.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

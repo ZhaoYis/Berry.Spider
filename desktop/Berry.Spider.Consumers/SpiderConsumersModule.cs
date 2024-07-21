@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Berry.Spider.Application;
 using Berry.Spider.Baidu;
+using Berry.Spider.Core;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.EventBus.RabbitMq;
 using Berry.Spider.FreeRedis;
@@ -49,24 +50,43 @@ public class SpiderConsumersModule : AbpModule
 
         //注册服务
         // await context.AddBackgroundWorkerAsync<ServLifetimeCheckerWorker>();
+
         await context.AddBackgroundWorkerAsync<WeatherLoadWorker>();
+    }
+
+    public override void PreConfigureServices(ServiceConfigurationContext context)
+    {
+        //注入高德地图区域编码
+        string[] codes = AMapAdcode.TxtString.Split("\n");
+        context.Services.Configure<AMapAdcodeOptions>(ctf =>
+        {
+            foreach (string code in codes)
+            {
+                string[] lines = code.Split("\t");
+                ctf.Items.Add(new NameValue
+                {
+                    Name = lines[0],
+                    Value = lines[1]
+                });
+            }
+        });
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        // //今日头条
-        // context.Services.AddTransient<ITouTiaoSpider4QuestionEventHandler, TouTiaoSpider4QuestionEventHandler>();
-        // context.Services.AddTransient<ITouTiaoSpider4QuestionExtNo1EventHandler, TouTiaoSpider4QuestionExtNo1EventHandler>();
-        // context.Services.AddTransient<ITouTiaoSpider4HighQualityQuestionEventHandler, TouTiaoSpider4HighQualityQuestionEventHandler>();
-        // context.Services.AddTransient<ITouTiaoSpider4HighQualityQuestionExtNo1EventHandler, TouTiaoSpider4HighQualityQuestionExtNo1EventHandler>();
-        // context.Services.AddTransient<ITouTiaoSpider4InformationEventHandler, TouTiaoSpider4InformationEventHandler>();
-        // context.Services.AddTransient<ITouTiaoSpider4InformationCompositionEventHandler, TouTiaoSpider4InformationCompositionEventHandler>();
-        //
-        // //搜狗
-        // context.Services.AddTransient<ISogouSpider4RelatedSearchEventHandler, SogouSpider4RelatedSearchEventHandler>();
-        // context.Services.AddTransient<ISogouSpider4WenWenEventHandler, SogouSpider4WenWenEventHandler>();
-        //
-        // //百度
-        // context.Services.AddTransient<IBaiduSpider4RelatedSearchEventHandler, BaiduSpider4RelatedSearchEventHandler>();
+        //今日头条
+        context.Services.AddTransient<ITouTiaoSpider4QuestionEventHandler, TouTiaoSpider4QuestionEventHandler>();
+        context.Services.AddTransient<ITouTiaoSpider4QuestionExtNo1EventHandler, TouTiaoSpider4QuestionExtNo1EventHandler>();
+        context.Services.AddTransient<ITouTiaoSpider4HighQualityQuestionEventHandler, TouTiaoSpider4HighQualityQuestionEventHandler>();
+        context.Services.AddTransient<ITouTiaoSpider4HighQualityQuestionExtNo1EventHandler, TouTiaoSpider4HighQualityQuestionExtNo1EventHandler>();
+        context.Services.AddTransient<ITouTiaoSpider4InformationEventHandler, TouTiaoSpider4InformationEventHandler>();
+        context.Services.AddTransient<ITouTiaoSpider4InformationCompositionEventHandler, TouTiaoSpider4InformationCompositionEventHandler>();
+
+        //搜狗
+        context.Services.AddTransient<ISogouSpider4RelatedSearchEventHandler, SogouSpider4RelatedSearchEventHandler>();
+        context.Services.AddTransient<ISogouSpider4WenWenEventHandler, SogouSpider4WenWenEventHandler>();
+
+        //百度
+        context.Services.AddTransient<IBaiduSpider4RelatedSearchEventHandler, BaiduSpider4RelatedSearchEventHandler>();
     }
 }
