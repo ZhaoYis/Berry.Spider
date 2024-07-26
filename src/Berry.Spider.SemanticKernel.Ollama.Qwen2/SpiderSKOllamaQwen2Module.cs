@@ -8,6 +8,7 @@ namespace Berry.Spider.SemanticKernel.Ollama.Qwen2;
 /// SemanticKernel & Ollama集成qwen2:7b模型
 /// 模型地址：https://ollama.com/library/qwen2
 /// </summary>
+[DependsOn(typeof(SpiderSKOllamaModule))]
 public class SpiderSKOllamaQwen2Module : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
