@@ -25,55 +25,58 @@ public class NotifyAgentToStartDeployingAppCommand : IFixedCommand, ITransientDe
 
     public async Task ExecuteAsync(CommandLineArgs commandLineArgs)
     {
-        NotifyAgentToStartDeployingAppDto? dto = JsonSerializer.Deserialize<NotifyAgentToStartDeployingAppDto>(commandLineArgs.Body);
-        if (dto is not null and { RunAppCount: > 0 })
+        if (commandLineArgs.Body is string body)
         {
-            string deployPath = Path.Combine(AppContext.BaseDirectory, "Download");
-            if (!Directory.Exists(deployPath)) Directory.CreateDirectory(deployPath);
-
-            //检查当前机器是否存在部署包
-            EasyConfigHelper easyConfigHelper = new EasyConfigHelper(AgentConfigName);
-            if (easyConfigHelper.Exists("Install", "Path"))
+            NotifyAgentToStartDeployingAppDto? dto = JsonSerializer.Deserialize<NotifyAgentToStartDeployingAppDto>(body);
+            if (dto is not null and { RunAppCount: > 0 })
             {
-                //检查当前机器是否存在运行中的即将部署的应用进程，存在则全部停止
-                Process[] processes = Process.GetProcessesByName(ProcessName);
-                foreach (Process process in processes)
-                {
-                    process.Kill();
-                    await process.WaitForExitAsync();
-                }
+                string deployPath = Path.Combine(AppContext.BaseDirectory, "Download");
+                if (!Directory.Exists(deployPath)) Directory.CreateDirectory(deployPath);
 
-                //检查版本
-                string currentRunVersion = easyConfigHelper.Get("Install", "Version");
-                if (currentRunVersion == dto.RunAppInfo.TagName)
+                //检查当前机器是否存在部署包
+                EasyConfigHelper easyConfigHelper = new EasyConfigHelper(AgentConfigName);
+                if (easyConfigHelper.Exists("Install", "Path"))
                 {
-                    deployPath = easyConfigHelper.Get("Install", "Path");
+                    //检查当前机器是否存在运行中的即将部署的应用进程，存在则全部停止
+                    Process[] processes = Process.GetProcessesByName(ProcessName);
+                    foreach (Process process in processes)
+                    {
+                        process.Kill();
+                        await process.WaitForExitAsync();
+                    }
+
+                    //检查版本
+                    string currentRunVersion = easyConfigHelper.Get("Install", "Version");
+                    if (currentRunVersion == dto.RunAppInfo.TagName)
+                    {
+                        deployPath = easyConfigHelper.Get("Install", "Path");
+                    }
+                    else
+                    {
+                        deployPath = await this.DownloadPackageAsync(deployPath, dto.RunAppInfo);
+                    }
                 }
                 else
                 {
                     deployPath = await this.DownloadPackageAsync(deployPath, dto.RunAppInfo);
                 }
-            }
-            else
-            {
-                deployPath = await this.DownloadPackageAsync(deployPath, dto.RunAppInfo);
-            }
 
-            //运行节点
-            string deployAppPath = Path.Combine(deployPath, ProcessName, $"{ProcessName}.exe");
-            for (int i = 0; i < dto.RunAppCount; i++)
-            {
-                UserProcessHelper.StartProcessAndBypassUAC(deployAppPath, string.Empty, out UserProcessHelper.PROCESS_INFORMATION pInfo);
-                await Task.Delay(100).ConfigureAwait(false);
-            }
+                //运行节点
+                string deployAppPath = Path.Combine(deployPath, ProcessName, $"{ProcessName}.exe");
+                for (int i = 0; i < dto.RunAppCount; i++)
+                {
+                    UserProcessHelper.StartProcessAndBypassUAC(deployAppPath, string.Empty, out UserProcessHelper.PROCESS_INFORMATION pInfo);
+                    await Task.Delay(100).ConfigureAwait(false);
+                }
 
-            //保存配置信息
-            easyConfigHelper.Set("Install", new Dictionary<string, string>
-            {
-                { "Path", deployPath },
-                { "Version", dto.RunAppInfo.TagName },
-                { "Count", dto.RunAppCount.ToString() }
-            });
+                //保存配置信息
+                easyConfigHelper.Set("Install", new Dictionary<string, string>
+                {
+                    { "Path", deployPath },
+                    { "Version", dto.RunAppInfo.TagName },
+                    { "Count", dto.RunAppCount.ToString() }
+                });
+            }
         }
     }
 

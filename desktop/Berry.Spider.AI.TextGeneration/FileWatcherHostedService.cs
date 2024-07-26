@@ -1,14 +1,21 @@
+using Berry.Spider.Core.Commands;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Volo.Abp.Threading;
 
 namespace Berry.Spider.AI.TextGeneration;
 
 public class FileWatcherHostedService : IHostedService
 {
     private readonly FileSystemWatcher _fileSystemWatcher;
+    private IServiceScopeFactory ServiceScopeFactory { get; }
+    private ICommandSelector CommandSelector { get; }
 
-    public FileWatcherHostedService()
+    public FileWatcherHostedService(IServiceScopeFactory factory, ICommandSelector commandSelector)
     {
         _fileSystemWatcher = new FileSystemWatcher(Path.Combine("files"));
+        this.ServiceScopeFactory = factory;
+        this.CommandSelector = commandSelector;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
@@ -38,31 +45,40 @@ public class FileWatcherHostedService : IHostedService
 
     private void OnFileCreated(object sender, FileSystemEventArgs e)
     {
-        // 处理文件创建事件
-        Console.WriteLine($"File created: {e.FullPath}");
+        var (command, commandLineArgs) = this.GetCommand(nameof(WatcherChangeTypes.Created), e);
+        AsyncHelper.RunSync(() => command.ExecuteAsync(commandLineArgs));
     }
 
     private void OnFileChanged(object sender, FileSystemEventArgs e)
     {
-        // 处理文件更改事件
-        Console.WriteLine($"File changed: {e.FullPath}");
+        var (command, commandLineArgs) = this.GetCommand(nameof(WatcherChangeTypes.Changed), e);
+        AsyncHelper.RunSync(() => command.ExecuteAsync(commandLineArgs));
     }
 
     private void OnFileDeleted(object sender, FileSystemEventArgs e)
     {
-        // 处理文件删除事件
-        Console.WriteLine($"File deleted: {e.FullPath}");
+        var (command, commandLineArgs) = this.GetCommand(nameof(WatcherChangeTypes.Deleted), e);
+        AsyncHelper.RunSync(() => command.ExecuteAsync(commandLineArgs));
     }
 
     private void OnFileRenamed(object sender, RenamedEventArgs e)
     {
-        // 处理文件重命名事件
-        Console.WriteLine($"File renamed: {e.OldName} to {e.Name}");
+        var (command, commandLineArgs) = this.GetCommand(nameof(WatcherChangeTypes.Renamed), e);
+        AsyncHelper.RunSync(() => command.ExecuteAsync(commandLineArgs));
     }
-
+    
     private void OnError(object sender, ErrorEventArgs e)
     {
         // 错误消息
-        Console.WriteLine($"{e.GetException().ToString()}");
+        Console.WriteLine(@$"{e.GetException().ToString()}");
+    }
+
+    private (IFixedCommand, CommandLineArgs) GetCommand(string commandName, object e)
+    {
+        using var scope = ServiceScopeFactory.CreateScope();
+        CommandLineArgs commandLineArgs = new CommandLineArgs(commandName, e);
+        var commandType = this.CommandSelector.Select(commandLineArgs);
+        var command = (IFixedCommand)scope.ServiceProvider.GetRequiredService(commandType);
+        return (command, commandLineArgs);
     }
 }

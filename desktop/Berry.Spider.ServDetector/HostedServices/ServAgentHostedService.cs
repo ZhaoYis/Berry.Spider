@@ -60,11 +60,7 @@ public class ServAgentHostedService : IHostedService
                 {
                     using var scope = ServiceScopeFactory.CreateScope();
                     var commandSelector = scope.ServiceProvider.GetRequiredService<ICommandSelector>();
-                    CommandLineArgs commandLineArgs = new CommandLineArgs
-                    {
-                        Command = msg.Code.GetName(),
-                        Body = msg.Data
-                    };
+                    CommandLineArgs commandLineArgs = new CommandLineArgs(msg.Code.GetName(), msg.Data);
                     var commandType = commandSelector.Select(commandLineArgs);
 
                     var command = (IFixedCommand)scope.ServiceProvider.GetRequiredService(commandType);
