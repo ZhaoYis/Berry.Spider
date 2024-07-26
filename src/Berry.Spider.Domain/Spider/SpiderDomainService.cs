@@ -27,6 +27,7 @@ public class SpiderDomainService : DomainService
         IImageResourceProvider imageResourceProvider,
         ITemplateRenderer templateRenderer,
         ISegmenterProvider segmenterProvider,
+        INaiPanService naiPanService,
         IStringBuilderObjectPoolProvider stringBuilderObjectPoolProvider,
         IOptionsSnapshot<SpiderOptions> options,
         IOptionsSnapshot<TitleTemplateContentOptions> titleTemplateOptions)
@@ -34,6 +35,7 @@ public class SpiderDomainService : DomainService
         ImageResourceProvider = imageResourceProvider;
         TemplateRenderer = templateRenderer;
         SegmenterProvider = segmenterProvider;
+        NaiPanService = naiPanService;
         StringBuilderObjectPoolProvider = stringBuilderObjectPoolProvider;
         Options = options.Value;
         TitleTemplateOptions = titleTemplateOptions.Value;
