@@ -45,40 +45,39 @@ public class FileWatcherHostedService : IHostedService
 
     private void OnFileCreated(object sender, FileSystemEventArgs e)
     {
-        var (command, commandLineArgs) = this.GetCommand(nameof(WatcherChangeTypes.Created), e);
-        AsyncHelper.RunSync(() => command.ExecuteAsync(commandLineArgs));
+        this.RunCommand(nameof(WatcherChangeTypes.Created), e);
     }
 
     private void OnFileChanged(object sender, FileSystemEventArgs e)
     {
-        var (command, commandLineArgs) = this.GetCommand(nameof(WatcherChangeTypes.Changed), e);
-        AsyncHelper.RunSync(() => command.ExecuteAsync(commandLineArgs));
+        this.RunCommand(nameof(WatcherChangeTypes.Changed), e);
     }
 
     private void OnFileDeleted(object sender, FileSystemEventArgs e)
     {
-        var (command, commandLineArgs) = this.GetCommand(nameof(WatcherChangeTypes.Deleted), e);
-        AsyncHelper.RunSync(() => command.ExecuteAsync(commandLineArgs));
+        this.RunCommand(nameof(WatcherChangeTypes.Deleted), e);
     }
 
     private void OnFileRenamed(object sender, RenamedEventArgs e)
     {
-        var (command, commandLineArgs) = this.GetCommand(nameof(WatcherChangeTypes.Renamed), e);
-        AsyncHelper.RunSync(() => command.ExecuteAsync(commandLineArgs));
+        this.RunCommand(nameof(WatcherChangeTypes.Renamed), e);
     }
-    
+
     private void OnError(object sender, ErrorEventArgs e)
     {
         // 错误消息
         Console.WriteLine(@$"{e.GetException().ToString()}");
     }
 
-    private (IFixedCommand, CommandLineArgs) GetCommand(string commandName, object e)
+    /// <summary>
+    /// 执行命令
+    /// </summary>
+    private void RunCommand(string commandName, object e)
     {
         using var scope = ServiceScopeFactory.CreateScope();
         CommandLineArgs commandLineArgs = new CommandLineArgs(commandName, e);
         var commandType = this.CommandSelector.Select(commandLineArgs);
         var command = (IFixedCommand)scope.ServiceProvider.GetRequiredService(commandType);
-        return (command, commandLineArgs);
+        AsyncHelper.RunSync(() => command.ExecuteAsync(commandLineArgs));
     }
 }
