@@ -16,6 +16,9 @@
 - [RabbitMQ](https://www.rabbitmq.com)
 - [Useragents.me](https://www.useragents.me)
 - [NSSM](http://www.nssm.cc/download)
+- [SemanticKernel](https://github.com/microsoft/semantic-kernel)
+- [Ollama](https://ollama.com/library/qwen2)
+- [OllamaSharp](https://github.com/awaescher/OllamaSharp)
 - ...
 
 🈲*重要说明：此项目仅用于个人学习、演示使用。*
