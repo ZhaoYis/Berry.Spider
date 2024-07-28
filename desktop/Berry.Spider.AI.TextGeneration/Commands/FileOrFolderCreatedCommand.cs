@@ -13,16 +13,10 @@ namespace Berry.Spider.AI.TextGeneration.Commands;
 /// 处理文件创建事件
 /// </summary>
 [CommandName(nameof(WatcherChangeTypes.Created))]
-public class FileOrFolderCreatedCommand : IFixedCommand, ITransientDependency
+public class FileOrFolderCreatedCommand(Kernel kernel, ISpiderContentRepository repository) : IFixedCommand, ITransientDependency
 {
-    private ITextGenerationService TextGenerationService { get; }
-    private ISpiderContentRepository SpiderRepository { get; }
-
-    public FileOrFolderCreatedCommand(Kernel kernel, ISpiderContentRepository repository)
-    {
-        this.TextGenerationService = kernel.GetRequiredService<ITextGenerationService>();
-        this.SpiderRepository = repository;
-    }
+    private ITextGenerationService TextGenerationService { get; } = kernel.GetRequiredService<ITextGenerationService>();
+    private ISpiderContentRepository SpiderRepository { get; } = repository;
 
     public async Task ExecuteAsync(CommandLineArgs commandLineArgs)
     {
@@ -63,6 +57,7 @@ public class FileOrFolderCreatedCommand : IFixedCommand, ITransientDependency
         catch (Exception e)
         {
             ConsoleHelper.WriteLine(e.ToString(), ConsoleColor.Red);
+            ConsoleHelper.WriteLine($"---------------错误标题：{title}---------------", ConsoleColor.Red);
         }
     }
 }
