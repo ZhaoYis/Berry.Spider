@@ -1,3 +1,4 @@
+using Berry.Spider.Core;
 using Berry.Spider.Core.Commands;
 using Volo.Abp.DependencyInjection;
 
@@ -13,7 +14,7 @@ public class FileOrFolderChangedCommand : IFixedCommand, ITransientDependency
     {
         if (commandLineArgs.Body is FileSystemEventArgs e)
         {
-            Console.WriteLine(@$"File changed: {e.FullPath}");
+            ConsoleHelper.WriteLine(@$"监听到新文件被创建: {e.FullPath}", ConsoleColor.Yellow);
         }
     }
 }

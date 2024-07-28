@@ -1,24 +1,23 @@
 using Berry.Spider.Core.Commands;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Volo.Abp.Threading;
 
 namespace Berry.Spider.AI.TextGeneration;
 
-public class FileWatcherHostedService : IHostedService
+public class FileWatcherService
 {
     private readonly FileSystemWatcher _fileSystemWatcher;
     private IServiceScopeFactory ServiceScopeFactory { get; }
     private ICommandSelector CommandSelector { get; }
 
-    public FileWatcherHostedService(IServiceScopeFactory factory, ICommandSelector commandSelector)
+    public FileWatcherService(IServiceScopeFactory factory, ICommandSelector commandSelector)
     {
         _fileSystemWatcher = new FileSystemWatcher(Path.Combine("files"));
         this.ServiceScopeFactory = factory;
         this.CommandSelector = commandSelector;
     }
 
-    public async Task StartAsync(CancellationToken cancellationToken)
+    public void Start()
     {
         //监视最近写入、目录更改和文件名更改
         _fileSystemWatcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.DirectoryName | NotifyFilters.FileName;
@@ -33,14 +32,12 @@ public class FileWatcherHostedService : IHostedService
         _fileSystemWatcher.IncludeSubdirectories = true;
         //是否启用事件监听
         _fileSystemWatcher.EnableRaisingEvents = true;
-        await Task.CompletedTask;
     }
 
-    public async Task StopAsync(CancellationToken cancellationToken)
+    public void Stop()
     {
         // 在一段时间后或不再需要时停止监视
         _fileSystemWatcher.Dispose();
-        await Task.CompletedTask;
     }
 
     private void OnFileCreated(object sender, FileSystemEventArgs e)

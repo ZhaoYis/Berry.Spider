@@ -1,3 +1,5 @@
+using Berry.Spider.AI.TextGeneration.Storage;
+using Berry.Spider.Core;
 using Berry.Spider.Core.Commands;
 using Volo.Abp.DependencyInjection;
 
@@ -13,7 +15,9 @@ public class FileOrFolderRenamedCommand : IFixedCommand, ITransientDependency
     {
         if (commandLineArgs.Body is RenamedEventArgs e)
         {
-            Console.WriteLine(@$"File renamed: {e.OldName} to {e.Name}");
+            ConsoleHelper.WriteLine(@$"[变更]原始名称：{e.OldName}，新名称: {e.Name}", ConsoleColor.Gray);
+            FileStorageProcessor.Remove(e.OldName ?? e.Name ?? e.FullPath);
+            FileStorageProcessor.Add(e.Name ?? e.FullPath, e.FullPath);
         }
     }
 }

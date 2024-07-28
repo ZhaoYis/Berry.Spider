@@ -69,9 +69,14 @@ public enum SpiderSourceFrom
     /// 搜狗_相关搜索
     /// </summary>
     [Description("搜狗_相关搜索")] Sogou_Related_Search = 301,
-    
+
     /// <summary> 
     /// 搜狗_问问
     /// </summary>
-    [Description("搜狗_问问")] Sogou_WenWen = 401
+    [Description("搜狗_问问")] Sogou_WenWen = 401,
+
+    /// <summary> 
+    /// AI
+    /// </summary>
+    [Description("AI")] AI = 501
 }

@@ -127,6 +127,25 @@ public class SpiderDomainService : DomainService
         return default;
     }
 
+
+    /// <summary>
+    /// 统一构建落库实体内容
+    /// </summary>
+    /// <returns></returns>
+    public async Task<SpiderContent?> BuildContentAsync(string originalTitle,
+        SpiderSourceFrom sourceFrom,
+        string article,
+        string? traceCode = null,
+        string? identityId = null)
+    {
+        //组装数据
+        var content = new SpiderContent(originalTitle, article, sourceFrom);
+        content.SetTraceCodeIfNotNull(traceCode);
+        content.SetIdentityIdIfNotNull(identityId);
+
+        return content;
+    }
+
     /// <summary>
     /// 统一构建落库实体内容（优质问答）
     /// </summary>

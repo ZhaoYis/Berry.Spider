@@ -1,3 +1,5 @@
+using Berry.Spider.AI.TextGeneration.Storage;
+using Berry.Spider.Core;
 using Berry.Spider.Core.Commands;
 using Volo.Abp.DependencyInjection;
 
@@ -13,7 +15,8 @@ public class FileOrFolderDeletedCommand : IFixedCommand, ITransientDependency
     {
         if (commandLineArgs.Body is FileSystemEventArgs e)
         {
-            Console.WriteLine(@$"File deleted: {e.FullPath}");
+            ConsoleHelper.WriteLine(@$"[删除]文件名称：{e.Name}，所在路径: {e.FullPath}", ConsoleColor.Red);
+            FileStorageProcessor.Remove(e.Name ?? e.FullPath);
         }
     }
 }

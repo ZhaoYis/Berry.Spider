@@ -1,6 +1,4 @@
-﻿using Berry.Spider.AI.TextGeneration.Commands;
-using Berry.Spider.Core.Commands;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
@@ -29,20 +27,7 @@ public class Program
         {
             Log.Information("Starting console host.");
 
-            await Host.CreateDefaultBuilder(args)
-                .ConfigureServices(services =>
-                {
-                    services.RegisterCommand(opt =>
-                    {
-                        opt.Commands.Add(nameof(WatcherChangeTypes.Created), typeof(FileOrFolderCreatedCommand));
-                        opt.Commands.Add(nameof(WatcherChangeTypes.Deleted), typeof(FileOrFolderDeletedCommand));
-                        opt.Commands.Add(nameof(WatcherChangeTypes.Changed), typeof(FileOrFolderChangedCommand));
-                        opt.Commands.Add(nameof(WatcherChangeTypes.Renamed), typeof(FileOrFolderRenamedCommand));
-                    });
-
-                    services.AddHostedService<AITextGenerationHostedService>();
-                    services.AddHostedService<FileWatcherHostedService>();
-                })
+            await Host.CreateDefaultBuilder(args).ConfigureServices(services => { services.AddHostedService<AITextGenerationHostedService>(); })
                 //集成AgileConfig
                 .UseAgileConfig()
                 .UseSerilog()
