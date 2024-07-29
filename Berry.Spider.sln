@@ -105,6 +105,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{46854626-E2C5-4C92-890D-A3D7BAB9EC7E}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\consumer_build.yml = .github\workflows\consumer_build.yml
+		.github\workflows\ai_text_generation_build.yml = .github\workflows\ai_text_generation_build.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Berry.Spider.OpenAI.Application", "src\Berry.Spider.OpenAI.Application\Berry.Spider.OpenAI.Application.csproj", "{48522D07-6C12-4BEC-AC15-900C292738D5}"

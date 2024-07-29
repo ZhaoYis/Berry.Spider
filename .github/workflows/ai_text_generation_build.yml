@@ -1,4 +1,4 @@
-name: Berry.Spider.Consumers
+name: Berry.Spider.AI.TextGeneration
 
 on:
   push:
@@ -21,19 +21,19 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Restore Dependencies
-        run: dotnet restore desktop/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj
+        run: dotnet restore desktop/Berry.Spider.AI.TextGeneration/Berry.Spider.AI.TextGeneration.csproj
 
       - name: Build Application
-        run: dotnet build desktop/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release
+        run: dotnet build desktop/Berry.Spider.AI.TextGeneration/Berry.Spider.AI.TextGeneration.csproj -c Release
 
       - name: Publish Application
-        run: dotnet publish desktop/Berry.Spider.Consumers/Berry.Spider.Consumers.csproj -c Release -o ${{ github.workspace }}/publish/Berry.Spider.Consumers -r win-x64 --self-contained=false /p:PublishSingleFile=true /p:Environment=${{ env.ENVIRONMENT }}
+        run: dotnet publish desktop/Berry.Spider.AI.TextGeneration/Berry.Spider.AI.TextGeneration.csproj -c Release -o ${{ github.workspace }}/publish/Berry.Spider.AI.TextGeneration -r win-x64 --self-contained=false /p:PublishSingleFile=true /p:Environment=${{ env.ENVIRONMENT }}
         env:
           ENVIRONMENT: ${{ env.ASPNETCORE_ENVIRONMENT }}
 
       - name: Remove pdb files
         run: |
-          cd ${{ github.workspace }}/publish/Berry.Spider.Consumers
+          cd ${{ github.workspace }}/publish/Berry.Spider.AI.TextGeneration
           DEL *.pdb
         shell: pwsh
 
@@ -55,14 +55,14 @@ jobs:
       - name: Zip artifact
         run: |
           cd ${{ github.workspace }}/publish
-          Compress-Archive -Path Berry.Spider.Consumers -DestinationPath Berry.Spider.Consumers-v${{ github.run_number }}.zip
+          Compress-Archive -Path Berry.Spider.AI.TextGeneration -DestinationPath Berry.Spider.AI.TextGeneration-v${{ github.run_number }}.zip
         shell: pwsh
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: Berry.Spider.Consumers
-          path: ${{ github.workspace }}/publish/Berry.Spider.Consumers-v${{ github.run_number }}.zip
+          name: Berry.Spider.AI.TextGeneration
+          path: ${{ github.workspace }}/publish/Berry.Spider.AI.TextGeneration-v${{ github.run_number }}.zip
 
       - name: Attach Artifact to Release
         id: attach_artifact
@@ -71,16 +71,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ github.workspace }}/publish/Berry.Spider.Consumers-v${{ github.run_number }}.zip
-          asset_name: Berry.Spider.Consumers-v${{ github.run_number }}.zip
+          asset_path: ${{ github.workspace }}/publish/Berry.Spider.AI.TextGeneration-v${{ github.run_number }}.zip
+          asset_name: Berry.Spider.AI.TextGeneration-v${{ github.run_number }}.zip
           asset_content_type: application/zip
 
       - name: Upload to qiniu
         run: |
           .qshell/qshell.exe account ${{secrets.QINIU_AK}} ${{secrets.QINIU_SK}} ${{secrets.QINIU_USER_NAME}}
-          .qshell/qshell.exe rput berry-spider consumer-client/Berry.Spider.Consumers-v${{ github.run_number }}.zip ${{ github.workspace }}/publish/Berry.Spider.Consumers-v${{ github.run_number }}.zip --overwrite --resumable-api-v2
+          .qshell/qshell.exe rput berry-spider ai-text-generation/Berry.Spider.AI.TextGeneration-v${{ github.run_number }}.zip ${{ github.workspace }}/publish/Berry.Spider.AI.TextGeneration-v${{ github.run_number }}.zip --overwrite --resumable-api-v2
         shell: pwsh
-      
+
       - name: WeChat Work notification by text
         uses: chf007/action-wechat-work@master
         env:
@@ -90,6 +90,6 @@ jobs:
           HTML_URL: ${{ github.event.release.html_url }}
         with:
           msgtype: markdown
-          content: "[Berry.Spider.Consumers]打包成功！请及时下载最新版本并替换现有程序。\n
+          content: "[Berry.Spider.AI.TextGeneration]打包成功！请及时下载最新版本并替换现有程序。\n
           > 下载地址：[点我前往](https://github.com/ZhaoYis/Berry.Spider/releases) \n"
           mentioned_list: '["@all"]'
