@@ -25,7 +25,7 @@ public class TouTiaoQuestionTextAnalysisProvider : ITextAnalysisProvider
         List<string> list = new List<string>();
 
         //根据\n进行分割
-        string[] sources = source.Split('\n');
+        string[] sources = source.ReplaceLineEndings("\n").Split('\n');
         if (sources.Length > 0)
         {
             //验证是否有序号，例如：[1、]、[1.]、[一、]等
