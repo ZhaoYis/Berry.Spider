@@ -38,7 +38,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             string current = driver.CurrentWindowHandle;
 
             if (string.IsNullOrEmpty(page)) return;
-            this.Logger.LogInformation("[V]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
+            this.Logger.LogInformation("[V]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, url);
 
             //人机验证拦截
             if (await this.InterceptorProvider.LockedAsync(targetUrl, url)) return;
@@ -83,7 +83,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                     string current = driver.CurrentWindowHandle;
 
                     if (string.IsNullOrEmpty(page)) return;
-                    this.Logger.LogInformation("[BV]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
+                    this.Logger.LogInformation("[BV]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, url);
 
                     //人机验证拦截
                     if (await this.InterceptorProvider.LockedAsync(targetUrl, url)) return;
@@ -128,7 +128,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             string current = driver.CurrentWindowHandle;
 
             if (string.IsNullOrEmpty(page)) return default;
-            this.Logger.LogInformation("[T]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
+            this.Logger.LogInformation("[T]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, url);
 
             //人机验证拦截
             if (await this.InterceptorProvider.LockedAsync(targetUrl, url)) return default(T);
@@ -178,7 +178,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             string current = driver.CurrentWindowHandle;
 
             if (string.IsNullOrEmpty(page)) return string.Empty;
-            this.Logger.LogInformation("[AC]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
+            this.Logger.LogInformation("[AC]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, url);
 
             //人机验证拦截
             if (await this.InterceptorProvider.LockedAsync(targetUrl, url)) return string.Empty;
@@ -220,7 +220,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             string current = driver.CurrentWindowHandle;
 
             if (string.IsNullOrEmpty(page)) return;
-            this.Logger.LogInformation("[ACI]窗口句柄：{0}，关键字：{1}，地址：{2}", current, title, url);
+            this.Logger.LogInformation("[ACI]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, url);
 
             //人机验证拦截
             if (await this.InterceptorProvider.LockedAsync(targetUrl, url)) return;

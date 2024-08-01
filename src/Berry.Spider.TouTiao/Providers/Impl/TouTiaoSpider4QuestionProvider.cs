@@ -14,7 +14,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：问答
 /// </summary>
-[SpiderService(new[] {SpiderSourceFrom.TouTiao_Question, SpiderSourceFrom.TouTiao_Question_Ext_NO_1})]
+[SpiderService(new[] { SpiderSourceFrom.TouTiao_Question, SpiderSourceFrom.TouTiao_Question_Ext_NO_1 })]
 public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4QuestionProvider>, ISpiderProvider
 {
     private IWebElementLoadProvider WebElementLoadProvider { get; }
@@ -102,7 +102,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                     if (root == null) return;
 
                     var resultContent = root.TryFindElements(By.CssSelector(".result-content"));
-                    if (resultContent is null or {Count: 0}) return;
+                    if (resultContent is null or { Count: 0 }) return;
 
                     ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                     foreach (IWebElement element in resultContent)
@@ -137,9 +137,9 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                         }
                     }
 
-                    if (childPageDataItems is {Count: > 0})
+                    if (childPageDataItems is { Count: > 0 })
                     {
-                        this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
+                        this.Logger.LogInformation("通道：{Description}，关键字：{Keyword}，一级页面：{Count}条", eventData.SourceFrom.GetDescription(),
                             eventData.Keyword, childPageDataItems.Count.ToString());
 
                         var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom,
@@ -181,17 +181,17 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                     if (root == null) return;
 
                     var resultContent = root.TryFindElements(By.CssSelector(".list"));
-                    if (resultContent is null or {Count: 0}) return;
+                    if (resultContent is null or { Count: 0 }) return;
 
                     foreach (IWebElement element in resultContent)
                     {
                         var answerList = element.TryFindElements(By.TagName("div"));
-                        if (answerList is null or {Count: 0}) continue;
+                        if (answerList is null or { Count: 0 }) continue;
 
                         var realAnswerList = answerList
                             .Where(c => c.GetAttribute("class").StartsWith("answer_layout_wrapper_"))
                             .ToList();
-                        if (realAnswerList is null or {Count: 0}) continue;
+                        if (realAnswerList is null or { Count: 0 }) continue;
 
                         foreach (IWebElement answer in realAnswerList)
                         {
@@ -202,7 +202,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
                                 if (list.Count > 0)
                                 {
                                     contentItems = contentItems.AddRange(list);
-                                    this.Logger.LogInformation("总共解析到记录：{0}", list.Count);
+                                    this.Logger.LogInformation("总共解析到记录：{Count}", list.Count);
                                 }
                             }
                         }
@@ -217,7 +217,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
             if (spiderContent != null)
             {
                 await this.SpiderRepository.InsertAsync(spiderContent);
-                this.Logger.LogInformation("落库成功关键字：{0}，标题：{0}，共计：{1}行记录", eventData.Keyword, spiderContent.Title, contentItems.Count);
+                this.Logger.LogInformation("落库成功关键字：{Keyword}，标题：{Title}，共计：{Count}行记录", eventData.Keyword, spiderContent.Title, contentItems.Count);
             }
         }
         catch (Exception exception)

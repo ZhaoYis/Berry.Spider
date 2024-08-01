@@ -28,7 +28,7 @@ public class AITextGenerationModule : AbpModule
         var configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
 
         var hostEnvironment = context.ServiceProvider.GetRequiredService<IHostEnvironment>();
-        logger.LogInformation($"EnvironmentName => {hostEnvironment.EnvironmentName}");
+        logger.LogInformation("EnvironmentName => {EnvironmentName}", hostEnvironment.EnvironmentName);
 
         //启动文件监听服务
         context.ServiceProvider.GetRequiredService<FileWatcherService>().Start();

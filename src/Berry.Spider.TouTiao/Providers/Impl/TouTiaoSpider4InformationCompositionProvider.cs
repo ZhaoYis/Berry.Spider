@@ -15,7 +15,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：头条_资讯_作文板块
 /// </summary>
-[SpiderService(new[] {SpiderSourceFrom.TouTiao_Information_Composition})]
+[SpiderService(new[] { SpiderSourceFrom.TouTiao_Information_Composition })]
 public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiaoSpider4InformationCompositionProvider>, ISpiderProvider
 {
     private IGuidGenerator GuidGenerator { get; }
@@ -104,7 +104,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                     if (root == null) return;
 
                     var resultContent = root.TryFindElements(By.CssSelector(".result-content"));
-                    if (resultContent is null or {Count: 0}) return;
+                    if (resultContent is null or { Count: 0 }) return;
 
                     ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                     foreach (IWebElement element in resultContent)
@@ -137,9 +137,9 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
                         }
                     }
 
-                    if (childPageDataItems is {Count: > 0})
+                    if (childPageDataItems is { Count: > 0 })
                     {
-                        this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(), eventData.Keyword, childPageDataItems.Count.ToString());
+                        this.Logger.LogInformation("通道：{Description}，关键字：{Keyword}，一级页面：{Count}条", eventData.SourceFrom.GetDescription(), eventData.Keyword, childPageDataItems.Count.ToString());
 
                         var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom,
                             eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode,

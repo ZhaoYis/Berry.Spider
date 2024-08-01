@@ -36,7 +36,7 @@ public class QgNetProxyHttpClient
             }
             else
             {
-                this.Logger.LogError("代理IP获取失败：" + result?.Code);
+                this.Logger.LogError("代理IP获取失败：{Code}", result?.Code);
             }
         }
         catch (Exception e)

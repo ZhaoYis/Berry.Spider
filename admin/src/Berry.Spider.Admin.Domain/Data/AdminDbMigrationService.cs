@@ -79,7 +79,7 @@ public class AdminDbMigrationService : ITransientDependency
                 await SeedDataAsync(tenant);
             }
 
-            Logger.LogInformation($"Successfully completed {tenant.Name} tenant database migrations.");
+            Logger.LogInformation("Successfully completed {Name} tenant database migrations.", tenant.Name);
         }
 
         Logger.LogInformation("Successfully completed all database migrations.");

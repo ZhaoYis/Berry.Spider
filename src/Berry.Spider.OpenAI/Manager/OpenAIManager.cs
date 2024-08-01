@@ -66,7 +66,7 @@ public class OpenAIManager : IOpenAIManager
                 throw new BusinessException("Unknown Error");
             }
 
-            Logger.LogError($"{completionResult.Error.Code}: {completionResult.Error.Message}");
+            Logger.LogError("{Code}:{Message}", completionResult.Error.Code, completionResult.Error.Message);
         }
 
         return default;

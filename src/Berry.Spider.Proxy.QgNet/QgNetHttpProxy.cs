@@ -67,7 +67,7 @@ public class QgNetHttpProxy : IHttpProxy
 
         if (qgNetProxyResult != null)
         {
-            this.Logger.LogInformation($"获取到qg.net代理IP信息：{qgNetProxyResult.Server}");
+            this.Logger.LogInformation("获取到qg.net代理IP信息：{Server}", qgNetProxyResult.Server);
             return qgNetProxyResult.Server;
         }
 

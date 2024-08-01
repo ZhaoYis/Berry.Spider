@@ -26,7 +26,7 @@ public class GithubWebhookReleasedHandler : INotificationHandler<GithubWebhookDt
     {
         if (body.Action == GithubWebhookAction.Released)
         {
-            this.Logger.LogInformation($"收到Github Webhook[{GithubWebhookAction.Released.GetName()}]消息，报文：{JsonSerializer.Serialize(body)}");
+            this.Logger.LogInformation("收到Github Webhook[{Name}]消息，报文：{@Body}", GithubWebhookAction.Released.GetName(), body);
 
             GithubWebhookReleaseDto? releaseInfo = body.Release;
             if (releaseInfo is not null)

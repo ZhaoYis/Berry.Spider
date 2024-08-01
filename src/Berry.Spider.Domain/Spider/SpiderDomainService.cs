@@ -116,7 +116,7 @@ public class SpiderDomainService : DomainService
                 if (this.Options is { IsEnableNaiPan: true })
                 {
                     string res = await this.NaiPanService.GenerateAsync(content.Content);
-                    this.Logger.LogInformation("伪原创内容生成成功：{0}", res);
+                    this.Logger.LogInformation("伪原创内容生成成功：{Result}", res);
                     content.Content = res;
                 }
 
@@ -215,7 +215,7 @@ public class SpiderDomainService : DomainService
         if (this.Options is { IsEnableNaiPan: true })
         {
             string res = await this.NaiPanService.GenerateAsync(content.Content);
-            this.Logger.LogInformation("伪原创内容生成成功：{0}", res);
+            this.Logger.LogInformation("伪原创内容生成成功：{Result}", res);
             content.Content = res;
         }
 

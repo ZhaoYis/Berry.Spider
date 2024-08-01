@@ -124,7 +124,7 @@ public class SogouSpider4RelatedSearchProvider : ProviderBase<SogouSpider4Relate
 
                     if (childPageDataItems is { Count: > 0 })
                     {
-                        this.Logger.LogInformation("通道：{0}，关键字：{1}，一级页面：{2}条", eventData.SourceFrom.GetDescription(),
+                        this.Logger.LogInformation("通道：{Description}，关键字：{Keyword}，一级页面：{Count}条", eventData.SourceFrom.GetDescription(),
                             eventData.Keyword, childPageDataItems.Count.ToString());
 
                         var eto = eventData.SourceFrom.TryCreateEto(EtoType.Pull, eventData.SourceFrom,

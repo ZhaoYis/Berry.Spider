@@ -46,7 +46,7 @@ public class MmonlySpiderAppService : ApplicationService, IMmonlySpiderAppServic
 
         foreach (string url in urls)
         {
-            this.Logger.LogInformation($"开始爬取{url}");
+            this.Logger.LogInformation("开始爬取{Url}", url);
 
             await this.DownloadImageAsync(url);
         }
@@ -74,7 +74,7 @@ public class MmonlySpiderAppService : ApplicationService, IMmonlySpiderAppServic
                     if (root == null) return;
 
                     var resultContent = root.FindElements(By.CssSelector(".ABox"));
-                    this.Logger.LogInformation("总共获取到记录：" + resultContent.Count);
+                    this.Logger.LogInformation("总共获取到记录：{Count}", resultContent.Count);
 
                     if (resultContent.Count > 0)
                     {
@@ -93,7 +93,7 @@ public class MmonlySpiderAppService : ApplicationService, IMmonlySpiderAppServic
                                     }, BackgroundJobPriority.High, TimeSpan.FromSeconds(10)
                                 );
 
-                                this.Logger.LogInformation("获取到二级页面  ---> " + href);
+                                this.Logger.LogInformation("获取到二级页面  ---> {Href}", href);
                             }
                         }
                     }

@@ -47,7 +47,7 @@ public class SpiderConsumersModule : AbpModule
         var configuration = context.ServiceProvider.GetRequiredService<IConfiguration>();
 
         var hostEnvironment = context.ServiceProvider.GetRequiredService<IHostEnvironment>();
-        logger.LogInformation($"EnvironmentName => {hostEnvironment.EnvironmentName}");
+        logger.LogInformation("EnvironmentName => {EnvironmentName}", hostEnvironment.EnvironmentName);
 
         //注册服务
         // await context.AddBackgroundWorkerAsync<ServLifetimeCheckerWorker>();
