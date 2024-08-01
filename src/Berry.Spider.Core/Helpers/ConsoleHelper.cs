@@ -17,4 +17,24 @@ public static class ConsoleHelper
         Console.Write(msg);
         Console.ResetColor();
     }
+
+    public static void Debug(string msg)
+    {
+        WriteLine(msg, ConsoleColor.White);
+    }
+
+    public static void Info(string msg)
+    {
+        WriteLine(msg, ConsoleColor.Green);
+    }
+
+    public static void Warn(string msg)
+    {
+        WriteLine(msg, ConsoleColor.Yellow);
+    }
+
+    public static void Error(string msg)
+    {
+        WriteLine(msg, ConsoleColor.Red);
+    }
 }

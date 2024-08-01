@@ -13,7 +13,7 @@ namespace Berry.Spider.AI.TextGeneration.Commands;
 /// 处理文件创建事件
 /// </summary>
 [CommandName(nameof(WatcherChangeTypes.Created))]
-public class FileOrFolderCreatedCommand(Kernel kernel, ISpiderContentRepository repository) : IFixedCommand, ITransientDependency
+public sealed class FileOrFolderCreatedCommand(Kernel kernel, ISpiderContentRepository repository) : IFixedCommand, ITransientDependency
 {
     private ITextGenerationService TextGenerationService { get; } = kernel.GetRequiredService<ITextGenerationService>();
     private ISpiderContentRepository SpiderRepository { get; } = repository;
@@ -22,20 +22,20 @@ public class FileOrFolderCreatedCommand(Kernel kernel, ISpiderContentRepository 
     {
         if (commandLineArgs.Body is FileSystemEventArgs e)
         {
-            ConsoleHelper.WriteLine(@$"[新增]文件名称：{e.Name}，所在路径: {e.FullPath}", ConsoleColor.Green);
-            FileStorageProcessor.Add(e.Name ?? e.FullPath, e.FullPath);
+            ConsoleHelper.Info(@$"[新增]文件名称：{e.Name}，所在路径: {e.FullPath}");
+            FileStorageProcessor.Instance.Add(e.Name ?? e.FullPath, e.FullPath);
 
             //TODO：通知程序开始处理文件内容
             await foreach (var line in File.ReadLinesAsync(Path.Combine(AppContext.BaseDirectory, e.FullPath)))
             {
                 string originalTitle = line.Trim();
 
-                ConsoleHelper.WriteLine($"开始生成标题为[{originalTitle}]的文章...");
+                ConsoleHelper.Info($"开始生成标题为[{originalTitle}]的文章...");
                 StringBuilder article = new StringBuilder();
                 await foreach (var text in this.TextGenerationService.GetStreamingTextContentsAsync(originalTitle))
                 {
                     article.Append(text.Text);
-                    ConsoleHelper.Write(text.Text ?? "", ConsoleColor.Magenta);
+                    ConsoleHelper.Info(text.Text ?? "");
                 }
 
                 await this.SaveArticleAsync(originalTitle, article.ToString(), e.Name ?? e.FullPath);
@@ -48,16 +48,16 @@ public class FileOrFolderCreatedCommand(Kernel kernel, ISpiderContentRepository 
     {
         try
         {
-            var content = new SpiderContent(title, article.ToString(), SpiderSourceFrom.AI);
+            var content = new SpiderContent(title, article, SpiderSourceFrom.AI);
             content.SetTraceCodeIfNotNull(traceCode);
 
             await this.SpiderRepository.InsertAsync(content);
-            ConsoleHelper.WriteLine($"标题为[{title}]的文章保存成功...");
+            ConsoleHelper.Info($"标题为[{title}]的文章保存成功...");
         }
         catch (Exception e)
         {
-            ConsoleHelper.WriteLine(e.ToString(), ConsoleColor.Red);
-            ConsoleHelper.WriteLine($"---------------错误标题：{title}---------------", ConsoleColor.Red);
+            ConsoleHelper.Error(e.ToString());
+            ConsoleHelper.Error($"---------------错误标题：{title}---------------");
         }
     }
 }

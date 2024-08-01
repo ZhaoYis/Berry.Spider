@@ -9,15 +9,17 @@ namespace Berry.Spider.AI.TextGeneration.Commands;
 /// 处理文件重命名事件
 /// </summary>
 [CommandName(nameof(WatcherChangeTypes.Renamed))]
-public class FileOrFolderRenamedCommand : IFixedCommand, ITransientDependency
+public sealed class FileOrFolderRenamedCommand : IFixedCommand, ITransientDependency
 {
-    public async Task ExecuteAsync(CommandLineArgs commandLineArgs)
+    public Task ExecuteAsync(CommandLineArgs commandLineArgs)
     {
         if (commandLineArgs.Body is RenamedEventArgs e)
         {
-            ConsoleHelper.WriteLine(@$"[变更]原始名称：{e.OldName}，新名称: {e.Name}", ConsoleColor.Gray);
-            FileStorageProcessor.Remove(e.OldName ?? e.Name ?? e.FullPath);
-            FileStorageProcessor.Add(e.Name ?? e.FullPath, e.FullPath);
+            ConsoleHelper.Info(@$"[变更]原始名称：{e.OldName}，新名称: {e.Name}");
+            FileStorageProcessor.Instance.Remove(e.OldName ?? e.Name ?? e.FullPath);
+            FileStorageProcessor.Instance.Add(e.Name ?? e.FullPath, e.FullPath);
         }
+
+        return Task.CompletedTask;
     }
 }

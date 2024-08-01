@@ -4,18 +4,11 @@ using Volo.Abp.Threading;
 
 namespace Berry.Spider.AI.TextGeneration;
 
-public class FileWatcherService
+public sealed class FileWatcherService(IServiceScopeFactory factory, ICommandSelector commandSelector)
 {
-    private readonly FileSystemWatcher _fileSystemWatcher;
-    private IServiceScopeFactory ServiceScopeFactory { get; }
-    private ICommandSelector CommandSelector { get; }
-
-    public FileWatcherService(IServiceScopeFactory factory, ICommandSelector commandSelector)
-    {
-        _fileSystemWatcher = new FileSystemWatcher(Path.Combine("files"));
-        this.ServiceScopeFactory = factory;
-        this.CommandSelector = commandSelector;
-    }
+    private readonly FileSystemWatcher _fileSystemWatcher = new(Path.Combine("files"));
+    private IServiceScopeFactory ServiceScopeFactory { get; } = factory;
+    private ICommandSelector CommandSelector { get; } = commandSelector;
 
     public void Start()
     {
