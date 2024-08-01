@@ -7,14 +7,9 @@ namespace Berry.Spider.Consumers;
 /// <summary>
 /// 今日头条：优质_问答
 /// </summary>
-public class TouTiaoSpider4HighQualityQuestionEventHandler : ITouTiaoSpider4HighQualityQuestionEventHandler, ICapSubscribe
+public sealed class TouTiaoSpider4HighQualityQuestionEventHandler(TouTiaoSpider4HighQualityQuestionProvider provider) : ITouTiaoSpider4HighQualityQuestionEventHandler, ICapSubscribe
 {
-    private TouTiaoSpider4HighQualityQuestionProvider Provider { get; }
-
-    public TouTiaoSpider4HighQualityQuestionEventHandler(TouTiaoSpider4HighQualityQuestionProvider provider)
-    {
-        this.Provider = provider;
-    }
+    private TouTiaoSpider4HighQualityQuestionProvider Provider { get; } = provider;
 
     /// <summary>
     /// 执行获取一级页面数据任务

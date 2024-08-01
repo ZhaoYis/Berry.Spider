@@ -12,10 +12,10 @@ using Volo.Abp.Threading;
 
 namespace Berry.Spider.Consumers;
 
-public class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
+public sealed class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
 {
-    public ServLifetimeCheckerWorker(AbpAsyncTimer timer, IServiceScopeFactory serviceScopeFactory) : base(timer,
-        serviceScopeFactory)
+    public ServLifetimeCheckerWorker(AbpAsyncTimer timer, IServiceScopeFactory serviceScopeFactory)
+        : base(timer, serviceScopeFactory)
     {
         Timer.Period = 10 * 1000;
     }
@@ -27,7 +27,7 @@ public class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
         if (applicationProcess is ApplicationProcessData app)
         {
             IRedisService? redisService = workerContext.ServiceProvider.GetService<IRedisService>();
-            if (!string.IsNullOrEmpty(app.ClientId) && redisService is { })
+            if (!string.IsNullOrEmpty(app.ClientId) && redisService is not null)
             {
                 // 获取当前进程
                 Process currentProcess = Process.GetCurrentProcess();
@@ -35,7 +35,7 @@ public class ServLifetimeCheckerWorker : AsyncPeriodicBackgroundWorkerBase
                 {
                     string memoryUsage = $"{currentProcess.WorkingSet64 / 1024 / 1024:#,##0} MB";
                     string cpuUsage = await this.GetCurrentProcessCpuUsageAsync();
-                    
+
                     ApplicationLifetimeData lifetime = new ApplicationLifetimeData
                     {
                         AreYouOk = true,

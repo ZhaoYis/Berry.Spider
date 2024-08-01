@@ -9,7 +9,7 @@ using Volo.Abp.Threading;
 
 namespace Berry.Spider.Consumers;
 
-public class WeatherLoadWorker : AsyncPeriodicBackgroundWorkerBase
+public sealed class WeatherLoadWorker : AsyncPeriodicBackgroundWorkerBase
 {
     public WeatherLoadWorker(AbpAsyncTimer timer, IServiceScopeFactory serviceScopeFactory)
         : base(timer, serviceScopeFactory)

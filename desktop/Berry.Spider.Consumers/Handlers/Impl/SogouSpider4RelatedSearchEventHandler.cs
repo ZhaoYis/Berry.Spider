@@ -7,14 +7,9 @@ namespace Berry.Spider.Consumers;
 /// <summary>
 /// 搜狗：相关搜索
 /// </summary>
-public class SogouSpider4RelatedSearchEventHandler : ISogouSpider4RelatedSearchEventHandler, ICapSubscribe
+public sealed class SogouSpider4RelatedSearchEventHandler(SogouSpider4RelatedSearchProvider provider) : ISogouSpider4RelatedSearchEventHandler, ICapSubscribe
 {
-    private SogouSpider4RelatedSearchProvider Provider { get; }
-
-    public SogouSpider4RelatedSearchEventHandler(SogouSpider4RelatedSearchProvider provider)
-    {
-        this.Provider = provider;
-    }
+    private SogouSpider4RelatedSearchProvider Provider { get; } = provider;
 
     /// <summary>
     /// 执行获取一级页面数据任务

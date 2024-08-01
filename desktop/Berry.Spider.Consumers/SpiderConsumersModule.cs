@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Berry.Spider.Application;
 using Berry.Spider.Baidu;
 using Berry.Spider.Core;
@@ -57,7 +58,7 @@ public class SpiderConsumersModule : AbpModule
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
         //注入高德地图区域编码
-        string[] codes = AMapAdcode.TxtString.Split("\n");
+        string[] codes = AMapAdcode.TxtString.Split("\n", StringSplitOptions.RemoveEmptyEntries);
         context.Services.Configure<AMapAdcodeOptions>(ctf =>
         {
             foreach (string code in codes)
