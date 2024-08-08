@@ -1,4 +1,5 @@
-﻿using Berry.Spider.AI.TextGeneration.Commands;
+﻿using System.Diagnostics.CodeAnalysis;
+using Berry.Spider.AI.TextGeneration.Commands;
 using Berry.Spider.Core.Commands;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.NaiPan;
@@ -34,8 +35,10 @@ public class AITextGenerationModule : AbpModule
         context.ServiceProvider.GetRequiredService<FileWatcherService>().Start();
     }
 
+    [Experimental("SKEXP0010")]
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        var configuration = context.Services.GetConfiguration();
         context.Services.AddSingleton<FileWatcherService>();
         context.Services.RegisterCommand(opt =>
         {
@@ -51,6 +54,14 @@ public class AITextGenerationModule : AbpModule
             KernelPluginCollection pluginCollection = new KernelPluginCollection();
             return new Kernel(serviceProvider, pluginCollection);
         });
+
+        // context.Services.AddTransient(serviceProvider =>
+        // {
+        //     var kernel = Kernel.CreateBuilder()
+        //         .AddOpenAIChatCompletion(modelId: "qwen2:7b", endpoint: new Uri("http://localhost:11434"), apiKey: null)
+        //         .Build();
+        //     return kernel;
+        // });
     }
 
     public override void OnApplicationShutdown(ApplicationShutdownContext context)

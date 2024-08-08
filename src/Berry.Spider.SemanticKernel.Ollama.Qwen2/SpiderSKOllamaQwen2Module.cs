@@ -13,6 +13,11 @@ public class SpiderSKOllamaQwen2Module : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        //TIPS：ollama目前已经兼容了openai的协议，因此如果使用ollama的话可以不用自己实现SK的相关接口
+        //参考文章：https://ollama.com/blog/openai-compatibility
+        //示例代码：
+        // var kernel = Kernel.CreateBuilder()
+        //     .AddOpenAIChatCompletion(modelId: "qwen2:7b", apiKey: null, endpoint: new Uri("http://localhost:11434")).Build();
         context.Services.AddSingleton<ITextGenerationService, OllamaQwen2TextGenerationService>();
     }
 }
