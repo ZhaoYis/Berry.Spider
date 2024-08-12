@@ -9,7 +9,6 @@ namespace Berry.Spider.SemanticKernel.Ollama.Qwen2;
 
 public class OllamaQwen2TextGenerationService : ITextGenerationService
 {
-    private const string DEFAULT_MODEL_ID_KEY = "qwen2:7b";
     private readonly OllamaApiClient _ollamaApiClient;
 
     private OllamaOptions OllamaOptions { get; }
@@ -19,10 +18,10 @@ public class OllamaQwen2TextGenerationService : ITextGenerationService
         this.OllamaOptions = options.Value;
         this.Attributes = new Dictionary<string, object?>
         {
-            [AIServiceExtensions.ModelIdKey] = DEFAULT_MODEL_ID_KEY,
+            [AIServiceExtensions.ModelIdKey] = OllamaQwen2Consts.DEFAULT_MODEL_ID_KEY,
             [AIServiceExtensions.EndpointKey] = this.OllamaOptions.ServiceAddr,
         };
-        _ollamaApiClient = new OllamaApiClient(this.OllamaOptions.ServiceAddr, DEFAULT_MODEL_ID_KEY);
+        _ollamaApiClient = new OllamaApiClient(this.OllamaOptions.ServiceAddr, OllamaQwen2Consts.DEFAULT_MODEL_ID_KEY);
     }
 
     /// <summary>
