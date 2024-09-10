@@ -266,6 +266,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.AI.TextGenerat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.TemplateProjectDemo", "template\Berry.Spider.TemplateProjectDemo\Berry.Spider.TemplateProjectDemo.csproj", "{35A64CE1-71CF-47E4-9A4F-4F717BB2C13D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.ToolkitStore", "desktop\Berry.Spider.ToolkitStore\Berry.Spider.ToolkitStore.csproj", "{8B657FFD-4814-402E-B226-8AE5AAED40FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -552,6 +554,10 @@ Global
 		{35A64CE1-71CF-47E4-9A4F-4F717BB2C13D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35A64CE1-71CF-47E4-9A4F-4F717BB2C13D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35A64CE1-71CF-47E4-9A4F-4F717BB2C13D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B657FFD-4814-402E-B226-8AE5AAED40FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B657FFD-4814-402E-B226-8AE5AAED40FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B657FFD-4814-402E-B226-8AE5AAED40FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B657FFD-4814-402E-B226-8AE5AAED40FF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -645,6 +651,7 @@ Global
 		{E5AB4C19-6F58-4F1E-A42D-E1C9C4EB09FC} = {67ADE138-9A6C-4707-AC18-F82AE0F6AA66}
 		{BB11C16E-12F7-4359-BA10-EB99F83E541C} = {60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}
 		{35A64CE1-71CF-47E4-9A4F-4F717BB2C13D} = {DDDE9686-C37F-4352-AA07-9AA56321BF37}
+		{8B657FFD-4814-402E-B226-8AE5AAED40FF} = {60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}
