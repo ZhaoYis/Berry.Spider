@@ -67,6 +67,14 @@ public partial class MainWindowViewModel : ViewModelBase
         await Task.CompletedTask;
     }
 
+    /// <summary>
+    /// 程序退出
+    /// </summary>
+    [RelayCommand]
+    private async Task AppExitAsync()
+    {
+    }
+
     private bool AppRunCanExecute()
     {
         return this.IsRunning == false && this.AppStrapPath is not null;
