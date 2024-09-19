@@ -6,6 +6,8 @@ public static class StringHelper
     /// 余弦相似度
     /// https://blog.csdn.net/u012160689/article/details/15341303
     /// </summary>
+    /// <param name="text1">第一个文本</param>
+    /// <param name="text2">第二个文本</param>
     /// <returns></returns>
     public static double Sim(string txt1, string txt2)
     {
@@ -54,5 +56,40 @@ public static class StringHelper
 
         double cos = num / (Math.Sqrt(numA) * Math.Sqrt(numB));
         return cos;
+    }
+
+    /// <summary>
+    /// 计算两个文本的向量并计算余弦相似度
+    /// </summary>
+    /// <param name="text1">第一个文本</param>
+    /// <param name="text2">第二个文本</param>
+    /// <returns>余弦相似度</returns>
+    public static double CalculateCosineSimilarity(string text1, string text2)
+    {
+        // 将文本转换为字符数组
+        char[] chars1 = text1.ToCharArray();
+        char[] chars2 = text2.ToCharArray();
+
+        // 获取两个文本的并集
+        HashSet<char> uniqueChars = new HashSet<char>(chars1.Concat(chars2));
+
+        // 计算向量
+        Dictionary<char, int> vector1 = CalculateVector(chars1, uniqueChars);
+        Dictionary<char, int> vector2 = CalculateVector(chars2, uniqueChars);
+
+        // 计算点积
+        double dotProduct = uniqueChars.Sum(c => vector1[c] * vector2[c]);
+
+        // 计算向量的模
+        double magnitude1 = Math.Sqrt(vector1.Values.Sum(v => v * v));
+        double magnitude2 = Math.Sqrt(vector2.Values.Sum(v => v * v));
+
+        // 计算余弦相似度
+        return dotProduct / (magnitude1 * magnitude2);
+    }
+
+    private static Dictionary<char, int> CalculateVector(char[] chars, HashSet<char> uniqueChars)
+    {
+        return uniqueChars.ToDictionary(c => c, c => chars.Count(ch => ch == c));
     }
 }
