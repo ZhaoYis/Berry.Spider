@@ -4,6 +4,12 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <AssemblyName>Berry.Spider.SemanticKernel.Ollama.Qwen</AssemblyName>
+        <RootNamespace>Berry.Spider.SemanticKernel.Ollama.Qwen</RootNamespace>
+        <PackageId>Berry.Spider.SemanticKernel.Ollama.Qwen</PackageId>
+        <Authors>Berry.Spider.SemanticKernel.Ollama.Qwen</Authors>
+        <Company>Berry.Spider.SemanticKernel.Ollama.Qwen</Company>
+        <Product>Berry.Spider.SemanticKernel.Ollama.Qwen</Product>
     </PropertyGroup>
 
     <ItemGroup>

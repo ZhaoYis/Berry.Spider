@@ -32,7 +32,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\src\Berry.Spider.Domain\Berry.Spider.Domain.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj" />
-      <ProjectReference Include="..\..\src\Berry.Spider.SemanticKernel.Ollama.Qwen2\Berry.Spider.SemanticKernel.Ollama.Qwen2.csproj" />
+      <ProjectReference Include="..\..\src\Berry.Spider.SemanticKernel.Ollama.Qwen\Berry.Spider.SemanticKernel.Ollama.Qwen.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -258,7 +258,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "semantic-kernel", "semantic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.SemanticKernel.Ollama", "src\Berry.Spider.SemanticKernel.Ollama\Berry.Spider.SemanticKernel.Ollama.csproj", "{FC10C3DB-9636-4D59-B3AC-11896FF32818}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.SemanticKernel.Ollama.Qwen2", "src\Berry.Spider.SemanticKernel.Ollama.Qwen2\Berry.Spider.SemanticKernel.Ollama.Qwen2.csproj", "{E5AB4C19-6F58-4F1E-A42D-E1C9C4EB09FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.SemanticKernel.Ollama.Qwen", "src\Berry.Spider.SemanticKernel.Ollama.Qwen\Berry.Spider.SemanticKernel.Ollama.Qwen.csproj", "{E5AB4C19-6F58-4F1E-A42D-E1C9C4EB09FC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "template", "template", "{DDDE9686-C37F-4352-AA07-9AA56321BF37}"
 EndProject

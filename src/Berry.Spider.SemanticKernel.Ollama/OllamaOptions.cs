@@ -13,5 +13,5 @@ public class OllamaOptions
     /// <summary>
     /// 服务地址
     /// </summary>
-    public string ServiceAddr { get; set; }
+    public required string ServiceAddr { get; set; }
 }
