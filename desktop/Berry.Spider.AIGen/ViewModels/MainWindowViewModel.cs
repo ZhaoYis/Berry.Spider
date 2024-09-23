@@ -6,7 +6,11 @@ public partial class MainWindowViewModel : ViewModelBase, ITransientDependency
 {
     private readonly HelloWorldService _helloWorldService;
 
-    public MainWindowViewModel(HelloWorldService helloWorldService)
+    public MainWindowViewModel()
+    {
+    }
+
+    public MainWindowViewModel(HelloWorldService helloWorldService) : this()
     {
         _helloWorldService = helloWorldService;
     }
