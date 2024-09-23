@@ -1,20 +1,65 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:Berry.Spider.AIGen.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="Berry.Spider.AIGen.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="Berry.Spider.AIGen">
+<Window
+    Icon="/Assets/avalonia-logo.ico"
+    Title="Berry.Spider.AIGen"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Berry.Spider.AIGen.Views.MainWindow"
+    x:DataType="vm:MainWindowViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:Berry.Spider.AIGen.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
+        <!--
+            This only sets the DataContext for the previewer in an IDE,
+            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
+        -->
+        <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <StackPanel>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                Command="{Binding AskAiCommand}"
+                                Content="问AI"
+                                Margin="10" />
+                        </StackPanel>
+                        <TextBox
+                            AcceptsReturn="True"
+                            Height="300"
+                            Margin="10"
+                            Text="{Binding AskAiRequestText}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <!-- <ui:ProgressRing IsIndeterminate="True" Visibility="{Binding ViewModel.ProgressRingVisible}" /> -->
+                </Grid>
+                <Grid Grid.Column="2">
+                    <StackPanel>
+                        <Button Content="AI回答" Margin="10" />
+                        <TextBox
+                            Height="300"
+                            Margin="10"
+                            Text="{Binding AskAiResponseText}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </StackPanel>
+    </StackPanel>
 
 </Window>
