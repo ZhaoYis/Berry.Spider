@@ -1,12 +1,12 @@
 <Window
     Icon="/Assets/avalonia-logo.ico"
+    SizeToContent="WidthAndHeight"
     Title="Berry.Spider.ToolkitStore"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d"
     x:Class="Berry.Spider.ToolkitStore.Views.MainWindow"
     x:DataType="vm:MainWindowViewModel"
-    SizeToContent="WidthAndHeight"
     xmlns="https://github.com/avaloniaui"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -26,7 +26,7 @@
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
-                    <MenuItem Header="_Exit" Command="{Binding AppExitCommand}" />
+                    <MenuItem Command="{Binding AppExitCommand}" Header="_Exit" />
                 </MenuItem>
                 <MenuItem Header="_About">
                     <MenuItem Header="About Us" />
@@ -36,14 +36,14 @@
 
         <Grid Margin="5" ShowGridLines="True">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120"></ColumnDefinition>
-                <ColumnDefinition Width="500"></ColumnDefinition>
-                <ColumnDefinition Width="180"></ColumnDefinition>
+                <ColumnDefinition Width="120" />
+                <ColumnDefinition Width="500" />
+                <ColumnDefinition Width="180" />
             </Grid.ColumnDefinitions>
 
             <Label
@@ -68,31 +68,34 @@
                 Grid.Row="0"
                 IsEnabled="{Binding !IsRunning}" />
 
-            <Label Grid.Column="0" Grid.Row="1" Content="启动程序数量："
-                   HorizontalAlignment="Center"
-                   Margin="5"
-                   VerticalContentAlignment="Center">
-            </Label>
+            <Label
+                Content="启动程序数量："
+                Grid.Column="0"
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                Margin="5"
+                VerticalContentAlignment="Center" />
 
-            <NumericUpDown Grid.Column="1" Grid.Row="1"
-                           HorizontalContentAlignment="Left"
-                           Margin="5"
-                           VerticalContentAlignment="Center"
-                           Increment="1"
-                           Value="1"
-                           Minimum="1"
-                           Maximum="10">
-            </NumericUpDown>
+            <NumericUpDown
+                Grid.Column="1"
+                Grid.Row="1"
+                HorizontalContentAlignment="Left"
+                Increment="1"
+                Margin="5"
+                Maximum="10"
+                Minimum="1"
+                Value="1"
+                VerticalContentAlignment="Center" />
 
             <Button
                 Command="{Binding AppRunCommand}"
                 Content="启动"
                 Grid.Column="1"
                 Grid.Row="2"
-                HorizontalContentAlignment="Center"
                 HorizontalAlignment="Left"
+                HorizontalContentAlignment="Center"
                 IsEnabled="{Binding !IsRunning}"
-                Margin="20 "
+                Margin="20"
                 Padding="20"
                 Width="200" />
             <Button
@@ -100,8 +103,8 @@
                 Content="取消"
                 Grid.Column="1"
                 Grid.Row="2"
-                HorizontalContentAlignment="Center"
                 HorizontalAlignment="Right"
+                HorizontalContentAlignment="Center"
                 IsEnabled="{Binding IsRunning}"
                 Margin="220,20,20,20"
                 Padding="20"
