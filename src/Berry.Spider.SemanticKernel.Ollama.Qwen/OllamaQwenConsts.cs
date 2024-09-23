@@ -1,6 +1,6 @@
-namespace Berry.Spider.SemanticKernel.Ollama.Qwen2;
+namespace Berry.Spider.SemanticKernel.Ollama.Qwen;
 
-public static class OllamaQwen2Consts
+public static class OllamaQwenConsts
 {
     /// <summary>
     /// 默认AI模型ID

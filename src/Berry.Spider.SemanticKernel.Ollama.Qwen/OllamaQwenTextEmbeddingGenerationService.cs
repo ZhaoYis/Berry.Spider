@@ -6,24 +6,26 @@ using Microsoft.SemanticKernel.Services;
 using OllamaSharp;
 using OllamaSharp.Models;
 
-namespace Berry.Spider.SemanticKernel.Ollama.Qwen2;
+namespace Berry.Spider.SemanticKernel.Ollama.Qwen;
 
 [Experimental("SKEXP0001")]
-public class OllamaQwen2TextEmbeddingGenerationService : IEmbeddingGenerationService<string, double>
+public class OllamaQwenTextEmbeddingGenerationService : IEmbeddingGenerationService<string, double>
 {
     private readonly OllamaApiClient _ollamaApiClient;
 
     private OllamaOptions OllamaOptions { get; }
+    private OllamaQwenOptions OllamaQwenOptions { get; }
 
-    public OllamaQwen2TextEmbeddingGenerationService(IOptionsSnapshot<OllamaOptions> options)
+    public OllamaQwenTextEmbeddingGenerationService(IOptionsSnapshot<OllamaOptions> ollamaOptions, IOptionsSnapshot<OllamaQwenOptions> qwenOPtions)
     {
-        this.OllamaOptions = options.Value;
+        this.OllamaOptions = ollamaOptions.Value;
+        this.OllamaQwenOptions = qwenOPtions.Value;
         this.Attributes = new Dictionary<string, object?>
         {
-            [AIServiceExtensions.ModelIdKey] = OllamaQwen2Consts.DEFAULT_TEXT_EMBEDDING_MODEL_ID_KEY,
+            [AIServiceExtensions.ModelIdKey] = this.OllamaQwenOptions.EmbeddingModelId ?? OllamaQwenConsts.DEFAULT_TEXT_EMBEDDING_MODEL_ID_KEY,
             [AIServiceExtensions.EndpointKey] = this.OllamaOptions.ServiceAddr,
         };
-        _ollamaApiClient = new OllamaApiClient(this.OllamaOptions.ServiceAddr, OllamaQwen2Consts.DEFAULT_MODEL_ID_KEY);
+        _ollamaApiClient = new OllamaApiClient(this.OllamaOptions.ServiceAddr, this.OllamaQwenOptions.EmbeddingModelId ?? OllamaQwenConsts.DEFAULT_TEXT_EMBEDDING_MODEL_ID_KEY);
     }
 
     /// <summary>

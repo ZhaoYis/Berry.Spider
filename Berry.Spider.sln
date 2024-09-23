@@ -258,7 +258,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "semantic-kernel", "semantic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.SemanticKernel.Ollama", "src\Berry.Spider.SemanticKernel.Ollama\Berry.Spider.SemanticKernel.Ollama.csproj", "{FC10C3DB-9636-4D59-B3AC-11896FF32818}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.SemanticKernel.Ollama.Qwen2", "src\Berry.Spider.SemanticKernel.Ollama.Qwen2\Berry.Spider.SemanticKernel.Ollama.Qwen2.csproj", "{E5AB4C19-6F58-4F1E-A42D-E1C9C4EB09FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.SemanticKernel.Ollama.Qwen", "src\Berry.Spider.SemanticKernel.Ollama.Qwen\Berry.Spider.SemanticKernel.Ollama.Qwen.csproj", "{E5AB4C19-6F58-4F1E-A42D-E1C9C4EB09FC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "template", "template", "{DDDE9686-C37F-4352-AA07-9AA56321BF37}"
 EndProject
@@ -267,6 +267,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.TemplateProjectDemo", "template\Berry.Spider.TemplateProjectDemo\Berry.Spider.TemplateProjectDemo.csproj", "{35A64CE1-71CF-47E4-9A4F-4F717BB2C13D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.ToolkitStore", "desktop\Berry.Spider.ToolkitStore\Berry.Spider.ToolkitStore.csproj", "{8B657FFD-4814-402E-B226-8AE5AAED40FF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.SemanticKernel.Shared", "src\Berry.Spider.SemanticKernel.Shared\Berry.Spider.SemanticKernel.Shared.csproj", "{EDE349E3-9EBB-4775-9B10-2E12C0D966A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -558,6 +560,10 @@ Global
 		{8B657FFD-4814-402E-B226-8AE5AAED40FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B657FFD-4814-402E-B226-8AE5AAED40FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B657FFD-4814-402E-B226-8AE5AAED40FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDE349E3-9EBB-4775-9B10-2E12C0D966A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDE349E3-9EBB-4775-9B10-2E12C0D966A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDE349E3-9EBB-4775-9B10-2E12C0D966A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDE349E3-9EBB-4775-9B10-2E12C0D966A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -652,6 +658,7 @@ Global
 		{BB11C16E-12F7-4359-BA10-EB99F83E541C} = {60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}
 		{35A64CE1-71CF-47E4-9A4F-4F717BB2C13D} = {DDDE9686-C37F-4352-AA07-9AA56321BF37}
 		{8B657FFD-4814-402E-B226-8AE5AAED40FF} = {60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}
+		{EDE349E3-9EBB-4775-9B10-2E12C0D966A3} = {67ADE138-9A6C-4707-AC18-F82AE0F6AA66}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}

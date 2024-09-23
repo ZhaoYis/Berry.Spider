@@ -5,23 +5,25 @@ using Microsoft.SemanticKernel.Services;
 using Microsoft.SemanticKernel.TextGeneration;
 using OllamaSharp;
 
-namespace Berry.Spider.SemanticKernel.Ollama.Qwen2;
+namespace Berry.Spider.SemanticKernel.Ollama.Qwen;
 
-public class OllamaQwen2TextGenerationService : ITextGenerationService
+public class OllamaQwenTextGenerationService : ITextGenerationService
 {
     private readonly OllamaApiClient _ollamaApiClient;
 
     private OllamaOptions OllamaOptions { get; }
+    private OllamaQwenOptions OllamaQwenOptions { get; }
 
-    public OllamaQwen2TextGenerationService(IOptionsSnapshot<OllamaOptions> options)
+    public OllamaQwenTextGenerationService(IOptionsSnapshot<OllamaOptions> ollamaOptions, IOptionsSnapshot<OllamaQwenOptions> qwenOPtions)
     {
-        this.OllamaOptions = options.Value;
+        this.OllamaOptions = ollamaOptions.Value;
+        this.OllamaQwenOptions = qwenOPtions.Value;
         this.Attributes = new Dictionary<string, object?>
         {
-            [AIServiceExtensions.ModelIdKey] = OllamaQwen2Consts.DEFAULT_MODEL_ID_KEY,
+            [AIServiceExtensions.ModelIdKey] = this.OllamaQwenOptions.ModelId ?? OllamaQwenConsts.DEFAULT_MODEL_ID_KEY,
             [AIServiceExtensions.EndpointKey] = this.OllamaOptions.ServiceAddr,
         };
-        _ollamaApiClient = new OllamaApiClient(this.OllamaOptions.ServiceAddr, OllamaQwen2Consts.DEFAULT_MODEL_ID_KEY);
+        _ollamaApiClient = new OllamaApiClient(this.OllamaOptions.ServiceAddr, this.OllamaQwenOptions.ModelId ?? OllamaQwenConsts.DEFAULT_MODEL_ID_KEY);
     }
 
     /// <summary>
