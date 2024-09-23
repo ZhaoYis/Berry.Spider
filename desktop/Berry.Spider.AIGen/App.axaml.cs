@@ -1,15 +1,20 @@
+using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Berry.Spider.AIGen.ViewModels;
 using Berry.Spider.AIGen.Views;
+using Microsoft.Extensions.DependencyInjection;
+using Serilog;
+using Volo.Abp;
 
 namespace Berry.Spider.AIGen;
 
 public partial class App : Application
 {
+    private IAbpApplicationWithInternalServiceProvider? _abpApplication;
+
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -17,17 +22,51 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            // Line below is needed to remove Avalonia data validation.
-            // Without this line you will get duplicate validations from both Avalonia and CT
-            BindingPlugins.DataValidators.RemoveAt(0);
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = new MainWindowViewModel(),
-            };
-        }
+        Log.Logger = new LoggerConfiguration()
+#if DEBUG
+            .MinimumLevel.Debug()
+#else
+            .MinimumLevel.Information()
+#endif
+            .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Information)
+            .Enrich.FromLogContext()
+            .WriteTo.Async(c => c.File("Logs/logs.txt"))
+            .CreateLogger();
 
-        base.OnFrameworkInitializationCompleted();
+        try
+        {
+            Log.Information("Starting Avalonia.AIGen host.");
+
+            _abpApplication = AbpApplicationFactory.Create<SpiderAIGenModule>(options =>
+            {
+                options.UseAutofac();
+                options.Services.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
+            });
+
+            _abpApplication.Initialize();
+
+            if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                // Line below is needed to remove Avalonia data validation.
+                // Without this line you will get duplicate validations from both Avalonia and CT
+                BindingPlugins.DataValidators.RemoveAt(0);
+                //初始化MainWindow
+                MainWindowViewModel mainWindowViewModel = _abpApplication.Services.GetRequiredService<MainWindowViewModel>();
+                // MainWindow mainWindow = _abpApplication.Services.GetRequiredService<MainWindow>();
+                // mainWindow.DataContext = mainWindowViewModel;
+                desktop.MainWindow = new MainWindow
+                {
+                    DataContext = mainWindowViewModel
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Host terminated unexpectedly!");
+        }
+        finally
+        {
+            base.OnFrameworkInitializationCompleted();
+        }
     }
 }

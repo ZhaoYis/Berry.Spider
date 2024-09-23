@@ -1,8 +1,15 @@
-﻿namespace Berry.Spider.AIGen.ViewModels;
+﻿using Volo.Abp.DependencyInjection;
 
-public partial class MainWindowViewModel : ViewModelBase
+namespace Berry.Spider.AIGen.ViewModels;
+
+public partial class MainWindowViewModel : ViewModelBase, ITransientDependency
 {
-#pragma warning disable CA1822 // Mark members as static
-    public string Greeting => "Welcome to Avalonia!";
-#pragma warning restore CA1822 // Mark members as static
+    private readonly HelloWorldService _helloWorldService;
+
+    public MainWindowViewModel(HelloWorldService helloWorldService)
+    {
+        _helloWorldService = helloWorldService;
+    }
+
+    public string Greeting => _helloWorldService.SayHello();
 }
