@@ -9,5 +9,59 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="clr-namespace:Berry.Spider.AIGen.ViewModels.Pages"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    Welcome to Avalonia!
+
+    <StackPanel>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                Command="{Binding RAGReplyCommand}"
+                                Content="问AI"
+                                Margin="10" />
+                            <TextBox
+                                HorizontalAlignment="Center"
+                                Text="{Binding Index}"
+                                VerticalAlignment="Center"
+                                Watermark="Index" />
+                            <Button
+                                Command="{Binding EmbeddingCommand}"
+                                Content="文本嵌入"
+                                Margin="10" />
+                        </StackPanel>
+                        <TextBox
+                            AcceptsReturn="True"
+                            Height="300"
+                            Margin="10"
+                            Text="{Binding Input}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Column="1">
+                    <!-- <ui:ProgressRing IsIndeterminate="True" Visibility="{Binding ViewModel.ProgressRingVisible}" /> -->
+                </Grid>
+
+                <Grid Grid.Column="2">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="RAG回答" Margin="10" />
+                        </StackPanel>
+                        <TextBox
+                            Height="300"
+                            Margin="10"
+                            Text="{Binding ResponseText}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </StackPanel>
+    </StackPanel>
 </UserControl>

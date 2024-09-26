@@ -8,7 +8,7 @@ public partial class AiChat : UserControl
 {
     public AiChat()
     {
-        DataContext = App.Current.Services.GetService<AiChatViewModel>();
+        DataContext = App.Current.Services.GetRequiredService<AiChatViewModel>();
         InitializeComponent();
     }
 }
