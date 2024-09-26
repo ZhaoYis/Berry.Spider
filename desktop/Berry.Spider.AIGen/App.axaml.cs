@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Berry.Spider.AIGen.ViewModels;
 using Berry.Spider.AIGen.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -18,6 +19,9 @@ public partial class App : Application
     {
         AvaloniaXamlLoader.Load(this);
     }
+
+    public new static App Current => (App)Application.Current!;
+    public IServiceProvider Services { get; private set; } = null!;
 
     public override void OnFrameworkInitializationCompleted()
     {
@@ -44,13 +48,16 @@ public partial class App : Application
 
             _abpApplication.Initialize();
 
+            this.Services = _abpApplication.Services.BuildServiceProvider();
+
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 // Line below is needed to remove Avalonia data validation.
                 // Without this line you will get duplicate validations from both Avalonia and CT
                 BindingPlugins.DataValidators.RemoveAt(0);
                 //初始化MainWindow
-                 MainWindow mainWindow = _abpApplication.Services.GetRequiredService<MainWindow>();
+                MainWindow mainWindow = this.Services.GetRequiredService<MainWindow>();
+                mainWindow.DataContext = this.Services.GetRequiredService<MainWindowViewModel>();
                 desktop.MainWindow = mainWindow;
             }
         }

@@ -48,7 +48,6 @@ public class SpiderAIGenModule : AbpModule
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        var configuration = context.Services.GetConfiguration();
         context.Services.AddSingleton<MainWindow>();
     }
 }
