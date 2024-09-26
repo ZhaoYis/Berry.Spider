@@ -13,12 +13,8 @@ public partial class MainWindowViewModel : ViewModelBase, ITransientDependency
 {
     private readonly ConfigClient _configClient;
     private readonly Kernel _kernel;
-
-    public MainWindowViewModel()
-    {
-    }
-
-    public MainWindowViewModel(ConfigClient client, Kernel kernel) : this()
+    
+    public MainWindowViewModel(ConfigClient client, Kernel kernel)
     {
         _configClient = client;
         _kernel = kernel;

@@ -3,7 +3,6 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
-using Berry.Spider.AIGen.ViewModels;
 using Berry.Spider.AIGen.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -51,13 +50,8 @@ public partial class App : Application
                 // Without this line you will get duplicate validations from both Avalonia and CT
                 BindingPlugins.DataValidators.RemoveAt(0);
                 //初始化MainWindow
-                MainWindowViewModel mainWindowViewModel = _abpApplication.Services.GetRequiredService<MainWindowViewModel>();
-                // MainWindow mainWindow = _abpApplication.Services.GetRequiredService<MainWindow>();
-                // mainWindow.DataContext = mainWindowViewModel;
-                desktop.MainWindow = new MainWindow
-                {
-                    DataContext = mainWindowViewModel
-                };
+                 MainWindow mainWindow = _abpApplication.Services.GetRequiredService<MainWindow>();
+                desktop.MainWindow = mainWindow;
             }
         }
         catch (Exception ex)
