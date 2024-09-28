@@ -42,8 +42,7 @@ public class OllamaQwenTextEmbeddingGenerationService : ITextEmbeddingGeneration
     /// <returns></returns>
     public async Task<IList<ReadOnlyMemory<float>>> GenerateEmbeddingsAsync(IList<string> data, Kernel? kernel = null, CancellationToken cancellationToken = default)
     {
-        var result = new List<ReadOnlyMemory<double>>(data.Count);
-
+        var result = new List<ReadOnlyMemory<double>>();
         foreach (var text in data)
         {
             GenerateEmbeddingRequest embeddingRequest = new GenerateEmbeddingRequest
@@ -52,7 +51,7 @@ public class OllamaQwenTextEmbeddingGenerationService : ITextEmbeddingGeneration
                 Prompt = text
             };
             GenerateEmbeddingResponse embeddingResponse = await _ollamaApiClient.GenerateEmbeddings(embeddingRequest, cancellationToken);
-            if (embeddingResponse is { Embedding: { Length: > 0 } })
+            if (embeddingResponse is { Embedding.Length: > 0 })
             {
                 var embedding = new ReadOnlyMemory<double>(embeddingResponse.Embedding);
                 result.Add(embedding);
@@ -64,28 +63,16 @@ public class OllamaQwenTextEmbeddingGenerationService : ITextEmbeddingGeneration
 
     private List<ReadOnlyMemory<float>> ConvertToFloatList(List<ReadOnlyMemory<double>> doubleList)
     {
-        List<ReadOnlyMemory<float>> floatList = new List<ReadOnlyMemory<float>>();
-
-        foreach (var memory in doubleList)
+        return doubleList.Select(mem =>
         {
-            // 获取当前 ReadOnlyMemory<double> 的长度，以元素数量计
-            int doubleCount = memory.Length;
-            // 计算需要的 float 数组的大小
-            int floatCount = doubleCount * sizeof(double) / sizeof(float);
-            // 创建新的 float 数组
-            var floatArray = new float[floatCount];
-
-            // 将 double 值转换为 float 并复制到新数组
-            int fi = 0;
-            foreach (var item in memory.Span)
+            var span = mem.Span;
+            float[] floatArray = new float[span.Length];
+            for (int i = 0; i < span.Length; i++)
             {
-                floatArray[fi++] = (float)item;
+                floatArray[i] = (float)span[i];
             }
 
-            // 将 float 数组转换为 ReadOnlyMemory<float> 并添加到列表中
-            floatList.Add(floatArray);
-        }
-
-        return floatList;
+            return new ReadOnlyMemory<float>(floatArray);
+        }).ToList();
     }
 }
