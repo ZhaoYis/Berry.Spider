@@ -1,8 +1,14 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel.Embeddings;
 using Microsoft.SemanticKernel.TextGeneration;
 using Volo.Abp.Modularity;
 
 namespace Berry.Spider.SemanticKernel.Ollama.Qwen;
+
+#pragma warning disable SKEXP0050
+#pragma warning disable SKEXP0001
+#pragma warning disable SKEXP0020
+#pragma warning disable SKEXP0010
 
 /// <summary>
 /// SemanticKernel & Ollama集成qwen2:7b模型
@@ -15,12 +21,14 @@ public class SpiderSKOllamaQwenModule : AbpModule
     {
         var configuration = context.Services.GetConfiguration();
         context.Services.Configure<OllamaQwenOptions>(configuration.GetSection(nameof(OllamaQwenOptions)));
-        
+
         //TIPS：ollama目前已经兼容了openai的协议，因此如果使用ollama的话可以不用自己实现SK的相关接口
         //参考文章：https://ollama.com/blog/openai-compatibility
         //示例代码：
         // var kernel = Kernel.CreateBuilder()
         //     .AddOpenAIChatCompletion(modelId: "qwen2:7b", apiKey: null, endpoint: new Uri("http://localhost:11434")).Build();
+
         context.Services.AddSingleton<ITextGenerationService, OllamaQwenTextGenerationService>();
+        context.Services.AddSingleton<ITextEmbeddingGenerationService, OllamaQwenTextEmbeddingGenerationService>();
     }
 }

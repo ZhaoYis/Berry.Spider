@@ -22,25 +22,25 @@
                 <Grid Grid.Column="0">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
-                            <Button
-                                Command="{Binding RAGReplyCommand}"
-                                Content="问AI"
-                                Margin="10" />
-                            <TextBox
-                                HorizontalAlignment="Center"
-                                Text="{Binding Index}"
-                                VerticalAlignment="Center"
-                                Watermark="Index" />
+                            <!--  <TextBox  -->
+                            <!--  HorizontalAlignment="Center"  -->
+                            <!--  Text="{Binding CollectionName}"  -->
+                            <!--  VerticalAlignment="Center"  -->
+                            <!--  Watermark="Collection Name" />  -->
                             <Button
                                 Command="{Binding EmbeddingCommand}"
                                 Content="文本嵌入"
+                                Margin="10" />
+                            <Button
+                                Command="{Binding AskAiCommand}"
+                                Content="问AI"
                                 Margin="10" />
                         </StackPanel>
                         <TextBox
                             AcceptsReturn="True"
                             Height="300"
                             Margin="10"
-                            Text="{Binding Input}"
+                            Text="{Binding AskAiRequestText}"
                             TextWrapping="Wrap" />
                     </StackPanel>
                 </Grid>
@@ -57,7 +57,7 @@
                         <TextBox
                             Height="300"
                             Margin="10"
-                            Text="{Binding ResponseText}"
+                            Text="{Binding AskAiResponseText}"
                             TextWrapping="Wrap" />
                     </StackPanel>
                 </Grid>

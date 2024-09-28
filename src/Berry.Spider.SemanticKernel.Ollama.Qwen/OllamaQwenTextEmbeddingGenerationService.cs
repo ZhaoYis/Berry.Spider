@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Embeddings;
@@ -8,15 +7,19 @@ using OllamaSharp.Models;
 
 namespace Berry.Spider.SemanticKernel.Ollama.Qwen;
 
-[Experimental("SKEXP0001")]
-public class OllamaQwenTextEmbeddingGenerationService : IEmbeddingGenerationService<string, double>
+#pragma warning disable SKEXP0050
+#pragma warning disable SKEXP0001
+#pragma warning disable SKEXP0020
+#pragma warning disable SKEXP0010
+
+public class OllamaQwenTextEmbeddingGenerationService : ITextEmbeddingGenerationService
 {
     private readonly OllamaApiClient _ollamaApiClient;
 
     private OllamaOptions OllamaOptions { get; }
     private OllamaQwenOptions OllamaQwenOptions { get; }
 
-    public OllamaQwenTextEmbeddingGenerationService(IOptionsSnapshot<OllamaOptions> ollamaOptions, IOptionsSnapshot<OllamaQwenOptions> qwenOPtions)
+    public OllamaQwenTextEmbeddingGenerationService(IOptions<OllamaOptions> ollamaOptions, IOptions<OllamaQwenOptions> qwenOPtions)
     {
         this.OllamaOptions = ollamaOptions.Value;
         this.OllamaQwenOptions = qwenOPtions.Value;
@@ -37,7 +40,7 @@ public class OllamaQwenTextEmbeddingGenerationService : IEmbeddingGenerationServ
     /// 生成文本向量
     /// </summary>
     /// <returns></returns>
-    public async Task<IList<ReadOnlyMemory<double>>> GenerateEmbeddingsAsync(IList<string> data, Kernel? kernel = null, CancellationToken cancellationToken = default)
+    public async Task<IList<ReadOnlyMemory<float>>> GenerateEmbeddingsAsync(IList<string> data, Kernel? kernel = null, CancellationToken cancellationToken = default)
     {
         var result = new List<ReadOnlyMemory<double>>(data.Count);
 
@@ -56,6 +59,33 @@ public class OllamaQwenTextEmbeddingGenerationService : IEmbeddingGenerationServ
             }
         }
 
-        return result;
+        return this.ConvertToFloatList(result);
+    }
+
+    private List<ReadOnlyMemory<float>> ConvertToFloatList(List<ReadOnlyMemory<double>> doubleList)
+    {
+        List<ReadOnlyMemory<float>> floatList = new List<ReadOnlyMemory<float>>();
+
+        foreach (var memory in doubleList)
+        {
+            // 获取当前 ReadOnlyMemory<double> 的长度，以元素数量计
+            int doubleCount = memory.Length;
+            // 计算需要的 float 数组的大小
+            int floatCount = doubleCount * sizeof(double) / sizeof(float);
+            // 创建新的 float 数组
+            var floatArray = new float[floatCount];
+
+            // 将 double 值转换为 float 并复制到新数组
+            int fi = 0;
+            foreach (var item in memory.Span)
+            {
+                floatArray[fi++] = (float)item;
+            }
+
+            // 将 float 数组转换为 ReadOnlyMemory<float> 并添加到列表中
+            floatList.Add(floatArray);
+        }
+
+        return floatList;
     }
 }
