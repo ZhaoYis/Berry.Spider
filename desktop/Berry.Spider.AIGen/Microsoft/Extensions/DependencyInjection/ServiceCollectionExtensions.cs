@@ -25,6 +25,8 @@ public static class ServiceCollectionExtensions
     /// </summary>
     public static void AddKernel(this IServiceCollection services, ConfigClient client)
     {
+        Check.NotNull(client, nameof(client));
+
         string serviceAddr = client.Get("OllamaOptions:ServiceAddr");
         string modelId = client.Get("OllamaQwenOptions:ModelId");
         services.AddTransient<Kernel>(serviceProvider =>
@@ -59,7 +61,6 @@ public static class ServiceCollectionExtensions
 
     public static void ConfigureOllamaOptions(this IServiceCollection services, ConfigClient client)
     {
-        Check.NotNull(services, nameof(services));
         Check.NotNull(client, nameof(client));
 
         bool isEnable = bool.Parse(client.Get("OllamaOptions:IsEnable"));
@@ -73,7 +74,6 @@ public static class ServiceCollectionExtensions
 
     public static void ConfigureOllamaQwenOptions(this IServiceCollection services, ConfigClient client)
     {
-        Check.NotNull(services, nameof(services));
         Check.NotNull(client, nameof(client));
 
         string modelId = client.Get("OllamaQwenOptions:ModelId");
