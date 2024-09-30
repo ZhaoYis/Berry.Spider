@@ -270,6 +270,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.AIGen", "deskt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.SemanticKernel.Ollama.Qwen", "src\Berry.Spider.SemanticKernel.Ollama.Qwen\Berry.Spider.SemanticKernel.Ollama.Qwen.csproj", "{FE0768C3-300C-4A2A-A7A3-ED4E0BBD59E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.SemanticKernel.Plugin", "src\Berry.Spider.SemanticKernel.Plugin\Berry.Spider.SemanticKernel.Plugin.csproj", "{576DB7E2-7199-4E0A-9316-7A65DB4A3BEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -564,6 +566,10 @@ Global
 		{FE0768C3-300C-4A2A-A7A3-ED4E0BBD59E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE0768C3-300C-4A2A-A7A3-ED4E0BBD59E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE0768C3-300C-4A2A-A7A3-ED4E0BBD59E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{576DB7E2-7199-4E0A-9316-7A65DB4A3BEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{576DB7E2-7199-4E0A-9316-7A65DB4A3BEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{576DB7E2-7199-4E0A-9316-7A65DB4A3BEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{576DB7E2-7199-4E0A-9316-7A65DB4A3BEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -659,6 +665,7 @@ Global
 		{8B657FFD-4814-402E-B226-8AE5AAED40FF} = {60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}
 		{67451012-388F-4BBB-866E-A3CE5CFF5D0F} = {60E0A1FC-2233-4953-B9C0-FF9C128F4E9E}
 		{FE0768C3-300C-4A2A-A7A3-ED4E0BBD59E4} = {67ADE138-9A6C-4707-AC18-F82AE0F6AA66}
+		{576DB7E2-7199-4E0A-9316-7A65DB4A3BEA} = {67ADE138-9A6C-4707-AC18-F82AE0F6AA66}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B84DCEB-1712-4B0D-9E25-16D9BAF7A20A}

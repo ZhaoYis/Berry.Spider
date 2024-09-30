@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Folder Include="Microsoft\" />
         <Folder Include="Models\"/>
         <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
@@ -44,5 +45,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Berry.Spider.SemanticKernel.Ollama.Qwen\Berry.Spider.SemanticKernel.Ollama.Qwen.csproj" />
+      <ProjectReference Include="..\..\src\Berry.Spider.SemanticKernel.Plugin\Berry.Spider.SemanticKernel.Plugin.csproj" />
     </ItemGroup>
 </Project>
