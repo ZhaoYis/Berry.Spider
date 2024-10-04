@@ -1,7 +1,8 @@
 using AgileConfig.Client;
 using Berry.Spider.AIGen.Views;
 using Berry.Spider.SemanticKernel.Ollama.Qwen;
-using Berry.Spider.SemanticKernel.Plugin;
+using Berry.Spider.SemanticKernel.Plugins;
+using Berry.Spider.SemanticKernel.Shared;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Autofac;
@@ -17,6 +18,7 @@ namespace Berry.Spider.AIGen;
 
 [DependsOn(typeof(AbpAutofacModule),
     typeof(SpiderSKOllamaQwenModule),
+    typeof(SpiderSKSharedModule),
     typeof(SpiderSKPluginModule))]
 public class SpiderAIGenModule : AbpModule
 {
@@ -31,7 +33,7 @@ public class SpiderAIGenModule : AbpModule
             if (isConnect)
             {
                 context.Services.AddKernel(client);
-                context.Services.AddSingleton(client);
+                context.Services.AddSingleton<ConfigClient>(client);
 
                 context.Services.ConfigureOllamaOptions(client);
                 context.Services.ConfigureOllamaQwenOptions(client);

@@ -38,6 +38,10 @@ public static class ServiceCollectionExtensions
                 apiKey: null,
                 httpClient: new HttpClient(handler)
             );
+
+            //注入自定义插件
+            builder.Plugins.AddPlugins();
+
             return builder.Build();
         });
     }

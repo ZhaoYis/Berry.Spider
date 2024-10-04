@@ -20,6 +20,9 @@
         <TabItem FontSize="16" Header="AI Embedding">
             <pages:AiEmbedding />
         </TabItem>
+        <TabItem FontSize="16" Header="Function Calling">
+            <pages:FunctionCalling />
+        </TabItem>
     </TabControl>
 
 </Window>

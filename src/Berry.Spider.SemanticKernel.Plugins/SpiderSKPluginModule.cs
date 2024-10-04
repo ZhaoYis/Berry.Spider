@@ -1,6 +1,6 @@
 using Volo.Abp.Modularity;
 
-namespace Berry.Spider.SemanticKernel.Plugin;
+namespace Berry.Spider.SemanticKernel.Plugins;
 
 public class SpiderSKPluginModule : AbpModule
 {

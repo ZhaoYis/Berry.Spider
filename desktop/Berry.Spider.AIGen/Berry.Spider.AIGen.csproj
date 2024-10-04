@@ -23,9 +23,9 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.10"/>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1"/>
-        <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.20.0" />
-        <PackageReference Include="Microsoft.SemanticKernel.Connectors.Sqlite" Version="1.20.0-alpha" />
-        <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.20.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.21.1" />
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.Sqlite" Version="1.21.1-alpha" />
+        <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.21.1" />
         <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
         <PackageReference Include="Serilog.Sinks.Async" Version="2.0.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
@@ -45,6 +45,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Berry.Spider.SemanticKernel.Ollama.Qwen\Berry.Spider.SemanticKernel.Ollama.Qwen.csproj" />
-      <ProjectReference Include="..\..\src\Berry.Spider.SemanticKernel.Plugin\Berry.Spider.SemanticKernel.Plugin.csproj" />
+      <ProjectReference Include="..\..\src\Berry.Spider.SemanticKernel.Plugins\Berry.Spider.SemanticKernel.Plugins.csproj" />
+      <ProjectReference Include="..\..\src\Berry.Spider.SemanticKernel.Shared\Berry.Spider.SemanticKernel.Shared.csproj" />
     </ItemGroup>
 </Project>
