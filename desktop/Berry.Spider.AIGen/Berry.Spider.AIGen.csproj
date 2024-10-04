@@ -10,7 +10,6 @@
 
     <ItemGroup>
         <Folder Include="Microsoft\" />
-        <Folder Include="Models\"/>
         <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
 

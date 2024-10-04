@@ -1,15 +1,17 @@
 using System.Threading.Tasks;
 using AgileConfig.Client;
+using Berry.Spider.AIGen.Models;
 using Berry.Spider.SemanticKernel.Shared.FunctionCallers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.SemanticKernel;
 using Volo.Abp;
 using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.AIGen.ViewModels.Pages;
 
-public partial class FunctionCallingViewModel(ConfigClient configClient, Kernel kernel) : ViewModelBase, ITransientDependency
+public partial class FunctionCallingViewModel(ConfigClient configClient, Kernel kernel) : ObservableRecipient, ITransientDependency
 {
     /// <summary>
     /// 问题
@@ -30,8 +32,13 @@ public partial class FunctionCallingViewModel(ConfigClient configClient, Kernel 
     {
         Check.NotNullOrWhiteSpace(this.AskAiRequestText, nameof(this.AskAiRequestText));
 
+        this.IsActive = this.FunctionCallingCanExecute();
+        this.Messenger.Send(new NotifyTaskExecuteMessage(isRunning: true));
+
         UniversalFunctionCaller planner = new(kernel);
         string? result = await planner.RunAsync(this.AskAiRequestText);
+
+        this.Messenger.Send(new NotifyTaskExecuteMessage(isRunning: false));
         this.AskAiResponseText = result!;
     }
 

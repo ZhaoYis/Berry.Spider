@@ -13,16 +13,19 @@
     xmlns:vm="using:Berry.Spider.AIGen.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <TabControl>
-        <TabItem FontSize="16" Header="AI Chat">
-            <pages:AiChat />
-        </TabItem>
-        <TabItem FontSize="16" Header="AI Embedding">
-            <pages:AiEmbedding />
-        </TabItem>
-        <TabItem FontSize="16" Header="Function Calling">
-            <pages:FunctionCalling />
-        </TabItem>
-    </TabControl>
+    <StackPanel>
+        <TabControl>
+            <TabItem FontSize="16" Header="AI Chat">
+                <pages:AiChat />
+            </TabItem>
+            <TabItem FontSize="16" Header="AI Embedding">
+                <pages:AiEmbedding />
+            </TabItem>
+            <TabItem FontSize="16" Header="Function Calling">
+                <pages:FunctionCalling />
+            </TabItem>
+        </TabControl>
 
+        <Label Content="{Binding Tips}" Margin="20" />
+    </StackPanel>
 </Window>
