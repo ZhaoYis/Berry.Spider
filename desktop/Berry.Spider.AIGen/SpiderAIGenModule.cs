@@ -43,7 +43,7 @@ public class SpiderAIGenModule : AbpModule
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddSemanticTextMemory();
+        context.Services.AddSemanticTextMemory4Sqlite();
         context.Services.AddSingleton<MainWindow>();
     }
 }

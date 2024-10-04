@@ -49,7 +49,7 @@ public static class ServiceCollectionExtensions
     /// <summary>
     /// 注入SK核心ISemanticTextMemory服务
     /// </summary>
-    public static void AddSemanticTextMemory(this IServiceCollection services)
+    public static void AddSemanticTextMemory4Sqlite(this IServiceCollection services)
     {
         services.AddTransient<ISemanticTextMemory>(serviceProvider =>
         {
