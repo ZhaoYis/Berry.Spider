@@ -6,6 +6,7 @@ using AgileConfig.Client;
 using Berry.Spider.AIGen.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Memory;
 using Microsoft.SemanticKernel.Text;
@@ -19,7 +20,7 @@ namespace Berry.Spider.AIGen.ViewModels.Pages;
 #pragma warning disable SKEXP0020
 #pragma warning disable SKEXP0010
 
-public partial class AiEmbeddingViewModel(ConfigClient configClient, Kernel kernel, ISemanticTextMemory textMemory) : ViewModelBase, ITransientDependency
+public partial class AiEmbeddingViewModel(ConfigClient configClient, Kernel kernel, ISemanticTextMemory textMemory) : ViewModelRecipientBase, ITransientDependency
 {
     /// <summary>
     /// 存储文本向量集合名称
@@ -29,7 +30,8 @@ public partial class AiEmbeddingViewModel(ConfigClient configClient, Kernel kern
     /// <summary>
     /// 问题
     /// </summary>
-    [ObservableProperty] private string _askAiRequestText = null!;
+    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(AskAiCommand))] [NotifyCanExecuteChangedFor(nameof(EmbeddingCommand))]
+    private string _askAiRequestText = null!;
 
     /// <summary>
     /// AI回答的内容
@@ -39,10 +41,13 @@ public partial class AiEmbeddingViewModel(ConfigClient configClient, Kernel kern
     /// <summary>
     /// 问AI
     /// </summary>
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanExecute))]
     private async Task AskAiAsync()
     {
         Check.NotNullOrWhiteSpace(this.AskAiRequestText, nameof(this.AskAiRequestText));
+
+        this.IsActive = true;
+        this.Messenger.Send(new NotificationTaskMessage(isRunning: true));
 
         var memoryResults = textMemory.SearchAsync(this.CollectionName, this.AskAiRequestText, limit: 3, minRelevanceScore: 0.3);
         var existingKnowledge = await this.BuildPromptInformationAsync(memoryResults);
@@ -57,12 +62,14 @@ public partial class AiEmbeddingViewModel(ConfigClient configClient, Kernel kern
         {
             this.AskAiResponseText = response.Append(text).ToString();
         }
+
+        this.Messenger.Send(new NotificationTaskMessage(isRunning: false));
     }
 
     /// <summary>
     /// 执行文本嵌入
     /// </summary>
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanExecute))]
     private async Task EmbeddingAsync()
     {
         Check.NotNullOrWhiteSpace(this.AskAiRequestText, nameof(this.AskAiRequestText));
@@ -90,5 +97,10 @@ public partial class AiEmbeddingViewModel(ConfigClient configClient, Kernel kern
         }
 
         return information.ToString();
+    }
+
+    private bool CanExecute()
+    {
+        return !string.IsNullOrWhiteSpace(this.AskAiRequestText);
     }
 }

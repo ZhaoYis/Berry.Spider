@@ -7,7 +7,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.AIGen.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase, IRecipient<NotifyTaskExecuteMessage>, ITransientDependency
+public partial class MainWindowViewModel : ViewModelBase, IRecipient<NotificationTaskMessage>, ITransientDependency
 {
     /// <summary>
     /// 应用名称
@@ -35,7 +35,7 @@ public partial class MainWindowViewModel : ViewModelBase, IRecipient<NotifyTaskE
     /// <summary>
     /// 处理通知消息
     /// </summary>
-    public void Receive(NotifyTaskExecuteMessage message)
+    public void Receive(NotificationTaskMessage message)
     {
         switch (message.IsRunning)
         {

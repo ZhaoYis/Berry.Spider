@@ -27,22 +27,22 @@ public partial class FunctionCallingViewModel(ConfigClient configClient, Kernel 
     /// <summary>
     /// 函数调度
     /// </summary>
-    [RelayCommand(CanExecute = nameof(FunctionCallingCanExecute))]
+    [RelayCommand(CanExecute = nameof(CanExecute))]
     private async Task FunctionCallingAsync()
     {
         Check.NotNullOrWhiteSpace(this.AskAiRequestText, nameof(this.AskAiRequestText));
 
         this.IsActive = true;
-        this.Messenger.Send(new NotifyTaskExecuteMessage(isRunning: true));
+        this.Messenger.Send(new NotificationTaskMessage(isRunning: true));
 
         UniversalFunctionCaller planner = new(kernel);
         string? result = await planner.RunAsync(this.AskAiRequestText);
 
-        this.Messenger.Send(new NotifyTaskExecuteMessage(isRunning: false));
+        this.Messenger.Send(new NotificationTaskMessage(isRunning: false));
         this.AskAiResponseText = result!;
     }
 
-    private bool FunctionCallingCanExecute()
+    private bool CanExecute()
     {
         return !string.IsNullOrWhiteSpace(this.AskAiRequestText);
     }
