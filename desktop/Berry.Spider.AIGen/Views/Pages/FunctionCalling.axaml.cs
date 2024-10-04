@@ -1,16 +1,15 @@
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Berry.Spider.AIGen.ViewModels.Pages;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Berry.Spider.AIGen.Views.Pages;
 
-public partial class FunctionCalling : UserControl
+public partial class FunctionCalling : UserControlBase
 {
     public FunctionCalling()
     {
-        this.DataContext = App.Current.Services.GetRequiredService<FunctionCallingViewModel>();
-        InitializeComponent();
+        FunctionCallingViewModel vm = App.Current.Services.GetRequiredService<FunctionCallingViewModel>();
+        vm.ShowNotificationMessageEvent += ShowNotificationMessage;
+        this.DataContext = vm;
+        this.InitializeComponent();
     }
 }

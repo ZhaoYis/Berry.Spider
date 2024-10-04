@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using AgileConfig.Client;
+using Berry.Spider.AIGen.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.SemanticKernel;
@@ -72,6 +73,8 @@ public partial class AiEmbeddingViewModel(ConfigClient configClient, Kernel kern
         {
             await textMemory.SaveInformationAsync(this.CollectionName, id: Guid.NewGuid().ToString(), text: para, cancellationToken: default);
         }
+
+        this.ShowNotificationMessage(new NotificationMessageEventArgs("温馨提示", "文本嵌入操作成功"));
     }
 
     /// <summary>

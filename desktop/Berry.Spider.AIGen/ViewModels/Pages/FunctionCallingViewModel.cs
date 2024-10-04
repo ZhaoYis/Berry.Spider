@@ -11,7 +11,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.AIGen.ViewModels.Pages;
 
-public partial class FunctionCallingViewModel(ConfigClient configClient, Kernel kernel) : ObservableRecipient, ITransientDependency
+public partial class FunctionCallingViewModel(ConfigClient configClient, Kernel kernel) : ViewModelRecipientBase, ITransientDependency
 {
     /// <summary>
     /// 问题
@@ -32,7 +32,7 @@ public partial class FunctionCallingViewModel(ConfigClient configClient, Kernel 
     {
         Check.NotNullOrWhiteSpace(this.AskAiRequestText, nameof(this.AskAiRequestText));
 
-        this.IsActive = this.FunctionCallingCanExecute();
+        this.IsActive = true;
         this.Messenger.Send(new NotifyTaskExecuteMessage(isRunning: true));
 
         UniversalFunctionCaller planner = new(kernel);

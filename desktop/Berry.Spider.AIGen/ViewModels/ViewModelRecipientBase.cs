@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using Berry.Spider.AIGen.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Berry.Spider.AIGen.ViewModels;
 
-public class ViewModelBase : ObservableObject
+public class ViewModelRecipientBase : ObservableRecipient
 {
     public event EventHandler<NotificationMessageEventArgs>? ShowNotificationMessageEvent;
 
