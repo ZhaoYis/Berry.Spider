@@ -1,6 +1,5 @@
 using System.Text;
 using System.Threading.Tasks;
-using AgileConfig.Client;
 using Berry.Spider.AIGen.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -12,7 +11,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.AIGen.ViewModels.Pages;
 
-public partial class AiChatViewModel(ConfigClient configClient, Kernel kernel) : ViewModelRecipientBase, ITransientDependency
+public partial class AiChatViewModel(Kernel kernel) : ViewModelRecipientBase, ITransientDependency
 {
     /// <summary>
     /// 问题

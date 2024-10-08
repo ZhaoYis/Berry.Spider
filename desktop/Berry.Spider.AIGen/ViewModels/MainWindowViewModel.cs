@@ -41,7 +41,10 @@ public partial class MainWindowViewModel : ViewModelBase, IRecipient<Notificatio
         {
             case true:
             {
-                _timer.Elapsed += (sender, e) => { this.Tips = $"AI正在努力思考中，请稍后。当前已执行{_stopwatch.ElapsedMilliseconds / 1000}秒..."; };
+                _timer.Elapsed += (sender, e) =>
+                {
+                    this.Tips = $"AI正在努力思考中，请稍后。当前已执行{_stopwatch.ElapsedMilliseconds / 1000}秒...";
+                };
                 _stopwatch.Start();
                 _timer.Start();
                 break;

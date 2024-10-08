@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using AgileConfig.Client;
 using Berry.Spider.AIGen.Models;
 using Berry.Spider.SemanticKernel.Shared.FunctionCallers;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -11,7 +10,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.AIGen.ViewModels.Pages;
 
-public partial class FunctionCallingViewModel(ConfigClient configClient, Kernel kernel) : ViewModelRecipientBase, ITransientDependency
+public partial class FunctionCallingViewModel(Kernel kernel) : ViewModelRecipientBase, ITransientDependency
 {
     /// <summary>
     /// 问题

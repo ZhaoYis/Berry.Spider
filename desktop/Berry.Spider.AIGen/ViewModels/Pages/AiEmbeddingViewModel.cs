@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using AgileConfig.Client;
 using Berry.Spider.AIGen.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -20,7 +19,7 @@ namespace Berry.Spider.AIGen.ViewModels.Pages;
 #pragma warning disable SKEXP0020
 #pragma warning disable SKEXP0010
 
-public partial class AiEmbeddingViewModel(ConfigClient configClient, Kernel kernel, ISemanticTextMemory textMemory) : ViewModelRecipientBase, ITransientDependency
+public partial class AiEmbeddingViewModel(Kernel kernel, ISemanticTextMemory textMemory) : ViewModelRecipientBase, ITransientDependency
 {
     /// <summary>
     /// 存储文本向量集合名称
