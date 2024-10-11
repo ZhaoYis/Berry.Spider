@@ -16,7 +16,7 @@ public class SelfAttention_UnitTest
     [Fact]
     public void ComputeAttention_Test()
     {
-        // 输入嵌入矩阵 X（例如这里模拟3个词）,实际可以使用word embdding来生成
+        // 输入嵌入矩阵 X（例如这里模拟3个词）,实际可以使用word embdding等技术来生成
         double[,] X = new double[,]
         {
             { 1.0, 0.0, 1.0, 0.0 }, //我
@@ -26,9 +26,10 @@ public class SelfAttention_UnitTest
 
         // 权重矩阵 W_Q, W_K, W_V
         // 可以是固定的权重矩阵，也可以通过训练得到，有点像卷积神经网络的卷积核
-        double[,] W_Q = RandomMatrix(4, 4);
-        double[,] W_K = RandomMatrix(4, 4);
-        double[,] W_V = RandomMatrix(4, 4);
+        // W_Q和W_K的纬度需要一致，因为要做矩阵运算，但是可以和W_V不一样
+        double[,] W_Q = RandomMatrix(16, 16);
+        double[,] W_K = RandomMatrix(16, 16);
+        double[,] W_V = RandomMatrix(32, 32);
 
         // 输入参数
         int n = X.GetLength(0); // 序列长度（例如3个词）

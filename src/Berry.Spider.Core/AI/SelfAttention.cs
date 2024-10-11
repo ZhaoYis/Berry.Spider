@@ -8,11 +8,11 @@ namespace Berry.Spider.Core;
 /// </summary>
 public class SelfAttention
 {
-    private int n; // 序列长度
-    private int d; // 嵌入维度
-    private int d_k; // Q、K 的维度
-    private int d_v; // V 的维度
-
+    private readonly int n; // 序列长度
+    private readonly int d; // 嵌入维度
+    private readonly int d_k; // Q、K 的维度
+    private readonly int d_v; // V 的维度
+    
     /// <summary>
     /// 初始化自注意力机制的参数
     /// </summary>
@@ -48,7 +48,7 @@ public class SelfAttention
         // 通过将 K 转置后，可以将 Q 和 K 的每一对元素进行比较，从而计算出相似度矩阵
         double[,] K_T = MatrixTranspose(K); // K^T
 
-        // 计算Q与K的点积，得到相似度得分
+        // 计算Q与K的点积，得到相似度
         double[,] QK_T = MatrixMultiply(Q, K_T); // QK^T
 
         // 计算缩放因子sqrt(d_k)，即对Q、K的维度d_k开根号
