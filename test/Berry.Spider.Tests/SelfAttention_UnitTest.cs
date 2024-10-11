@@ -40,8 +40,8 @@ public class SelfAttention_UnitTest
         // 创建实例
         var selfAttention = new SelfAttention(sequenceLength: n, embeddingDimension: d, keyDimension: d_k, valueDimension: d_v);
 
-        // 计算注意力输出
-        double[,] output = selfAttention.ComputeAttention(X, W_Q, W_K, W_V);
+        // 计算注意力
+        double[,] output = selfAttention.ComputeSelfAttention(X, W_Q, W_K, W_V);
 
         // 验证输出的维度
         Assert.Equal(n, output.GetLength(0));
