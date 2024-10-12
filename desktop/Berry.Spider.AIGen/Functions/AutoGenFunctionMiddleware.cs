@@ -6,7 +6,7 @@ using AutoGen.SemanticKernel;
 
 namespace Berry.Spider.AIGen;
 
-public static class DateTimeFunctionMiddleware
+public static class AutoGenFunctionMiddleware
 {
     /// <summary>
     /// 注册自定义函数

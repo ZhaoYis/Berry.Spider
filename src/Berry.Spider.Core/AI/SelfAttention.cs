@@ -39,36 +39,95 @@ public class SelfAttention
     /// <returns></returns>
     public double[,] ComputeSelfAttention(double[,] X, double[,] W_Q, double[,] W_K, double[,] W_V)
     {
-        // 计算Q、K和V矩阵
-        double[,] Q = MatrixMultiply(X, W_Q); // 计算查询矩阵 Q = X * W_Q
-        double[,] K = MatrixMultiply(X, W_K); // 计算键矩阵 K = X * W_K
-        double[,] V = MatrixMultiply(X, W_V); // 计算值矩阵 V = X * W_V
+        // 1、添加位置编码到输入嵌入矩阵
+        double[,] X_pos = AddPositionalEncoding(X); // X' = X + PE
 
-        // 计算K的转置矩阵，主要目的是获得注意力得分
-        // 具体来说，Q 和 K 的点积（几何含义就是K在Q上的投影，投影的值越大说明两个向量相关度高，90度表明二者毫无关系）反映了输入序列中各个元素之间的相似性或关联程度。
+        // 2、计算Q、K和V矩阵
+        double[,] Q = MatrixMultiply(X_pos, W_Q); // 计算查询矩阵 Q = X * W_Q
+        double[,] K = MatrixMultiply(X_pos, W_K); // 计算键矩阵 K = X * W_K
+        double[,] V = MatrixMultiply(X_pos, W_V); // 计算值矩阵 V = X * W_V
+
+        // 3、计算K的转置矩阵
+        // 主要目的是获得注意力得分，具体来说，Q 和 K 的点积（几何含义就是K在Q上的投影，投影的值越大说明两个向量相关度高，90度表明二者毫无关系）反映了输入序列中各个元素之间的相似性或关联程度。
         // 通过将 K 转置后，可以将 Q 和 K 的每一对元素进行比较，从而计算出相似度矩阵
         double[,] K_T = MatrixTranspose(K); // K^T
 
-        // 计算Q与K的点积，得到相似度
-        double[,] QK_T = MatrixMultiply(Q, K_T); // QK^T
+        // 4、计算Q与K_T的点积，得到相似度
+        double[,] QK_T = MatrixMultiply(Q, K_T); // QK_T = Q * K_T
 
-        // 计算缩放因子sqrt(d_k)，即对Q、K的维度d_k开根号
+        // 5、计算缩放因子sqrt(d_k)，即对Q、K的维度d_k开根号
         double scale = Math.Sqrt(d_k); // sqrt(d_k)
 
-        // 将相似度得分QK_T除以缩放因子（transformer中使用sqrt(d_k)作为缩放因子）
+        // 6、将相似度得分QK_T除以缩放因子（transformer中使用sqrt(d_k)作为缩放因子）
         // 除以缩放因子的目的是为了减小数值范围，从而避免在计算 Softmax 时可能出现的数值不稳定性。
         // 具体来说，当输入向量的维度较高时，点积的结果可能会变得非常大，这可能导致 Softmax 函数中的指数计算产生极大的值，从而引起梯度消失或梯度爆炸的问题，
         // 梯度消失会导致深层网络前面的层权值几乎不变，仍接近于初始化的权值，就等价于只有后几层的浅层网络的学习了。
         // 梯度消失问题和梯度爆炸问题一般随着网络层数的增加会变得越来越明显，因此需要进行缩放。
-        double[,] scaledScores = ScalarDivide(QK_T, scale); // QK^T / sqrt(d_k)
+        double[,] QK_T_scaled = ScalarDivide(QK_T, scale); // QK^T / sqrt(d_k)
 
-        // 应用Softmax函数得到注意力权重（或者叫attention score）
+        // 7、应用Softmax函数得到注意力权重（或者叫attention scores）
         // 在softmax之后，attention score矩阵的每一行表示一个token，每一列表示该token和对应位置token的α值，
         // 因为进行了softmax，所以每一行的α值相加等于1
-        double[,] attentionWeights = Softmax(scaledScores); // Softmax(QK^T / sqrt(d_k))
+        double[,] attentionWeights = Softmax(QK_T_scaled); // Softmax(QK^T / sqrt(d_k))
 
-        // 计算注意力
-        return MatrixMultiply(attentionWeights, V); // 自注意力 = 权重 * V
+        // 8、计算注意力
+        return MatrixMultiply(attentionWeights, V); // Attention Output = Attention Weights * V
+    }
+
+    /// <summary>
+    /// 为输入嵌入矩阵添加正弦和余弦位置编码
+    /// </summary>
+    /// <param name="X">输入嵌入矩阵 (n x d)</param>
+    /// <returns>添加位置编码后的矩阵 (n x d)</returns>
+    private double[,] AddPositionalEncoding(double[,] X)
+    {
+        // 初始化位置编码矩阵
+        double[,] PE = GeneratePositionalEncoding(sequenceLength: n, embeddingDimension: d);
+
+        // 创建一个新的矩阵用于存储添加位置编码后的结果
+        double[,] X_pos = new double[n, d];
+
+        // 将输入矩阵 X 与位置编码矩阵 PE 相加
+        for (int i = 0; i < n; i++) // 遍历每个位置
+        {
+            for (int j = 0; j < d; j++) // 遍历每个维度
+            {
+                X_pos[i, j] = X[i, j] + PE[i, j]; // X' = X + PE
+            }
+        }
+
+        return X_pos;
+    }
+
+    /// <summary>
+    /// 生成正弦和余弦位置编码矩阵
+    /// </summary>
+    /// <param name="sequenceLength">序列长度</param>
+    /// <param name="embeddingDimension">嵌入维度</param>
+    /// <returns>位置编码矩阵 (n x d)</returns>
+    private double[,] GeneratePositionalEncoding(int sequenceLength, int embeddingDimension)
+    {
+        double[,] PE = new double[sequenceLength, embeddingDimension]; // 创建位置编码矩阵
+
+        // 计算位置编码
+        for (int pos = 0; pos < sequenceLength; pos++) // 遍历每个位置
+        {
+            for (int i = 0; i < embeddingDimension; i++) // 遍历每个维度
+            {
+                if (i % 2 == 0)
+                {
+                    // 偶数维度使用正弦函数
+                    PE[pos, i] = Math.Sin(pos / Math.Pow(10000, (double)i / embeddingDimension));
+                }
+                else
+                {
+                    // 奇数维度使用余弦函数
+                    PE[pos, i] = Math.Cos(pos / Math.Pow(10000, (double)(i - 1) / embeddingDimension));
+                }
+            }
+        }
+
+        return PE;
     }
 
     /// <summary>
@@ -79,7 +138,12 @@ public class SelfAttention
     {
         int A_rows = A.GetLength(0); // A的行数
         int A_cols = A.GetLength(1); // A的列数（也是B的行数）
+        int B_rows = B.GetLength(1); // B的行数
         int B_cols = B.GetLength(1); // B的列数
+
+        // 确保维度匹配
+        if (A_cols != B_rows)
+            throw new ArgumentException("矩阵A的列数必须等于矩阵B的行数");
 
         double[,] C = new double[A_rows, B_cols]; // 结果矩阵C
 
