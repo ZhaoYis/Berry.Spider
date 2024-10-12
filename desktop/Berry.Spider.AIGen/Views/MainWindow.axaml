@@ -24,6 +24,9 @@
             <TabItem FontSize="16" Header="Function Calling">
                 <pages:FunctionCalling />
             </TabItem>
+            <TabItem FontSize="16" Header="AutoGen For SK Agent">
+                <pages:AutoGen4SKAgent />
+            </TabItem>
         </TabControl>
 
         <Label Content="{Binding Tips}" Margin="20" />

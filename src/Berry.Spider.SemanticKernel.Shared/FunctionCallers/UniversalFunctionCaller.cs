@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.SemanticKernel;
@@ -44,9 +45,7 @@ public class UniversalFunctionCaller
         chatHistory.Add(new ChatMessageContent(AuthorRole.User, $"New task: {task}"));
 
         // Process function calls
-        for (int iteration = 0;
-             iteration < 10 && nextFunctionCall.Name != FunctionCallStatus.Finished;
-             iteration++)
+        for (int iteration = 0; iteration < 10 && nextFunctionCall.Name != FunctionCallStatus.Finished; iteration++)
         {
             nextFunctionCall = await GetNextFunctionCallAsync(chatHistory, pluginsAsText);
             if (nextFunctionCall == null)
@@ -400,7 +399,7 @@ StartSpaceship(shipName: ""Enterprise"", speed: 99999)
         foreach (var paraam in functionCall.Parameters)
             args.Add($"{paraam.Name} : {paraam.Value}");
 
-        Console.WriteLine($">>invoking {functionCall.Name} with parameters {string.Join(",", args)}");
+        Debug.WriteLine($">>invoking {functionCall.Name} with parameters {string.Join(",", args)}");
         // Iterate over each plugin in the kernel
         foreach (var plugin in _kernel.Plugins)
         {
@@ -418,7 +417,7 @@ StartSpaceship(shipName: ""Enterprise"", speed: 99999)
                 // Invoke the function
                 var result = await function.InvokeAsync(_kernel, context);
 
-                Console.WriteLine($">>Result: {result.ToString()}");
+                Debug.WriteLine($">>Result: {result.ToString()}");
                 return result.ToString();
             }
         }
