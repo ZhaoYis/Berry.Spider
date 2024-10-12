@@ -27,6 +27,9 @@
             <TabItem FontSize="16" Header="AutoGen For SK Agent">
                 <pages:AutoGen4SKAgent />
             </TabItem>
+            <TabItem FontSize="16" Header="AutoGen For SK Chat Agent">
+                <pages:AutoGen4SKChatAgent />
+            </TabItem>
         </TabControl>
 
         <Label Content="{Binding Tips}" Margin="20" />

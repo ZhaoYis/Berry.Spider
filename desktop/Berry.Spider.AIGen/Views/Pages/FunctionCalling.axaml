@@ -23,7 +23,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Button
                                 Command="{Binding FunctionCallingCommand}"
-                                Content="测试FunctionCalling"
+                                Content="调度自定义函数"
                                 Margin="10" />
                         </StackPanel>
                         <TextBox
@@ -35,7 +35,6 @@
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Column="1">
-                    <!-- <ui:ProgressRing IsIndeterminate="True" Visibility="{Binding ViewModel.ProgressRingVisible}" /> -->
                 </Grid>
                 <Grid Grid.Column="2">
                     <StackPanel>

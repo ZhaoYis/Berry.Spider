@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pages="clr-namespace:Berry.Spider.AIGen.ViewModels.Pages"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="pages:AutoGen4SKAgentViewModel"
-             x:Class="Berry.Spider.AIGen.Views.Pages.AutoGen4SKAgent">
+             x:DataType="pages:AutoGen4SKChatAgentViewModel"
+             x:Class="Berry.Spider.AIGen.Views.Pages.AutoGen4SKChatAgent">
     <StackPanel>
         <StackPanel>
             <Grid>
@@ -22,7 +22,6 @@
                                 Command="{Binding Ask4AgentCommand}"
                                 Content="询问AI代理"
                                 Margin="10" />
-                            <CheckBox Content="启用流式响应" IsChecked="{Binding IsEnableStreaming}"></CheckBox>
                         </StackPanel>
                         <TextBox
                             AcceptsReturn="True"
@@ -33,6 +32,7 @@
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Column="1">
+                    <!-- <ui:ProgressRing IsIndeterminate="True" Visibility="{Binding ViewModel.ProgressRingVisible}" /> -->
                 </Grid>
                 <Grid Grid.Column="2">
                     <StackPanel>

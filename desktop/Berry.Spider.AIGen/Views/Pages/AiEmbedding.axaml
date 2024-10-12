@@ -46,7 +46,6 @@
                 </Grid>
 
                 <Grid Grid.Column="1">
-                    <!-- <ui:ProgressRing IsIndeterminate="True" Visibility="{Binding ViewModel.ProgressRingVisible}" /> -->
                 </Grid>
 
                 <Grid Grid.Column="2">

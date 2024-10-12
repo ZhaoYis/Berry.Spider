@@ -1,20 +1,25 @@
-using System.Text;
 using System.Threading.Tasks;
 using AutoGen.Core;
 using AutoGen.SemanticKernel;
-using AutoGen.SemanticKernel.Extension;
 using Berry.Spider.AIGen.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Volo.Abp;
 using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.AIGen.ViewModels.Pages;
 
-public partial class AutoGen4SKAgentViewModel(Kernel kernel) : ViewModelRecipientBase, ITransientDependency
+#pragma warning disable SKEXP0050
+#pragma warning disable SKEXP0001
+#pragma warning disable SKEXP0020
+#pragma warning disable SKEXP0010
+#pragma warning disable SKEXP0110
+
+public partial class AutoGen4SKChatAgentViewModel(Kernel kernel) : ViewModelRecipientBase, ITransientDependency
 {
     /// <summary>
     /// 问题
@@ -28,11 +33,6 @@ public partial class AutoGen4SKAgentViewModel(Kernel kernel) : ViewModelRecipien
     [ObservableProperty] private string _askAiResponseText = null!;
 
     /// <summary>
-    /// 是否启用用流式响应
-    /// </summary>
-    [ObservableProperty] private bool _isEnableStreaming = true;
-
-    /// <summary>
     /// 调度
     /// </summary>
     [RelayCommand(CanExecute = nameof(CanExecute))]
@@ -43,15 +43,18 @@ public partial class AutoGen4SKAgentViewModel(Kernel kernel) : ViewModelRecipien
         this.IsActive = true;
         this.Messenger.Send(new NotificationTaskMessage(isRunning: true));
 
-        // create a semantic kernel agent
-        var semanticKernelAgent = new SemanticKernelAgent(
-            kernel: kernel,
-            name: "assistant",
-            systemMessage: "你是一名助手，帮助用户完成一些任务。必要的时候你需要调度一些系统定义好的函数来完成任务。"
-        );
-        semanticKernelAgent.RegisterMessageConnector();
-        semanticKernelAgent.RegisterPrintMessage();
-        //semanticKernelAgent.RegisterFunctions();
+        // The built-in ChatCompletionAgent from semantic kernel.
+        var chatAgent = new ChatCompletionAgent()
+        {
+            Kernel = kernel,
+            Name = "assistant",
+            Description = "你是一个乐于助人的人工智能助手，帮助用户完成一些任务。"
+        };
+
+        var messageConnector = new SemanticKernelChatMessageContentConnector();
+        var semanticKernelAgent = new SemanticKernelChatCompletionAgent(chatAgent)
+            .RegisterMiddleware(messageConnector) // register message connector so it support AutoGen built-in message types like TextMessage.
+            .RegisterPrintMessage(); // pretty print the message to the console
 
         // SemanticKernelAgent supports the following message types:
         // - IMessage<ChatMessageContent> where ChatMessageContent is from Azure.AI.OpenAI
@@ -60,25 +63,10 @@ public partial class AutoGen4SKAgentViewModel(Kernel kernel) : ViewModelRecipien
         // Use MessageEnvelope.Create to create an IMessage<ChatRequestMess>
         var chatMessageContent = MessageEnvelope.Create(userMessage);
 
-        if (this.IsEnableStreaming)
+        var response = await semanticKernelAgent.SendAsync(chatMessageContent);
+        if (response is TextMessage message)
         {
-            StringBuilder response = new StringBuilder();
-            var streamingReply = semanticKernelAgent.GenerateStreamingReplyAsync(new[] { chatMessageContent });
-            await foreach (var streamingMessage in streamingReply)
-            {
-                if (streamingMessage is MessageEnvelope<StreamingChatMessageContent> message)
-                {
-                    this.AskAiResponseText = response.Append(message.Content.Content).ToString();
-                }
-            }
-        }
-        else
-        {
-            var response = await semanticKernelAgent.SendAsync(chatMessageContent);
-            if (response is MessageEnvelope<ChatMessageContent> message)
-            {
-                this.AskAiResponseText = message.Content.Content ?? "Oops!";
-            }
+            this.AskAiResponseText = message.Content ?? "Oops!";
         }
 
         this.Messenger.Send(new NotificationTaskMessage(isRunning: false));
