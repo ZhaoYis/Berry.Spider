@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.21.1" />
+      <PackageReference Include="Microsoft.SemanticKernel.Plugins.Web" Version="1.22.0-alpha" />
       <PackageReference Include="Volo.Abp.Core" Version="8.0.2" />
     </ItemGroup>
 

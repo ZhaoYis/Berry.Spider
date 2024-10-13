@@ -1,6 +1,10 @@
 using Berry.Spider.SemanticKernel.Plugins;
+using Microsoft.SemanticKernel.Plugins.Web;
+using Microsoft.SemanticKernel.Plugins.Web.Bing;
 
 namespace Microsoft.SemanticKernel;
+
+#pragma warning disable SKEXP0050
 
 public static class KernelPluginExtensions
 {
@@ -9,7 +13,13 @@ public static class KernelPluginExtensions
     /// </summary>
     public static void AddPlugins(this IKernelBuilderPlugins plugins)
     {
+        // DateTime Plugin
         plugins.AddFromType<DateTimePlugin>("date_time_plugin");
+
+        // WebSearch Plugin
+        var bingSearch = new BingConnector("");
+        var webSearchPlugin = new WebSearchEnginePlugin(bingSearch);
+        plugins.AddFromObject(webSearchPlugin);
 
         // plugins.AddFromFunctions("date_time_plugin",
         // [

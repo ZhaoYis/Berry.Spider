@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:pages="clr-namespace:Berry.Spider.AIGen.ViewModels.Pages"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="pages:AutoGen4GroupChatViewModel"
+             x:Class="Berry.Spider.AIGen.Views.Pages.AutoGen4GroupChat">
+
+    <StackPanel>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                Command="{Binding Ask4AgentCommand}"
+                                Content="询问AI代理"
+                                Margin="10" />
+                        </StackPanel>
+                        <TextBox
+                            AcceptsReturn="True"
+                            Height="300"
+                            Margin="10"
+                            Text="{Binding AskAiRequestText}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Column="1">
+                </Grid>
+                <Grid Grid.Column="2">
+                    <StackPanel>
+                        <Button Content="AI回答" Margin="10" />
+                        <TextBox
+                            Height="300"
+                            Margin="10"
+                            Text="{Binding AskAiResponseText}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </StackPanel>
+    </StackPanel>
+</UserControl>
