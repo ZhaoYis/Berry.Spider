@@ -26,10 +26,10 @@ public class SelfAttention_UnitTest
 
         // 权重矩阵 W_Q, W_K, W_V
         // 可以是固定的权重矩阵，也可以通过训练得到，有点像卷积神经网络的卷积核
-        // W_Q和W_K的纬度需要一致，因为要做矩阵运算，但是可以和W_V不一样
-        double[,] W_Q = RandomMatrix(16, 16);
-        double[,] W_K = RandomMatrix(16, 16);
-        double[,] W_V = RandomMatrix(32, 32);
+        // W_Q和W_K的维度需要一致，因为要做矩阵运算（且K还会被转置），但是可以和W_V不一样
+        double[,] W_Q = RandomMatrix(4, 3);
+        double[,] W_K = RandomMatrix(4, 3);
+        double[,] W_V = RandomMatrix(8, 8);
 
         // 输入参数
         int n = X.GetLength(0); // 序列长度（例如3个词）

@@ -141,10 +141,6 @@ public class SelfAttention
         int B_rows = B.GetLength(1); // B的行数
         int B_cols = B.GetLength(1); // B的列数
 
-        // 确保维度匹配
-        if (A_cols != B_rows)
-            throw new ArgumentException("矩阵A的列数必须等于矩阵B的行数");
-
         double[,] C = new double[A_rows, B_cols]; // 结果矩阵C
 
         // 遍历矩阵A的每一行
@@ -153,7 +149,7 @@ public class SelfAttention
             // 遍历矩阵B的每一列
             for (int j = 0; j < B_cols; j++)
             {
-                double sum = 0.0; // 初始化和为0
+                double sum = 0.0;
                 // 计算A的行和B的列的点积
                 for (int k = 0; k < A_cols; k++)
                 {
