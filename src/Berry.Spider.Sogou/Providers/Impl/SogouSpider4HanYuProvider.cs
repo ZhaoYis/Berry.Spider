@@ -1,9 +1,12 @@
+using System.Collections.Immutable;
 using Berry.Spider.Application.Contracts;
 using Berry.Spider.Core;
+using Berry.Spider.Domain;
 using Berry.Spider.EventBus;
 using Berry.Spider.FreeRedis;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OpenQA.Selenium;
 
 namespace Berry.Spider.Sogou;
 
@@ -13,6 +16,7 @@ namespace Berry.Spider.Sogou;
 [SpiderService(new[] { SpiderSourceFrom.Sogou_HanYu })]
 public class SogouSpider4HanYuProvider : ProviderBase<SogouSpider4HanYuProvider>, ISpiderProvider
 {
+    private IWebElementLoadProvider WebElementLoadProvider { get; }
     private IEventBusPublisher DistributedEventBus { get; }
     private IRedisService RedisService { get; }
     private SpiderOptions Options { get; }
@@ -20,11 +24,13 @@ public class SogouSpider4HanYuProvider : ProviderBase<SogouSpider4HanYuProvider>
     private string HomePage => "https://hanyu.sogou.com";
 
     public SogouSpider4HanYuProvider(IOptionsSnapshot<SpiderOptions> options,
+        IWebElementLoadProvider webElementLoadProvider,
         IEventBusPublisher eventBus,
         IRedisService redisService,
         ILogger<SogouSpider4HanYuProvider> logger) : base(logger)
     {
         this.Options = options.Value;
+        this.WebElementLoadProvider = webElementLoadProvider;
         this.RedisService = redisService;
         this.DistributedEventBus = eventBus;
     }
@@ -69,7 +75,29 @@ public class SogouSpider4HanYuProvider : ProviderBase<SogouSpider4HanYuProvider>
     /// <returns></returns>
     public async Task HandlePushEventAsync<T>(T eventData) where T : class, ISpiderPushEto
     {
-        throw new NotImplementedException();
+        try
+        {
+            await this.WebElementLoadProvider.AutoClickAndInvokeAsync(
+                this.HomePage,
+                eventData.Keyword,
+                By.Name("query"),
+                By.XPath(@"//*[@id='pageApp']/div/div[3]/span[2]/input"),
+                drv => drv.FindElement(By.CssSelector(".results")),
+                async (root, keyword) =>
+                {
+                    if (root == null) return;
+
+                    //清除tab-div里面的内容
+                    IWebElement tabElement = root.FindElement(By.CssSelector(".tab-hanyu"));
+                    tabElement?.Clear();
+
+                    var resultContent = root.Text;
+                });
+        }
+        catch (Exception exception)
+        {
+            this.Logger.LogException(exception);
+        }
     }
 
     /// <summary>
