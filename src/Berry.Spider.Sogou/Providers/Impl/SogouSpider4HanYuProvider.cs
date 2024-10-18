@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using Berry.Spider.Application.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
@@ -19,6 +18,8 @@ public class SogouSpider4HanYuProvider : ProviderBase<SogouSpider4HanYuProvider>
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private IEventBusPublisher DistributedEventBus { get; }
     private IRedisService RedisService { get; }
+    private SpiderDomainService SpiderDomainService { get; }
+    private ISpiderContentRepository SpiderRepository { get; }
     private SpiderOptions Options { get; }
 
     private string HomePage => "https://hanyu.sogou.com";
@@ -27,11 +28,15 @@ public class SogouSpider4HanYuProvider : ProviderBase<SogouSpider4HanYuProvider>
         IWebElementLoadProvider webElementLoadProvider,
         IEventBusPublisher eventBus,
         IRedisService redisService,
+        SpiderDomainService spiderDomainService,
+        ISpiderContentRepository spiderRepository,
         ILogger<SogouSpider4HanYuProvider> logger) : base(logger)
     {
         this.Options = options.Value;
         this.WebElementLoadProvider = webElementLoadProvider;
         this.RedisService = redisService;
+        this.SpiderDomainService = spiderDomainService;
+        this.SpiderRepository = spiderRepository;
         this.DistributedEventBus = eventBus;
     }
 
@@ -91,7 +96,15 @@ public class SogouSpider4HanYuProvider : ProviderBase<SogouSpider4HanYuProvider>
                     IWebElement tabElement = root.FindElement(By.CssSelector(".tab-hanyu"));
                     tabElement?.Clear();
 
+                    var title = keyword.ToString() ?? string.Empty;
                     var resultContent = root.Text;
+                    SpiderContent? spiderContent = await this.SpiderDomainService.BuildContentAsync(title,
+                        eventData.SourceFrom, resultContent, traceCode: eventData.TraceCode, identityId: eventData.IdentityId);
+                    if (spiderContent != null)
+                    {
+                        await this.SpiderRepository.InsertAsync(spiderContent);
+                        this.Logger.LogInformation("落库成功关键字：{Keyword}，标题：{Title}", eventData.Keyword, spiderContent.Title);
+                    }
                 });
         }
         catch (Exception exception)
