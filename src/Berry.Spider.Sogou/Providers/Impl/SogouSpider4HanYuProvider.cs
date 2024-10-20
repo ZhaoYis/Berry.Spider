@@ -98,13 +98,10 @@ public class SogouSpider4HanYuProvider : ProviderBase<SogouSpider4HanYuProvider>
 
                     var title = keyword.ToString() ?? string.Empty;
                     var resultContent = root.Text;
-                    SpiderContent? spiderContent = await this.SpiderDomainService.BuildContentAsync(title,
+                    SpiderContent spiderContent = await this.SpiderDomainService.BuildContentAsync(title,
                         eventData.SourceFrom, resultContent, traceCode: eventData.TraceCode, identityId: eventData.IdentityId);
-                    if (spiderContent != null)
-                    {
-                        await this.SpiderRepository.InsertAsync(spiderContent);
-                        this.Logger.LogInformation("落库成功关键字：{Keyword}，标题：{Title}", eventData.Keyword, spiderContent.Title);
-                    }
+                    await this.SpiderRepository.InsertAsync(spiderContent);
+                    this.Logger.LogInformation("落库成功关键字：{Keyword}，标题：{Title}", eventData.Keyword, spiderContent.Title);
                 });
         }
         catch (Exception exception)
@@ -117,8 +114,8 @@ public class SogouSpider4HanYuProvider : ProviderBase<SogouSpider4HanYuProvider>
     /// 执行根据一级页面采集到的地址获取二级页面具体目标数据任务
     /// </summary>
     /// <returns></returns>
-    public async Task HandlePullEventAsync<T>(T eventData) where T : class, ISpiderPullEto
+    public Task HandlePullEventAsync<T>(T eventData) where T : class, ISpiderPullEto
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 }

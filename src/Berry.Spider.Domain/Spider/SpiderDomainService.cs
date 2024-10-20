@@ -132,7 +132,7 @@ public class SpiderDomainService : DomainService
     /// 统一构建落库实体内容
     /// </summary>
     /// <returns></returns>
-    public async Task<SpiderContent?> BuildContentAsync(string originalTitle,
+    public ValueTask<SpiderContent> BuildContentAsync(string originalTitle,
         SpiderSourceFrom sourceFrom,
         string article,
         string? traceCode = null,
@@ -143,7 +143,7 @@ public class SpiderDomainService : DomainService
         content.SetTraceCodeIfNotNull(traceCode);
         content.SetIdentityIdIfNotNull(identityId);
 
-        return content;
+        return ValueTask.FromResult(content);
     }
 
     /// <summary>
