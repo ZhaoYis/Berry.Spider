@@ -27,7 +27,7 @@ public class ExcelFileToDbAppService : IExcelFileToDbAppService
         List<SpiderContent> spiderContents = new List<SpiderContent>();
         foreach (string file in files)
         {
-            DataTable? dt = OfficeHelper.ReadExcelToDataTable(file, isFirstRowColumn: true);
+            DataTable? dt = OfficeHelper.ReadFromExcel(file, isFirstRowColumn: true);
             if (dt != null)
             {
                 for (int i = 0; i < dt.Rows.Count; i++)
@@ -84,5 +84,48 @@ public class ExcelFileToDbAppService : IExcelFileToDbAppService
 
             pageIndex++;
         }
+    }
+
+    public virtual Task ExportToExcelAsync()
+    {
+        string filePath = Path.Combine(AppContext.BaseDirectory, "files");
+        // 递归获取文件路径下的所有文件
+        var files = Directory.GetFiles(filePath, "*.xlsx", SearchOption.AllDirectories);
+        List<ExcelDataResource> worksheets = new List<ExcelDataResource>();
+        foreach (string file in files)
+        {
+            DataTable? dt = OfficeHelper.ReadFromExcel(file, isFirstRowColumn: true);
+            if (dt != null)
+            {
+                List<ExcelDataRow> rows = new List<ExcelDataRow>();
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    //组装数据
+                    string title = dt.Rows[i][1].ToString();
+                    string content = dt.Rows[i][2].ToString();
+
+                    if (!string.IsNullOrWhiteSpace(title) && !string.IsNullOrWhiteSpace(content))
+                    {
+                        title = title.Split("-").First().Replace("组词", "").Replace("的意思", "");
+                        title = $"{title}的意思及解释-{title}的拼音读音";
+                        rows.Add(new ExcelDataRow
+                        {
+                            Title = title,
+                            Content = content
+                        });
+                    }
+                }
+
+                worksheets.Add(new ExcelDataResource
+                {
+                    SheetName = "Sheet1",
+                    RowNum = 1,
+                    Rows = rows
+                });
+            }
+        }
+
+        OfficeHelper.WriteToExcel(worksheets, Path.Combine(filePath, $"{DateTime.Now:yyyyMMddHHmmssfff}.xlsx"));
+        return Task.CompletedTask;
     }
 }

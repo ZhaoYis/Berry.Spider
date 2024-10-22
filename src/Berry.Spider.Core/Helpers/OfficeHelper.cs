@@ -1,5 +1,8 @@
+using System.ComponentModel;
 using NPOI.SS.UserModel;
 using System.Data;
+using System.Reflection;
+using NPOI.XSSF.UserModel;
 
 namespace Berry.Spider.Core;
 
@@ -12,13 +15,24 @@ public static class OfficeHelper
     /// <param name="sheetName">指定读取excel工作薄sheet的名称</param>
     /// <param name="isFirstRowColumn">第一行是否是DataTable的列名：true=是，false=否</param>
     /// <returns>DataTable数据表</returns>
-    public static DataTable? ReadExcelToDataTable(string fileName, string sheetName = "", bool isFirstRowColumn = true)
+    public static DataTable? ReadFromExcel(string fileName, string sheetName = "", bool isFirstRowColumn = true)
     {
         if (!File.Exists(fileName)) return null;
 
         //根据指定路径读取文件
-        FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+        using FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
         return ReadStreamToDataTable(fs, sheetName, isFirstRowColumn);
+    }
+
+    /// <summary>
+    /// 传入固定格式的数据，生成Excel workbook再写入到基于内存的流里边去
+    /// </summary>
+    /// <returns></returns>
+    public static void WriteToExcel(List<ExcelDataResource> dataResources, string saveToFileName)
+    {
+        IWorkbook workbook = DataToHSSFWorkbook(dataResources);
+        using FileStream fs = new FileStream(saveToFileName, FileMode.Create, FileAccess.Write);
+        workbook.Write(fs);
     }
 
     /// <summary>
@@ -28,9 +42,9 @@ public static class OfficeHelper
     /// <param name="sheetName">指定读取excel工作薄sheet的名称</param>
     /// <param name="isFirstRowColumn">第一行是否是DataTable的列名：true=是，false=否</param>
     /// <returns>DataTable数据表</returns>
-    public static DataTable? ReadStreamToDataTable(Stream fileStream, string sheetName = "", bool isFirstRowColumn = true)
+    private static DataTable ReadStreamToDataTable(Stream fileStream, string sheetName = "", bool isFirstRowColumn = true)
     {
-        DataTable? data = new DataTable();
+        DataTable data = new DataTable();
         try
         {
             //excel工作表
@@ -124,4 +138,87 @@ public static class OfficeHelper
             throw;
         }
     }
+
+    /// <summary>
+    /// 给定固定格式的数据，可以生成Excel
+    /// </summary>
+    /// <returns></returns>
+    private static IWorkbook DataToHSSFWorkbook(List<ExcelDataResource> dataResources)
+    {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        //每循环一次就生成一个Sheet页出来
+        foreach (var sheetResource in dataResources)
+        {
+            if (sheetResource.Rows is { Count: 0 })
+            {
+                break;
+            }
+
+            //创建一个页签
+            ISheet sheet = workbook.CreateSheet(sheetResource.SheetName);
+            //确定当前这一页有多少列---取决保存当前Sheet页数据的实体属性中的标记的特性
+            object obj = sheetResource.Rows[0];
+
+            //获取需要导出的所有的列
+            Type type = obj.GetType();
+            List<PropertyInfo> propList = type.GetProperties().Where(c => c.IsDefined(typeof(DescriptionAttribute), true)).ToList();
+
+            //确定表头在哪一行生成
+            int rownum = 0;
+            if (sheetResource.RowNum >= 0)
+            {
+                rownum = sheetResource.RowNum - 1;
+            }
+
+            //基于当前的这个Sheet创建表头
+            IRow titleRow = sheet.CreateRow(rownum);
+
+            ICellStyle style = workbook.CreateCellStyle();
+            style.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.Grey25Percent.Index;
+            style.FillPattern = FillPattern.SolidForeground;
+            style.FillBackgroundColor = NPOI.HSSF.Util.HSSFColor.Automatic.Index;
+
+            style.Alignment = HorizontalAlignment.Center;
+            style.VerticalAlignment = VerticalAlignment.Center;
+            titleRow.Height = 100 * 4;
+            //给表头行，分别创建单元格，并赋值字段的名称
+            for (int i = 0; i < propList.Count; i++)
+            {
+                DescriptionAttribute? propertyAttribute = propList[i].GetCustomAttribute<DescriptionAttribute>();
+                ICell cell = titleRow.CreateCell(i);
+                cell.SetCellValue(propertyAttribute?.Description);
+                cell.CellStyle = style;
+            }
+
+            //去生成数据
+            for (int i = 0; i < sheetResource.Rows.Count; i++)
+            {
+                IRow row = sheet.CreateRow(i + rownum + 1);
+                object objInstance = sheetResource.Rows[i];
+                for (int j = 0; j < propList.Count(); j++)
+                {
+                    ICell cell = row.CreateCell(j);
+                    cell.SetCellValue(propList[j].GetValue(objInstance)?.ToString());
+                }
+            }
+        }
+
+        return workbook;
+    }
+}
+
+public class ExcelDataResource
+{
+    public string SheetName { get; set; }
+    public int RowNum { get; set; }
+    public List<ExcelDataRow> Rows { get; set; }
+}
+
+public class ExcelDataRow
+{
+    [Description("Title")]
+    public string Title { get; set; }
+    
+    [Description("Content")]
+    public string Content { get; set; }
 }

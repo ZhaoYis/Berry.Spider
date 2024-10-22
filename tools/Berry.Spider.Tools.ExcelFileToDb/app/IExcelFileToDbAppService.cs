@@ -8,4 +8,6 @@ namespace Berry.Spider.Tools.ExcelFileToDb;
 public interface IExcelFileToDbAppService : ITransientDependency
 {
     Task RunAsync();
+
+    Task ExportToExcelAsync();
 }
