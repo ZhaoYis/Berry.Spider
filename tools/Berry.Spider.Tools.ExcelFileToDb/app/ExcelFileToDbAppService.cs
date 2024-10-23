@@ -101,8 +101,8 @@ public class ExcelFileToDbAppService : IExcelFileToDbAppService
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
                     //组装数据
-                    string title = dt.Rows[i][1].ToString();
-                    string content = dt.Rows[i][2].ToString();
+                    string? title = dt.Rows[i][1].ToString();
+                    string? content = dt.Rows[i][2].ToString();
 
                     if (!string.IsNullOrWhiteSpace(title) && !string.IsNullOrWhiteSpace(content))
                     {

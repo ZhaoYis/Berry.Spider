@@ -217,8 +217,8 @@ public class ExcelDataResource
 public class ExcelDataRow
 {
     [Description("Title")]
-    public string Title { get; set; }
+    public string? Title { get; set; }
     
     [Description("Content")]
-    public string Content { get; set; }
+    public string? Content { get; set; }
 }
