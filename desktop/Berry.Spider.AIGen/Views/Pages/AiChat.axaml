@@ -26,6 +26,7 @@
                                 Command="{Binding AskAiCommand}"
                                 Content="问AI"
                                 Margin="10" />
+                            <CheckBox Content="启用聊天" IsChecked="{Binding IsEnableChat}"></CheckBox>
                         </StackPanel>
                         <TextBox
                             AcceptsReturn="True"

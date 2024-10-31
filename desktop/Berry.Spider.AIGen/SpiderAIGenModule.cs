@@ -1,6 +1,6 @@
 using AgileConfig.Client;
 using Berry.Spider.AIGen.Views;
-using Berry.Spider.SemanticKernel.Ollama.Qwen;
+using Berry.Spider.SemanticKernel.Ollama;
 using Berry.Spider.SemanticKernel.Plugins;
 using Berry.Spider.SemanticKernel.Shared;
 using Microsoft.Extensions.Configuration;
@@ -17,9 +17,10 @@ namespace Berry.Spider.AIGen;
 #pragma warning disable SKEXP0010
 
 [DependsOn(typeof(AbpAutofacModule),
-    typeof(SpiderSKOllamaQwenModule),
     typeof(SpiderSKSharedModule),
-    typeof(SpiderSKPluginModule))]
+    typeof(SpiderSKPluginModule),
+    typeof(SpiderSKOllamaModule)
+)]
 public class SpiderAIGenModule : AbpModule
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)
