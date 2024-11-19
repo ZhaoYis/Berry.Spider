@@ -59,7 +59,7 @@ jobs:
         shell: pwsh
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: Berry.Spider.Consumers
           path: ${{ github.workspace }}/publish/Berry.Spider.Consumers-v${{ github.run_number }}.zip
