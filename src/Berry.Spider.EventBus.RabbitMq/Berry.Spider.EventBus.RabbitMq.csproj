@@ -1,18 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
 	    <TieredPGO>true</TieredPGO>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="DotNetCore.CAP.Dashboard" Version="8.0.0" />
-      <PackageReference Include="DotNetCore.CAP.MongoDB" Version="8.0.0" />
-      <PackageReference Include="DotNetCore.CAP.MySql" Version="8.0.0" />
-      <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="8.0.0" />
-      <PackageReference Include="Volo.Abp.Core" Version="8.0.2" />
+      <PackageReference Include="DotNetCore.CAP.Dashboard" Version="8.3.2-preview-248100009" />
+      <PackageReference Include="DotNetCore.CAP.MongoDB" Version="8.3.2-preview-248100009" />
+      <PackageReference Include="DotNetCore.CAP.MySql" Version="8.3.2-preview-248100009" />
+      <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="8.3.2-preview-248100009" />
+      <PackageReference Include="Volo.Abp.Core" Version="9.0.0-rc.3" />
     </ItemGroup>
 
     <ItemGroup>
