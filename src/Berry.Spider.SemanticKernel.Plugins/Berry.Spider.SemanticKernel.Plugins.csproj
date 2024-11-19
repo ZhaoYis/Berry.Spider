@@ -9,7 +9,7 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.29.0" />
       <PackageReference Include="Microsoft.SemanticKernel.Plugins.Web" Version="1.29.0-alpha" />
-      <PackageReference Include="Volo.Abp.Core" Version="9.0.0-rc.3" />
+      <PackageReference Include="Volo.Abp.Core" Version="9.0.0" />
     </ItemGroup>
 
 </Project>

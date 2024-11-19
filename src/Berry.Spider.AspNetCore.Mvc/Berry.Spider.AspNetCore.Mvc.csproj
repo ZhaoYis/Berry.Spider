@@ -13,8 +13,8 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-      <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="9.0.0-rc.3" />
-      <PackageReference Include="Volo.Abp.Core" Version="9.0.0-rc.3" />
+      <PackageReference Include="Volo.Abp.AspNetCore.Mvc" Version="9.0.0" />
+      <PackageReference Include="Volo.Abp.Core" Version="9.0.0" />
     </ItemGroup>
 
     <ItemGroup>
