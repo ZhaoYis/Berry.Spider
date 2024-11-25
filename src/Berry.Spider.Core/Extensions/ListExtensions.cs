@@ -25,28 +25,26 @@ public static class ListExtensions
             {
                 if (string.IsNullOrEmpty(originalTitle))
                 {
-                    for (int i = 0; i < items.Count; i++)
+                    foreach (var (index, item) in items.Index())
                     {
-                        string item = items[i];
-                        builder.AppendFormat("<p>{0}、{1}</p>", i + 1, item);
+                        builder.AppendFormat("<p>{0}、{1}</p>", index + 1, item);
                     }
                 }
                 else
                 {
                     //将原标题每隔一定记录加到最上面部分
-                    for (int i = 0; i < items.Count; i++)
+                    foreach (var (index, item) in items.Index())
                     {
                         //分段标题
                         if (options.SectionTitleOptions.IsEnable)
                         {
-                            if (i % _pageSize == 0)
+                            if (index % _pageSize == 0)
                             {
                                 builder.AppendFormat("<p><strong>{0}</strong></p>", originalTitle);
                             }
                         }
 
-                        string item = items[i];
-                        builder.AppendFormat("<p>{0}、{1}</p>", i + 1, item);
+                        builder.AppendFormat("<p>{0}、{1}</p>", index + 1, item);
                     }
                 }
             }
@@ -62,10 +60,9 @@ public static class ListExtensions
                         builder.AppendFormat("<p id='{0}'><strong>{0}</strong></p>", subTitle);
                     }
 
-                    for (int i = 0; i < items.Count; i++)
+                    foreach (var (index, item) in items.Index())
                     {
-                        string item = items[i];
-                        builder.AppendFormat("<p>{0}、{1}</p>", i + 1, item);
+                        builder.AppendFormat("<p>{0}、{1}</p>", index + 1, item);
                     }
                 }
                 else
@@ -88,19 +85,18 @@ public static class ListExtensions
                                 builder.AppendFormat("<p id='{0}'><strong>{0}</strong></p>", subTitle);
                             }
 
-                            for (int j = 0; j < current.Count; j++)
+                            foreach (var (index, item) in current.Index())
                             {
-                                string item = current[j];
-                                builder.AppendFormat("<p>{0}、{1}</p>", j + 1, item);
+                                builder.AppendFormat("<p>{0}、{1}</p>", index + 1, item);
                             }
 
                             _currentIndex++;
                         }
                         else
                         {
-                            for (int k = 0; k < current.Count; k++)
+                            foreach (var (index, item) in current.Index())
                             {
-                                if (k + 1 == current.Count / 2)
+                                if (index + 1 == current.Count / 2)
                                 {
                                     //分段标题
                                     if (options.SectionTitleOptions.IsEnable)
@@ -113,8 +109,7 @@ public static class ListExtensions
                                     }
                                 }
 
-                                string item = current[k];
-                                builder.AppendFormat("<p>{0}、{1}</p>", k + 1, item);
+                                builder.AppendFormat("<p>{0}、{1}</p>", item + 1, item);
                             }
 
                             _currentIndex++;
@@ -142,17 +137,15 @@ public static class ListExtensions
 
         string mainContent = stringBuilderObjectPoolProvider.Invoke(builder =>
         {
-            for (int i = 0; i < items.Count; i++)
+            foreach (var (index, item) in items.Index())
             {
-                string item = items[i];
-
-                if (i == items.Count / 2)
+                if (index == items.Count / 2)
                 {
                     string imageUrl = provider.TryGet();
                     builder.AppendFormat("<p><img src='{0}' alt=''></img></p>", imageUrl);
                 }
 
-                builder.AppendFormat("<p>{0}、{1}</p>", i + 1, item);
+                builder.AppendFormat("<p>{0}、{1}</p>", index + 1, item);
             }
         });
 
@@ -173,10 +166,9 @@ public static class ListExtensions
             builder.AppendLine("<h3>本文目录一览：</h3>");
             builder.AppendLine("<ul>");
 
-            for (int i = 0; i < subTitleList.Count; i++)
+            foreach (var (index, item) in subTitleList.Index())
             {
-                string item = subTitleList[i];
-                builder.AppendFormat("<li style='margin-bottom: 3px;list-style: none'><a href='#{1}' title='{1}'>{0}、{1}</a></li>", i + 1, item);
+                builder.AppendFormat("<li style='margin-bottom: 3px;list-style: none'><a href='#{1}' title='{1}'>{0}、{1}</a></li>", index + 1, item);
             }
 
             builder.AppendLine("</ul>");
