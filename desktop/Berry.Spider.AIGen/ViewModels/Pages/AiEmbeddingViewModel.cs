@@ -77,7 +77,7 @@ public partial class AiEmbeddingViewModel(Kernel kernel, ISemanticTextMemory tex
         var paragraphs = TextChunker.SplitPlainTextParagraphs(lines, 1000);
         foreach (var para in paragraphs)
         {
-            await textMemory.SaveInformationAsync(this.CollectionName, id: Guid.NewGuid().ToString(), text: para, cancellationToken: default);
+            await textMemory.SaveInformationAsync(this.CollectionName, id: Guid.CreateVersion7().ToString(), text: para, cancellationToken: default);
         }
 
         this.ShowNotificationMessage(new NotificationMessageEventArgs("温馨提示", "文本嵌入操作成功"));

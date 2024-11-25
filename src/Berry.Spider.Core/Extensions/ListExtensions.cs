@@ -82,7 +82,7 @@ public static class ListExtensions
                             if (options.SectionTitleOptions.IsEnable)
                             {
                                 string subTitle = i + 1 > subTitleList.Count
-                                    ? subTitleList.OrderBy(c => Guid.NewGuid()).First()
+                                    ? subTitleList.OrderBy(c => Guid.CreateVersion7()).First()
                                     : subTitleList[i];
                                 //加一个小标题
                                 builder.AppendFormat("<p id='{0}'><strong>{0}</strong></p>", subTitle);
@@ -106,7 +106,7 @@ public static class ListExtensions
                                     if (options.SectionTitleOptions.IsEnable)
                                     {
                                         string subTitle = i + 1 > subTitleList.Count
-                                            ? subTitleList.OrderBy(c => Guid.NewGuid()).First()
+                                            ? subTitleList.OrderBy(c => Guid.CreateVersion7()).First()
                                             : subTitleList[i];
                                         //加一个小标题
                                         builder.AppendFormat("<p id='{0}'><strong>{0}</strong></p>", subTitle);
@@ -191,7 +191,7 @@ public static class ListExtensions
     /// <returns></returns>
     public static void RandomSort<T>(this List<T> sources)
     {
-        Random rd = new Random(Guid.NewGuid().GetHashCode());
+        Random rd = new Random(Guid.CreateVersion7().GetHashCode());
         for (int i = 0; i < sources.Count - 1; i++)
         {
             var index = rd.Next(0, sources.Count - 1);

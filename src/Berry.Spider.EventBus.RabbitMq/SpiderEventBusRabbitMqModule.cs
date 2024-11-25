@@ -94,7 +94,7 @@ public class SpiderEventBusRabbitMqModule : AbpModule
         ConsulOptions? consulOptions = configuration.GetSection(nameof(ConsulOptions)).Get<ConsulOptions>();
         if (consulOptions is { IsEnabled: true })
         {
-            string nodeId = Guid.NewGuid().ToString("N");
+            string nodeId = Guid.CreateVersion7().ToString("N");
             string nodeName = "Consumer_" + nodeId;
             opt.UseConsulDiscovery(d =>
             {

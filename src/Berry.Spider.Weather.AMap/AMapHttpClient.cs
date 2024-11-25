@@ -23,7 +23,7 @@ public class AMapHttpClient
     /// <returns></returns>
     public async Task<AMapWeatherInfoDTO?> GetWeatherInfoAsync([NotNull] string adcode)
     {
-        string uri = $"v3/weather/weatherInfo?key={_options.Keys.OrderBy(key => Guid.NewGuid()).First()}&city={adcode}&extensions=all";
+        string uri = $"v3/weather/weatherInfo?key={_options.Keys.OrderBy(key => Guid.CreateVersion7()).First()}&city={adcode}&extensions=all";
         AMapWeatherInfoDTO? result = await _httpClient.GetFromJsonAsync<AMapWeatherInfoDTO>(uri);
         return result;
     }

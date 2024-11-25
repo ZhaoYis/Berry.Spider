@@ -44,7 +44,7 @@ public class CommonController : SpiderControllerBase
 
                         FileContentResult result = new FileContentResult(stream.GetBuffer(), "text/plain")
                         {
-                            FileDownloadName = Guid.NewGuid().ToString("N") + ".txt"
+                            FileDownloadName = Guid.CreateVersion7().ToString("N") + ".txt"
                         };
 
                         return result;
