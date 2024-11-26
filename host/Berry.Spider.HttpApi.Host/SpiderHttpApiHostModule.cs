@@ -182,7 +182,7 @@ public class SpiderHttpApiHostModule : AbpModule
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "Spider API");
             options.DocExpansion(DocExpansion.None);
-            
+
             var configuration = context.GetConfiguration();
             options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
             options.OAuthScopes("Spider");
