@@ -21,12 +21,12 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="9.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
-        <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
-        <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.4" />
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0-dev-02303" />
+        <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0-dev-02304" />
         <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.0.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
         <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="9.0.0" />
         <PackageReference Include="Volo.Abp.Autofac" Version="9.0.0" />
         <PackageReference Include="Volo.Abp.Caching.StackExchangeRedis" Version="9.0.0" />
