@@ -2,6 +2,8 @@ using Berry.Spider.Core;
 using Berry.Spider.Domain;
 using Microsoft.Extensions.Logging;
 using System.Data;
+using System.Xml.XPath;
+using HtmlAgilityPack;
 
 namespace Berry.Spider.Tools.ExcelFileToDb;
 
@@ -127,5 +129,73 @@ public class ExcelFileToDbAppService : IExcelFileToDbAppService
 
         OfficeHelper.WriteToExcel(worksheets, Path.Combine(filePath, $"{DateTime.Now:yyyyMMddHHmmssfff}.xlsx"));
         return Task.CompletedTask;
+    }
+
+    public async Task CleanAndExportToExcelAsync()
+    {
+        string filePath = Path.Combine("/");
+        // 递归获取文件路径下的所有文件
+        var files = Directory.GetFiles(filePath, "*.php", SearchOption.AllDirectories);
+        List<ExcelDataResource> worksheets = new List<ExcelDataResource>();
+        List<ExcelDataRow> rows = new List<ExcelDataRow>(100_00);
+        HtmlDocument doc = new HtmlDocument();
+        foreach (string file in files)
+        {
+            doc.Load(file);
+            HtmlNode rootNode = doc.DocumentNode;
+
+            if (rootNode.InnerText.Contains("的拼音,读音,繁体,注音,火星文,平调拼音"))
+            {
+                // 删除所有 <audio> 标签
+                foreach (var audioNode in rootNode.SelectNodes("//audio") ?? new HtmlNodeCollection(null))
+                {
+                    audioNode.Remove();
+                }
+
+                // 删除所有 <img> 标签
+                foreach (var imgNode in rootNode.SelectNodes("//img") ?? new HtmlNodeCollection(null))
+                {
+                    imgNode.Remove();
+                }
+
+                // 删除最后一个 <p> 标签
+                var pNodes = rootNode.LastChild;
+                pNodes.Remove();
+
+                //标题
+                string? title = rootNode.FirstChild.InnerText;
+                title = title.Replace("的拼音,读音,繁体,注音,火星文,平调拼音", "");
+                title = $"{title}的拼音读音-{title}的意思及解释";
+                rootNode.FirstChild.Remove();
+                //内容
+                var newPNode = HtmlNode.CreateNode($"<p>{title}</p>");
+                rootNode.PrependChild(newPNode);
+                string? content = rootNode.OuterHtml;
+
+                if (!string.IsNullOrWhiteSpace(title) && !string.IsNullOrWhiteSpace(content))
+                {
+                    rows.Add(new ExcelDataRow
+                    {
+                        Title = title,
+                        Content = content
+                    });
+                }
+
+                Console.WriteLine(@"标题：[{0}]处理成功", title);
+            }
+
+            if (rows.Count == 100_00)
+            {
+                worksheets.Add(new ExcelDataResource
+                {
+                    SheetName = "Sheet1",
+                    RowNum = 1,
+                    Rows = rows
+                });
+                OfficeHelper.WriteToExcel(worksheets, Path.Combine(filePath, $"{DateTime.Now:yyyyMMddHHmmssfff}.xlsx"));
+                rows.Clear();
+                worksheets.Clear();
+            }
+        }
     }
 }

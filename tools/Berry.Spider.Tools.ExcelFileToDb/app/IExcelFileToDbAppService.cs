@@ -10,4 +10,10 @@ public interface IExcelFileToDbAppService : ITransientDependency
     Task RunAsync();
 
     Task ExportToExcelAsync();
+    
+    /// <summary>
+    /// 清理*.php文件并导出到excel
+    /// </summary>
+    /// <returns></returns>
+    Task CleanAndExportToExcelAsync();
 }

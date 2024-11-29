@@ -34,7 +34,8 @@ public class ExcelFileToDbHostedService : IHostedService
 
         //启动服务
         //await _abpApplication.ServiceProvider.GetRequiredService<IExcelFileToDbAppService>().RunAsync();
-        await _abpApplication.ServiceProvider.GetRequiredService<IExcelFileToDbAppService>().ExportToExcelAsync();
+        // await _abpApplication.ServiceProvider.GetRequiredService<IExcelFileToDbAppService>().ExportToExcelAsync();
+        await _abpApplication.ServiceProvider.GetRequiredService<IExcelFileToDbAppService>().CleanAndExportToExcelAsync();
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
