@@ -3,7 +3,6 @@ using Berry.Spider.AI.TextGeneration.Commands;
 using Berry.Spider.Core.Commands;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.NaiPan;
-using Berry.Spider.SemanticKernel.Ollama.Qwen;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,8 +17,7 @@ namespace Berry.Spider.AI.TextGeneration;
 [DependsOn(
     typeof(AbpAutofacModule),
     typeof(SpiderEntityFrameworkCoreModule),
-    typeof(SpiderNaiPanModule),
-    typeof(SpiderSKOllamaQwenModule)
+    typeof(SpiderNaiPanModule)
 )]
 public class AITextGenerationModule : AbpModule
 {

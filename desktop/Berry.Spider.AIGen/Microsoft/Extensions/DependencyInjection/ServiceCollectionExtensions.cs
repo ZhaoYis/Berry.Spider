@@ -1,9 +1,6 @@
 using System;
-using System.Net.Http;
 using AgileConfig.Client;
-using Berry.Spider.AIGen;
 using Berry.Spider.SemanticKernel.Ollama;
-using Berry.Spider.SemanticKernel.Ollama.Qwen;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Sqlite;
 using Microsoft.SemanticKernel.Embeddings;
@@ -17,6 +14,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 #pragma warning disable SKEXP0001
 #pragma warning disable SKEXP0020
 #pragma warning disable SKEXP0010
+#pragma warning disable SKEXP0070
 
 public static class ServiceCollectionExtensions
 {
@@ -29,15 +27,27 @@ public static class ServiceCollectionExtensions
 
         string serviceAddr = client.Get("OllamaOptions:ServiceAddr");
         string modelId = client.Get("OllamaQwenOptions:ModelId");
+        string embeddingModelId = client.Get("OllamaQwenOptions:EmbeddingModelId");
         services.AddTransient<Kernel>(serviceProvider =>
         {
-            var handler = new OpenAIHttpClientHandler(serviceAddr);
-            var builder = Kernel.CreateBuilder().AddOpenAIChatCompletion(
-                modelId: modelId,
-                endpoint: new Uri(serviceAddr),
-                apiKey: null,
-                httpClient: new HttpClient(handler)
-            );
+            //var handler = new OpenAIHttpClientHandler(serviceAddr);
+            // var builder = Kernel.CreateBuilder().AddOpenAIChatCompletion(
+            //     modelId: modelId,
+            //     endpoint: new Uri(serviceAddr),
+            //     apiKey: null,
+            //     httpClient: new HttpClient(handler)
+            // );
+
+            var builder = Kernel.CreateBuilder()
+                .AddOllamaChatCompletion(
+                    modelId: modelId,
+                    endpoint: new Uri(serviceAddr))
+                .AddOllamaTextGeneration(
+                    modelId: modelId,
+                    endpoint: new Uri(serviceAddr))
+                .AddOllamaTextEmbeddingGeneration(
+                    modelId: embeddingModelId,
+                    endpoint: new Uri(serviceAddr));
 
             //注入自定义插件
             builder.Plugins.AddPlugins();
@@ -53,8 +63,9 @@ public static class ServiceCollectionExtensions
     {
         services.AddTransient<ISemanticTextMemory>(serviceProvider =>
         {
+            Kernel kernel = serviceProvider.GetRequiredService<Kernel>();
+            ITextEmbeddingGenerationService tegService = kernel.Services.GetRequiredService<ITextEmbeddingGenerationService>();
             var memoryBuilder = new MemoryBuilder();
-            ITextEmbeddingGenerationService tegService = serviceProvider.GetRequiredService<ITextEmbeddingGenerationService>();
             memoryBuilder.WithTextEmbeddingGeneration(tegService);
             IMemoryStore memoryStore = AsyncHelper.RunSync(async () => await SqliteMemoryStore.ConnectAsync("memstore.db"));
             memoryBuilder.WithMemoryStore(memoryStore);

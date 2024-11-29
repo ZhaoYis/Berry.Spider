@@ -9,6 +9,7 @@ public class SpiderSKOllamaModule : AbpModule
     {
         var configuration = context.Services.GetConfiguration();
 
-        context.Services.Configure<OllamaOptions>(configuration.GetSection(nameof(OllamaOptions)));
+        // context.Services.Configure<OllamaOptions>(configuration.GetSection(nameof(OllamaOptions)));
+        // context.Services.Configure<OllamaQwenOptions>(configuration.GetSection(nameof(OllamaQwenOptions)));
     }
 }
