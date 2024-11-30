@@ -13,6 +13,7 @@
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
       <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.21.1" />
       <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.21.1" />
+      <PackageReference Include="OllamaSharp" Version="3.0.12" />
       <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
       <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.1-dev-10370" />
       <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
@@ -32,6 +33,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\src\Berry.Spider.Domain\Berry.Spider.Domain.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj" />
+      <ProjectReference Include="..\..\src\Berry.Spider.SemanticKernel.Ollama\Berry.Spider.SemanticKernel.Ollama.csproj" />
     </ItemGroup>
 
     <ItemGroup>

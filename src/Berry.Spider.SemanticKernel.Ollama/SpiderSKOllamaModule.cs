@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel.TextGeneration;
 using Volo.Abp.Modularity;
 
 namespace Berry.Spider.SemanticKernel.Ollama;
@@ -9,7 +10,6 @@ public class SpiderSKOllamaModule : AbpModule
     {
         var configuration = context.Services.GetConfiguration();
 
-        // context.Services.Configure<OllamaOptions>(configuration.GetSection(nameof(OllamaOptions)));
-        // context.Services.Configure<OllamaQwenOptions>(configuration.GetSection(nameof(OllamaQwenOptions)));
+        context.Services.AddSingleton<ITextGenerationService, OllamaQwenTextGenerationService>();
     }
 }

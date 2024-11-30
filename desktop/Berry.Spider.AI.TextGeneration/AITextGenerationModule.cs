@@ -3,6 +3,7 @@ using Berry.Spider.AI.TextGeneration.Commands;
 using Berry.Spider.Core.Commands;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.NaiPan;
+using Berry.Spider.SemanticKernel.Ollama;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +18,8 @@ namespace Berry.Spider.AI.TextGeneration;
 [DependsOn(
     typeof(AbpAutofacModule),
     typeof(SpiderEntityFrameworkCoreModule),
-    typeof(SpiderNaiPanModule)
+    typeof(SpiderNaiPanModule),
+    typeof(SpiderSKOllamaModule)
 )]
 public class AITextGenerationModule : AbpModule
 {
@@ -53,6 +55,9 @@ public class AITextGenerationModule : AbpModule
             return new Kernel(serviceProvider, pluginCollection);
         });
 
+        context.Services.Configure<OllamaOptions>(configuration.GetSection(nameof(OllamaOptions)));
+        context.Services.Configure<OllamaQwenOptions>(configuration.GetSection(nameof(OllamaQwenOptions)));
+        
         // context.Services.AddTransient(serviceProvider =>
         // {
         //     var kernel = Kernel.CreateBuilder()
