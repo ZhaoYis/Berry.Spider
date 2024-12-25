@@ -43,7 +43,7 @@ public class ServAppHostedService : IHostedService
                         Data = new AppClientInfo
                         {
                             MachineName = DnsHelper.GetHostName(),
-                            MachineCode = $"{MachineGroupCode.App.GetName()}_{Guid.NewGuid().ToString("N")[..10]}",
+                            MachineCode = $"{MachineGroupCode.App.GetName()}_{Guid.CreateVersion7().ToString("N")[..10]}",
                             MachineIpAddr = DnsHelper.GetIpV4s(),
                             MachineMacAddr = DnsHelper.GetMacAddress(),
                             ConnectionId = _connection.ConnectionId

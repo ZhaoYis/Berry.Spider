@@ -26,7 +26,7 @@ public class FileHelper
 
             using (StreamReader reader = new StreamReader(filePath))
             {
-                Random random = new Random(Guid.NewGuid().GetHashCode());
+                Random random = new Random(Guid.CreateVersion7().GetHashCode());
                 string? row = (await reader.ReadLineAsync())?.Trim();
                 while (!string.IsNullOrEmpty(row))
                 {

@@ -40,7 +40,7 @@ public class ServAgentHostedService : IHostedService
                         Data = new AgentClientInfo
                         {
                             MachineName = DnsHelper.GetHostName(),
-                            MachineCode = $"{MachineGroupCode.Agent.GetName()}_{Guid.NewGuid().ToString("N")[..10]}",
+                            MachineCode = $"{MachineGroupCode.Agent.GetName()}_{Guid.CreateVersion7().ToString("N")[..10]}",
                             MachineIpAddr = DnsHelper.GetIpV4s(),
                             MachineMacAddr = DnsHelper.GetMacAddress(),
                             ConnectionId = _connection.ConnectionId

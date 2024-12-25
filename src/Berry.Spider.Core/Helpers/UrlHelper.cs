@@ -12,7 +12,7 @@ public static partial class UrlHelper
     {
         try
         {
-            Regex regex = HostRegex();
+            Regex regex = new Regex(@"^([a-zA-Z0-9]+:\/\/)?([0-9a-zA-Z-.]+)(:\d+)?(\/.*)?$");
             if (regex.Match(url).Success)
             {
                 return regex.Match(url).Groups[2].Value;
@@ -32,13 +32,7 @@ public static partial class UrlHelper
     /// <returns></returns>
     public static bool IsUrl(string source)
     {
-        Regex regex = UrlRegex();
+        Regex regex = new Regex(@"^(http?|https?|ftp):\/\/[^\s\/$.?#].[^\s]*$");
         return regex.Match(source).Success;
     }
-
-    [GeneratedRegex(@"^([a-zA-Z0-9]+:\/\/)?([0-9a-zA-Z-.]+)(:\d+)?(\/.*)?$")]
-    private static partial Regex HostRegex();
-
-    [GeneratedRegex(@"^(http?|https?|ftp):\/\/[^\s\/$.?#].[^\s]*$")]
-    private static partial Regex UrlRegex();
 }

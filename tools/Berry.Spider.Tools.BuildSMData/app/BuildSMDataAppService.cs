@@ -86,7 +86,7 @@ public class BuildSMDataAppService : IBuildSMDataAppService
         }
 
         //获取内容
-        temp = temp.Where(c => !string.IsNullOrWhiteSpace(c)).OrderBy(c => Guid.NewGuid()).ToList();
+        temp = temp.Where(c => !string.IsNullOrWhiteSpace(c)).OrderBy(c => Guid.CreateVersion7()).ToList();
         ListHelper listHelper = new ListHelper(temp, 50);
 
         //保存
@@ -98,7 +98,7 @@ public class BuildSMDataAppService : IBuildSMDataAppService
             //神马词
             string smWord = smWords[i];
             //随机获取一个获取固定词
-            Random fixedRandom = new Random(Guid.NewGuid().GetHashCode());
+            Random fixedRandom = new Random(Guid.CreateVersion7().GetHashCode());
             string fixedWord = fixedWords[fixedRandom.Next(0, fixedWords.Count - 1)];
 
             //组装新的标题
@@ -108,7 +108,7 @@ public class BuildSMDataAppService : IBuildSMDataAppService
             string todoItem = "";
             while (string.IsNullOrEmpty(todoItem))
             {
-                todoItem = todoSaveItems.OrderBy(c => Guid.NewGuid()).FirstOrDefault();
+                todoItem = todoSaveItems.OrderBy(c => Guid.CreateVersion7()).FirstOrDefault();
             }
 
             string remark = todoItem.Length >= 10
@@ -133,7 +133,7 @@ public class BuildSMDataAppService : IBuildSMDataAppService
                 List<string> names = this.AbstractTemplateOptions.Templates.Select(c => c.Name).ToList();
                 if (names.Count > 0)
                 {
-                    int index = new Random(Guid.NewGuid().GetHashCode()).Next(0, names.Count - 1);
+                    int index = new Random(Guid.CreateVersion7().GetHashCode()).Next(0, names.Count - 1);
                     string titleTemplateName = names[index];
 
                     //摘要
@@ -141,7 +141,7 @@ public class BuildSMDataAppService : IBuildSMDataAppService
                     {
                         smWord = smWord,
                         fixedWord = fixedWord,
-                        remark = string.Join(",", todoSaveItems.OrderBy(c => Guid.NewGuid()).Take(3))
+                        remark = string.Join(",", todoSaveItems.OrderBy(c => Guid.CreateVersion7()).Take(3))
                     });
 
                     builder.Insert(0, text);

@@ -6,18 +6,18 @@
         <Nullable>enable</Nullable>
         <RootNamespace>Berry.Spider.Admin</RootNamespace>
         <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Volo.Abp.Identity.Domain.Shared" Version="8.0.2" />
-        <PackageReference Include="Volo.Abp.BackgroundJobs.Domain.Shared" Version="8.0.2" />
-        <PackageReference Include="Volo.Abp.AuditLogging.Domain.Shared" Version="8.0.2" />
-        <PackageReference Include="Volo.Abp.TenantManagement.Domain.Shared" Version="8.0.2" />
-        <PackageReference Include="Volo.Abp.FeatureManagement.Domain.Shared" Version="8.0.2" />
-        <PackageReference Include="Volo.Abp.PermissionManagement.Domain.Shared" Version="8.0.2" />
-        <PackageReference Include="Volo.Abp.SettingManagement.Domain.Shared" Version="8.0.2" />
-        <PackageReference Include="Volo.Abp.OpenIddict.Domain.Shared" Version="8.0.2" />
+        <PackageReference Include="Volo.Abp.Identity.Domain.Shared" Version="9.0.1" />
+        <PackageReference Include="Volo.Abp.BackgroundJobs.Domain.Shared" Version="9.0.1" />
+        <PackageReference Include="Volo.Abp.AuditLogging.Domain.Shared" Version="9.0.1" />
+        <PackageReference Include="Volo.Abp.TenantManagement.Domain.Shared" Version="9.0.1" />
+        <PackageReference Include="Volo.Abp.FeatureManagement.Domain.Shared" Version="9.0.1" />
+        <PackageReference Include="Volo.Abp.PermissionManagement.Domain.Shared" Version="9.0.1" />
+        <PackageReference Include="Volo.Abp.SettingManagement.Domain.Shared" Version="9.0.1" />
+        <PackageReference Include="Volo.Abp.OpenIddict.Domain.Shared" Version="9.0.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -26,7 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.1" />
+        <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="9.0.0" />
     </ItemGroup>
 
 </Project>

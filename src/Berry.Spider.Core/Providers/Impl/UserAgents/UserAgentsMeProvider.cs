@@ -29,7 +29,7 @@ public class UserAgentsMeProvider : IUserAgentProvider
     /// <returns></returns>
     public async Task<string> GetOnesAsync()
     {
-        Random random = new Random(Guid.NewGuid().GetHashCode());
+        Random random = new Random(Guid.CreateVersion7().GetHashCode());
 
         var cache = await _distributedCache.GetAsync(UserAgentsMeCacheKey);
         if (cache is { UaPools: { Count: > 0 } })

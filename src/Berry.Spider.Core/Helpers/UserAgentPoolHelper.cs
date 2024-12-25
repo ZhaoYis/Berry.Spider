@@ -23,7 +23,7 @@ public static class UserAgentPoolHelper
     {
         if (UserAgentList is { Count: > 0 })
         {
-            return UserAgentList.OrderBy(u => Guid.NewGuid()).First().ua;
+            return UserAgentList.OrderBy(u => Guid.CreateVersion7()).First().ua;
         }
 
         return "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36";
