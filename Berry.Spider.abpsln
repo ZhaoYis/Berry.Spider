@@ -1,0 +1,9 @@
+{
+  "id": "df1c7580-e73a-4c62-a250-9dbab2ecc20a",
+  "template": "empty",
+  "modules": {
+    "Berry.Spider": {
+      "path": "Berry.Spider.abpmdl"
+    }
+  }
+}

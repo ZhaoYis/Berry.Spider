@@ -1,0 +1,316 @@
+{
+  "folders": {
+    "items": {
+      "src": {},
+      "host": {},
+      "test": {},
+      "desktop": {},
+      "admin": {
+        "items": {
+          "host": {},
+          "src": {}
+        }
+      },
+      "tools": {},
+      "template": {}
+    }
+  },
+  "packages": {
+    "Berry.Spider.Core": {
+      "path": "src/Berry.Spider.Core/Berry.Spider.Core.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.TouTiao": {
+      "path": "src/Berry.Spider.TouTiao/Berry.Spider.TouTiao.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Proxy.Local": {
+      "path": "src/Berry.Spider.Proxy.Local/Berry.Spider.Proxy.Local.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.TouTiao.Contracts": {
+      "path": "src/Berry.Spider.TouTiao.Contracts/Berry.Spider.TouTiao.Contracts.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.EntityFrameworkCore": {
+      "path": "src/Berry.Spider.EntityFrameworkCore/Berry.Spider.EntityFrameworkCore.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Domain": {
+      "path": "src/Berry.Spider.Domain/Berry.Spider.Domain.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Domain.Shared": {
+      "path": "src/Berry.Spider.Domain.Shared/Berry.Spider.Domain.Shared.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Application.Contracts": {
+      "path": "src/Berry.Spider.Application.Contracts/Berry.Spider.Application.Contracts.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.HttpApi": {
+      "path": "src/Berry.Spider.HttpApi/Berry.Spider.HttpApi.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.HttpApi.Host": {
+      "path": "host/Berry.Spider.HttpApi.Host/Berry.Spider.HttpApi.Host.abppkg",
+      "folder": "host"
+    },
+    "Berry.Spider.Application": {
+      "path": "src/Berry.Spider.Application/Berry.Spider.Application.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Baidu.Contracts": {
+      "path": "src/Berry.Spider.Baidu.Contracts/Berry.Spider.Baidu.Contracts.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Baidu": {
+      "path": "src/Berry.Spider.Baidu/Berry.Spider.Baidu.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Tests": {
+      "path": "test/Berry.Spider.Tests/Berry.Spider.Tests.abppkg",
+      "folder": "test"
+    },
+    "Berry.Spider.AspNetCore.Mvc": {
+      "path": "src/Berry.Spider.AspNetCore.Mvc/Berry.Spider.AspNetCore.Mvc.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Mmonly": {
+      "path": "src/Berry.Spider.Mmonly/Berry.Spider.Mmonly.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Mmonly.Contracts": {
+      "path": "src/Berry.Spider.Mmonly.Contracts/Berry.Spider.Mmonly.Contracts.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Sogou.Contracts": {
+      "path": "src/Berry.Spider.Sogou.Contracts/Berry.Spider.Sogou.Contracts.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Sogou": {
+      "path": "src/Berry.Spider.Sogou/Berry.Spider.Sogou.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Proxy.Abstractions": {
+      "path": "src/Berry.Spider.Proxy.Abstractions/Berry.Spider.Proxy.Abstractions.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Proxy.QgNet": {
+      "path": "src/Berry.Spider.Proxy.QgNet/Berry.Spider.Proxy.QgNet.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Proxy": {
+      "path": "src/Berry.Spider.Proxy/Berry.Spider.Proxy.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.FreeRedis": {
+      "path": "src/Berry.Spider.FreeRedis/Berry.Spider.FreeRedis.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.EventBus.RabbitMq": {
+      "path": "src/Berry.Spider.EventBus.RabbitMq/Berry.Spider.EventBus.RabbitMq.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.EventBus": {
+      "path": "src/Berry.Spider.EventBus/Berry.Spider.EventBus.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Segmenter": {
+      "path": "src/Berry.Spider.Segmenter/Berry.Spider.Segmenter.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Segmenter.JiebaNet": {
+      "path": "src/Berry.Spider.Segmenter.JiebaNet/Berry.Spider.Segmenter.JiebaNet.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.XxlJob": {
+      "path": "src/Berry.Spider.XxlJob/Berry.Spider.XxlJob.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.XxlJob.JobHandler": {
+      "path": "src/Berry.Spider.XxlJob.JobHandler/Berry.Spider.XxlJob.JobHandler.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.OpenAI": {
+      "path": "src/Berry.Spider.OpenAI/Berry.Spider.OpenAI.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.OpenAI.Application": {
+      "path": "src/Berry.Spider.OpenAI.Application/Berry.Spider.OpenAI.Application.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.OpenAI.Contracts": {
+      "path": "src/Berry.Spider.OpenAI.Contracts/Berry.Spider.OpenAI.Contracts.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Weixin": {
+      "path": "src/Berry.Spider.Weixin/Berry.Spider.Weixin.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Weixin.Work": {
+      "path": "src/Berry.Spider.Weixin.Work/Berry.Spider.Weixin.Work.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.EventBus.MongoDB": {
+      "path": "src/Berry.Spider.EventBus.MongoDB/Berry.Spider.EventBus.MongoDB.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Toolkit": {
+      "path": "desktop/Berry.Spider.Toolkit/Berry.Spider.Toolkit.abppkg",
+      "folder": "desktop"
+    },
+    "Berry.Spider.Admin.AuthServer": {
+      "path": "admin/host/Berry.Spider.Admin.AuthServer/Berry.Spider.Admin.AuthServer.abppkg",
+      "folder": "admin/host"
+    },
+    "Berry.Spider.Admin.HttpApi.Host": {
+      "path": "admin/host/Berry.Spider.Admin.HttpApi.Host/Berry.Spider.Admin.HttpApi.Host.abppkg",
+      "folder": "admin/host"
+    },
+    "Berry.Spider.Admin.Web": {
+      "path": "admin/host/Berry.Spider.Admin.Web/Berry.Spider.Admin.Web.abppkg",
+      "folder": "admin/host"
+    },
+    "Berry.Spider.Admin.Application": {
+      "path": "admin/src/Berry.Spider.Admin.Application/Berry.Spider.Admin.Application.abppkg",
+      "folder": "admin/src"
+    },
+    "Berry.Spider.Admin.Application.Contracts": {
+      "path": "admin/src/Berry.Spider.Admin.Application.Contracts/Berry.Spider.Admin.Application.Contracts.abppkg",
+      "folder": "admin/src"
+    },
+    "Berry.Spider.Admin.DbMigrator": {
+      "path": "admin/src/Berry.Spider.Admin.DbMigrator/Berry.Spider.Admin.DbMigrator.abppkg",
+      "folder": "admin/src"
+    },
+    "Berry.Spider.Admin.Domain": {
+      "path": "admin/src/Berry.Spider.Admin.Domain/Berry.Spider.Admin.Domain.abppkg",
+      "folder": "admin/src"
+    },
+    "Berry.Spider.Admin.Domain.Shared": {
+      "path": "admin/src/Berry.Spider.Admin.Domain.Shared/Berry.Spider.Admin.Domain.Shared.abppkg",
+      "folder": "admin/src"
+    },
+    "Berry.Spider.Admin.EntityFrameworkCore": {
+      "path": "admin/src/Berry.Spider.Admin.EntityFrameworkCore/Berry.Spider.Admin.EntityFrameworkCore.abppkg",
+      "folder": "admin/src"
+    },
+    "Berry.Spider.Admin.HttpApi": {
+      "path": "admin/src/Berry.Spider.Admin.HttpApi/Berry.Spider.Admin.HttpApi.abppkg",
+      "folder": "admin/src"
+    },
+    "Berry.Spider.Admin.HttpApi.Client": {
+      "path": "admin/src/Berry.Spider.Admin.HttpApi.Client/Berry.Spider.Admin.HttpApi.Client.abppkg",
+      "folder": "admin/src"
+    },
+    "Berry.Spider.RealTime": {
+      "path": "src/Berry.Spider.RealTime/Berry.Spider.RealTime.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.RealTime.Abstractions": {
+      "path": "src/Berry.Spider.RealTime.Abstractions/Berry.Spider.RealTime.Abstractions.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.RealTime.Integration": {
+      "path": "src/Berry.Spider.RealTime.Integration/Berry.Spider.RealTime.Integration.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.RealTime.Shared": {
+      "path": "src/Berry.Spider.RealTime.Shared/Berry.Spider.RealTime.Shared.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Tools.BuildSMData": {
+      "path": "tools/Berry.Spider.Tools.BuildSMData/Berry.Spider.Tools.BuildSMData.abppkg",
+      "folder": "tools"
+    },
+    "Berry.Spider.Tools.ExcelFileToDb": {
+      "path": "tools/Berry.Spider.Tools.ExcelFileToDb/Berry.Spider.Tools.ExcelFileToDb.abppkg",
+      "folder": "tools"
+    },
+    "Berry.Spider.Tools.JsonFileToDb": {
+      "path": "tools/Berry.Spider.Tools.JsonFileToDb/Berry.Spider.Tools.JsonFileToDb.abppkg",
+      "folder": "tools"
+    },
+    "Berry.Spider.Tools.SyncToRedis": {
+      "path": "tools/Berry.Spider.Tools.SyncToRedis/Berry.Spider.Tools.SyncToRedis.abppkg",
+      "folder": "tools"
+    },
+    "Berry.Spider.Tools.TxtFileToDb": {
+      "path": "tools/Berry.Spider.Tools.TxtFileToDb/Berry.Spider.Tools.TxtFileToDb.abppkg",
+      "folder": "tools"
+    },
+    "Berry.Spider.HttpApi.Client": {
+      "path": "src/Berry.Spider.HttpApi.Client/Berry.Spider.HttpApi.Client.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Consumers": {
+      "path": "desktop/Berry.Spider.Consumers/Berry.Spider.Consumers.abppkg",
+      "folder": "desktop"
+    },
+    "Berry.Spider.ServDetector": {
+      "path": "desktop/Berry.Spider.ServDetector/Berry.Spider.ServDetector.abppkg",
+      "folder": "desktop"
+    },
+    "Berry.Spider.Tools.SplitTxtFile": {
+      "path": "tools/Berry.Spider.Tools.SplitTxtFile/Berry.Spider.Tools.SplitTxtFile.abppkg",
+      "folder": "tools"
+    },
+    "Berry.Spider.NaiPan": {
+      "path": "src/Berry.Spider.NaiPan/Berry.Spider.NaiPan.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Tools.AutoUploader": {
+      "path": "tools/Berry.Spider.Tools.AutoUploader/Berry.Spider.Tools.AutoUploader.abppkg",
+      "folder": "tools"
+    },
+    "Berry.Spider.Weather.Abstractions": {
+      "path": "src/Berry.Spider.Weather.Abstractions/Berry.Spider.Weather.Abstractions.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Weather.AMap": {
+      "path": "src/Berry.Spider.Weather.AMap/Berry.Spider.Weather.AMap.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Weather": {
+      "path": "src/Berry.Spider.Weather/Berry.Spider.Weather.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.Weather.Shared": {
+      "path": "src/Berry.Spider.Weather.Shared/Berry.Spider.Weather.Shared.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.SemanticKernel.Ollama": {
+      "path": "src/Berry.Spider.SemanticKernel.Ollama/Berry.Spider.SemanticKernel.Ollama.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.AI.TextGeneration": {
+      "path": "desktop/Berry.Spider.AI.TextGeneration/Berry.Spider.AI.TextGeneration.abppkg",
+      "folder": "desktop"
+    },
+    "Berry.Spider.TemplateProjectDemo": {
+      "path": "template/Berry.Spider.TemplateProjectDemo/Berry.Spider.TemplateProjectDemo.abppkg",
+      "folder": "template"
+    },
+    "Berry.Spider.ToolkitStore": {
+      "path": "desktop/Berry.Spider.ToolkitStore/Berry.Spider.ToolkitStore.abppkg",
+      "folder": "desktop"
+    },
+    "Berry.Spider.AIGen": {
+      "path": "desktop/Berry.Spider.AIGen/Berry.Spider.AIGen.abppkg",
+      "folder": "desktop"
+    },
+    "Berry.Spider.SemanticKernel.Plugins": {
+      "path": "src/Berry.Spider.SemanticKernel.Plugins/Berry.Spider.SemanticKernel.Plugins.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.SemanticKernel.Shared": {
+      "path": "src/Berry.Spider.SemanticKernel.Shared/Berry.Spider.SemanticKernel.Shared.abppkg",
+      "folder": "src"
+    },
+    "Berry.Spider.AIGenPlus": {
+      "path": "desktop/Berry.Spider.AIGenPlus/Berry.Spider.AIGenPlus.abppkg",
+      "folder": "desktop"
+    }
+  }
+}

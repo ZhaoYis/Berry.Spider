@@ -33,7 +33,6 @@
       <ProjectReference Include="..\..\src\Berry.Spider.Domain\Berry.Spider.Domain.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.SemanticKernel.Ollama\Berry.Spider.SemanticKernel.Ollama.csproj" />
-        <TargetFramework>net9.0</TargetFramework>
     </ItemGroup>
 
     <ItemGroup>

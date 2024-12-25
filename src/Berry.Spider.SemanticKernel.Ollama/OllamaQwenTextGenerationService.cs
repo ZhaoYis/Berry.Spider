@@ -39,7 +39,7 @@ public class OllamaQwenTextGenerationService : ITextGenerationService
     {
         List<TextContent> textContents = new List<TextContent>();
         ConversationContext? context = null;
-        var completionResponse = _ollamaApiClient.Generate(prompt, context, cancellationToken); //.GetCompletion(prompt, context, cancellationToken);
+        var completionResponse = _ollamaApiClient.GenerateAsync(prompt, context, cancellationToken); //.GetCompletion(prompt, context, cancellationToken);
         await foreach (var res in completionResponse)
         {
             TextContent textContent = new TextContent(res?.Response);
@@ -57,7 +57,7 @@ public class OllamaQwenTextGenerationService : ITextGenerationService
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         ConversationContext? context = null;
-        var completionResponseStream = _ollamaApiClient.Generate(prompt, context, cancellationToken); //.StreamCompletion(prompt, context, cancellationToken);
+        var completionResponseStream = _ollamaApiClient.GenerateAsync(prompt, context, cancellationToken); //.StreamCompletion(prompt, context, cancellationToken);
         await foreach (var cps in completionResponseStream)
         {
             yield return new StreamingTextContent(cps?.Response);
