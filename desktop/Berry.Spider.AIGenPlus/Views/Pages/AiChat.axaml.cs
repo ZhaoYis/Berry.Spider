@@ -1,16 +1,13 @@
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using Berry.Spider.AIGenPlus.ViewModels.Pages;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Berry.Spider.AIGenPlus.Views.Pages;
 
-public partial class HomePage : UserControlBase
+public partial class AiChat : UserControlBase
 {
-    public HomePage()
+    public AiChat()
     {
-        HomePageViewModel vm = App.Current.GetRequiredService<HomePageViewModel>();
+        AiChatViewModel vm = App.Current.GetRequiredService<AiChatViewModel>();
         vm.ShowNotificationMessageEvent += this.ShowNotificationMessage;
         this.DataContext = vm;
         InitializeComponent();

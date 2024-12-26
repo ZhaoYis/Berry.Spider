@@ -43,4 +43,11 @@
     <ItemGroup>
       <UpToDateCheckInput Remove="Animations\SemiPopupAnimations.axaml" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\Pages\AiChat.axaml.cs">
+        <DependentUpon>AiChat.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
 </Project>

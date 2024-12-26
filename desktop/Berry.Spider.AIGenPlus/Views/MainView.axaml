@@ -31,7 +31,7 @@
                     <SelectableTextBlock
                         VerticalAlignment="Center"
                         Classes="H6"
-                        Text="Semi Avalonia"
+                        Text="AIGenPlus"
                         Theme="{DynamicResource TitleSelectableTextBlock}" />
                     <SelectableTextBlock
                         VerticalAlignment="Center"
@@ -96,8 +96,11 @@
             TabStripPlacement="Left"
             Classes.Dismiss="{Binding #ExpandButton.IsChecked}"
             Theme="{DynamicResource NavigationTab}">
-            <TabItem Header="Overview">
+            <TabItem Header="HomePage">
                 <pages:HomePage />
+            </TabItem>
+            <TabItem Header="AiChat">
+                <pages:AiChat />
             </TabItem>
         </TabControl>
     </Grid>
