@@ -3,13 +3,15 @@
         xmlns:vm="using:Berry.Spider.AIGenPlus.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:Berry.Spider.AIGenPlus.Views"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Berry.Spider.AIGenPlus.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="Berry.Spider.AIGenPlus">
 
-    <StackPanel>
-        <Label Content="{Binding Tips}" Margin="20" />
-    </StackPanel>
+    <!-- <StackPanel> -->
+    <!--     <Label Content="{Binding Tips}" Margin="20" /> -->
+    <!-- </StackPanel> -->
+    <views:MainView />
 </Window>

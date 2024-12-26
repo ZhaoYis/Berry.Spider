@@ -6,11 +6,14 @@
              RequestedThemeVariant="Default">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
-    <Application.DataTemplates>
-        <local:ViewLocator />
-    </Application.DataTemplates>
+    <!-- <Application.DataTemplates> -->
+    <!--     <local:ViewLocator /> -->
+    <!-- </Application.DataTemplates> -->
 
     <Application.Styles>
+        <!-- You can still reference in old way.  -->
+        <!-- <StyleInclude Source="avares://Semi.Avalonia/Themes/Index.axaml" /> -->
         <semi:SemiTheme Locale="zh-CN" />
+        <StyleInclude Source="avares://Semi.Avalonia.DataGrid/Index.axaml" />
     </Application.Styles>
 </Application>

@@ -25,6 +25,7 @@
         <PackageReference Include="Microsoft.Extensions.AI" Version="9.0.1-preview.1.24570.5" />
         <PackageReference Include="Microsoft.Extensions.AI.Ollama" Version="9.0.1-preview.1.24570.5" />
         <PackageReference Include="Semi.Avalonia" Version="11.2.1.2" />
+        <PackageReference Include="Semi.Avalonia.DataGrid" Version="11.2.1.2" />
         <PackageReference Include="Serilog" Version="4.2.0" />
         <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />
         <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
@@ -37,5 +38,9 @@
       <None Update="appsettings.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpToDateCheckInput Remove="Animations\SemiPopupAnimations.axaml" />
     </ItemGroup>
 </Project>
