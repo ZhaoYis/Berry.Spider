@@ -6,7 +6,7 @@
         <Setter Property="OnContent" Value="{Binding $self.Content}" />
         <Setter Property="OnContentTemplate">
             <DataTemplate>
-                <PathIcon Theme="{StaticResource InnerPathIcon}" Data="{Binding }" />
+                <PathIcon Theme="{StaticResource InnerPathIcon}" Data="{Binding}" />
             </DataTemplate>
         </Setter>
         <Setter Property="OffContent" Value="{Binding $self.Content}" />

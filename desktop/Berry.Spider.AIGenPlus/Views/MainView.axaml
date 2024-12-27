@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pages="clr-namespace:Berry.Spider.AIGenPlus.Views.Pages"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:CompileBindings="True"
              x:DataType="vm:MainViewModel"
              x:Class="Berry.Spider.AIGenPlus.Views.MainView">
 
