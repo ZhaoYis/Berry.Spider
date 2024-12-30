@@ -14,7 +14,12 @@ public static class ServiceCollectionExtensions
 
         string serviceAddr = client.Get("OllamaOptions:ServiceAddr");
         string modelId = client.Get("OllamaQwenOptions:ModelId");
-        services.AddChatClient(builder => new OllamaChatClient(serviceAddr, modelId));
+        services.AddChatClient(_ => new ChatClientBuilder(new OllamaChatClient(serviceAddr, modelId))
+            .UseFunctionInvocation()
+            //.UseDistributedCache()
+            //.UseOpenTelemetry()
+            //.UseLogging()
+            .Build());
     }
 
     public static void ConfigureOllamaOptions(this IServiceCollection services, ConfigClient client)
