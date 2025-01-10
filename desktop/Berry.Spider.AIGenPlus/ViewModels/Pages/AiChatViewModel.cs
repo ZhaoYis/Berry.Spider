@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -31,12 +33,29 @@ public partial class AiChatViewModel(IChatClient chatClient) : ViewModelBase, IT
 
         this.ShowNotificationMessage("请稍后，AI正在努力思考中...");
 
-        var streamingResponse = chatClient.CompleteStreamingAsync(this.AskAiRequestText);
-        StringBuilder response = new StringBuilder();
-        await foreach (var text in streamingResponse)
+        var chatOptons = new ChatOptions
         {
-            this.AskAiResponseText = response.Append(text.Text).ToString();
-        }
+            Tools =
+            [
+                AIFunctionFactory.Create(() =>
+                    {
+                        Debug.WriteLine("Invoke the system function get_current_time()...");
+                        return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    },
+                    "get_current_time",
+                    "Get the current system time.")
+            ]
+        };
+
+        var res = await chatClient.CompleteAsync(this.AskAiRequestText, chatOptons);
+        this.AskAiResponseText = res.ToString();
+
+        // var streamingResponse = chatClient.CompleteStreamingAsync(this.AskAiRequestText, chatOptons);
+        // StringBuilder response = new StringBuilder();
+        // await foreach (var text in streamingResponse)
+        // {
+        //     this.AskAiResponseText = response.Append(text.Text).ToString();
+        // }
     }
 
     private bool CanExecute()

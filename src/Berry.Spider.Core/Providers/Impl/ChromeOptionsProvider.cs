@@ -26,7 +26,7 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         //https://www.cnblogs.com/gurenyumao/p/14721035.html
         ChromeOptions options = new ChromeOptions();
 
-        //Chrome在root权限下跑
+        //禁用沙箱模式
         options.AddArgument("--no-sandbox");
         //停用DNS预读
         options.AddArgument("--dns-prefetch-disable");
@@ -44,6 +44,8 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         options.AddArgument("--disable-popup-blocking");
         //禁用 Chrome 浏览器的 Web 安全功能
         options.AddArgument("--disable-web-security");
+        //解决内存不足问题
+        options.AddArgument("--disable-dev-shm-usage");
 
         //无界面运行(无窗口)，也叫无头浏览器，通常用于远程运行，在本地运行也可以通过该参数提升运行效率
         //在无头模式下运行，即没有UI或显示服务器依赖性。

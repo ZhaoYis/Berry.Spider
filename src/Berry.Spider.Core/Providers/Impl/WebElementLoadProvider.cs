@@ -31,7 +31,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
 
             using IWebDriver driver = await this.WebDriverProvider.GetAsync();
             //跳转
-            driver.Navigate().GoToUrl(targetUrl);
+            await driver.Navigate().GoToUrlAsync(targetUrl);
             string title = driver.Title;
             string page = driver.PageSource;
             string url = driver.Url;
@@ -76,7 +76,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
                     if (await this.InterceptorProvider.IsLockedAsync(targetUrl)) return;
 
                     //跳转
-                    driver.Navigate().GoToUrl(targetUrl);
+                    await driver.Navigate().GoToUrlAsync(targetUrl);
                     string title = driver.Title;
                     string page = driver.PageSource;
                     string url = driver.Url;
@@ -121,7 +121,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
 
             using IWebDriver driver = await this.WebDriverProvider.GetAsync();
             //跳转
-            driver.Navigate().GoToUrl(targetUrl);
+            await driver.Navigate().GoToUrlAsync(targetUrl);
             string title = driver.Title;
             string page = driver.PageSource;
             string url = driver.Url;
@@ -165,7 +165,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             //隐式等待
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             //跳转
-            driver.Navigate().GoToUrl(targetUrl);
+            await driver.Navigate().GoToUrlAsync(targetUrl);
             //获取输入框
             driver.FindElement(inputBox).SendKeys(state.ToString());
             //点击按钮
@@ -207,7 +207,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
 
             using IWebDriver driver = await this.WebDriverProvider.GetAsync();
             //跳转
-            driver.Navigate().GoToUrl(targetUrl);
+            await driver.Navigate().GoToUrlAsync(targetUrl);
             //获取输入框
             driver.FindElement(inputBox).SendKeys(state.ToString());
             //点击按钮
@@ -225,7 +225,7 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             //人机验证拦截
             if (await this.InterceptorProvider.LockedAsync(targetUrl, url)) return;
 
-            driver.Navigate().GoToUrl(driver.Url);
+            await driver.Navigate().GoToUrlAsync(driver.Url);
             WebDriverWait wait = new WebDriverWait(driver, timeout: TimeSpan.FromSeconds(30))
             {
                 PollingInterval = TimeSpan.FromSeconds(5),
