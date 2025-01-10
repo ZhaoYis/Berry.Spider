@@ -1,16 +1,15 @@
-using System;
-using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
+using Berry.Spider.AIGenPlus.Functions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages;
 
-public partial class AiChatViewModel(IChatClient chatClient) : ViewModelBase, ITransientDependency
+public partial class FunctionCallViewModel(IChatClient chatClient) : ViewModelBase, ITransientDependency
 {
     /// <summary>
     /// 问题
@@ -32,12 +31,15 @@ public partial class AiChatViewModel(IChatClient chatClient) : ViewModelBase, IT
         Check.NotNullOrWhiteSpace(this.AskAiRequestText, nameof(this.AskAiRequestText));
         this.ShowNotificationMessage("请稍后，AI正在努力思考中...");
 
-        var streamingResponse = chatClient.CompleteStreamingAsync(this.AskAiRequestText);
-        StringBuilder response = new StringBuilder();
-        await foreach (var text in streamingResponse)
+        var chatOptons = new ChatOptions
         {
-            this.AskAiResponseText = response.Append(text.Text).ToString();
-        }
+            Tools =
+            [
+                App.Current.GetRequiredService<DateTimeFunction>()
+            ]
+        };
+        var res = await chatClient.CompleteAsync(this.AskAiRequestText, chatOptons);
+        this.AskAiResponseText = res.ToString();
     }
 
     private bool CanExecute()

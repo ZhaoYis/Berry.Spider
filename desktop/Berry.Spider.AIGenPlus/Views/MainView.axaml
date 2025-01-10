@@ -103,6 +103,9 @@
             <TabItem Header="AiChat">
                 <pages:AiChat />
             </TabItem>
+            <TabItem Header="Function Call">
+                <pages:FunctionCall />
+            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>
