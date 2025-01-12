@@ -1,10 +1,10 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Berry.Spider.AIGenPlus.ViewModels.Pages;
+using Berry.Spider.ToolkitStore.ViewModels.Pages;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Berry.Spider.AIGenPlus.Views.Pages;
+namespace Berry.Spider.ToolkitStore.Views.Pages;
 
 public partial class HomePage : UserControlBase
 {

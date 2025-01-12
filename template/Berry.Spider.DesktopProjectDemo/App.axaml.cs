@@ -38,7 +38,7 @@ public partial class App : Application
 
         try
         {
-            Log.Information("Starting Avalonia.ToolkitStore host.");
+            Log.Information("Starting Avalonia.AIGenPlus host.");
 
             _abpApplication = AbpApplicationFactory.Create<SpiderToolkitStoreModule>(options =>
             {

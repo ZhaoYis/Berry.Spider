@@ -32,7 +32,7 @@
                     <ToggleSwitch Name="ExpandButton" Theme="{DynamicResource SplitViewToggleSwitch}" />
                     <SelectableTextBlock
                         Classes="H6"
-                        Text="ToolkitStore"
+                        Text="AIGenPlus"
                         Theme="{DynamicResource TitleSelectableTextBlock}"
                         VerticalAlignment="Center" />
                     <SelectableTextBlock Text="/" VerticalAlignment="Center" />

@@ -1,15 +1,15 @@
 using AgileConfig.Client;
-using Berry.Spider.AIGenPlus.Views;
+using Berry.Spider.ToolkitStore.Views;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Autofac;
 using Volo.Abp.Modularity;
 using Volo.Abp.Threading;
 
-namespace Berry.Spider.AIGenPlus;
+namespace Berry.Spider.ToolkitStore;
 
 [DependsOn(typeof(AbpAutofacModule))]
-public class SpiderAIGenPlusModule : AbpModule
+public class SpiderToolkitStoreModule : AbpModule
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
@@ -22,8 +22,6 @@ public class SpiderAIGenPlusModule : AbpModule
             if (isConnect)
             {
                 context.Services.AddSingleton<ConfigClient>(client);
-                context.Services.AddOllamaChatClient(client);
-                context.Services.ConfigureOllamaOptions(client);
             }
         }
     }

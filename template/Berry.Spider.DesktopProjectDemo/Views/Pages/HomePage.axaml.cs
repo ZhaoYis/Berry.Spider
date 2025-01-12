@@ -1,16 +1,16 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Berry.Spider.AIGenPlus.ViewModels.Pages;
+using Berry.Spider.ToolkitStore.ViewModels.Pages;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Berry.Spider.AIGenPlus.Views.Pages;
+namespace Berry.Spider.ToolkitStore.Views.Pages;
 
-public partial class FunctionCall : UserControlBase
+public partial class HomePage : UserControlBase
 {
-    public FunctionCall()
+    public HomePage()
     {
-        FunctionCallViewModel vm = App.Current.GetRequiredService<FunctionCallViewModel>();
+        HomePageViewModel vm = App.Current.GetRequiredService<HomePageViewModel>();
         vm.ShowNotificationMessageEvent += this.ShowNotificationMessage;
         this.DataContext = vm;
         InitializeComponent();
