@@ -1,115 +1,17 @@
-<Window
-    Icon="/Assets/avalonia-logo.ico"
-    SizeToContent="WidthAndHeight"
-    Title="Berry.Spider.ToolkitStore"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
-    mc:Ignorable="d"
-    x:Class="Berry.Spider.ToolkitStore.Views.MainWindow"
-    x:DataType="vm:MainWindowViewModel"
-    xmlns="https://github.com/avaloniaui"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vm="using:Berry.Spider.ToolkitStore.ViewModels"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Berry.Spider.AIGenPlus.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:Berry.Spider.AIGenPlus.Views"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Berry.Spider.AIGenPlus.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Berry.Spider.AIGenPlus">
 
-    <Design.DataContext>
-        <!--
-            This only sets the DataContext for the previewer in an IDE,
-            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
-        -->
-        <vm:MainWindowViewModel />
-    </Design.DataContext>
-
-    <StackPanel>
-
-        <DockPanel>
-            <Menu DockPanel.Dock="Top">
-                <MenuItem Header="_File">
-                    <MenuItem Command="{Binding AppExitCommand}" Header="_Exit" />
-                </MenuItem>
-                <MenuItem Header="_About">
-                    <MenuItem Header="About Us" />
-                </MenuItem>
-            </Menu>
-        </DockPanel>
-
-        <Grid Margin="5" ShowGridLines="True">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120" />
-                <ColumnDefinition Width="500" />
-                <ColumnDefinition Width="180" />
-            </Grid.ColumnDefinitions>
-
-            <Label
-                Content="启动程序路径:"
-                Grid.Column="0"
-                Grid.Row="0"
-                HorizontalAlignment="Center"
-                Margin="5"
-                VerticalContentAlignment="Center" />
-            <TextBox
-                Grid.Column="1"
-                Grid.Row="0"
-                HorizontalContentAlignment="Left"
-                IsReadOnly="True"
-                Margin="5"
-                Text="{Binding AppStrapPath}"
-                VerticalContentAlignment="Center" />
-            <Button
-                Command="{Binding AppSelectorCommand}"
-                Content="选择启动程序..."
-                Grid.Column="2"
-                Grid.Row="0"
-                IsEnabled="{Binding !IsRunning}" />
-
-            <Label
-                Content="启动程序数量："
-                Grid.Column="0"
-                Grid.Row="1"
-                HorizontalAlignment="Center"
-                Margin="5"
-                VerticalContentAlignment="Center" />
-
-            <NumericUpDown
-                Grid.Column="1"
-                Grid.Row="1"
-                HorizontalContentAlignment="Left"
-                Increment="1"
-                Margin="5"
-                Maximum="10"
-                Minimum="1"
-                Value="1"
-                VerticalContentAlignment="Center" />
-
-            <Button
-                Command="{Binding AppRunCommand}"
-                Content="启动"
-                Grid.Column="1"
-                Grid.Row="2"
-                HorizontalAlignment="Left"
-                HorizontalContentAlignment="Center"
-                IsEnabled="{Binding !IsRunning}"
-                Margin="20"
-                Padding="20"
-                Width="200" />
-            <Button
-                Command="{Binding AppCancleCommand}"
-                Content="取消"
-                Grid.Column="1"
-                Grid.Row="2"
-                HorizontalAlignment="Right"
-                HorizontalContentAlignment="Center"
-                IsEnabled="{Binding IsRunning}"
-                Margin="220,20,20,20"
-                Padding="20"
-                Width="200" />
-        </Grid>
-    </StackPanel>
-
+    <!-- <StackPanel> -->
+    <!--     <Label Content="{Binding Tips}" Margin="20" /> -->
+    <!-- </StackPanel> -->
+    <views:MainView />
 </Window>

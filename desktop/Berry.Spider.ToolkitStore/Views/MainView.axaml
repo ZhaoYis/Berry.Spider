@@ -1,0 +1,111 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Berry.Spider.AIGenPlus.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:pages="clr-namespace:Berry.Spider.AIGenPlus.Views.Pages"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:CompileBindings="True"
+             x:DataType="vm:MainViewModel"
+             x:Class="Berry.Spider.AIGenPlus.Views.MainView">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="../Themes/TabMenu.axaml" />
+                <ResourceInclude Source="../Themes/ToggleSwitch.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid RowDefinitions="Auto, *">
+        <Border
+            Grid.Row="0"
+            Margin="8"
+            Padding="12,4"
+            Theme="{DynamicResource CardBorder}">
+            <Panel>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <ToggleSwitch
+                        Name="ExpandButton"
+                        Theme="{DynamicResource SplitViewToggleSwitch}" />
+                    <SelectableTextBlock
+                        VerticalAlignment="Center"
+                        Classes="H6"
+                        Text="AIGenPlus"
+                        Theme="{DynamicResource TitleSelectableTextBlock}" />
+                    <SelectableTextBlock
+                        VerticalAlignment="Center"
+                        Text="/" />
+                    <SelectableTextBlock
+                        VerticalAlignment="Center"
+                        Classes="Secondary"
+                        Text="{ReflectionBinding #tab.SelectedItem.Header}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <StackPanel.Styles>
+                        <Style Selector="Button">
+                            <Setter Property="Theme" Value="{DynamicResource BorderlessButton}" />
+                            <Setter Property="Padding" Value="8" />
+                            <Setter Property="Foreground" Value="{DynamicResource ButtonDefaultTertiaryForeground}" />
+                        </Style>
+                        <Style Selector="ToggleSwitch">
+                            <Setter Property="Theme" Value="{DynamicResource ThemeToggleSwitch}" />
+                            <Setter Property="Foreground" Value="{DynamicResource ButtonDefaultTertiaryForeground}" />
+                        </Style>
+                        <Style Selector="PathIcon">
+                            <Setter Property="Theme" Value="{DynamicResource InnerPathIcon}" />
+                        </Style>
+                    </StackPanel.Styles>
+
+                    <Button Command="{Binding OpenUrlCommand}" CommandParameter="{Binding DocumentationUrl}">
+                        <PathIcon Data="{StaticResource SemiIconGlobe}" />
+                    </Button>
+
+                    <Button Command="{Binding OpenUrlCommand}" CommandParameter="{Binding RepoUrl}">
+                        <PathIcon Data="{StaticResource SemiIconGithubLogo}" />
+                    </Button>
+
+                    <ToggleSwitch
+                        Command="{Binding ToggleThemeCommand}"
+                        OnContent="{StaticResource SemiIconMoon}"
+                        OffContent="{StaticResource SemiIconSun}" />
+
+                    <Button>
+                        <PathIcon Data="{StaticResource SemiIconMenu}" />
+                        <Button.Flyout>
+                            <MenuFlyout Placement="Bottom" ItemsSource="{Binding MenuItems}" />
+                        </Button.Flyout>
+                        <Button.Styles>
+                            <Style Selector="MenuItem" x:DataType="vm:MenuItemViewModel">
+                                <Setter Property="Header" Value="{Binding Header}" />
+                                <Setter Property="ItemsSource" Value="{Binding Items}" />
+                                <Setter Property="Command" Value="{Binding Command}" />
+                                <Setter Property="CommandParameter" Value="{Binding CommandParameter}" />
+                            </Style>
+                        </Button.Styles>
+                    </Button>
+                </StackPanel>
+            </Panel>
+        </Border>
+        <TabControl
+            Name="tab"
+            Grid.Row="1"
+            Margin="8"
+            Padding="20,0,0,0"
+            HorizontalAlignment="Stretch"
+            TabStripPlacement="Left"
+            Classes.Dismiss="{Binding #ExpandButton.IsChecked}"
+            Theme="{DynamicResource NavigationTab}">
+            <TabItem Header="HomePage">
+                <pages:HomePage />
+            </TabItem>
+            <TabItem Header="AiChat">
+                <pages:AiChat />
+            </TabItem>
+            <TabItem Header="Function Call">
+                <pages:FunctionCall />
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

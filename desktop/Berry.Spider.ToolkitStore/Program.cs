@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using System;
 
-namespace Berry.Spider.ToolkitStore;
+namespace Berry.Spider.AIGenPlus;
 
 sealed class Program
 {

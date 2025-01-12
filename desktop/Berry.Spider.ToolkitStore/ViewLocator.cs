@@ -1,9 +1,9 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using Berry.Spider.ToolkitStore.ViewModels;
+using Berry.Spider.AIGenPlus.ViewModels;
 
-namespace Berry.Spider.ToolkitStore;
+namespace Berry.Spider.AIGenPlus;
 
 public class ViewLocator : IDataTemplate
 {

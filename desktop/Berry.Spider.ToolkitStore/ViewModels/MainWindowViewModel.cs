@@ -1,81 +1,58 @@
-﻿using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Platform.Storage;
+﻿using System.Diagnostics;
+using System.Timers;
+using Berry.Spider.AIGenPlus.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Volo.Abp.DependencyInjection;
 
-namespace Berry.Spider.ToolkitStore.ViewModels;
+namespace Berry.Spider.AIGenPlus.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase
+public partial class MainWindowViewModel : ViewModelBase, IRecipient<NotificationTaskMessage>, ITransientDependency
 {
     /// <summary>
-    /// 启动程序路径
+    /// 应用名称
     /// </summary>
-    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(AppRunCommand))]
-    private string? _appStrapPath;
+    [ObservableProperty] private string _applicationTitle = "Berry.Spider.AIGenPlus";
 
     /// <summary>
-    /// 程序是否运行中
+    /// 主窗口提示信息
     /// </summary>
-    [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(AppRunCommand))]
-    private bool _isRunning = false;
+    [ObservableProperty] private string _tips = "Berry.Spider.AIGenPlus";
 
-    /// <summary>
-    /// 选择启动程序
-    /// </summary>
-    [RelayCommand]
-    private async Task AppSelectorAsync()
+    private readonly Stopwatch _stopwatch;
+    private readonly Timer _timer;
+
+    public MainWindowViewModel()
     {
-        var desktop = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
-        var storage = desktop?.MainWindow?.StorageProvider;
-        if (storage is not null)
+        _stopwatch = new Stopwatch();
+        _timer = new Timer
         {
-            var files = await storage.OpenFilePickerAsync(new FilePickerOpenOptions
-            {
-                AllowMultiple = false,
-                FileTypeFilter = new[] { FilePickerFileTypes.TextPlain }
-            });
+            Interval = 1000
+        };
+        WeakReferenceMessenger.Default.Register(this);
+    }
 
-            if (files is { Count: > 0 })
+    /// <summary>
+    /// 处理通知消息
+    /// </summary>
+    public void Receive(NotificationTaskMessage message)
+    {
+        switch (message.IsRunning)
+        {
+            case true:
             {
-                this.AppStrapPath = files[0].Path.ToString();
+                _timer.Elapsed += (sender, e) => { this.Tips = $"AI正在努力思考中，请稍后。当前已执行{_stopwatch.ElapsedMilliseconds / 1000}秒..."; };
+                _stopwatch.Start();
+                _timer.Start();
+                break;
+            }
+            case false:
+            {
+                _timer.Stop();
+                _stopwatch.Stop();
+                _stopwatch.Reset();
+                break;
             }
         }
-
-        await Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// 启动
-    /// </summary>
-    [RelayCommand(CanExecute = nameof(AppRunCanExecute))]
-    private async Task AppRunAsync()
-    {
-        this.IsRunning = true;
-        await Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// 取消
-    /// </summary>
-    [RelayCommand]
-    private async Task AppCancleAsync()
-    {
-        this.IsRunning = false;
-        await Task.CompletedTask;
-    }
-
-    /// <summary>
-    /// 程序退出
-    /// </summary>
-    [RelayCommand]
-    private async Task AppExitAsync()
-    {
-    }
-
-    private bool AppRunCanExecute()
-    {
-        return this.IsRunning == false && this.AppStrapPath is not null;
     }
 }

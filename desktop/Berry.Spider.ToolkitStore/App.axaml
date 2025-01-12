@@ -1,16 +1,18 @@
-<Application
-    RequestedThemeVariant="Default"
-    x:Class="Berry.Spider.ToolkitStore.App"
-    xmlns="https://github.com/avaloniaui"
-    xmlns:local="using:Berry.Spider.ToolkitStore"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <!--  "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options.  -->
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:semi="https://irihi.tech/semi"
+             x:Class="Berry.Spider.AIGenPlus.App"
+             RequestedThemeVariant="Default">
+    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
-    <Application.DataTemplates>
-        <local:ViewLocator />
-    </Application.DataTemplates>
+    <!-- <Application.DataTemplates> -->
+    <!--     <local:ViewLocator /> -->
+    <!-- </Application.DataTemplates> -->
 
     <Application.Styles>
-        <FluentTheme />
+        <!-- You can still reference in old way.  -->
+        <!-- <StyleInclude Source="avares://Semi.Avalonia/Themes/Index.axaml" /> -->
+        <semi:SemiTheme Locale="zh-CN" />
+        <StyleInclude Source="avares://Semi.Avalonia.DataGrid/Index.axaml" />
     </Application.Styles>
 </Application>
