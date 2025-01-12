@@ -1,5 +1,5 @@
 using System;
-using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
@@ -11,7 +11,7 @@ using Volo.Abp;
 
 namespace Berry.Spider.ToolkitStore;
 
-public partial class App : Application
+public partial class App : Avalonia.Application
 {
     private IAbpApplicationWithInternalServiceProvider? _abpApplication;
 
@@ -20,21 +20,21 @@ public partial class App : Application
         AvaloniaXamlLoader.Load(this);
     }
 
-    public new static App Current => (App)Application.Current!;
+    public new static App Current => (App)Avalonia.Application.Current!;
     public IServiceProvider Services { get; private set; } = null!;
 
     public override void OnFrameworkInitializationCompleted()
     {
         Log.Logger = new LoggerConfiguration()
 #if DEBUG
-            .MinimumLevel.Debug()
+                     .MinimumLevel.Debug()
 #else
             .MinimumLevel.Information()
 #endif
-            .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Information)
-            .Enrich.FromLogContext()
-            .WriteTo.Async(c => c.File("Logs/logs.txt"))
-            .CreateLogger();
+                     .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Information)
+                     .Enrich.FromLogContext()
+                     .WriteTo.Async(c => c.File("Logs/logs.txt"))
+                     .CreateLogger();
 
         try
         {
@@ -69,5 +69,15 @@ public partial class App : Application
         {
             base.OnFrameworkInitializationCompleted();
         }
+    }
+
+    public static TopLevel? ResolveDefaultTopLevel()
+    {
+        return App.Current.ApplicationLifetime switch
+               {
+                   IClassicDesktopStyleApplicationLifetime desktopLifetime => desktopLifetime.MainWindow,
+                   ISingleViewApplicationLifetime singleView => TopLevel.GetTopLevel(singleView.MainView),
+                   _ => null
+               };
     }
 }

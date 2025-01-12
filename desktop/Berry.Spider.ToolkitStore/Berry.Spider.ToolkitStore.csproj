@@ -43,4 +43,13 @@
     <ItemGroup>
       <UpToDateCheckInput Remove="Animations\SemiPopupAnimations.axaml" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Berry.Spider.Application\Berry.Spider.Application.csproj" />
+      <ProjectReference Include="..\..\src\Berry.Spider.Baidu\Berry.Spider.Baidu.csproj" />
+      <ProjectReference Include="..\..\src\Berry.Spider.EntityFrameworkCore\Berry.Spider.EntityFrameworkCore.csproj" />
+      <ProjectReference Include="..\..\src\Berry.Spider.Segmenter.JiebaNet\Berry.Spider.Segmenter.JiebaNet.csproj" />
+      <ProjectReference Include="..\..\src\Berry.Spider.Sogou\Berry.Spider.Sogou.csproj" />
+      <ProjectReference Include="..\..\src\Berry.Spider.TouTiao\Berry.Spider.TouTiao.csproj" />
+    </ItemGroup>
 </Project>

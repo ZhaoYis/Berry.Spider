@@ -1,0 +1,44 @@
+<UserControl
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Berry.Spider.ToolkitStore.Views.Pages.TouTiao"
+    x:DataType="pages:TouTiaoViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pages="clr-namespace:Berry.Spider.ToolkitStore.ViewModels.Pages"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel>
+        <StackPanel.Styles>
+            <Style Selector="Button">
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
+        </StackPanel.Styles>
+
+        <TextBox
+            InnerLeftContent="文件路径："
+            Margin="10"
+            Text="{Binding CurrentFilePath}" />
+        <Button
+            Command="{Binding ChoseFileCommand}"
+            Content="选择关键词文件..."
+            Margin="10" />
+
+        <Button
+            Command="{Binding ExecCommand}"
+            Content="开始执行"
+            Margin="10" />
+
+        <StackPanel>
+            <TextBox
+                Classes="TextArea"
+                Height="300"
+                IsReadOnly="True"
+                Margin="10"
+                Text="{Binding ExecLog}"
+                TextWrapping="Wrap" />
+        </StackPanel>
+    </StackPanel>
+
+</UserControl>

@@ -32,7 +32,7 @@
                     <ToggleSwitch Name="ExpandButton" Theme="{DynamicResource SplitViewToggleSwitch}" />
                     <SelectableTextBlock
                         Classes="H6"
-                        Text="ToolkitStore"
+                        Text="🍒工具箱"
                         Theme="{DynamicResource TitleSelectableTextBlock}"
                         VerticalAlignment="Center" />
                     <SelectableTextBlock Text="/" VerticalAlignment="Center" />
@@ -96,8 +96,11 @@
             Padding="20,0,0,0"
             TabStripPlacement="Left"
             Theme="{DynamicResource NavigationTab}">
-            <TabItem Header="HomePage">
+            <TabItem Header="导航">
                 <pages:HomePage />
+            </TabItem>
+            <TabItem Header="今日头条">
+                <pages:TouTiao />
             </TabItem>
         </TabControl>
     </Grid>
