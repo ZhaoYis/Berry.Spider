@@ -40,7 +40,7 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
     private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=question&dvpf=pc";
 
     public TouTiaoViewModel(IServiceProvider serviceProvider, IWebElementLoadProvider webProvider,
-        ISpiderContentKeywordRepository keywordRepository, ILogger<TouTiaoViewModel> logger, IMediator mediator)
+                            ISpiderContentKeywordRepository keywordRepository, ILogger<TouTiaoViewModel> logger, IMediator mediator)
     {
         this.WebElementLoadProvider = webProvider;
         this.ResolveJumpUrlProvider = serviceProvider.GetRequiredService<TouTiaoResolveJumpUrlProvider>();
@@ -71,7 +71,7 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
         if (files is { Count: > 0 })
         {
             IStorageFile file = files.First();
-            this.CurrentFilePath = file.Path.AbsolutePath;
+            this.CurrentFilePath = UrlHelper.UrlDecode(file.Path.AbsolutePath);
         }
     }
 

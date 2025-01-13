@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace Berry.Spider.Core;
@@ -34,5 +35,14 @@ public static partial class UrlHelper
     {
         Regex regex = new Regex(@"^(http?|https?|ftp):\/\/[^\s\/$.?#].[^\s]*$");
         return regex.Match(source).Success;
+    }
+
+    /// <summary>
+    /// 解码
+    /// </summary>
+    /// <returns></returns>
+    public static string UrlDecode(string url)
+    {
+        return WebUtility.UrlDecode(url);
     }
 }
