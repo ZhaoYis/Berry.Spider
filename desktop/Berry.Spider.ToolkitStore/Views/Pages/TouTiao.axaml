@@ -18,6 +18,7 @@
 
         <TextBox
             InnerLeftContent="文件路径："
+            IsReadOnly="True"
             Margin="10"
             Text="{Binding CurrentFilePath}" />
         <Button
