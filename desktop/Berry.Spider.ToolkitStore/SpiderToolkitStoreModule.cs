@@ -18,14 +18,14 @@ using Volo.Abp.Threading;
 namespace Berry.Spider.ToolkitStore;
 
 [DependsOn(
-              typeof(AbpAutofacModule),
-              typeof(SpiderEntityFrameworkCoreModule),
-              typeof(SpiderSegmenterJiebaNetModule),
-              typeof(SpiderFreeRedisModule),
-              typeof(SpiderApplicationModule),
-              typeof(TouTiaoSpiderApplicationModule),
-              typeof(SogouSpiderApplicationModule),
-              typeof(BaiduSpiderApplicationModule))]
+    typeof(AbpAutofacModule),
+    typeof(SpiderEntityFrameworkCoreModule),
+    typeof(SpiderSegmenterJiebaNetModule),
+    typeof(SpiderFreeRedisModule),
+    typeof(SpiderApplicationModule),
+    typeof(TouTiaoSpiderApplicationModule),
+    typeof(SogouSpiderApplicationModule),
+    typeof(BaiduSpiderApplicationModule))]
 public class SpiderToolkitStoreModule : AbpModule
 {
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
@@ -52,5 +52,10 @@ public class SpiderToolkitStoreModule : AbpModule
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         context.Services.AddSingleton<MainWindow>();
+        //注册MediatR
+        context.Services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+        });
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,6 +11,7 @@ using Berry.Spider.Domain;
 using Berry.Spider.TouTiao;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
@@ -36,25 +36,17 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
     private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
     private ISpiderContentKeywordRepository SpiderKeywordRepository { get; }
     private ILogger<TouTiaoViewModel> Logger { get; }
+    private IMediator Mediator { get; }
     private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=question&dvpf=pc";
 
-    /// <summary>
-    /// 可选的通道
-    /// </summary>
-    [ObservableProperty] private ObservableCollection<string> _chennelSelectorItems;
-
     public TouTiaoViewModel(IServiceProvider serviceProvider, IWebElementLoadProvider webProvider,
-                            ISpiderContentKeywordRepository keywordRepository, ILogger<TouTiaoViewModel> logger)
+        ISpiderContentKeywordRepository keywordRepository, ILogger<TouTiaoViewModel> logger, IMediator mediator)
     {
         this.WebElementLoadProvider = webProvider;
         this.ResolveJumpUrlProvider = serviceProvider.GetRequiredService<TouTiaoResolveJumpUrlProvider>();
         this.SpiderKeywordRepository = keywordRepository;
         this.Logger = logger;
-
-        this.ChennelSelectorItems = new ObservableCollection<string>
-        {
-            SpiderSourceFrom.TouTiao_Question.GetDescription()
-        };
+        this.Mediator = mediator;
     }
 
     /// <summary>
@@ -79,10 +71,7 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
         if (files is { Count: > 0 })
         {
             IStorageFile file = files.First();
-            if (file is not null)
-            {
-                this.CurrentFilePath = file.Path.AbsolutePath;
-            }
+            this.CurrentFilePath = file.Path.AbsolutePath;
         }
     }
 
@@ -92,13 +81,15 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
     [RelayCommand(CanExecute = nameof(CanExecute))]
     private async Task ExecAsync()
     {
-        if (File.Exists(this.CurrentFilePath))
+        if (!File.Exists(this.CurrentFilePath)) return;
+
+        var lines = await File.ReadAllLinesAsync(this.CurrentFilePath);
+        if (lines is { Length: > 0 })
         {
-            var lines = await File.ReadAllLinesAsync(this.CurrentFilePath);
             string saveFileName = $"{DateTime.Now:yyyyMMddHHmmssfff}.txt";
             string saveFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, saveFileName);
 
-            await Parallel.ForEachAsync(lines, new ParallelOptions { MaxDegreeOfParallelism = 1 }, async (keyword, token) =>
+            await Parallel.ForEachAsync(lines, new ParallelOptions { MaxDegreeOfParallelism = AppGlobalConstants.ParallelMaxDegreeOfParallelism }, async (keyword, token) =>
             {
                 if (string.IsNullOrEmpty(keyword)) return;
                 this.SetExecLog($"开始抓取关键字：{keyword}");
@@ -149,7 +140,8 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
                             // await this.SpiderKeywordRepository.InsertManyAsync(list, cancellationToken: token);
 
                             List<string> titles = childPageDataItems.Select(x => x.Title).ToList();
-                            await FileHelper.WriteToFileAsync(saveFilePath, string.Join(Environment.NewLine, titles));
+                            //直接发送本地消息
+                            await this.Mediator.Send(new ChildPageTitleRequest(saveFilePath, titles), token);
                             this.SetExecLog($"关键字：{keyword}，保存采集到的标题：{childPageDataItems.Count}条{Environment.NewLine}");
                         }
                         catch (Exception e)
