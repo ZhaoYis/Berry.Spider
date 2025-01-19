@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Avalonia.Controls;
-using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Styling;
 using CommunityToolkit.Mvvm.Input;
 using Semi.Avalonia;
@@ -72,20 +70,10 @@ public partial class MainViewModel : ViewModelBase, ITransientDependency
     [RelayCommand]
     private async Task OpenUrlAsync(string url)
     {
-        var launcher = ResolveDefaultTopLevel()?.Launcher;
+        var launcher = App.ResolveDefaultTopLevel()?.Launcher;
         if (launcher is not null)
         {
             await launcher.LaunchUriAsync(new Uri(url));
         }
-    }
-
-    private static TopLevel? ResolveDefaultTopLevel()
-    {
-        return App.Current.ApplicationLifetime switch
-        {
-            IClassicDesktopStyleApplicationLifetime desktopLifetime => desktopLifetime.MainWindow,
-            ISingleViewApplicationLifetime singleView => TopLevel.GetTopLevel(singleView.MainView),
-            _ => null
-        };
     }
 }
