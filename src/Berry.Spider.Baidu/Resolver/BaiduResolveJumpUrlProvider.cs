@@ -1,5 +1,4 @@
 using Berry.Spider.Core;
-using System.Web;
 
 namespace Berry.Spider.Baidu;
 
@@ -11,7 +10,7 @@ public class BaiduResolveJumpUrlProvider : IResolveJumpUrlProvider
 
         if (sourceUrl.StartsWith("http") || sourceUrl.StartsWith("https"))
         {
-            Uri jumpUri = new Uri(HttpUtility.UrlDecode(sourceUrl));
+            Uri jumpUri = new Uri(UrlHelper.UrlDecode(sourceUrl));
             if (jumpUri.Host.Contains("baidu"))
             {
                 string url = jumpUri.ToString();

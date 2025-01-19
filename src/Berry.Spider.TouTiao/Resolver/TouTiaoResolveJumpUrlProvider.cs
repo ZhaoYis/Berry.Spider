@@ -1,6 +1,5 @@
 using System.Text.RegularExpressions;
 using Berry.Spider.Core;
-using System.Web;
 using Microsoft.Extensions.Options;
 
 namespace Berry.Spider.TouTiao;
@@ -24,7 +23,7 @@ public class TouTiaoResolveJumpUrlProvider : IResolveJumpUrlProvider
 
         //执行一次解码，结果范例如下：
         // /search/jump?url=https://tsearch.toutiaoapi.com/s/search_wenda/list?enable_miaozhen_page=1&enter_answer_id=7175162421706048012&enter_from=search_result&outer_show_aid=7175162421706048012&qid=6931623923998900488&relate_type=0&search_id=xxx&aid=4916&jtoken=xxx
-        sourceUrl = HttpUtility.UrlDecode(sourceUrl);
+        sourceUrl = UrlHelper.UrlDecode(sourceUrl);
 
         //只获取so.toutiao.com、tsearch.toutiaoapi.com的记录
         if (Toutiaoapi_Com_Regex.Match(sourceUrl).Success || Toutiao_Com_Regex.Match(sourceUrl).Success)

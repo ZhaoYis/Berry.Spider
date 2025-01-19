@@ -33,7 +33,7 @@ public class JsonFileToDbAppService : IJsonFileToDbAppService
 
         await Parallel.ForEachAsync(files, new ParallelOptions
         {
-            MaxDegreeOfParallelism = AppGlobalConstants.ParallelMaxDegreeOfParallelism
+            MaxDegreeOfParallelism = AppGlobalConstants.ParallelSafeDegreeOfParallelism
         }, async (file, token) =>
         {
             try

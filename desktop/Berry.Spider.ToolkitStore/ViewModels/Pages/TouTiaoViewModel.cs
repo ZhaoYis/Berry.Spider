@@ -1,13 +1,12 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
 using Berry.Spider.Core;
-using Berry.Spider.Domain;
 using Berry.Spider.TouTiao;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -34,17 +33,17 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
 
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
-    private ISpiderContentKeywordRepository SpiderKeywordRepository { get; }
     private ILogger<TouTiaoViewModel> Logger { get; }
     private IMediator Mediator { get; }
     private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=question&dvpf=pc";
-
-    public TouTiaoViewModel(IServiceProvider serviceProvider, IWebElementLoadProvider webProvider,
-                            ISpiderContentKeywordRepository keywordRepository, ILogger<TouTiaoViewModel> logger, IMediator mediator)
+    
+    public TouTiaoViewModel(IServiceProvider serviceProvider,
+                            IWebElementLoadProvider webProvider,
+                            ILogger<TouTiaoViewModel> logger,
+                            IMediator mediator)
     {
         this.WebElementLoadProvider = webProvider;
         this.ResolveJumpUrlProvider = serviceProvider.GetRequiredService<TouTiaoResolveJumpUrlProvider>();
-        this.SpiderKeywordRepository = keywordRepository;
         this.Logger = logger;
         this.Mediator = mediator;
     }
@@ -56,7 +55,7 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
     [RelayCommand]
     private async Task ChoseFileAsync()
     {
-        var sp = this.GetStorageProvider();
+        var sp = App.ResolveDefaultStorageProvider();
         if (sp is null) return;
         IReadOnlyList<IStorageFile> files = await sp.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
@@ -89,7 +88,10 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
             string saveFileName = $"{DateTime.Now:yyyyMMddHHmmssfff}.txt";
             string saveFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, saveFileName);
 
-            await Parallel.ForEachAsync(lines, new ParallelOptions { MaxDegreeOfParallelism = AppGlobalConstants.ParallelMaxDegreeOfParallelism }, async (keyword, token) =>
+            await Parallel.ForEachAsync(lines, new ParallelOptions
+            {
+                MaxDegreeOfParallelism = AppGlobalConstants.ParallelSafeDegreeOfParallelism
+            }, async (keyword, token) =>
             {
                 if (string.IsNullOrEmpty(keyword)) return;
                 this.SetExecLog($"开始抓取关键字：{keyword}");
@@ -103,8 +105,11 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
                     var resultContent = root.TryFindElements(By.CssSelector(".result-content"));
                     if (resultContent is null or { Count: 0 }) return;
 
-                    ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
-                    foreach (IWebElement element in resultContent)
+                    var resultBag = new ConcurrentBag<ChildPageDataItem>();
+                    await Parallel.ForEachAsync(resultContent, new ParallelOptions
+                    {
+                        MaxDegreeOfParallelism = AppGlobalConstants.ParallelMaxDegreeOfParallelism
+                    }, async (element, _) =>
                     {
                         var a = element.TryFindElement(By.TagName("a"));
                         if (a != null)
@@ -115,34 +120,23 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
 
                             if (!string.IsNullOrEmpty(text) && !string.IsNullOrEmpty(realHref))
                             {
-                                childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
+                                resultBag.Add(new ChildPageDataItem
                                 {
                                     Title = text,
                                     Href = realHref
                                 });
                             }
                         }
-                    }
+                    });
 
-                    if (childPageDataItems is { Count: > 0 })
+                    if (resultBag is { Count: > 0 })
                     {
                         try
                         {
-                            //保存采集到的标题
-                            // List<SpiderContent_Keyword> list = childPageDataItems.Select(item => new SpiderContent_Keyword(item.Title, SpiderSourceFrom.TouTiao_Question, ""))
-                            //                                                      .ToList();
-                            // this.Logger.LogInformation($"[SpiderContent_Keyword] {JsonSerializer.Serialize(list, new JsonSerializerOptions
-                            // {
-                            //     WriteIndented = true,
-                            //     Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-                            // })}");
-                            //
-                            // await this.SpiderKeywordRepository.InsertManyAsync(list, cancellationToken: token);
-
-                            List<string> titles = childPageDataItems.Select(x => x.Title).ToList();
+                            List<string> titles = resultBag.Select(x => x.Title).ToList();
                             //直接发送本地消息
                             await this.Mediator.Send(new ChildPageTitleRequest(saveFilePath, titles), token);
-                            this.SetExecLog($"关键字：{keyword}，保存采集到的标题：{childPageDataItems.Count}条{Environment.NewLine}");
+                            this.SetExecLog($"关键字：{keyword}，保存采集到的标题：{resultBag.Count}条{Environment.NewLine}");
                         }
                         catch (Exception e)
                         {
@@ -169,11 +163,5 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
         if (logBuilder.Length > 1_000_000) logBuilder.Clear();
         logBuilder.AppendFormat("{0:HH:mm:ss:fff} {1}{2}", DateTime.Now, message, Environment.NewLine);
         this.ExecLog = logBuilder.ToString();
-    }
-
-    private IStorageProvider? GetStorageProvider()
-    {
-        var topLevel = App.ResolveDefaultTopLevel();
-        return topLevel?.StorageProvider;
     }
 }

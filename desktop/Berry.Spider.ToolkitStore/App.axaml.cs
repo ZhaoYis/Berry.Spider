@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform.Storage;
 using Berry.Spider.ToolkitStore.ViewModels;
 using Berry.Spider.ToolkitStore.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -79,5 +80,11 @@ public partial class App : Avalonia.Application
                    ISingleViewApplicationLifetime singleView => TopLevel.GetTopLevel(singleView.MainView),
                    _ => null
                };
+    }
+
+    public static IStorageProvider? ResolveDefaultStorageProvider()
+    {
+        var topLevel = App.ResolveDefaultTopLevel();
+        return topLevel?.StorageProvider;
     }
 }
