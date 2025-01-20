@@ -33,11 +33,6 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
     [NotifyCanExecuteChangedFor(nameof(ExecCommand))] [ObservableProperty]
     private string _currentFilePath;
 
-    /// <summary>
-    /// 异步任务取消令牌
-    /// </summary>
-    private readonly CancellationTokenSource cancellationTokenSource = new();
-
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
     private ILogger<TouTiaoViewModel> Logger { get; }
@@ -95,8 +90,7 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
         IAsyncEnumerable<string> lines = File.ReadLinesAsync(this.CurrentFilePath);
         await Parallel.ForEachAsync(lines, new ParallelOptions
         {
-            MaxDegreeOfParallelism = AppGlobalConstants.ParallelSafeDegreeOfParallelism,
-            CancellationToken = cancellationTokenSource.Token
+            MaxDegreeOfParallelism = 1
         }, async (_keyword, _cancellationToken) =>
         {
             if (string.IsNullOrEmpty(_keyword)) return;
@@ -114,9 +108,8 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
                 var resultBag = new ConcurrentBag<ChildPageDataItem>();
                 await Parallel.ForEachAsync(resultContent, new ParallelOptions
                 {
-                    MaxDegreeOfParallelism = AppGlobalConstants.ParallelMaxDegreeOfParallelism,
-                    CancellationToken = _cancellationToken
-                }, async (element, _) =>
+                    MaxDegreeOfParallelism = AppGlobalConstants.ParallelMaxDegreeOfParallelism
+                }, async (element, _innerToken) =>
                 {
                     var a = element.TryFindElement(By.TagName("a"));
                     if (a != null)
@@ -143,9 +136,9 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
                     await this.Mediator.Send(new ChildPageTitleRequest(saveFilePath, titles), _cancellationToken);
                     this.SetExecLog($"关键字：{state}，保存采集到的标题：{resultBag.Count}条{Environment.NewLine}");
                 }
-            });
 
-            await Task.Delay(RandomHelper.GetRandom(500, 1000), _cancellationToken);
+                await Task.Delay(RandomHelper.GetRandom(500, 1000), _cancellationToken);
+            });
         });
     }
 
