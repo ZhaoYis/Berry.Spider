@@ -5,5 +5,5 @@ namespace Berry.Spider.Core;
 
 public interface IWebDriverProvider : ISingletonDependency
 {
-    Task<IWebDriver> GetAsync();
+    Task<IWebDriver> GetAsync(string isolationContext = "");
 }

@@ -33,6 +33,14 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
     [NotifyCanExecuteChangedFor(nameof(ExecCommand))] [ObservableProperty]
     private string _currentFilePath;
 
+    /// <summary>
+    /// 是否正在执行
+    /// </summary>
+    [NotifyCanExecuteChangedFor(nameof(StopCommand), nameof(ExecCommand))] [ObservableProperty]
+    private bool _isExecuting;
+
+    private readonly CancellationTokenSource cancellationTokenSource = new();
+
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
     private ILogger<TouTiaoViewModel> Logger { get; }
@@ -40,9 +48,9 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
     private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=question&dvpf=pc";
 
     public TouTiaoViewModel(IServiceProvider serviceProvider,
-                            IWebElementLoadProvider webProvider,
-                            ILogger<TouTiaoViewModel> logger,
-                            IMediator mediator)
+        IWebElementLoadProvider webProvider,
+        ILogger<TouTiaoViewModel> logger,
+        IMediator mediator)
     {
         this.WebElementLoadProvider = webProvider;
         this.ResolveJumpUrlProvider = serviceProvider.GetRequiredService<TouTiaoResolveJumpUrlProvider>();
@@ -84,13 +92,16 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
     {
         if (!File.Exists(this.CurrentFilePath)) return;
 
+        // 设置正在执行状态
+        this.IsExecuting = true;
         string saveFileName = $"{DateTime.Now:yyyyMMddHHmmssfff}.txt";
         string saveFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, saveFileName);
 
-        IAsyncEnumerable<string> lines = File.ReadLinesAsync(this.CurrentFilePath);
+        IAsyncEnumerable<string> lines = File.ReadLinesAsync(this.CurrentFilePath, cancellationTokenSource.Token);
         await Parallel.ForEachAsync(lines, new ParallelOptions
         {
-            MaxDegreeOfParallelism = 1
+            MaxDegreeOfParallelism = AppGlobalConstants.ParallelMaxDegreeOfParallelism,
+            CancellationToken = cancellationTokenSource.Token
         }, async (_keyword, _cancellationToken) =>
         {
             if (string.IsNullOrEmpty(_keyword)) return;
@@ -108,7 +119,8 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
                 var resultBag = new ConcurrentBag<ChildPageDataItem>();
                 await Parallel.ForEachAsync(resultContent, new ParallelOptions
                 {
-                    MaxDegreeOfParallelism = AppGlobalConstants.ParallelMaxDegreeOfParallelism
+                    MaxDegreeOfParallelism = AppGlobalConstants.ParallelMaxDegreeOfParallelism,
+                    CancellationToken = _cancellationToken
                 }, async (element, _innerToken) =>
                 {
                     var a = element.TryFindElement(By.TagName("a"));
@@ -137,14 +149,28 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
                     this.SetExecLog($"关键字：{state}，保存采集到的标题：{resultBag.Count}条{Environment.NewLine}");
                 }
 
-                await Task.Delay(RandomHelper.GetRandom(500, 1000), _cancellationToken);
+                await Task.Delay(RandomHelper.GetRandom(100, 200), _cancellationToken).ConfigureAwait(false);
             });
         });
     }
 
+    /// <summary>
+    /// 停止执行
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(IsExecuting))]
+    private async Task StopAsync()
+    {
+        await this.cancellationTokenSource.CancelAsync();
+        this.IsExecuting = false;
+    }
+
+    /// <summary>
+    /// 是否可以点击去执行按钮
+    /// </summary>
+    /// <returns></returns>
     private bool CanExecute()
     {
-        return !string.IsNullOrEmpty(this.CurrentFilePath);
+        return !string.IsNullOrEmpty(this.CurrentFilePath) && !this.IsExecuting;
     }
 
     private static readonly StringBuilder logBuilder = new StringBuilder();

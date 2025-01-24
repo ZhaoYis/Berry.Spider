@@ -30,6 +30,11 @@
             Command="{Binding ExecCommand}"
             Content="开始执行"
             Margin="10" />
+            
+        <Button
+            Command="{Binding StopCommand}"
+            Content="停止执行"
+            Margin="10" />
 
         <StackPanel>
             <TextBox

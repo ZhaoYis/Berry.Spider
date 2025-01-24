@@ -1,10 +1,11 @@
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using Volo.Abp.Threading;
 
 namespace Berry.Spider.Core;
 
-public class WebElementLoadProvider : IWebElementLoadProvider
+public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
 {
     private ILogger<WebElementLoadProvider> Logger { get; }
     private IWebDriverProvider WebDriverProvider { get; }
@@ -12,11 +13,14 @@ public class WebElementLoadProvider : IWebElementLoadProvider
 
     public WebElementLoadProvider(ILogger<WebElementLoadProvider> logger,
         IWebDriverProvider webDriverProvider,
-        IHumanMachineVerificationInterceptorProvider interceptorProvider)
+        IHumanMachineVerificationInterceptorProvider interceptorProvider) : base(webDriverProvider)
     {
         this.Logger = logger;
         this.WebDriverProvider = webDriverProvider;
         this.InterceptorProvider = interceptorProvider;
+
+        //初始化浏览器
+        AsyncHelper.RunSync(() => this.InitializeAsync(nameof(WebElementLoadProvider)));
     }
 
     public async Task InvokeAsync(string targetUrl,
@@ -26,9 +30,6 @@ public class WebElementLoadProvider : IWebElementLoadProvider
     {
         try
         {
-            //检查是否处于人机验证资源锁定阶段
-            if (await this.InterceptorProvider.IsLockedAsync(targetUrl)) return;
-
             using IWebDriver driver = await this.WebDriverProvider.GetAsync();
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
@@ -39,9 +40,6 @@ public class WebElementLoadProvider : IWebElementLoadProvider
 
             if (string.IsNullOrEmpty(page)) return;
             this.Logger.LogInformation("[V]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, url);
-
-            //人机验证拦截
-            if (await this.InterceptorProvider.LockedAsync(targetUrl, url)) return;
 
             WebDriverWait wait = new WebDriverWait(driver, timeout: TimeSpan.FromSeconds(30))
             {

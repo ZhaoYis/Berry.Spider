@@ -20,8 +20,8 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
         this.SeleniumProxyProvider = proxyProvider;
         this.UserAgentProvider = userAgentProvider;
     }
-
-    public async Task<ChromeOptions> BuildAsync(bool isUsedProxy = true)
+    
+    public async Task<ChromeOptions> BuildAsync(string context, bool isUsedProxy = true)
     {
         //https://www.cnblogs.com/gurenyumao/p/14721035.html
         ChromeOptions options = new ChromeOptions();
@@ -97,6 +97,19 @@ public class ChromeOptionsProvider : IDriverOptionsProvider
             }
         }
 
+        var userProfileDirectory = UserProfileDirectory(context);
+        if (!string.IsNullOrEmpty(userProfileDirectory))
+        {
+            Directory.CreateDirectory(userProfileDirectory);
+            options.AddArgument($"--user-data-dir={userProfileDirectory}");
+            options.AddUserProfilePreference("download.default_directory", Path.Combine(userProfileDirectory, "Downloads"));
+        }
+
         return options;
+    }
+
+    private static string UserProfileDirectory(string context)
+    {
+        return string.IsNullOrEmpty(context) ? string.Empty : Path.Combine(Path.GetTempPath(), "BrowserFixtureUserProfiles", context);
     }
 }
