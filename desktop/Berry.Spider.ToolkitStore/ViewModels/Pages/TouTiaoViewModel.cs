@@ -98,59 +98,53 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
         string saveFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, saveFileName);
 
         IAsyncEnumerable<string> lines = File.ReadLinesAsync(this.CurrentFilePath, cancellationTokenSource.Token);
-        await Parallel.ForEachAsync(lines, new ParallelOptions
+        Dictionary<string, string> keywordList = new Dictionary<string, string>(200_000);
+        await foreach (var keyword in lines)
         {
-            MaxDegreeOfParallelism = AppGlobalConstants.ParallelMaxDegreeOfParallelism,
-            CancellationToken = cancellationTokenSource.Token
-        }, async (_keyword, _cancellationToken) =>
-        {
-            if (string.IsNullOrEmpty(_keyword)) return;
-            //this.SetExecLog($"开始抓取关键字：{_keyword}");
+            if (string.IsNullOrEmpty(keyword)) continue;
+            string targetUrl = string.Format(this.HomePage, keyword);
+            keywordList[keyword] = targetUrl;
+        }
 
-            string targetUrl = string.Format(this.HomePage, _keyword);
-            await this.WebElementLoadProvider.InvokeAsync(targetUrl, _keyword, drv => drv.FindElement(By.CssSelector(".s-result-list")), async (root, state) =>
+        await this.WebElementLoadProvider.BatchInvokeAsync(keywordList, drv => drv.FindElement(By.CssSelector(".s-result-list")), async (root, state) =>
+        {
+            if (root == null) return;
+
+            var resultContent = root.TryFindElements(By.CssSelector(".result-content"));
+            if (resultContent is null or { Count: 0 }) return;
+
+            var resultBag = new ConcurrentBag<ChildPageDataItem>();
+            await Parallel.ForEachAsync(resultContent, new ParallelOptions
             {
-                if (root == null) return;
-                //this.SetExecLog($"抓取到页面数据，开始执行数据解析操作...");
-
-                var resultContent = root.TryFindElements(By.CssSelector(".result-content"));
-                if (resultContent is null or { Count: 0 }) return;
-
-                var resultBag = new ConcurrentBag<ChildPageDataItem>();
-                await Parallel.ForEachAsync(resultContent, new ParallelOptions
+                MaxDegreeOfParallelism = AppGlobalConstants.ParallelMaxDegreeOfParallelism,
+                CancellationToken = cancellationTokenSource.Token
+            }, async (element, _innerToken) =>
+            {
+                var a = element.TryFindElement(By.TagName("a"));
+                if (a != null)
                 {
-                    MaxDegreeOfParallelism = AppGlobalConstants.ParallelMaxDegreeOfParallelism,
-                    CancellationToken = _cancellationToken
-                }, async (element, _innerToken) =>
-                {
-                    var a = element.TryFindElement(By.TagName("a"));
-                    if (a != null)
+                    string text = a.Text.Trim();
+                    string href = a.GetDomAttribute("href");
+
+                    if (!string.IsNullOrEmpty(text) && !string.IsNullOrEmpty(href))
                     {
-                        string text = a.Text.Trim();
-                        string href = a.GetDomAttribute("href");
-
-                        if (!string.IsNullOrEmpty(text) && !string.IsNullOrEmpty(href))
+                        string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
+                        resultBag.Add(new ChildPageDataItem
                         {
-                            string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
-                            resultBag.Add(new ChildPageDataItem
-                            {
-                                Title = text,
-                                Href = realHref
-                            });
-                        }
+                            Title = text,
+                            Href = realHref
+                        });
                     }
-                });
-
-                if (resultBag is { Count: > 0 })
-                {
-                    List<string> titles = resultBag.Select(x => x.Title).ToList();
-                    //直接发送本地消息
-                    await this.Mediator.Send(new ChildPageTitleRequest(saveFilePath, titles), _cancellationToken);
-                    this.SetExecLog($"关键字：{state}，保存采集到的标题：{resultBag.Count}条{Environment.NewLine}");
                 }
-
-                await Task.Delay(RandomHelper.GetRandom(100, 200), _cancellationToken).ConfigureAwait(false);
             });
+
+            if (resultBag is { Count: > 0 })
+            {
+                List<string> titles = resultBag.Select(x => x.Title).ToList();
+                //直接发送本地消息
+                await this.Mediator.Send(new ChildPageTitleRequest(saveFilePath, titles), cancellationTokenSource.Token);
+                this.SetExecLog($"关键字：{state}，保存采集到的标题：{resultBag.Count}条{Environment.NewLine}");
+            }
         });
     }
 

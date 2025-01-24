@@ -66,9 +66,6 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
                     string keyword = pair.Key;
                     string targetUrl = pair.Value;
 
-                    //检查是否处于人机验证资源锁定阶段
-                    if (await this.InterceptorProvider.IsLockedAsync(targetUrl)) return;
-
                     //跳转
                     await driver.Navigate().GoToUrlAsync(targetUrl);
                     string title = driver.Title;
@@ -78,9 +75,6 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
 
                     if (string.IsNullOrEmpty(page)) return;
                     this.Logger.LogInformation("[BV]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, url);
-
-                    //人机验证拦截
-                    if (await this.InterceptorProvider.LockedAsync(targetUrl, url)) return;
 
                     WebDriverWait wait = new WebDriverWait(driver, timeout: TimeSpan.FromSeconds(30))
                     {
