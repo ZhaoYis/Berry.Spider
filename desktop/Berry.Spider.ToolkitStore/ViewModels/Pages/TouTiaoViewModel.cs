@@ -15,7 +15,6 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
-using Volo.Abp;
 using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.ToolkitStore.ViewModels.Pages;
@@ -98,7 +97,7 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
         string saveFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, saveFileName);
 
         IAsyncEnumerable<string> lines = File.ReadLinesAsync(this.CurrentFilePath, cancellationTokenSource.Token);
-        Dictionary<string, string> keywordList = new Dictionary<string, string>(200_000);
+        IDictionary<string, string> keywordList = new Dictionary<string, string>(200_000);
         await foreach (var keyword in lines)
         {
             if (string.IsNullOrEmpty(keyword)) continue;
@@ -143,7 +142,7 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
                 List<string> titles = resultBag.Select(x => x.Title).ToList();
                 //直接发送本地消息
                 await this.Mediator.Send(new ChildPageTitleRequest(saveFilePath, titles), cancellationTokenSource.Token);
-                this.SetExecLog($"关键字：{state}，保存采集到的标题：{resultBag.Count}条{Environment.NewLine}");
+                this.SetExecLog($"关键字：{state}，保存采集到的标题：{resultBag.Count}条");
             }
         });
     }
@@ -172,7 +171,6 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
     private void SetExecLog(string message)
     {
         if (logBuilder.Length > 1_000_000) logBuilder.Clear();
-        logBuilder.AppendFormat("{0:HH:mm:ss:fff} {1}{2}", DateTime.Now, message, Environment.NewLine);
-        this.ExecLog = logBuilder.ToString();
+        this.ExecLog = logBuilder.AppendFormat("{0:HH:mm:ss:ffffff} {1}{2}", DateTime.Now, message, Environment.NewLine).ToString();
     }
 }

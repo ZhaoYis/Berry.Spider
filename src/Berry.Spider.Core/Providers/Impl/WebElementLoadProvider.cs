@@ -26,7 +26,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     {
         try
         {
-            using IWebDriver driver = await this.WebDriverProvider.GetAsync();
+            using IWebDriver driver = await this.WebDriverProvider.GetAsync(nameof(InvokeAsync));
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
             string title = driver.Title;
@@ -58,7 +58,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     {
         try
         {
-            using IWebDriver driver = await this.WebDriverProvider.GetAsync();
+            using IWebDriver driver = await this.WebDriverProvider.GetAsync(nameof(BatchInvokeAsync));
             foreach (KeyValuePair<string, string> pair in keywordList)
             {
                 try
@@ -107,7 +107,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             //检查是否处于人机验证资源锁定阶段
             if (await this.InterceptorProvider.IsLockedAsync(targetUrl)) return default(T);
 
-            using IWebDriver driver = await this.WebDriverProvider.GetAsync();
+            using IWebDriver driver = await this.WebDriverProvider.GetAsync(nameof(InvokeAndReturnAsync));
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
             string title = driver.Title;
@@ -149,7 +149,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             //检查是否处于人机验证资源锁定阶段
             if (await this.InterceptorProvider.IsLockedAsync(targetUrl)) return string.Empty;
 
-            using IWebDriver driver = await this.WebDriverProvider.GetAsync();
+            using IWebDriver driver = await this.WebDriverProvider.GetAsync(nameof(AutoClickAsync));
             //隐式等待
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             //跳转
@@ -193,7 +193,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             //检查是否处于人机验证资源锁定阶段
             if (await this.InterceptorProvider.IsLockedAsync(targetUrl)) return;
 
-            using IWebDriver driver = await this.WebDriverProvider.GetAsync();
+            using IWebDriver driver = await this.WebDriverProvider.GetAsync(nameof(AutoClickAndInvokeAsync));
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
             //获取输入框
