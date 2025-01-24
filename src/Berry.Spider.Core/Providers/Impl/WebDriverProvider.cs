@@ -28,14 +28,17 @@ public class WebDriverProvider : IWebDriverProvider, IAsyncDisposable
 
             if (this.DriverOptions.LocalOptions.IsEnable)
             {
-                var cds = this.CreateChromeDriverService(this.DriverOptions.LocalOptions.LocalAddress);
-                IWebDriver driver = new ChromeDriver(
-                    cds,
-                    options,
-                    TimeSpan.FromSeconds(30)
-                );
+                return _browsers.GetOrAdd(isolationContext, () =>
+                {
+                    var cds = this.CreateChromeDriverService(this.DriverOptions.LocalOptions.LocalAddress);
+                    IWebDriver driver = new ChromeDriver(
+                        cds,
+                        options,
+                        TimeSpan.FromSeconds(30)
+                    );
 
-                return driver;
+                    return driver;
+                });
             }
             else if (this.DriverOptions.RemoteOptions.IsEnable)
             {
