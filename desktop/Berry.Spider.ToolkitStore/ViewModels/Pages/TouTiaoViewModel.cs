@@ -105,13 +105,13 @@ public partial class TouTiaoViewModel : ViewModelBase, ITransientDependency
         }, async (_keyword, _cancellationToken) =>
         {
             if (string.IsNullOrEmpty(_keyword)) return;
-            this.SetExecLog($"开始抓取关键字：{_keyword}");
+            //this.SetExecLog($"开始抓取关键字：{_keyword}");
 
             string targetUrl = string.Format(this.HomePage, _keyword);
             await this.WebElementLoadProvider.InvokeAsync(targetUrl, _keyword, drv => drv.FindElement(By.CssSelector(".s-result-list")), async (root, state) =>
             {
                 if (root == null) return;
-                this.SetExecLog($"抓取到页面数据，开始执行数据解析操作...");
+                //this.SetExecLog($"抓取到页面数据，开始执行数据解析操作...");
 
                 var resultContent = root.TryFindElements(By.CssSelector(".result-content"));
                 if (resultContent is null or { Count: 0 }) return;
