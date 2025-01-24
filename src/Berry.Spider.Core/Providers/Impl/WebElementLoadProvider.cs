@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using Volo.Abp.Threading;
 
 namespace Berry.Spider.Core;
 
@@ -18,9 +17,6 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
         this.Logger = logger;
         this.WebDriverProvider = webDriverProvider;
         this.InterceptorProvider = interceptorProvider;
-
-        //初始化浏览器
-        AsyncHelper.RunSync(() => this.InitializeAsync(nameof(WebElementLoadProvider)));
     }
 
     public async Task InvokeAsync(string targetUrl,
