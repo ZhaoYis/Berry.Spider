@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using Volo.Abp;
 
 namespace Berry.Spider.Core;
 
@@ -11,8 +12,8 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     private IHumanMachineVerificationInterceptorProvider InterceptorProvider { get; }
 
     public WebElementLoadProvider(ILogger<WebElementLoadProvider> logger,
-        IWebDriverProvider webDriverProvider,
-        IHumanMachineVerificationInterceptorProvider interceptorProvider) : base(webDriverProvider)
+                                  IWebDriverProvider webDriverProvider,
+                                  IHumanMachineVerificationInterceptorProvider interceptorProvider) : base(webDriverProvider)
     {
         this.Logger = logger;
         this.WebDriverProvider = webDriverProvider;
@@ -20,9 +21,9 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     }
 
     public async Task InvokeAsync(string targetUrl,
-        object state,
-        Func<IWebDriver, IWebElement?> selector,
-        Func<IWebElement?, object, Task> executor)
+                                  object state,
+                                  Func<IWebDriver, IWebElement?> selector,
+                                  Func<IWebElement?, object, Task> executor)
     {
         try
         {
@@ -53,8 +54,8 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     }
 
     public async Task BatchInvokeAsync(IDictionary<string, string> keywordList,
-        Func<IWebDriver, IWebElement?> selector,
-        Func<IWebElement?, object, Task> executor)
+                                       Func<IWebDriver, IWebElement?> selector,
+                                       Func<IWebElement?, object, Task> executor)
     {
         try
         {
@@ -86,7 +87,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
                 }
                 finally
                 {
-                    await Task.Delay(20).ConfigureAwait(false);
+                    await Task.Delay(RandomHelper.GetRandom(10, 20)).ConfigureAwait(false);
                 }
             }
         }
@@ -98,9 +99,9 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     }
 
     public async Task<T?> InvokeAndReturnAsync<T>(string targetUrl,
-        object state,
-        Func<IWebDriver, IWebElement?> selector,
-        Func<IWebElement?, object, Task<T>> executor)
+                                                  object state,
+                                                  Func<IWebDriver, IWebElement?> selector,
+                                                  Func<IWebElement?, object, Task<T>> executor)
     {
         try
         {
@@ -140,9 +141,9 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     }
 
     public async Task<string> AutoClickAsync(string targetUrl,
-        object state,
-        By inputBox,
-        By submitBtn)
+                                             object state,
+                                             By inputBox,
+                                             By submitBtn)
     {
         try
         {
@@ -182,11 +183,11 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     }
 
     public async Task AutoClickAndInvokeAsync(string targetUrl,
-        object state,
-        By inputBox,
-        By submitBtn,
-        Func<IWebDriver, IWebElement?> selector,
-        Func<IWebElement?, object, Task> executor)
+                                              object state,
+                                              By inputBox,
+                                              By submitBtn,
+                                              Func<IWebDriver, IWebElement?> selector,
+                                              Func<IWebElement?, object, Task> executor)
     {
         try
         {
