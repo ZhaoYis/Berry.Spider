@@ -19,7 +19,7 @@ public class DateTimeFunction : AIFunction, ITransientDependency
         Debug.WriteLine("Invoke the system function get_current_time()...");
         return Task.FromResult<object?>(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
     }
-
+    
     /// <summary>
     /// Gets metadata describing the function.
     /// </summary>

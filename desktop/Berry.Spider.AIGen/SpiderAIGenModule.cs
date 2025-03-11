@@ -37,7 +37,6 @@ public class SpiderAIGenModule : AbpModule
                 context.Services.AddSingleton<ConfigClient>(client);
 
                 context.Services.ConfigureOllamaOptions(client);
-                context.Services.ConfigureOllamaQwenOptions(client);
             }
         }
     }

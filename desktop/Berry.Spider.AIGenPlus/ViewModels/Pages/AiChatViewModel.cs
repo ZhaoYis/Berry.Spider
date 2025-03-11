@@ -5,12 +5,15 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages;
 
-public partial class AiChatViewModel(IChatClient chatClient) : ViewModelBase, ITransientDependency
+public partial class AiChatViewModel(
+    [FromKeyedServices(nameof(OllamaChatClient))]
+    IChatClient chatClient) : ViewModelBase, ITransientDependency
 {
     /// <summary>
     /// 问题

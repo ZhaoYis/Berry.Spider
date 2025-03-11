@@ -56,7 +56,6 @@ public class AITextGenerationModule : AbpModule
         });
 
         context.Services.Configure<OllamaOptions>(configuration.GetSection(nameof(OllamaOptions)));
-        context.Services.Configure<OllamaQwenOptions>(configuration.GetSection(nameof(OllamaQwenOptions)));
         
         // context.Services.AddTransient(serviceProvider =>
         // {

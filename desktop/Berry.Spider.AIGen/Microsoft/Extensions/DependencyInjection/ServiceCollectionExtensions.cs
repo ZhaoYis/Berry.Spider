@@ -26,8 +26,8 @@ public static class ServiceCollectionExtensions
         Check.NotNull(client, nameof(client));
 
         string serviceAddr = client.Get("OllamaOptions:ServiceAddr");
-        string modelId = client.Get("OllamaQwenOptions:ModelId");
-        string embeddingModelId = client.Get("OllamaQwenOptions:EmbeddingModelId");
+        string modelId = client.Get("OllamaOptions:ModelId");
+        string embeddingModelId = client.Get("OllamaOptions:EmbeddingModelId");
         services.AddTransient<Kernel>(serviceProvider =>
         {
             //var handler = new OpenAIHttpClientHandler(serviceAddr);
@@ -80,21 +80,12 @@ public static class ServiceCollectionExtensions
 
         bool isEnable = bool.Parse(client.Get("OllamaOptions:IsEnable"));
         string serviceAddr = client.Get("OllamaOptions:ServiceAddr");
+        string modelId = client.Get("OllamaOptions:ModelId");
+        string embeddingModelId = client.Get("OllamaOptions:EmbeddingModelId");
         services.Configure<OllamaOptions>(opt =>
         {
             opt.IsEnable = isEnable;
             opt.ServiceAddr = serviceAddr;
-        });
-    }
-
-    public static void ConfigureOllamaQwenOptions(this IServiceCollection services, ConfigClient client)
-    {
-        Check.NotNull(client, nameof(client));
-
-        string modelId = client.Get("OllamaQwenOptions:ModelId");
-        string embeddingModelId = client.Get("OllamaQwenOptions:EmbeddingModelId");
-        services.Configure<OllamaQwenOptions>(opt =>
-        {
             opt.ModelId = modelId;
             opt.EmbeddingModelId = embeddingModelId;
         });

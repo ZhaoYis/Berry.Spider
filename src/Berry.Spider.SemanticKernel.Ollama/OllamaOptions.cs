@@ -14,4 +14,14 @@ public class OllamaOptions
     /// 服务地址
     /// </summary>
     public required string ServiceAddr { get; set; }
+
+    /// <summary>
+    /// 默认模型ID
+    /// </summary>
+    public string ModelId { get; set; }
+
+    /// <summary>
+    /// 默认文本嵌入模型ID
+    /// </summary>
+    public string EmbeddingModelId { get; set; }
 }

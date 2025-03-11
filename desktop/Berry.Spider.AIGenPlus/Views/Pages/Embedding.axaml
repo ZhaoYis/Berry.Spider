@@ -1,0 +1,79 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:pages="clr-namespace:Berry.Spider.AIGenPlus.ViewModels.Pages"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="pages:EmbeddingViewModel"
+             x:Class="Berry.Spider.AIGenPlus.Views.Pages.Embedding">
+    <StackPanel>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                Command="{Binding ExecEmbeddingCommand}"
+                                Content="嵌入文本"
+                                Margin="10" />
+                        </StackPanel>
+                        <TextBox
+                            AcceptsReturn="True"
+                            Height="100"
+                            Width="800"
+                            Margin="200 10 10 10"
+                            Classes="TextArea"
+                            Text="{Binding DocText}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                Command="{Binding ExecSearchCommand}"
+                                Content="提问"
+                                Margin="10" />
+                        </StackPanel>
+                        <TextBox
+                            AcceptsReturn="True"
+                            Height="100"
+                            Margin="10"
+                            Classes="TextArea"
+                            Text="{Binding QuestionText}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                Content="回答"
+                                Margin="10" />
+                        </StackPanel>
+                        <TextBox
+                            AcceptsReturn="True"
+                            Height="100"
+                            Margin="10"
+                            Classes="TextArea"
+                            IsReadOnly="True"
+                            Text="{Binding AnswerText}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

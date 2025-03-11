@@ -106,6 +106,9 @@
             <TabItem Header="Function Call">
                 <pages:FunctionCall />
             </TabItem>
+            <TabItem Header="Text Embedding">
+                <pages:Embedding />
+            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>

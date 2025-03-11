@@ -12,18 +12,16 @@ public class OllamaQwenTextGenerationService : ITextGenerationService
     private readonly OllamaApiClient _ollamaApiClient;
 
     private OllamaOptions OllamaOptions { get; }
-    private OllamaQwenOptions OllamaQwenOptions { get; }
 
-    public OllamaQwenTextGenerationService(IOptions<OllamaOptions> ollamaOptions, IOptions<OllamaQwenOptions> ollamaQwenOptions)
+    public OllamaQwenTextGenerationService(IOptions<OllamaOptions> ollamaOptions)
     {
         this.OllamaOptions = ollamaOptions.Value;
-        this.OllamaQwenOptions = ollamaQwenOptions.Value;
         this.Attributes = new Dictionary<string, object?>
         {
-            [AIServiceExtensions.ModelIdKey] = this.OllamaQwenOptions.ModelId,
+            [AIServiceExtensions.ModelIdKey] = this.OllamaOptions.ModelId,
             [AIServiceExtensions.EndpointKey] = this.OllamaOptions.ServiceAddr,
         };
-        _ollamaApiClient = new OllamaApiClient(this.OllamaOptions.ServiceAddr, this.OllamaQwenOptions.ModelId);
+        _ollamaApiClient = new OllamaApiClient(this.OllamaOptions.ServiceAddr, this.OllamaOptions.ModelId);
     }
 
     /// <summary>

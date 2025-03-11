@@ -24,6 +24,7 @@
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0-preview3" />
         <PackageReference Include="Microsoft.Extensions.AI" Version="9.0.1-preview.1.24570.5" />
         <PackageReference Include="Microsoft.Extensions.AI.Ollama" Version="9.0.1-preview.1.24570.5" />
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.Qdrant" Version="1.30.0-preview" />
         <PackageReference Include="Semi.Avalonia" Version="11.2.1.2" />
         <PackageReference Include="Semi.Avalonia.DataGrid" Version="11.2.1.2" />
         <PackageReference Include="Serilog" Version="4.2.0" />

@@ -2,36 +2,108 @@ using System;
 using AgileConfig.Client;
 using Berry.Spider.AIGenPlus;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Configuration;
 using Volo.Abp;
+using Volo.Abp.Threading;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddOllamaChatClient(this IServiceCollection services, ConfigClient client)
+    public static void AddOllamaAiClient(this IServiceCollection services, IConfiguration configuration)
     {
-        Check.NotNull(client, nameof(client));
+        Check.NotNull(configuration, nameof(configuration));
 
-        string serviceAddr = client.Get("OllamaOptions:ServiceAddr");
-        string modelId = client.Get("OllamaQwenOptions:ModelId");
-        services.AddChatClient(_ => new ChatClientBuilder(new OllamaChatClient(serviceAddr, modelId))
+        ConfigClientOptions? configClientOptions = configuration.GetSection(nameof(ConfigClientOptions)).Get<ConfigClientOptions>();
+        if (configClientOptions is not null)
+        {
+            ConfigClient client = new ConfigClient(configClientOptions);
+            bool isConnect = AsyncHelper.RunSync(async () => await client.ConnectAsync());
+            if (isConnect)
+            {
+                services.AddSingleton<ConfigClient>(client);
+                services.AddOllamaChatClient(client);
+                services.ConfigureOllamaOptions(client);
+            }
+        }
+        else
+        {
+            services.AddOllamaChatClient(configuration);
+            services.Configure<OllamaOptions>(configuration.GetSection(nameof(OllamaOptions)));
+        }
+    }
+
+    private static void AddOllamaChatClient(this IServiceCollection services, IConfiguration configuration)
+    {
+        OllamaOptions? ollamaOptions = configuration.GetSection(nameof(OllamaOptions)).Get<OllamaOptions>();
+        Check.NotNull(ollamaOptions, nameof(ollamaOptions));
+
+        services.AddOllamaKeyedChatClient(ollamaOptions);
+        services.AddOllamaKeyedEmbeddingClient(ollamaOptions);
+    }
+
+    private static void AddOllamaChatClient(this IServiceCollection services, ConfigClient client)
+    {
+        services.AddOllamaKeyedChatClient(BuildOllamaOptions(client));
+        services.AddOllamaKeyedEmbeddingClient(BuildOllamaOptions(client));
+    }
+
+    private static void AddOllamaKeyedChatClient(this IServiceCollection services, OllamaOptions options)
+    {
+        //chat client
+        var ollamaChatClient = new OllamaChatClient(options.ServiceAddr, options.ModelId);
+        services.AddKeyedChatClient(nameof(OllamaChatClient), _ => new ChatClientBuilder(ollamaChatClient)
             .UseFunctionInvocation()
             //.UseDistributedCache()
             //.UseOpenTelemetry()
             //.UseLogging()
             .Build());
+
+        //或者使用OpenAIClient进行初始化
+        // var apiKeyCredential = new ApiKeyCredential(options.ModelId);
+        // var aiClientOptions = new OpenAIClientOptions
+        // {
+        //     Endpoint = new Uri(options.ServiceAddr)
+        // };
+        //
+        // var openAiClient = new OpenAIClient(apiKeyCredential, aiClientOptions).AsChatClient(options.ModelId);
+        // services.AddKeyedChatClient(serviceKey, _ => new ChatClientBuilder(openAiClient)
+        //     .UseFunctionInvocation()
+        //     .Build());
     }
 
-    public static void ConfigureOllamaOptions(this IServiceCollection services, ConfigClient client)
+    private static void AddOllamaKeyedEmbeddingClient(this IServiceCollection services, OllamaOptions options)
+    {
+        //embedding client
+        services.AddKeyedSingleton(nameof(OllamaEmbeddingGenerator), new OllamaEmbeddingGenerator(options.ServiceAddr, options.EmbeddingModelId));
+    }
+
+    private static void ConfigureOllamaOptions(this IServiceCollection services, ConfigClient client)
+    {
+        services.Configure<OllamaOptions>(opt =>
+        {
+            OllamaOptions options = BuildOllamaOptions(client);
+            opt.IsEnable = options.IsEnable;
+            opt.ServiceAddr = options.ServiceAddr;
+            opt.ModelId = options.ModelId;
+            opt.EmbeddingModelId = options.EmbeddingModelId;
+        });
+    }
+
+    private static OllamaOptions BuildOllamaOptions(ConfigClient client)
     {
         Check.NotNull(client, nameof(client));
 
         bool isEnable = bool.Parse(client.Get("OllamaOptions:IsEnable"));
         string serviceAddr = client.Get("OllamaOptions:ServiceAddr");
-        services.Configure<OllamaOptions>(opt =>
+        string modelId = client.Get("OllamaOptions:ModelId");
+        string embeddingModelId = client.Get("OllamaOptions:EmbeddingModelId");
+        return new OllamaOptions
         {
-            opt.IsEnable = isEnable;
-            opt.ServiceAddr = serviceAddr;
-        });
+            IsEnable = isEnable,
+            ServiceAddr = serviceAddr,
+            ModelId = modelId,
+            EmbeddingModelId = embeddingModelId
+        };
     }
 }
