@@ -94,10 +94,10 @@ public static class ServiceCollectionExtensions
     {
         Check.NotNull(client, nameof(client));
 
-        bool isEnable = bool.Parse(client.Get("OllamaOptions:IsEnable"));
-        string serviceAddr = client.Get("OllamaOptions:ServiceAddr");
-        string modelId = client.Get("OllamaOptions:ModelId");
-        string embeddingModelId = client.Get("OllamaOptions:EmbeddingModelId");
+        bool isEnable = bool.Parse(client.Get(nameof(OllamaOptions.IsEnable)));
+        string serviceAddr = client.Get(nameof(OllamaOptions.ServiceAddr));
+        string modelId = client.Get(nameof(OllamaOptions.ModelId));
+        string embeddingModelId = client.Get(nameof(OllamaOptions.EmbeddingModelId));
         return new OllamaOptions
         {
             IsEnable = isEnable,
