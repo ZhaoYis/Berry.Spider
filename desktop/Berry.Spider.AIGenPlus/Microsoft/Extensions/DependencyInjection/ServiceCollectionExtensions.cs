@@ -44,8 +44,11 @@ public static class ServiceCollectionExtensions
 
     private static void AddOllamaChatClient(this IServiceCollection services, ConfigClient client)
     {
-        services.AddOllamaKeyedChatClient(BuildOllamaOptions(client));
-        services.AddOllamaKeyedEmbeddingClient(BuildOllamaOptions(client));
+        OllamaOptions ollamaOptions = BuildOllamaOptions(client);
+        Check.NotNull(ollamaOptions, nameof(ollamaOptions));
+
+        services.AddOllamaKeyedChatClient(ollamaOptions);
+        services.AddOllamaKeyedEmbeddingClient(ollamaOptions);
     }
 
     private static void AddOllamaKeyedChatClient(this IServiceCollection services, OllamaOptions options)
