@@ -44,7 +44,7 @@
                         <StackPanel Orientation="Horizontal">
                             <Button
                                 Command="{Binding ExecSearchCommand}"
-                                Content="提问"
+                                Content="搜索问题"
                                 Margin="10" />
                         </StackPanel>
                         <TextBox
@@ -60,7 +60,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal">
                             <Button
-                                Content="回答"
+                                Content="相似度搜索结果"
                                 Margin="10" />
                         </StackPanel>
                         <TextBox

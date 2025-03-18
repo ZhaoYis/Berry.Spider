@@ -17,6 +17,11 @@ public partial class EmbeddingViewModel(
     [FromKeyedServices(nameof(OllamaEmbeddingGenerator))]
     OllamaEmbeddingGenerator embeddingGenerator) : ViewModelBase, ITransientDependency
 {
+    /**
+     * docker启动qdrant服务：
+     * docker run -p 6333:6333 -p 6334:6334 -v $(pwd)/qdrant_storage:/qdrant/storage qdrant/qdrant
+     */
+    
     /// <summary>
     /// 待嵌入的文本
     /// </summary>
