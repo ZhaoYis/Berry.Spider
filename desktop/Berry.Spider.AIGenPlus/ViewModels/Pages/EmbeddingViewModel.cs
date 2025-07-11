@@ -21,7 +21,6 @@ public partial class EmbeddingViewModel(
      * docker启动qdrant服务：
      * docker run -p 6333:6333 -p 6334:6334 -v $(pwd)/qdrant_storage:/qdrant/storage qdrant/qdrant
      */
-    
     /// <summary>
     /// 待嵌入的文本
     /// </summary>
@@ -40,7 +39,7 @@ public partial class EmbeddingViewModel(
     private async Task ExecEmbeddingAsync()
     {
         var vectorStore = new QdrantVectorStore(new QdrantClient(host: "localhost", port: 6334));
-        var ragVectorRecordCollection = vectorStore.GetCollection<Guid, TextSnippet>("TextSnippet");
+        var ragVectorRecordCollection = vectorStore.GetCollection<Guid, TextSnippet>(nameof(TextSnippet));
         await ragVectorRecordCollection.CreateCollectionIfNotExistsAsync();
 
         var result = await embeddingGenerator.GenerateEmbeddingVectorAsync(this.DocText);
@@ -59,13 +58,14 @@ public partial class EmbeddingViewModel(
     [RelayCommand(CanExecute = nameof(CanExecuteSearch))]
     private async Task ExecSearchAsync()
     {
-        var searchOptions = new VectorSearchOptions
+        var searchOptions = new VectorSearchOptions<TextSnippet>
         {
             Top = 3,
-            VectorPropertyName = nameof(TextSnippet.TextEmbedding)
+            Filter = x => true,
+            VectorProperty = x => x.TextEmbedding
         };
         var vectorStore = new QdrantVectorStore(new QdrantClient(host: "localhost", port: 6334));
-        var ragVectorRecordCollection = vectorStore.GetCollection<Guid, TextSnippet>("TextSnippet");
+        var ragVectorRecordCollection = vectorStore.GetCollection<Guid, TextSnippet>(nameof(TextSnippet));
         var queryEmbedding = await embeddingGenerator.GenerateEmbeddingVectorAsync(this.QuestionText);
         var searchResults = await ragVectorRecordCollection.VectorizedSearchAsync(queryEmbedding, searchOptions);
 

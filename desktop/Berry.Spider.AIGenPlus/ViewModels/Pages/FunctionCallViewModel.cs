@@ -40,7 +40,7 @@ public partial class FunctionCallViewModel(
                 App.Current.GetRequiredService<DateTimeFunction>()
             ]
         };
-        var res = await chatClient.CompleteAsync(this.AskAiRequestText, chatOptons);
+        var res = await chatClient.GetResponseAsync(this.AskAiRequestText, chatOptons);
         this.AskAiResponseText = res.ToString();
     }
 

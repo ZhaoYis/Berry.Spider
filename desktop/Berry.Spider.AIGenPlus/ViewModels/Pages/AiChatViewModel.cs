@@ -35,7 +35,7 @@ public partial class AiChatViewModel(
         Check.NotNullOrWhiteSpace(this.AskAiRequestText, nameof(this.AskAiRequestText));
         this.ShowNotificationMessage("请稍后，AI正在努力思考中...");
 
-        var streamingResponse = chatClient.CompleteStreamingAsync(this.AskAiRequestText);
+        var streamingResponse = chatClient.GetStreamingResponseAsync(this.AskAiRequestText);
         StringBuilder response = new StringBuilder();
         await foreach (var text in streamingResponse)
         {
