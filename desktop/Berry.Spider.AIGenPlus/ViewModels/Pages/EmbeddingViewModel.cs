@@ -38,18 +38,18 @@ public partial class EmbeddingViewModel(
     [RelayCommand(CanExecute = nameof(CanExecuteEmbedding))]
     private async Task ExecEmbeddingAsync()
     {
-        var vectorStore = new QdrantVectorStore(new QdrantClient(host: "localhost", port: 6334));
+        var vectorStore = new QdrantVectorStore(new QdrantClient(host: "localhost", port: 6334), true);
         var ragVectorRecordCollection = vectorStore.GetCollection<Guid, TextSnippet>(nameof(TextSnippet));
-        await ragVectorRecordCollection.CreateCollectionIfNotExistsAsync();
+        await ragVectorRecordCollection.EnsureCollectionExistsAsync();
 
-        var result = await embeddingGenerator.GenerateEmbeddingVectorAsync(this.DocText);
+        var result = await embeddingGenerator.GenerateVectorAsync(this.DocText);
         TextSnippet textSnippet = new TextSnippet
         {
             Key = Guid.CreateVersion7(),
             Text = this.DocText,
             TextEmbedding = result
         };
-        Guid key = await ragVectorRecordCollection.UpsertAsync(textSnippet);
+        await ragVectorRecordCollection.UpsertAsync(textSnippet);
     }
 
     /// <summary>
@@ -60,17 +60,17 @@ public partial class EmbeddingViewModel(
     {
         var searchOptions = new VectorSearchOptions<TextSnippet>
         {
-            Top = 3,
+            Skip = 3,
             Filter = x => true,
             VectorProperty = x => x.TextEmbedding
         };
-        var vectorStore = new QdrantVectorStore(new QdrantClient(host: "localhost", port: 6334));
+        var vectorStore = new QdrantVectorStore(new QdrantClient(host: "localhost", port: 6334), true);
         var ragVectorRecordCollection = vectorStore.GetCollection<Guid, TextSnippet>(nameof(TextSnippet));
-        var queryEmbedding = await embeddingGenerator.GenerateEmbeddingVectorAsync(this.QuestionText);
-        var searchResults = await ragVectorRecordCollection.VectorizedSearchAsync(queryEmbedding, searchOptions);
+        var queryEmbedding = await embeddingGenerator.GenerateVectorAsync(this.QuestionText);
+        var searchResults = ragVectorRecordCollection.SearchAsync(queryEmbedding, 3, searchOptions);
 
         var responseResults = new List<TextSearchResult>();
-        await foreach (var result in searchResults.Results)
+        await foreach (var result in searchResults)
         {
             responseResults.Add(new TextSearchResult()
             {
@@ -101,19 +101,19 @@ public partial class EmbeddingViewModel(
         /// <summary>
         /// 文档主键
         /// </summary>
-        [VectorStoreRecordKey]
+        [VectorStoreKey]
         public required Guid Key { get; set; }
 
         /// <summary>
         /// 文档原始内容
         /// </summary>
-        [VectorStoreRecordData]
+        [VectorStoreData]
         public required string Text { get; set; }
 
         /// <summary>
         /// 文档向量（1024维）
         /// </summary>
-        [VectorStoreRecordVector(Dimensions: 1024)]
+        [VectorStoreVector(Dimensions: 1024)]
         public required ReadOnlyMemory<float> TextEmbedding { get; set; }
     }
 

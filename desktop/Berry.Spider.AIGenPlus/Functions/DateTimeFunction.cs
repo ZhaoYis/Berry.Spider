@@ -14,9 +14,9 @@ public class DateTimeFunction : AIFunction, ITransientDependency
     /// 获取当前系统时间
     /// </summary>
     /// <returns></returns>
-    protected override Task<object?> InvokeCoreAsync(IEnumerable<KeyValuePair<string, object?>> arguments, CancellationToken cancellationToken)
+    protected override ValueTask<object?> InvokeCoreAsync(AIFunctionArguments arguments, CancellationToken cancellationToken)
     {
         Debug.WriteLine("Invoke the system function get_current_time()...");
-        return Task.FromResult<object?>(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+        return ValueTask.FromResult<object?>(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
     }
 }
