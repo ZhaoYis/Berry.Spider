@@ -1,8 +1,10 @@
 using System;
+using System.Net.Http;
 using AgileConfig.Client;
 using Berry.Spider.AIGenPlus;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
+using Microsoft.SemanticKernel;
 using Volo.Abp;
 using Volo.Abp.Threading;
 
@@ -33,6 +35,27 @@ public static class ServiceCollectionExtensions
         }
     }
 
+    /// <summary>
+    /// 注入SK核心Kernel服务
+    /// </summary>
+    public static void AddSKernel(this IServiceCollection services, IConfiguration configuration)
+    {
+        OllamaOptions? ollamaOptions = configuration.GetSection(nameof(OllamaOptions)).Get<OllamaOptions>();
+        Check.NotNull(ollamaOptions, nameof(ollamaOptions));
+
+        services.AddTransient<Kernel>(serviceProvider =>
+        {
+            var builder = Kernel.CreateBuilder()
+                                .AddOllamaChatCompletion(modelId: ollamaOptions.ModelId,
+                                                         endpoint: new Uri(ollamaOptions.ServiceAddr))
+                                .AddOllamaChatClient(modelId: ollamaOptions.ModelId)
+                ;
+            //注入自定义插件
+            builder.Plugins.AddPlugins();
+            return builder.Build();
+        });
+    }
+
     private static void AddOllamaChatClient(this IServiceCollection services, IConfiguration configuration)
     {
         OllamaOptions? ollamaOptions = configuration.GetSection(nameof(OllamaOptions)).Get<OllamaOptions>();
@@ -56,11 +79,11 @@ public static class ServiceCollectionExtensions
         //chat client
         var ollamaChatClient = new OllamaChatClient(options.ServiceAddr, options.ModelId);
         services.AddKeyedChatClient(nameof(OllamaChatClient), _ => new ChatClientBuilder(ollamaChatClient)
-            .UseFunctionInvocation()
-            //.UseDistributedCache()
-            //.UseOpenTelemetry()
-            //.UseLogging()
-            .Build());
+                                                                   .UseFunctionInvocation()
+                                                                   //.UseDistributedCache()
+                                                                   //.UseOpenTelemetry()
+                                                                   //.UseLogging()
+                                                                   .Build());
 
         //或者使用OpenAIClient进行初始化
         // var apiKeyCredential = new ApiKeyCredential(options.ModelId);
