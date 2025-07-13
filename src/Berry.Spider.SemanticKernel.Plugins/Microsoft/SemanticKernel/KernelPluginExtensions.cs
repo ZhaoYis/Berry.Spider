@@ -15,6 +15,7 @@ public static class KernelPluginExtensions
     {
         // DateTime Plugin
         plugins.AddFromType<DateTimePlugin>("date_time_plugin");
+        plugins.AddFromType<ClipboardAccessPlugin>("set_clipboard_plugin");
 
         // WebSearch Plugin
         var bingSearch = new BingConnector("");
