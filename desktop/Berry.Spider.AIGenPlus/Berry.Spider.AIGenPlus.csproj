@@ -26,7 +26,9 @@
         <PackageReference Include="Microsoft.Extensions.AI" Version="9.7.0"/>
         <PackageReference Include="Microsoft.Extensions.AI.Ollama" Version="9.7.0-preview.1.25356.2"/>
         <PackageReference Include="Microsoft.SemanticKernel" Version="1.60.0"/>
-        <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.18.1-alpha" />
+        <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.60.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Agents.Orchestration" Version="1.60.0-preview" />
+        <PackageReference Include="Microsoft.SemanticKernel.Agents.Runtime.InProcess" Version="1.60.0-preview" />
         <PackageReference Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.60.0-alpha"/>
         <PackageReference Include="Microsoft.SemanticKernel.Connectors.Qdrant" Version="1.60.0-preview"/>
         <PackageReference Include="Semi.Avalonia" Version="11.2.1.5"/>
@@ -58,5 +60,9 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Berry.Spider.SemanticKernel.Plugins\Berry.Spider.SemanticKernel.Plugins.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="ViewModels\Pages\Agents\" />
     </ItemGroup>
 </Project>

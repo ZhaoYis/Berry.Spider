@@ -6,12 +6,11 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Primitives;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Agents.Chat;
 using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
+using Microsoft.SemanticKernel.Connectors.Ollama;
 using Volo.Abp;
 using Volo.Abp.DependencyInjection;
 
@@ -58,7 +57,7 @@ public partial class AiGroupChatViewModel(Kernel kernel) : ViewModelBase, ITrans
                 - Never repeat previous suggestions.
                 """,
             Kernel = kernel,
-            Arguments = new KernelArguments(new AzureOpenAIPromptExecutionSettings()
+            Arguments = new KernelArguments(new OllamaPromptExecutionSettings()
             {
                 FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
             })
