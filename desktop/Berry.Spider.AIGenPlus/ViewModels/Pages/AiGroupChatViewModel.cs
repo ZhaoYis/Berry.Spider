@@ -18,7 +18,7 @@ using Volo.Abp.DependencyInjection;
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages;
 
 /// <summary>
-/// https://learn.microsoft.com/zh-cn/semantic-kernel/frameworks/agent/agent-orchestration/group-chat?pivots=programming-language-csharp
+/// https://learn.microsoft.com/zh-cn/semantic-kernel/support/archive/agent-chat?pivots=programming-language-csharp
 /// </summary>
 /// <param name="kernel"></param>
 public partial class AiGroupChatViewModel(Kernel kernel) : ViewModelBase, ITransientDependency
@@ -78,36 +78,36 @@ public partial class AiGroupChatViewModel(Kernel kernel) : ViewModelBase, ITrans
         };
 
         KernelFunction selectionFunction = CreatePromptFunctionForStrategy(
-            $$$"""
-               Examine the provided RESPONSE and choose the next participant.
-               State only the name of the chosen participant without explanation.
-               Never choose the participant named in the RESPONSE.
-               Choose only from these participants:
-               - {{{ReviewerName}}}
-               - {{{WriterName}}}
-               Always follow these rules when choosing the next participant:
-               - If RESPONSE is user input, it is {{{ReviewerName}}}'s turn.
-               - If RESPONSE is by {{{ReviewerName}}}, it is {{{WriterName}}}'s turn.
-               - If RESPONSE is by {{{WriterName}}}, it is {{{ReviewerName}}}'s turn.
-               RESPONSE:
-               {{${{{KernelFunctionTerminationStrategy.DefaultHistoryVariableName}}}}}
-               检查所提供的 RESPONSE 并选择下一位参与者。
-               只说出所选参与者的姓名，不作任何解释。
-               切勿选择 RESPONSE 中列出的参与者。
-               """
-        );
+                                                                           $$$"""
+                                                                              Examine the provided RESPONSE and choose the next participant.
+                                                                              State only the name of the chosen participant without explanation.
+                                                                              Never choose the participant named in the RESPONSE.
+                                                                              Choose only from these participants:
+                                                                              - {{{ReviewerName}}}
+                                                                              - {{{WriterName}}}
+                                                                              Always follow these rules when choosing the next participant:
+                                                                              - If RESPONSE is user input, it is {{{ReviewerName}}}'s turn.
+                                                                              - If RESPONSE is by {{{ReviewerName}}}, it is {{{WriterName}}}'s turn.
+                                                                              - If RESPONSE is by {{{WriterName}}}, it is {{{ReviewerName}}}'s turn.
+                                                                              RESPONSE:
+                                                                              {{${{{KernelFunctionTerminationStrategy.DefaultHistoryVariableName}}}}}
+                                                                              检查所提供的 RESPONSE 并选择下一位参与者。
+                                                                              只说出所选参与者的姓名，不作任何解释。
+                                                                              切勿选择 RESPONSE 中列出的参与者。
+                                                                              """
+                                                                          );
 
         const string TerminationToken = "yes";
         KernelFunction terminationFunction = CreatePromptFunctionForStrategy(
-            $$$"""
-               Examine the RESPONSE and determine whether the content has been deemed satisfactory.
-               If content is satisfactory, respond with a single word without explanation: {{{TerminationToken}}}.
-               If specific suggestions are being provided, it is not satisfactory.
-               If no correction is suggested, it is satisfactory.
-               RESPONSE:
-               {{${{{KernelFunctionTerminationStrategy.DefaultHistoryVariableName}}}}}
-               """
-        );
+                                                                             $$$"""
+                                                                                Examine the RESPONSE and determine whether the content has been deemed satisfactory.
+                                                                                If content is satisfactory, respond with a single word without explanation: {{{TerminationToken}}}.
+                                                                                If specific suggestions are being provided, it is not satisfactory.
+                                                                                If no correction is suggested, it is satisfactory.
+                                                                                RESPONSE:
+                                                                                {{${{{KernelFunctionTerminationStrategy.DefaultHistoryVariableName}}}}}
+                                                                                """
+                                                                            );
         ChatHistoryTruncationReducer historyReducer = new(1);
         AgentGroupChat chat = new(agentReviewer, agentWriter)
         {
