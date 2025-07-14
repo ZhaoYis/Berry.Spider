@@ -96,13 +96,13 @@
             Padding="20,0,0,0"
             TabStripPlacement="Left"
             Theme="{DynamicResource NavigationTab}">
-            <TabItem Header="HomePage">
+            <TabItem Header="Home Page">
                 <pages:HomePage />
             </TabItem>
-            <TabItem Header="AiChat">
+            <TabItem Header="AI Chat">
                 <pages:AiChat />
             </TabItem>
-            <TabItem Header="AiGroupChat">
+            <TabItem Header="AI Group Chat">
                 <pages:AiGroupChat />
             </TabItem>
             <TabItem Header="Function Call">

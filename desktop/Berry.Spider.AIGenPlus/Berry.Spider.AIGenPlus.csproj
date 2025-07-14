@@ -64,5 +64,6 @@
 
     <ItemGroup>
       <Folder Include="ViewModels\Pages\Agents\" />
+      <Folder Include="Views\Pages\Agents\" />
     </ItemGroup>
 </Project>

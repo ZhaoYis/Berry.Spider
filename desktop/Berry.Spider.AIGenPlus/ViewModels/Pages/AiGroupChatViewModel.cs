@@ -117,7 +117,7 @@ public partial class AiGroupChatViewModel(Kernel kernel) : ViewModelBase, ITrans
                     // Always start with the editor agent.
                     InitialAgent = agentReviewer,
                     // Save tokens by only including the final response
-                    //HistoryReducer = historyReducer,
+                    HistoryReducer = historyReducer,
                     // The prompt variable name for the history argument.
                     HistoryVariableName = KernelFunctionTerminationStrategy.DefaultHistoryVariableName,
                     // Returns the entire result value as a string.
@@ -128,7 +128,7 @@ public partial class AiGroupChatViewModel(Kernel kernel) : ViewModelBase, ITrans
                     // Only evaluate for editor's response
                     Agents = [agentReviewer],
                     // Save tokens by only including the final response
-                    // HistoryReducer = historyReducer,
+                    HistoryReducer = historyReducer,
                     // The prompt variable name for the history argument.
                     HistoryVariableName = KernelFunctionTerminationStrategy.DefaultHistoryVariableName,
                     // Limit total number of turns
@@ -171,6 +171,18 @@ public partial class AiGroupChatViewModel(Kernel kernel) : ViewModelBase, ITrans
             this.AskAiRequestText = string.Empty;
             try
             {
+                // await foreach (StreamingChatMessageContent response in chat.InvokeStreamingAsync())
+                // {
+                //     if (string.IsNullOrWhiteSpace(response?.Content))
+                //     {
+                //         continue;
+                //     }
+                //
+                //     aiResponseStringBuilder.Append(Environment.NewLine);
+                //     this.AskAiResponseText = aiResponseStringBuilder.Append($"{response?.AuthorName?.ToUpperInvariant()}({response?.Role.ToString()}):{Environment.NewLine}{response?.Content}").ToString();
+                //     aiResponseStringBuilder.Append(Environment.NewLine);
+                // }
+
                 await foreach (ChatMessageContent response in chat.InvokeAsync())
                 {
                     if (string.IsNullOrWhiteSpace(response?.Content))
