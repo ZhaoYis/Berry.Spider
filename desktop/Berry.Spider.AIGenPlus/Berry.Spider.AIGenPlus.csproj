@@ -61,9 +61,4 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\Berry.Spider.SemanticKernel.Plugins\Berry.Spider.SemanticKernel.Plugins.csproj"/>
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="ViewModels\Pages\Agents\" />
-      <Folder Include="Views\Pages\Agents\" />
-    </ItemGroup>
 </Project>

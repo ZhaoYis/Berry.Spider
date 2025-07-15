@@ -1,0 +1,52 @@
+<UserControl
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d"
+    x:Class="Berry.Spider.AIGenPlus.Views.Pages.Agents.ArticleWriterAgent"
+    x:DataType="pages:ArticleWriterAgentViewModel"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pages="clr-namespace:Berry.Spider.AIGenPlus.ViewModels.Pages.Agents"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Button
+                                Command="{Binding GeneratingCommand}"
+                                Content="开始生成"
+                                Margin="10" />
+                        </StackPanel>
+                        <TextBox
+                            AcceptsReturn="True"
+                            Classes="TextArea"
+                            Height="300"
+                            Margin="10"
+                            Text="{Binding UserInput}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <StackPanel>
+                        <Button Content="AI回答" Margin="10" />
+                        <TextBox
+                            Classes="TextArea"
+                            Height="300"
+                            IsReadOnly="True"
+                            Margin="10"
+                            Text="{Binding AiResponseText}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

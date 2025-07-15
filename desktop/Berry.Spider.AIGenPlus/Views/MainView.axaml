@@ -6,6 +6,7 @@
     x:CompileBindings="True"
     x:DataType="vm:MainViewModel"
     xmlns="https://github.com/avaloniaui"
+    xmlns:agents="clr-namespace:Berry.Spider.AIGenPlus.Views.Pages.Agents"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="clr-namespace:Berry.Spider.AIGenPlus.Views.Pages"
@@ -110,6 +111,9 @@
             </TabItem>
             <TabItem Header="Text Embedding">
                 <pages:Embedding />
+            </TabItem>
+            <TabItem Header="Article Writer Agent">
+                <agents:ArticleWriterAgent />
             </TabItem>
         </TabControl>
     </Grid>
