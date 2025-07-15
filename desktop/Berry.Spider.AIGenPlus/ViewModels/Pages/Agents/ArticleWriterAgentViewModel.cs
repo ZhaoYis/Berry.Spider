@@ -7,7 +7,6 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Agents.Orchestration.Sequential;
 using Microsoft.SemanticKernel.Agents.Runtime.InProcess;
-using Microsoft.SemanticKernel.ChatCompletion;
 using Volo.Abp;
 using Volo.Abp.DependencyInjection;
 
@@ -35,10 +34,7 @@ public partial class ArticleWriterAgentViewModel(Kernel kernel) : ViewModelBase,
     /// </summary>
     [ObservableProperty] private string? _aiResponseText;
 
-    /// <summary>
-    /// 聊天历史记录
-    /// </summary>
-    private ChatHistory ChatHistory { get; set; } = [];
+    private OrchestrationMonitor OrchestrationMonitor { get; } = new();
 
     private CancellationTokenSource CancellationTokenSource { get; } = new();
 
@@ -65,7 +61,7 @@ public partial class ArticleWriterAgentViewModel(Kernel kernel) : ViewModelBase,
         SequentialOrchestration orchestration = new(summarizeWriterAgent, mainWriterAgent, reviewerAgent, terminatorAgent, terminatorAgent)
         {
             Name = "ArticleWriterAgent",
-            ResponseCallback = ResponseCallback
+            ResponseCallback = this.OrchestrationMonitor.ResponseCallback
         };
         await inProcessRuntime.StartAsync(this.CancellationTokenSource.Token);
 
@@ -80,15 +76,5 @@ public partial class ArticleWriterAgentViewModel(Kernel kernel) : ViewModelBase,
     private bool CanExecute()
     {
         return !string.IsNullOrWhiteSpace(this.UserInput);
-    }
-
-    /// <summary>
-    /// 响应内容回调函数
-    /// </summary>
-    /// <returns></returns>
-    private ValueTask ResponseCallback(ChatMessageContent response)
-    {
-        this.ChatHistory.Add(response);
-        return ValueTask.CompletedTask;
     }
 }
