@@ -1,10 +1,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Berry.Spider.AIGenPlus.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Agents.Orchestration.Sequential;
@@ -54,28 +52,13 @@ public partial class ArticleWriterAgentViewModel(Kernel kernel) : ViewModelBase,
         this.ShowNotificationMessage("请稍后，AI正在努力思考中...");
 
         //定义SummarizeWriterAgent
-        ChatAgentCreator summarizeWriterAgentCreator = new("SummarizeWriterAgent", """
-
-                                                                                   """);
-        ChatCompletionAgent summarizeWriterAgent = kernel.CreateAgent(summarizeWriterAgentCreator);
-
+        ChatCompletionAgent summarizeWriterAgent = kernel.CreateSummarizeWriterAgent();
         //定义MainWriterAgent
-        ChatAgentCreator mainWriterAgentCreator = new("MainWriterAgent", """
-
-                                                                         """);
-        ChatCompletionAgent mainWriterAgent = kernel.CreateAgent(mainWriterAgentCreator);
-
+        ChatCompletionAgent mainWriterAgent = kernel.CreateMainWriterAgent();
         //定义ReviewerAgent
-        ChatAgentCreator reviewerAgentCreator = new("ReviewerAgent", """
-
-                                                                     """);
-        ChatCompletionAgent reviewerAgent = kernel.CreateAgent(reviewerAgentCreator);
-
+        ChatCompletionAgent reviewerAgent = kernel.CreateReviewerAgent();
         //定义TerminatorAgent
-        ChatAgentCreator terminatorAgentCreator = new("TerminatorAgent", """
-
-                                                                         """);
-        ChatCompletionAgent terminatorAgent = kernel.CreateAgent(terminatorAgentCreator);
+        ChatCompletionAgent terminatorAgent = kernel.CreateerminatorAgent();
 
         //设置顺序编排器
         InProcessRuntime inProcessRuntime = new InProcessRuntime();
