@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -58,16 +59,24 @@ public partial class ArticleWriterAgentViewModel(Kernel kernel) : ViewModelBase,
 
         //设置顺序编排器
         InProcessRuntime inProcessRuntime = new InProcessRuntime();
-        SequentialOrchestration orchestration = new(summarizeWriterAgent, mainWriterAgent, reviewerAgent, terminatorAgent, terminatorAgent)
+        SequentialOrchestration orchestration = new(summarizeWriterAgent, mainWriterAgent, reviewerAgent, terminatorAgent)
         {
             Name = "ArticleWriterAgent",
-            ResponseCallback = this.OrchestrationMonitor.ResponseCallback
+            ResponseCallback = this.OrchestrationMonitor.ResponseCallback,
+            // StreamingResponseCallback = this.OrchestrationMonitor.StreamingResultCallback
         };
         await inProcessRuntime.StartAsync(this.CancellationTokenSource.Token);
 
         //开始调度
         var result = await orchestration.InvokeAsync(this.UserInput, inProcessRuntime, this.CancellationTokenSource.Token);
-        var output = await result.GetValueAsync(TimeSpan.FromSeconds(60), this.CancellationTokenSource.Token);
+        var output = await result.GetValueAsync(TimeSpan.FromMinutes(10), this.CancellationTokenSource.Token);
+        this.AiResponseText = output;
+
+        Debug.WriteLine("\n\nORCHESTRATION HISTORY");
+        foreach (ChatMessageContent message in this.OrchestrationMonitor.ChatHistory)
+        {
+            Debug.WriteLine($"# {message.Role} - {message.AuthorName}: {message.Content}");
+        }
 
         //停止
         await inProcessRuntime.RunUntilIdleAsync();

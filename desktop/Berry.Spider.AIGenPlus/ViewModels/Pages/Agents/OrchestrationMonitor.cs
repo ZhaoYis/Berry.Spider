@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -10,7 +11,7 @@ public sealed class OrchestrationMonitor
     /// <summary>
     /// 聊天历史记录
     /// </summary>
-    private ChatHistory ChatHistory = [];
+    public ChatHistory ChatHistory { get; } = [];
 
     /// <summary>
     /// 流式聊天历史记录
@@ -23,6 +24,7 @@ public sealed class OrchestrationMonitor
     /// <returns></returns>
     public ValueTask ResponseCallback(ChatMessageContent response)
     {
+        Debug.WriteLine($"# {response.Role} - {response.AuthorName}: {response.Content}");
         this.ChatHistory.Add(response);
         return ValueTask.CompletedTask;
     }
