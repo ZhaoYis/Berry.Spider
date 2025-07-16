@@ -72,12 +72,6 @@ public partial class ArticleWriterAgentViewModel(Kernel kernel) : ViewModelBase,
         var output = await result.GetValueAsync(TimeSpan.FromMinutes(10), this.CancellationTokenSource.Token);
         this.AiResponseText = output;
 
-        Debug.WriteLine("\n\nORCHESTRATION HISTORY");
-        foreach (ChatMessageContent message in this.OrchestrationMonitor.ChatHistory)
-        {
-            Debug.WriteLine($"# {message.Role} - {message.AuthorName}: {message.Content}");
-        }
-
         //停止
         await inProcessRuntime.RunUntilIdleAsync();
     }
