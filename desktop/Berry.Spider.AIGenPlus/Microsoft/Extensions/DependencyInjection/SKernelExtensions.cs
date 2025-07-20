@@ -1,6 +1,7 @@
 using Berry.Spider.AIGenPlus.Models;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
+using Microsoft.SemanticKernel.Connectors.Ollama;
 using Volo.Abp;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -15,13 +16,17 @@ public static class SKernelExtensions
     {
         Check.NotNull(kernel, nameof(kernel));
         Check.NotNull(creator, nameof(creator));
-        
+
         return new ChatCompletionAgent
         {
             Name = creator.AgentName,
             Instructions = creator.Instructions,
             Description = creator.Description,
-            Kernel = kernel
+            Kernel = kernel,
+            Arguments = new KernelArguments(new OllamaPromptExecutionSettings
+            {
+                FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+            })
         };
     }
 }
