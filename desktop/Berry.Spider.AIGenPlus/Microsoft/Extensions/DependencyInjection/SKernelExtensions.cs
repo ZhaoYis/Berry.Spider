@@ -20,13 +20,16 @@ public static class SKernelExtensions
         return new ChatCompletionAgent
         {
             Name = creator.AgentName,
-            Instructions = creator.Instructions,
+            Instructions = "{{#ins}}",
             Description = creator.Description,
             Kernel = kernel,
             Arguments = new KernelArguments(new OllamaPromptExecutionSettings
             {
                 FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
             })
+            {
+                ["ins"] = creator.Instructions
+            }
         };
     }
 }
