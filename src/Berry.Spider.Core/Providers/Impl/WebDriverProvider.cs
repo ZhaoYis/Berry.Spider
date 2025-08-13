@@ -31,12 +31,8 @@ public class WebDriverProvider : IWebDriverProvider, IAsyncDisposable
                 return _browsers.GetOrAdd(isolationContext, () =>
                 {
                     var cds = this.CreateChromeDriverService(this.DriverOptions.LocalOptions.LocalAddress);
-                    IWebDriver driver = new ChromeDriver(
-                        cds,
-                        options,
-                        TimeSpan.FromSeconds(30)
-                    );
-
+                    cds.HideCommandPromptWindow = true;
+                    IWebDriver driver = new ChromeDriver(cds, options, TimeSpan.FromSeconds(30));
                     return driver;
                 });
             }
@@ -131,11 +127,19 @@ public class WebDriverProvider : IWebDriverProvider, IAsyncDisposable
     {
         if (OperatingSystem.IsWindows())
         {
-            return Path.Combine("web-driver", "windows");
+            string windowsDriverPath = Path.Combine("web-driver", "windows");
+            if (Directory.Exists(windowsDriverPath))
+            {
+                return windowsDriverPath;
+            }
         }
         else if (OperatingSystem.IsMacOS())
         {
-            return Path.Combine("web-driver", "macos");
+            string macosDriverPath = Path.Combine("web-driver", "macos");
+            if (Directory.Exists(macosDriverPath))
+            {
+                return macosDriverPath;
+            }
         }
 
         return defatltWebDriverPath;
