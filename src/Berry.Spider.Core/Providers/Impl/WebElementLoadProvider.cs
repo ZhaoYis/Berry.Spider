@@ -12,8 +12,8 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     private IHumanMachineVerificationInterceptorProvider InterceptorProvider { get; }
 
     public WebElementLoadProvider(ILogger<WebElementLoadProvider> logger,
-                                  IWebDriverProvider webDriverProvider,
-                                  IHumanMachineVerificationInterceptorProvider interceptorProvider) : base(webDriverProvider)
+        IWebDriverProvider webDriverProvider,
+        IHumanMachineVerificationInterceptorProvider interceptorProvider) : base(webDriverProvider)
     {
         this.Logger = logger;
         this.WebDriverProvider = webDriverProvider;
@@ -21,15 +21,17 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     }
 
     public async Task InvokeAsync(string targetUrl,
-                                  object state,
-                                  Func<IWebDriver, IWebElement?> selector,
-                                  Func<IWebElement?, object, Task> executor)
+        object state,
+        Func<IWebDriver, IWebElement?> selector,
+        Func<IWebElement?, object, Task> executor)
     {
         try
         {
             using IWebDriver driver = await this.WebDriverProvider.GetAsync(nameof(InvokeAsync));
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
+            //行为模拟
+            await HumanBehavior.ScrollLikeHumanAsync(driver, steps: 5);
             string title = driver.Title;
             string page = driver.PageSource;
             string url = driver.Url;
@@ -42,7 +44,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             {
                 PollingInterval = TimeSpan.FromSeconds(5),
             };
-            wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException), typeof(NotFoundException));
+            wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException), typeof(NotFoundException), typeof(StaleElementReferenceException));
             IWebElement? webElement = wait.Until(selector);
             await executor.Invoke(webElement, state);
         }
@@ -54,8 +56,8 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     }
 
     public async Task BatchInvokeAsync(IDictionary<string, string> keywordList,
-                                       Func<IWebDriver, IWebElement?> selector,
-                                       Func<IWebElement?, object, Task> executor)
+        Func<IWebDriver, IWebElement?> selector,
+        Func<IWebElement?, object, Task> executor)
     {
         try
         {
@@ -69,6 +71,8 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
 
                     //跳转
                     await driver.Navigate().GoToUrlAsync(targetUrl);
+                    //行为模拟
+                    await HumanBehavior.ScrollLikeHumanAsync(driver, steps: 5);
                     string title = driver.Title;
                     string page = driver.PageSource;
                     string url = driver.Url;
@@ -81,7 +85,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
                     {
                         PollingInterval = TimeSpan.FromSeconds(5),
                     };
-                    wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException), typeof(NotFoundException));
+                    wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException), typeof(NotFoundException), typeof(StaleElementReferenceException));
                     IWebElement? webElement = wait.Until(selector);
                     await executor.Invoke(webElement, keyword);
                 }
@@ -99,9 +103,9 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     }
 
     public async Task<T?> InvokeAndReturnAsync<T>(string targetUrl,
-                                                  object state,
-                                                  Func<IWebDriver, IWebElement?> selector,
-                                                  Func<IWebElement?, object, Task<T>> executor)
+        object state,
+        Func<IWebDriver, IWebElement?> selector,
+        Func<IWebElement?, object, Task<T>> executor)
     {
         try
         {
@@ -111,6 +115,8 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             using IWebDriver driver = await this.WebDriverProvider.GetAsync(nameof(InvokeAndReturnAsync));
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
+            //行为模拟
+            await HumanBehavior.ScrollLikeHumanAsync(driver, steps: 5);
             string title = driver.Title;
             string page = driver.PageSource;
             string url = driver.Url;
@@ -126,7 +132,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             {
                 PollingInterval = TimeSpan.FromSeconds(5),
             };
-            wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException), typeof(NotFoundException));
+            wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException), typeof(NotFoundException), typeof(StaleElementReferenceException));
             IWebElement? webElement = wait.Until(selector);
             T result = await executor.Invoke(webElement, state);
             return result;
@@ -141,9 +147,9 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     }
 
     public async Task<string> AutoClickAsync(string targetUrl,
-                                             object state,
-                                             By inputBox,
-                                             By submitBtn)
+        object state,
+        By inputBox,
+        By submitBtn)
     {
         try
         {
@@ -155,6 +161,8 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
+            //行为模拟
+            await HumanBehavior.ScrollLikeHumanAsync(driver, steps: 5);
             //获取输入框
             driver.FindElement(inputBox).SendKeys(state.ToString());
             //点击按钮
@@ -183,11 +191,11 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     }
 
     public async Task AutoClickAndInvokeAsync(string targetUrl,
-                                              object state,
-                                              By inputBox,
-                                              By submitBtn,
-                                              Func<IWebDriver, IWebElement?> selector,
-                                              Func<IWebElement?, object, Task> executor)
+        object state,
+        By inputBox,
+        By submitBtn,
+        Func<IWebDriver, IWebElement?> selector,
+        Func<IWebElement?, object, Task> executor)
     {
         try
         {
@@ -197,6 +205,8 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             using IWebDriver driver = await this.WebDriverProvider.GetAsync(nameof(AutoClickAndInvokeAsync));
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
+            //行为模拟
+            await HumanBehavior.ScrollLikeHumanAsync(driver, steps: 5);
             //获取输入框
             driver.FindElement(inputBox).SendKeys(state.ToString());
             //点击按钮
@@ -219,7 +229,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             {
                 PollingInterval = TimeSpan.FromSeconds(5),
             };
-            wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException), typeof(NotFoundException));
+            wait.IgnoreExceptionTypes(typeof(NoSuchElementException), typeof(WebDriverTimeoutException), typeof(NotFoundException), typeof(StaleElementReferenceException));
 
             IWebElement? webElement = wait.Until(selector);
             await executor.Invoke(webElement, state);
