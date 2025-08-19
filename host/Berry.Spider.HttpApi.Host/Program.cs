@@ -58,12 +58,23 @@ public class Program
                 Log.Information("{EntryKey}={EntryValue}", entry.Key, entry.Value);
             }
 
-            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "DEV";
             var builder = WebApplication.CreateBuilder(args);
-            builder.Host.AddAppSettingsSecretsJson()
-                .UseAgileConfig($"appsettings.{env}.json")
-                .UseAutofac()
-                .UseSerilog();
+            var enableAgileConfig = builder.Configuration.GetValue<bool>("AgileConfig:Enable");
+            if (enableAgileConfig)
+            {
+                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "DEV";
+                builder.Host.AddAppSettingsSecretsJson()
+                    .UseAgileConfig($"AgileConfig.{env}.json")
+                    .UseAutofac()
+                    .UseSerilog();
+            }
+            else
+            {
+                builder.Host.AddAppSettingsSecretsJson()
+                    .UseAutofac()
+                    .UseSerilog();
+            }
+
             await builder.AddApplicationAsync<SpiderHttpApiHostModule>();
             var app = builder.Build();
             await app.InitializeApplicationAsync();
