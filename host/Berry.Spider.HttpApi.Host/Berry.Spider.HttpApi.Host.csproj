@@ -8,6 +8,7 @@
         <LangVersion>default</LangVersion>
         <TieredPGO>true</TieredPGO>
 		<SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
+        <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     </PropertyGroup>
 
     <ItemGroup>
