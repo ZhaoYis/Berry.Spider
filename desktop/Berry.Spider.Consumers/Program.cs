@@ -65,17 +65,26 @@ public class Program
                 Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             }));
 
-            await Host.CreateDefaultBuilder(args).ConfigureServices(services =>
-                {
-                    services.AddHostedService<ServAppHostedService>();
-                    services.AddHostedService<SpiderConsumersHostedService>();
-                })
-                //机密配置文件
-                .AddAppSettingsSecretsJson()
-                //集成AgileConfig
-                .UseAgileConfig()
-                .UseSerilog()
-                .RunConsoleAsync();
+            IHostBuilder builder = Host.CreateDefaultBuilder(args).ConfigureServices(services =>
+            {
+                services.AddHostedService<ServAppHostedService>();
+                services.AddHostedService<SpiderConsumersHostedService>();
+            });
+            var enableAgileConfig = configuration.GetValue<bool>("AgileConfig:Enable");
+            if (enableAgileConfig)
+            {
+                await builder.AddAppSettingsSecretsJson()
+                    //集成AgileConfig
+                    .UseAgileConfig()
+                    .UseSerilog()
+                    .RunConsoleAsync();
+            }
+            else
+            {
+                await builder.AddAppSettingsSecretsJson()
+                    .UseSerilog()
+                    .RunConsoleAsync();
+            }
 
             return 0;
         }
