@@ -168,11 +168,6 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
             }
         }
 
-        if (!redirectUri.IsNullOrWhiteSpace() || !postLogoutRedirectUri.IsNullOrWhiteSpace())
-        {
-            application.Permissions.Add(OpenIddictConstants.Permissions.Endpoints.Logout);
-        }
-
         var buildInGrantTypes = new[]
         {
             OpenIddictConstants.GrantTypes.Implicit, OpenIddictConstants.GrantTypes.Password,
@@ -223,12 +218,6 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
             if (grantType == OpenIddictConstants.GrantTypes.RefreshToken)
             {
                 application.Permissions.Add(OpenIddictConstants.Permissions.GrantTypes.RefreshToken);
-            }
-
-            if (grantType == OpenIddictConstants.GrantTypes.DeviceCode)
-            {
-                application.Permissions.Add(OpenIddictConstants.Permissions.GrantTypes.DeviceCode);
-                application.Permissions.Add(OpenIddictConstants.Permissions.Endpoints.Device);
             }
 
             if (grantType == OpenIddictConstants.GrantTypes.Implicit)

@@ -9,7 +9,7 @@
 
     <ItemGroup>
       <PackageReference Include="Betalgo.OpenAI" Version="8.7.2" />
-      <PackageReference Include="Volo.Abp.Core" Version="9.0.1" />
+      <PackageReference Include="Volo.Abp.Core" Version="9.3.1" />
     </ItemGroup>
 
     <ItemGroup>

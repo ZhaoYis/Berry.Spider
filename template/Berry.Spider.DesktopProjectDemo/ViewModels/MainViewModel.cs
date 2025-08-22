@@ -39,12 +39,6 @@ public partial class MainViewModel : ViewModelBase, ITransientDependency
                     },
                     new MenuItemViewModel
                     {
-                        Header = "Dust",
-                        Command = SelectThemeCommand,
-                        CommandParameter = SemiTheme.Dust
-                    },
-                    new MenuItemViewModel
-                    {
                         Header = "NightSky",
                         Command = SelectThemeCommand,
                         CommandParameter = SemiTheme.NightSky

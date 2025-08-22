@@ -8,10 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MediatR" Version="12.4.1" />
-      <PackageReference Include="Volo.Abp.AutoMapper" Version="9.0.1" />
-      <PackageReference Include="Volo.Abp.Core" Version="9.0.1" />
-      <PackageReference Include="Volo.Abp.Ddd.Application" Version="9.0.1" />
+      <PackageReference Include="MediatR" Version="13.0.0" />
+      <PackageReference Include="Volo.Abp.AutoMapper" Version="9.3.1" />
+      <PackageReference Include="Volo.Abp.Core" Version="9.3.1" />
+      <PackageReference Include="Volo.Abp.Ddd.Application" Version="9.3.1" />
     </ItemGroup>
 
     <ItemGroup>
