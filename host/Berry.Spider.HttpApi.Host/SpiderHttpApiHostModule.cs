@@ -54,7 +54,7 @@ public class SpiderHttpApiHostModule : AbpModule
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         var configuration = context.Services.GetConfiguration();
 
-        ConfigureAuthentication(context, configuration);
+        // ConfigureAuthentication(context, configuration);
         ConfigureCache(configuration);
         ConfigureDataProtection(context, configuration, hostingEnvironment);
         ConfigureDistributedLocking(context, configuration);
@@ -87,7 +87,7 @@ public class SpiderHttpApiHostModule : AbpModule
                         configuration["App:CorsOrigins"]?
                             .Split(",", StringSplitOptions.RemoveEmptyEntries)
                             .Select(o => o.RemovePostFix("/"))
-                            .ToArray() ?? Array.Empty<string>()
+                            .ToArray() ?? []
                     )
                     .WithAbpExposedHeaders()
                     .SetIsOriginAllowedToAllowWildcardSubdomains()
@@ -132,24 +132,26 @@ public class SpiderHttpApiHostModule : AbpModule
 
     private void ConfigureSwaggerServices(ServiceConfigurationContext context, IConfiguration configuration)
     {
-        // context.Services.AddAbpSwaggerGen(options =>
+        context.Services.AddAbpSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "Spider API", Version = "v1" });
+            options.DocInclusionPredicate((docName, description) => true);
+            options.CustomSchemaIds(type => type.FullName);
+            //Hides ABP Related endpoints on Swagger UI
+            options.HideAbpEndpoints();
+        });
+
+        // context.Services.AddAbpSwaggerGenWithOAuth(configuration["AuthServer:Authority"]!,
+        //     new Dictionary<string, string>
+        //     {
+        //         { "Spider", "Spider API" }
+        //     },
+        //     options =>
         //     {
         //         options.SwaggerDoc("v1", new OpenApiInfo { Title = "Spider API", Version = "v1" });
         //         options.DocInclusionPredicate((docName, description) => true);
         //         options.CustomSchemaIds(type => type.FullName);
         //     });
-
-        context.Services.AddAbpSwaggerGenWithOAuth(configuration["AuthServer:Authority"]!,
-            new Dictionary<string, string>
-            {
-                { "Spider", "Spider API" }
-            },
-            options =>
-            {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Spider API", Version = "v1" });
-                options.DocInclusionPredicate((docName, description) => true);
-                options.CustomSchemaIds(type => type.FullName);
-            });
     }
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
@@ -183,9 +185,9 @@ public class SpiderHttpApiHostModule : AbpModule
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "Spider API");
             options.DocExpansion(DocExpansion.None);
 
-            var configuration = context.GetConfiguration();
-            options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
-            options.OAuthScopes("Spider");
+            // var configuration = context.GetConfiguration();
+            // options.OAuthClientId(configuration["AuthServer:SwaggerClientId"]);
+            // options.OAuthScopes("Spider");
         });
 
         app.UseAbpSerilogEnrichers();
