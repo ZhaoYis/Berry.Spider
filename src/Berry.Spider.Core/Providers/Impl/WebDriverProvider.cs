@@ -29,22 +29,12 @@ public class WebDriverProvider : IWebDriverProvider
 
             if (this.DriverOptions.LocalOptions.IsEnable)
             {
-                if (_browsers.TryGetValue(isolationContext, out var existingDriver))
-                {
-                    return existingDriver;
-                }
+                var cds = this.CreateChromeDriverService(this.DriverOptions.LocalOptions.LocalAddress);
+                _driverServices.TryAdd(isolationContext, cds);
 
-                lock (_browsers)
-                {
-                    return _browsers.GetOrAdd(isolationContext, () =>
-                    {
-                        var cds = this.CreateChromeDriverService(this.DriverOptions.LocalOptions.LocalAddress);
-                        cds.HideCommandPromptWindow = true;
-                        var driver = new ChromeDriver(cds, options, TimeSpan.FromSeconds(30));
-                        _driverServices.TryAdd(isolationContext, cds);
-                        return driver;
-                    });
-                }
+                var driver = new ChromeDriver(cds, options, TimeSpan.FromSeconds(30));
+                _browsers.TryAdd(isolationContext, driver);
+                return driver;
             }
             else if (this.DriverOptions.RemoteOptions.IsEnable)
             {
@@ -70,12 +60,16 @@ public class WebDriverProvider : IWebDriverProvider
         if (!string.IsNullOrEmpty(chromeDriverPathEnvVar))
         {
             Console.WriteLine(@$"Using chromedriver at path {chromeDriverPathEnvVar}");
-            return ChromeDriverService.CreateDefaultService(chromeDriverPathEnvVar);
+            var cds = ChromeDriverService.CreateDefaultService(chromeDriverPathEnvVar);
+            cds.HideCommandPromptWindow = true;
+            return cds;
         }
         else
         {
             Console.WriteLine(@$"Using default chromedriver from Selenium Manager");
-            return ChromeDriverService.CreateDefaultService();
+            var cds = ChromeDriverService.CreateDefaultService();
+            cds.HideCommandPromptWindow = true;
+            return cds;
         }
     }
 
