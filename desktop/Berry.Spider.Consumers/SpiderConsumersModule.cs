@@ -51,8 +51,7 @@ public class SpiderConsumersModule : AbpModule
 
         //注册服务
         // await context.AddBackgroundWorkerAsync<ServLifetimeCheckerWorker>();
-
-        await context.AddBackgroundWorkerAsync<WeatherLoadWorker>();
+        // await context.AddBackgroundWorkerAsync<WeatherLoadWorker>();
     }
 
     public override void PreConfigureServices(ServiceConfigurationContext context)
