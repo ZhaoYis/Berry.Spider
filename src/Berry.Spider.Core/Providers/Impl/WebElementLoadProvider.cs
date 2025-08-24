@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -38,7 +39,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             string current = driver.CurrentWindowHandle;
 
             if (string.IsNullOrEmpty(page)) return;
-            this.Logger.LogInformation("[V]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, url);
+            this.Logger.LogInformation("[V]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, WebUtility.UrlDecode(url));
 
             WebDriverWait wait = new WebDriverWait(driver, timeout: TimeSpan.FromSeconds(30))
             {
@@ -79,7 +80,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
                     string current = driver.CurrentWindowHandle;
 
                     if (string.IsNullOrEmpty(page)) return;
-                    this.Logger.LogInformation("[BV]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, url);
+                    this.Logger.LogInformation("[BV]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, WebUtility.UrlDecode(url));
 
                     WebDriverWait wait = new WebDriverWait(driver, timeout: TimeSpan.FromSeconds(30))
                     {
@@ -123,7 +124,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             string current = driver.CurrentWindowHandle;
 
             if (string.IsNullOrEmpty(page)) return default;
-            this.Logger.LogInformation("[T]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, url);
+            this.Logger.LogInformation("[T]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, WebUtility.UrlDecode(url));
 
             //人机验证拦截
             if (await this.InterceptorProvider.LockedAsync(targetUrl, url)) return default(T);
@@ -175,7 +176,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             string current = driver.CurrentWindowHandle;
 
             if (string.IsNullOrEmpty(page)) return string.Empty;
-            this.Logger.LogInformation("[AC]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, url);
+            this.Logger.LogInformation("[AC]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, WebUtility.UrlDecode(url));
 
             //人机验证拦截
             if (await this.InterceptorProvider.LockedAsync(targetUrl, url)) return string.Empty;
@@ -219,7 +220,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             string current = driver.CurrentWindowHandle;
 
             if (string.IsNullOrEmpty(page)) return;
-            this.Logger.LogInformation("[ACI]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, url);
+            this.Logger.LogInformation("[ACI]窗口句柄：{Current}，关键字：{Title}，地址：{Url}", current, title, WebUtility.UrlDecode(url));
 
             //人机验证拦截
             if (await this.InterceptorProvider.LockedAsync(targetUrl, url)) return;
