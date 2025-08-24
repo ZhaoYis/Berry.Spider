@@ -1,11 +1,14 @@
-﻿using OpenQA.Selenium;
+﻿using Microsoft.Extensions.DependencyInjection;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.Core;
 
 /// <summary>
 /// Chrome选项提供器
 /// </summary>
+[Dependency(ServiceLifetime.Singleton, ReplaceServices = true), ExposeServices(typeof(IDriverOptionsProvider))]
 public class ChromeOptionsProvider : IDriverOptionsProvider
 {
     private ISeleniumProxyProvider SeleniumProxyProvider { get; }
