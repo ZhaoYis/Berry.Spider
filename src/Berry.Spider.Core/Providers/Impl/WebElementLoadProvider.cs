@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using Volo.Abp;
+using Volo.Abp.Guids;
 
 namespace Berry.Spider.Core;
 
@@ -10,14 +11,17 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
 {
     private ILogger<WebElementLoadProvider> Logger { get; }
     private IWebDriverProvider WebDriverProvider { get; }
+    private IGuidGenerator GuidGenerator { get; }
     private IHumanMachineVerificationInterceptorProvider InterceptorProvider { get; }
 
     public WebElementLoadProvider(ILogger<WebElementLoadProvider> logger,
         IWebDriverProvider webDriverProvider,
+        IGuidGenerator guidGenerator,
         IHumanMachineVerificationInterceptorProvider interceptorProvider) : base(webDriverProvider)
     {
         this.Logger = logger;
         this.WebDriverProvider = webDriverProvider;
+        this.GuidGenerator = guidGenerator;
         this.InterceptorProvider = interceptorProvider;
     }
 
@@ -28,7 +32,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     {
         try
         {
-            using IWebDriver driver = await this.WebDriverProvider.GetAsync(nameof(InvokeAsync));
+            using IWebDriver driver = await this.WebDriverProvider.GetAsync(this.GuidGenerator.Create().ToString());
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
             //行为模拟
@@ -62,7 +66,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     {
         try
         {
-            using IWebDriver driver = await this.WebDriverProvider.GetAsync(nameof(BatchInvokeAsync));
+            using IWebDriver driver = await this.WebDriverProvider.GetAsync(this.GuidGenerator.Create().ToString());
             foreach (KeyValuePair<string, string> pair in keywordList)
             {
                 try
@@ -113,7 +117,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             //检查是否处于人机验证资源锁定阶段
             if (await this.InterceptorProvider.IsLockedAsync(targetUrl)) return default(T);
 
-            using IWebDriver driver = await this.WebDriverProvider.GetAsync(nameof(InvokeAndReturnAsync));
+            using IWebDriver driver = await this.WebDriverProvider.GetAsync(this.GuidGenerator.Create().ToString());
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
             //行为模拟
@@ -157,7 +161,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             //检查是否处于人机验证资源锁定阶段
             if (await this.InterceptorProvider.IsLockedAsync(targetUrl)) return string.Empty;
 
-            using IWebDriver driver = await this.WebDriverProvider.GetAsync(nameof(AutoClickAsync));
+            using IWebDriver driver = await this.WebDriverProvider.GetAsync(this.GuidGenerator.Create().ToString());
             //隐式等待
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             //跳转
@@ -203,7 +207,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             //检查是否处于人机验证资源锁定阶段
             if (await this.InterceptorProvider.IsLockedAsync(targetUrl)) return;
 
-            using IWebDriver driver = await this.WebDriverProvider.GetAsync(nameof(AutoClickAndInvokeAsync));
+            using IWebDriver driver = await this.WebDriverProvider.GetAsync(this.GuidGenerator.Create().ToString());
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
             //行为模拟
