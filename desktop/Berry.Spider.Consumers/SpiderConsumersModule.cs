@@ -4,7 +4,7 @@ using Berry.Spider.Application;
 using Berry.Spider.Baidu;
 using Berry.Spider.Core;
 using Berry.Spider.EntityFrameworkCore;
-using Berry.Spider.EventBus.RabbitMq;
+using Berry.Spider.EventBus.Redis;
 using Berry.Spider.FreeRedis;
 using Berry.Spider.NaiPan;
 using Berry.Spider.RealTime;
@@ -18,7 +18,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Volo.Abp;
 using Volo.Abp.Autofac;
-using Volo.Abp.BackgroundWorkers;
 using Volo.Abp.BackgroundWorkers.Quartz;
 using Volo.Abp.Modularity;
 
@@ -28,7 +27,7 @@ namespace Berry.Spider.Consumers;
     typeof(AbpAutofacModule),
     typeof(AbpBackgroundWorkersQuartzModule),
     typeof(SpiderEntityFrameworkCoreModule),
-    typeof(SpiderEventBusRabbitMqModule),
+    typeof(SpiderEventBusRedisModule),
     typeof(SpiderSegmenterJiebaNetModule),
     typeof(SpiderRealTimeAbstractionsModule),
     typeof(SpiderFreeRedisModule),

@@ -3,7 +3,7 @@ using Berry.Spider.AspNetCore.Mvc;
 using Berry.Spider.Baidu;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.EventBus.MongoDB;
-using Berry.Spider.EventBus.RabbitMq;
+using Berry.Spider.EventBus.Redis;
 using Berry.Spider.OpenAI.Application;
 using Berry.Spider.Segmenter.JiebaNet;
 using Berry.Spider.Sogou;
@@ -38,7 +38,7 @@ namespace Berry.Spider.HttpApi.Host;
     typeof(SpiderHttpApiModule),
     typeof(SpiderEntityFrameworkCoreModule),
     typeof(SpiderAspNetCoreMvcModule),
-    typeof(SpiderEventBusRabbitMqModule),
+    typeof(SpiderEventBusRedisModule),
     typeof(SpiderEventBusMongoDBModule),
     typeof(SpiderSegmenterJiebaNetModule),
     typeof(TouTiaoSpiderApplicationModule),

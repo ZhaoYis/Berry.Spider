@@ -1,6 +1,6 @@
 ﻿using Berry.Spider.Baidu;
 using Berry.Spider.EntityFrameworkCore;
-using Berry.Spider.EventBus.RabbitMq;
+using Berry.Spider.EventBus.Redis;
 using Berry.Spider.FreeRedis;
 using Berry.Spider.NaiPan;
 using Berry.Spider.Segmenter.JiebaNet;
@@ -19,7 +19,7 @@ namespace Berry.Spider.Tools.AutoUploader;
 [DependsOn(
     typeof(AbpAutofacModule),
     typeof(SpiderEntityFrameworkCoreModule),
-    typeof(SpiderEventBusRabbitMqModule),
+    typeof(SpiderEventBusRedisModule),
     typeof(SpiderSegmenterJiebaNetModule),
     typeof(SpiderFreeRedisModule),
     typeof(SpiderNaiPanModule),

@@ -37,6 +37,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Berry.Spider.EventBus.Redis\Berry.Spider.EventBus.Redis.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.Application\Berry.Spider.Application.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.AspNetCore.Mvc\Berry.Spider.AspNetCore.Mvc.csproj" />
       <ProjectReference Include="..\..\src\Berry.Spider.Baidu\Berry.Spider.Baidu.csproj" />
