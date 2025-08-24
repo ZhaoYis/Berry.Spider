@@ -84,8 +84,14 @@ public class WebDriverProvider : IWebDriverProvider
         {
             try
             {
-                kvp.Value?.Quit();
-                kvp.Value?.Dispose();
+                if (_browsers.TryRemove(kvp.Key, out var browser))
+                {
+                    browser?.Quit();
+                    browser?.Dispose();
+                    //删除浏览器用户配置目录
+                    DeleteBrowserUserProfileDirectories(kvp.Key);
+                }
+
                 if (_driverServices.TryRemove(kvp.Key, out var service))
                 {
                     service.Dispose();
@@ -97,47 +103,38 @@ public class WebDriverProvider : IWebDriverProvider
             }
         }));
         await Task.WhenAll(disposalTasks);
-        //删除浏览器用户配置目录
-        await DeleteBrowserUserProfileDirectoriesAsync();
     }
 
     /// <summary>
     /// 删除浏览器用户配置目录
     /// </summary>
-    private async Task DeleteBrowserUserProfileDirectoriesAsync()
+    private void DeleteBrowserUserProfileDirectories(string context)
     {
-        foreach (var context in _browsers.Keys)
+        var userProfileDirectory = UserProfileDirectory(context);
+        if (!string.IsNullOrEmpty(userProfileDirectory) && Directory.Exists(userProfileDirectory))
         {
-            var userProfileDirectory = UserProfileDirectory(context);
-            if (!string.IsNullOrEmpty(userProfileDirectory) && Directory.Exists(userProfileDirectory))
+            var attemptCount = 0;
+            while (true)
             {
-                var attemptCount = 0;
-                while (true)
+                try
                 {
-                    try
+                    Directory.Delete(userProfileDirectory, recursive: true);
+                    break;
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    attemptCount++;
+                    if (attemptCount < 5)
                     {
-                        Directory.Delete(userProfileDirectory, recursive: true);
-                        break;
+                        Console.WriteLine(@$"Failed to delete browser profile directory '{userProfileDirectory}': '{ex}'. Will retry.");
                     }
-                    catch (UnauthorizedAccessException ex)
+                    else
                     {
-                        attemptCount++;
-                        if (attemptCount < 5)
-                        {
-                            Console.WriteLine(@$"Failed to delete browser profile directory '{userProfileDirectory}': '{ex}'. Will retry.");
-                            await Task.Delay(500);
-                        }
-                        else
-                        {
-                            throw;
-                        }
+                        throw;
                     }
                 }
             }
         }
-
-        //清空缓存的对象
-        _browsers.Clear();
     }
 
     private string UserProfileDirectory(string context)
