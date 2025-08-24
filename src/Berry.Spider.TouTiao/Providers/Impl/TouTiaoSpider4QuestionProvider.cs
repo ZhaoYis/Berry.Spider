@@ -174,7 +174,7 @@ public class TouTiaoSpider4QuestionProvider : ProviderBase<TouTiaoSpider4Questio
         {
             ImmutableList<string> contentItems = ImmutableList.Create<string>();
             await this.WebElementLoadProvider.BatchInvokeAsync(
-                eventData.Items.ToDictionary(k => k.Title, v => v.Href),
+                eventData.Items.DistinctBy(x => x.Title).ToDictionary(k => k.Title, v => v.Href),
                 drv => drv.FindElement(By.CssSelector(".s-container")),
                 async (root, keyword) =>
                 {

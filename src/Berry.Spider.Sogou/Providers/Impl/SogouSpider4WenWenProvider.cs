@@ -169,7 +169,7 @@ public class SogouSpider4WenWenProvider : ProviderBase<SogouSpider4WenWenProvide
         {
             ConcurrentDictionary<string, List<string>> contentItems = new ConcurrentDictionary<string, List<string>>();
             await this.WebElementLoadProvider.BatchInvokeAsync(
-                eventData.Items.ToDictionary(k => k.Title, v => v.Href),
+                eventData.Items.DistinctBy(x => x.Title).ToDictionary(k => k.Title, v => v.Href),
                 drv => drv.FindElement(By.Id("bestAnswers")),
                 async (root, keyword) =>
                 {

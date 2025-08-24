@@ -172,7 +172,7 @@ public class TouTiaoSpider4InformationCompositionProvider : ProviderBase<TouTiao
             string groupId = this.GuidGenerator.Create().ToString("N");
             ImmutableList<SpiderContent_Composition> contentItems = ImmutableList.Create<SpiderContent_Composition>();
             await this.WebElementLoadProvider.BatchInvokeAsync(
-                eventData.Items.ToDictionary(k => k.Title, v => v.Href),
+                eventData.Items.DistinctBy(x => x.Title).ToDictionary(k => k.Title, v => v.Href),
                 drv => drv.FindElement(By.CssSelector(".article-content")),
                 async (root, keyword) =>
                 {
