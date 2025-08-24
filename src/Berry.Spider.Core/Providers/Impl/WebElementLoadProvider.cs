@@ -31,7 +31,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
             //行为模拟
-            await HumanBehavior.ScrollLikeHumanAsync(driver, steps: 5);
+            await HumanBehavior.ScrollLikeHumanAsync(driver, steps: 2);
             string title = driver.Title;
             string page = driver.PageSource;
             string url = driver.Url;
@@ -72,7 +72,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
                     //跳转
                     await driver.Navigate().GoToUrlAsync(targetUrl);
                     //行为模拟
-                    await HumanBehavior.ScrollLikeHumanAsync(driver, steps: 5);
+                    await HumanBehavior.ScrollLikeHumanAsync(driver, steps: 2);
                     string title = driver.Title;
                     string page = driver.PageSource;
                     string url = driver.Url;
@@ -116,7 +116,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
             //行为模拟
-            await HumanBehavior.ScrollLikeHumanAsync(driver, steps: 5);
+            await HumanBehavior.ScrollLikeHumanAsync(driver, steps: 2);
             string title = driver.Title;
             string page = driver.PageSource;
             string url = driver.Url;
@@ -162,7 +162,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
             //行为模拟
-            await HumanBehavior.ScrollLikeHumanAsync(driver, steps: 5);
+            await HumanBehavior.ScrollLikeHumanAsync(driver, steps: 2);
             //获取输入框
             driver.FindElement(inputBox).SendKeys(state.ToString());
             //点击按钮
@@ -206,7 +206,7 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
             //行为模拟
-            await HumanBehavior.ScrollLikeHumanAsync(driver, steps: 5);
+            await HumanBehavior.ScrollLikeHumanAsync(driver, steps: 2);
             //获取输入框
             driver.FindElement(inputBox).SendKeys(state.ToString());
             //点击按钮

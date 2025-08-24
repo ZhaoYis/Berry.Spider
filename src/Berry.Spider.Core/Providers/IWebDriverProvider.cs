@@ -3,7 +3,7 @@ using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.Core;
 
-public interface IWebDriverProvider : ISingletonDependency
+public interface IWebDriverProvider : ISingletonDependency, IAsyncDisposable
 {
     Task<IWebDriver> GetAsync(string isolationContext = "");
 }
