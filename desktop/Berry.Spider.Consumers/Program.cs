@@ -73,9 +73,10 @@ public class Program
             var enableAgileConfig = configuration.GetValue<bool>("AgileConfig:Enable");
             if (enableAgileConfig)
             {
+                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "DEV";
                 await builder.AddAppSettingsSecretsJson()
                     //集成AgileConfig
-                    .UseAgileConfig()
+                    .UseAgileConfig($"AgileConfig.{env}.json")
                     .UseSerilog()
                     .RunConsoleAsync();
             }
