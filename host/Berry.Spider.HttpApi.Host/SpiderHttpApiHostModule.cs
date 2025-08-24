@@ -4,6 +4,7 @@ using Berry.Spider.Baidu;
 using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.EventBus.MongoDB;
 using Berry.Spider.EventBus.Redis;
+using Berry.Spider.NaiPan;
 using Berry.Spider.OpenAI.Application;
 using Berry.Spider.Segmenter.JiebaNet;
 using Berry.Spider.Sogou;
@@ -45,7 +46,8 @@ namespace Berry.Spider.HttpApi.Host;
     typeof(BaiduSpiderApplicationModule),
     typeof(SogouSpiderApplicationModule),
     typeof(SpiderApplicationModule),
-    typeof(SpiderOpenAIApplicationModule)
+    typeof(SpiderOpenAIApplicationModule),
+    typeof(SpiderNaiPanModule)
 )]
 public class SpiderHttpApiHostModule : AbpModule
 {
