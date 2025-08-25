@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Remote;
@@ -12,16 +11,16 @@ public class WebDriverProvider : IWebDriverProvider
     private WebDriverOptions DriverOptions { get; }
     private IDriverOptionsProvider DriverOptionsProvider { get; }
 
-    private readonly ConcurrentDictionary<string, ChromeDriverService> _driverServices = new();
-    private readonly ConcurrentDictionary<string, IWebDriver> _browsers = new();
-
     public WebDriverProvider(IOptionsSnapshot<WebDriverOptions> options, IDriverOptionsProvider optionsProvider)
     {
         this.DriverOptions = options.Value;
         this.DriverOptionsProvider = optionsProvider;
     }
 
-    public async Task<IWebDriver> GetAsync(string isolationContext = "")
+    /// <summary>
+    /// 获取WebDriver
+    /// </summary>
+    public async Task<IWebDriver> GetAsync(string isolationContext)
     {
         try
         {
@@ -30,10 +29,7 @@ public class WebDriverProvider : IWebDriverProvider
             if (this.DriverOptions.LocalOptions.IsEnable)
             {
                 var cds = this.CreateChromeDriverService(this.DriverOptions.LocalOptions.LocalAddress);
-                _driverServices.TryAdd(isolationContext, cds);
-
                 var driver = new ChromeDriver(cds, options, TimeSpan.FromSeconds(30));
-                _browsers.TryAdd(isolationContext, driver);
                 return driver;
             }
             else if (this.DriverOptions.RemoteOptions.IsEnable)
@@ -74,43 +70,11 @@ public class WebDriverProvider : IWebDriverProvider
     }
 
     /// <summary>
-    /// Performs application-defined tasks associated with freeing, releasing, or
-    /// resetting unmanaged resources asynchronously.</summary>
-    /// <returns>A task that represents the asynchronous dispose operation.</returns>
-    public async ValueTask DisposeAsync()
-    {
-        // 并行处理资源释放
-        var disposalTasks = _browsers.Select(kvp => Task.Run(() =>
-        {
-            try
-            {
-                if (_browsers.TryRemove(kvp.Key, out var browser))
-                {
-                    browser?.Quit();
-                    browser?.Dispose();
-                    //删除浏览器用户配置目录
-                    DeleteBrowserUserProfileDirectories(kvp.Key);
-                }
-
-                if (_driverServices.TryRemove(kvp.Key, out var service))
-                {
-                    service.Dispose();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"释放WebDriver资源失败：{ex.Message}");
-            }
-        }));
-        await Task.WhenAll(disposalTasks);
-    }
-
-    /// <summary>
     /// 删除浏览器用户配置目录
     /// </summary>
-    private void DeleteBrowserUserProfileDirectories(string context)
+    public void DeleteBrowserUserProfileDirectories(string isolationContext)
     {
-        var userProfileDirectory = UserProfileDirectory(context);
+        var userProfileDirectory = UserProfileDirectory(isolationContext);
         if (!string.IsNullOrEmpty(userProfileDirectory) && Directory.Exists(userProfileDirectory))
         {
             var attemptCount = 0;

@@ -1,5 +1,4 @@
 using System.Net;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -11,17 +10,17 @@ namespace Berry.Spider.Core;
 public class WebElementLoadProvider : IWebElementLoadProvider
 {
     private ILogger<WebElementLoadProvider> Logger { get; }
-    private IServiceProvider ServiceProvider { get; }
+    private IWebDriverProvider WebDriverProvider { get; }
     private IGuidGenerator GuidGenerator { get; }
     private IHumanMachineVerificationInterceptorProvider InterceptorProvider { get; }
 
     public WebElementLoadProvider(ILogger<WebElementLoadProvider> logger,
-        IServiceProvider serviceProvider,
+        IWebDriverProvider webDriverProvider,
         IGuidGenerator guidGenerator,
         IHumanMachineVerificationInterceptorProvider interceptorProvider)
     {
         this.Logger = logger;
-        this.ServiceProvider = serviceProvider;
+        this.WebDriverProvider = webDriverProvider;
         this.GuidGenerator = guidGenerator;
         this.InterceptorProvider = interceptorProvider;
     }
@@ -31,10 +30,10 @@ public class WebElementLoadProvider : IWebElementLoadProvider
         Func<IWebDriver, IWebElement?> selector,
         Func<IWebElement?, object, Task> executor)
     {
+        var isolationContext = this.GuidGenerator.Create().ToString();
         try
         {
-            await using IWebDriverProvider provider = this.ServiceProvider.GetRequiredService<IWebDriverProvider>();
-            using IWebDriver driver = await provider.GetAsync(this.GuidGenerator.Create().ToString());
+            using IWebDriver driver = await this.WebDriverProvider.GetAsync(isolationContext);
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
             //行为模拟
@@ -60,16 +59,20 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             this.Logger.LogException(exception);
             await executor.Invoke(null, state);
         }
+        finally
+        {
+            this.WebDriverProvider.DeleteBrowserUserProfileDirectories(isolationContext);
+        }
     }
 
     public async Task BatchInvokeAsync(IDictionary<string, string> keywordList,
         Func<IWebDriver, IWebElement?> selector,
         Func<IWebElement?, object, Task> executor)
     {
+        var isolationContext = this.GuidGenerator.Create().ToString();
         try
         {
-            await using IWebDriverProvider provider = this.ServiceProvider.GetRequiredService<IWebDriverProvider>();
-            using IWebDriver driver = await provider.GetAsync(this.GuidGenerator.Create().ToString());
+            using IWebDriver driver = await this.WebDriverProvider.GetAsync(isolationContext);
             foreach (KeyValuePair<string, string> pair in keywordList)
             {
                 try
@@ -108,6 +111,10 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             this.Logger.LogException(exception);
             await executor.Invoke(null, "");
         }
+        finally
+        {
+            this.WebDriverProvider.DeleteBrowserUserProfileDirectories(isolationContext);
+        }
     }
 
     public async Task<T?> InvokeAndReturnAsync<T>(string targetUrl,
@@ -115,13 +122,13 @@ public class WebElementLoadProvider : IWebElementLoadProvider
         Func<IWebDriver, IWebElement?> selector,
         Func<IWebElement?, object, Task<T>> executor)
     {
+        var isolationContext = this.GuidGenerator.Create().ToString();
         try
         {
             //检查是否处于人机验证资源锁定阶段
             if (await this.InterceptorProvider.IsLockedAsync(targetUrl)) return default(T);
 
-            await using IWebDriverProvider provider = this.ServiceProvider.GetRequiredService<IWebDriverProvider>();
-            using IWebDriver driver = await provider.GetAsync(this.GuidGenerator.Create().ToString());
+            using IWebDriver driver = await this.WebDriverProvider.GetAsync(isolationContext);
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
             //行为模拟
@@ -151,6 +158,10 @@ public class WebElementLoadProvider : IWebElementLoadProvider
             this.Logger.LogException(exception);
             await executor.Invoke(null, state);
         }
+        finally
+        {
+            this.WebDriverProvider.DeleteBrowserUserProfileDirectories(isolationContext);
+        }
 
         return default(T);
     }
@@ -160,13 +171,13 @@ public class WebElementLoadProvider : IWebElementLoadProvider
         By inputBox,
         By submitBtn)
     {
+        var isolationContext = this.GuidGenerator.Create().ToString();
         try
         {
             //检查是否处于人机验证资源锁定阶段
             if (await this.InterceptorProvider.IsLockedAsync(targetUrl)) return string.Empty;
 
-            await using IWebDriverProvider provider = this.ServiceProvider.GetRequiredService<IWebDriverProvider>();
-            using IWebDriver driver = await provider.GetAsync(this.GuidGenerator.Create().ToString());
+            using IWebDriver driver = await this.WebDriverProvider.GetAsync(isolationContext);
             //隐式等待
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             //跳转
@@ -196,6 +207,10 @@ public class WebElementLoadProvider : IWebElementLoadProvider
         {
             this.Logger.LogException(exception);
         }
+        finally
+        {
+            this.WebDriverProvider.DeleteBrowserUserProfileDirectories(isolationContext);
+        }
 
         return string.Empty;
     }
@@ -207,13 +222,13 @@ public class WebElementLoadProvider : IWebElementLoadProvider
         Func<IWebDriver, IWebElement?> selector,
         Func<IWebElement?, object, Task> executor)
     {
+        var isolationContext = this.GuidGenerator.Create().ToString();
         try
         {
             //检查是否处于人机验证资源锁定阶段
             if (await this.InterceptorProvider.IsLockedAsync(targetUrl)) return;
 
-            await using IWebDriverProvider provider = this.ServiceProvider.GetRequiredService<IWebDriverProvider>();
-            using IWebDriver driver = await provider.GetAsync(this.GuidGenerator.Create().ToString());
+            using IWebDriver driver = await this.WebDriverProvider.GetAsync(isolationContext);
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
             //行为模拟
@@ -249,6 +264,10 @@ public class WebElementLoadProvider : IWebElementLoadProvider
         {
             this.Logger.LogException(exception);
             await executor.Invoke(null, state);
+        }
+        finally
+        {
+            this.WebDriverProvider.DeleteBrowserUserProfileDirectories(isolationContext);
         }
     }
 }
