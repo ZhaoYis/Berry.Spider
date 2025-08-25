@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -7,20 +8,20 @@ using Volo.Abp.Guids;
 
 namespace Berry.Spider.Core;
 
-public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
+public class WebElementLoadProvider : IWebElementLoadProvider
 {
     private ILogger<WebElementLoadProvider> Logger { get; }
-    private IWebDriverProvider WebDriverProvider { get; }
+    private IServiceProvider ServiceProvider { get; }
     private IGuidGenerator GuidGenerator { get; }
     private IHumanMachineVerificationInterceptorProvider InterceptorProvider { get; }
 
     public WebElementLoadProvider(ILogger<WebElementLoadProvider> logger,
-        IWebDriverProvider webDriverProvider,
+        IServiceProvider serviceProvider,
         IGuidGenerator guidGenerator,
-        IHumanMachineVerificationInterceptorProvider interceptorProvider) : base(webDriverProvider)
+        IHumanMachineVerificationInterceptorProvider interceptorProvider)
     {
         this.Logger = logger;
-        this.WebDriverProvider = webDriverProvider;
+        this.ServiceProvider = serviceProvider;
         this.GuidGenerator = guidGenerator;
         this.InterceptorProvider = interceptorProvider;
     }
@@ -32,7 +33,8 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     {
         try
         {
-            using IWebDriver driver = await this.WebDriverProvider.GetAsync(this.GuidGenerator.Create().ToString());
+            await using IWebDriverProvider provider = this.ServiceProvider.GetRequiredService<IWebDriverProvider>();
+            using IWebDriver driver = await provider.GetAsync(this.GuidGenerator.Create().ToString());
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
             //行为模拟
@@ -66,7 +68,8 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
     {
         try
         {
-            using IWebDriver driver = await this.WebDriverProvider.GetAsync(this.GuidGenerator.Create().ToString());
+            await using IWebDriverProvider provider = this.ServiceProvider.GetRequiredService<IWebDriverProvider>();
+            using IWebDriver driver = await provider.GetAsync(this.GuidGenerator.Create().ToString());
             foreach (KeyValuePair<string, string> pair in keywordList)
             {
                 try
@@ -117,7 +120,8 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             //检查是否处于人机验证资源锁定阶段
             if (await this.InterceptorProvider.IsLockedAsync(targetUrl)) return default(T);
 
-            using IWebDriver driver = await this.WebDriverProvider.GetAsync(this.GuidGenerator.Create().ToString());
+            await using IWebDriverProvider provider = this.ServiceProvider.GetRequiredService<IWebDriverProvider>();
+            using IWebDriver driver = await provider.GetAsync(this.GuidGenerator.Create().ToString());
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
             //行为模拟
@@ -161,7 +165,8 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             //检查是否处于人机验证资源锁定阶段
             if (await this.InterceptorProvider.IsLockedAsync(targetUrl)) return string.Empty;
 
-            using IWebDriver driver = await this.WebDriverProvider.GetAsync(this.GuidGenerator.Create().ToString());
+            await using IWebDriverProvider provider = this.ServiceProvider.GetRequiredService<IWebDriverProvider>();
+            using IWebDriver driver = await provider.GetAsync(this.GuidGenerator.Create().ToString());
             //隐式等待
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             //跳转
@@ -207,7 +212,8 @@ public class WebElementLoadProvider : ServerBase, IWebElementLoadProvider
             //检查是否处于人机验证资源锁定阶段
             if (await this.InterceptorProvider.IsLockedAsync(targetUrl)) return;
 
-            using IWebDriver driver = await this.WebDriverProvider.GetAsync(this.GuidGenerator.Create().ToString());
+            await using IWebDriverProvider provider = this.ServiceProvider.GetRequiredService<IWebDriverProvider>();
+            using IWebDriver driver = await provider.GetAsync(this.GuidGenerator.Create().ToString());
             //跳转
             await driver.Navigate().GoToUrlAsync(targetUrl);
             //行为模拟
