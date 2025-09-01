@@ -17,7 +17,7 @@ public class SpiderEventBusRedisModule : AbpModule
         context.Services.AddCap(opt =>
         {
             //配置数据存储方式
-            opt.UseInMemoryStorage();
+            opt.UseSqlite(sqlite => { sqlite.ConnectionString = "Data Source=cap.db"; });
             //配置Redis
             if (redisOptions is not null)
             {
