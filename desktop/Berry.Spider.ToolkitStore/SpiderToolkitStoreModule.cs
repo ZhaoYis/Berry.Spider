@@ -5,6 +5,7 @@ using Berry.Spider.EntityFrameworkCore;
 using Berry.Spider.FreeRedis;
 using Berry.Spider.Segmenter.JiebaNet;
 using Berry.Spider.Sogou;
+using Berry.Spider.ToolkitStore.ViewModels;
 using Berry.Spider.ToolkitStore.Views;
 using Berry.Spider.TouTiao;
 using Microsoft.Extensions.Configuration;
@@ -51,11 +52,11 @@ public class SpiderToolkitStoreModule : AbpModule
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
-        context.Services.AddSingleton<MainWindow>();
-        //注册MediatR
-        context.Services.AddMediatR(cfg =>
+        context.Services.AddSingleton<MainWindow>(sp => new MainWindow
         {
-            cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+            DataContext = sp.GetRequiredService<MainWindowViewModel>()
         });
+        //注册MediatR
+        context.Services.AddMediatR(cfg => { cfg.RegisterServicesFromAssembly(typeof(Program).Assembly); });
     }
 }

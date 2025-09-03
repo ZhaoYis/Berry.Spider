@@ -28,14 +28,14 @@ public partial class App : Avalonia.Application
     {
         Log.Logger = new LoggerConfiguration()
 #if DEBUG
-                     .MinimumLevel.Debug()
+            .MinimumLevel.Debug()
 #else
             .MinimumLevel.Information()
 #endif
-                     .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Information)
-                     .Enrich.FromLogContext()
-                     .WriteTo.Async(c => c.File("Logs/logs.txt"))
-                     .CreateLogger();
+            .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Information)
+            .Enrich.FromLogContext()
+            .WriteTo.Async(c => c.File("Logs/logs.txt"))
+            .CreateLogger();
 
         try
         {
@@ -58,7 +58,6 @@ public partial class App : Avalonia.Application
                 BindingPlugins.DataValidators.RemoveAt(0);
                 //初始化MainWindow
                 MainWindow mainWindow = this.Services.GetRequiredService<MainWindow>();
-                mainWindow.DataContext = this.Services.GetRequiredService<MainWindowViewModel>();
                 desktop.MainWindow = mainWindow;
             }
         }
@@ -75,11 +74,11 @@ public partial class App : Avalonia.Application
     public static TopLevel? ResolveDefaultTopLevel()
     {
         return App.Current.ApplicationLifetime switch
-               {
-                   IClassicDesktopStyleApplicationLifetime desktopLifetime => desktopLifetime.MainWindow,
-                   ISingleViewApplicationLifetime singleView => TopLevel.GetTopLevel(singleView.MainView),
-                   _ => null
-               };
+        {
+            IClassicDesktopStyleApplicationLifetime desktopLifetime => desktopLifetime.MainWindow,
+            ISingleViewApplicationLifetime singleView => TopLevel.GetTopLevel(singleView.MainView),
+            _ => null
+        };
     }
 
     public static IStorageProvider? ResolveDefaultStorageProvider()
