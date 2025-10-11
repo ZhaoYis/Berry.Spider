@@ -2,8 +2,8 @@ namespace Berry.Spider.Core;
 
 public class NormalResolveJumpUrlProvider : IResolveJumpUrlProvider
 {
-    public Task<string> ResolveAsync(string sourceUrl)
+    public ValueTask<string> ResolveAsync(string sourceUrl)
     {
-        return Task.FromResult<string>(sourceUrl);
+        return new ValueTask<string>(sourceUrl);
     }
 }

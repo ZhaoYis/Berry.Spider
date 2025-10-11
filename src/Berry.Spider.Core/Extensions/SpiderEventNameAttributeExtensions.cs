@@ -19,14 +19,14 @@ public static class SpiderEventNameAttributeExtensions
             {
                 if (EventNameAttributesCache.ContainsKey(eventNameAttribute.SourceFrom))
                 {
-                    var list = EventNameAttributesCache[eventNameAttribute.SourceFrom] ?? new List<EventNameCacheItem>();
+                    var list = EventNameAttributesCache[eventNameAttribute.SourceFrom] ?? [];
                     list.Add(new EventNameCacheItem(type, eventNameAttribute));
 
                     EventNameAttributesCache[eventNameAttribute.SourceFrom] = list;
                 }
                 else
                 {
-                    EventNameAttributesCache.TryAdd(eventNameAttribute.SourceFrom, new List<EventNameCacheItem> { new EventNameCacheItem(type, eventNameAttribute) });
+                    EventNameAttributesCache.TryAdd(eventNameAttribute.SourceFrom, [new EventNameCacheItem(type, eventNameAttribute)]);
                 }
             }
         }
@@ -54,7 +54,7 @@ public static class SpiderEventNameAttributeExtensions
         }
         else
         {
-            return new List<string>();
+            return [];
         }
     }
 
@@ -67,7 +67,7 @@ public static class SpiderEventNameAttributeExtensions
             return instance ?? new object();
         }
 
-        return new();
+        throw new NotSupportedException($"Cannot create Eto object of type {type}");
     }
 
     private static SpiderEventNameAttribute? GetAttribute<T>(this T t)
@@ -78,7 +78,7 @@ public static class SpiderEventNameAttributeExtensions
         return EventNameAttributeCache.GetOrAdd(type, t =>
         {
             SpiderEventNameAttribute? attribute = t.GetCustomAttribute<SpiderEventNameAttribute>();
-            return attribute ?? default;
+            return attribute ?? null;
         });
     }
 
@@ -89,14 +89,14 @@ public static class SpiderEventNameAttributeExtensions
             if (value != null) return value.Select(e => e.EventNameAttribute).ToList();
         }
 
-        return default;
+        return null;
     }
 
     private static Type? GetEtoType(this SpiderSourceFrom from, EtoType type)
     {
         if (EventNameAttributesCache.TryGetValue(from, out List<EventNameCacheItem>? value))
         {
-            if (value != null)
+            if (value is { Count: > 0 })
             {
                 return value.Where(e => e.EventNameAttribute.EtoType == type)
                     .Select(e => e.ObjType)
@@ -104,7 +104,7 @@ public static class SpiderEventNameAttributeExtensions
             }
         }
 
-        return default;
+        return null;
     }
 }
 

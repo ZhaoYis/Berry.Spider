@@ -4,9 +4,9 @@ namespace Berry.Spider.Baidu;
 
 public class BaiduResolveJumpUrlProvider : IResolveJumpUrlProvider
 {
-    public Task<string> ResolveAsync(string sourceUrl)
+    public ValueTask<string> ResolveAsync(string sourceUrl)
     {
-        if (string.IsNullOrWhiteSpace(sourceUrl)) return Task.FromResult("");
+        if (string.IsNullOrWhiteSpace(sourceUrl)) return new ValueTask<string>("");
 
         if (sourceUrl.StartsWith("http") || sourceUrl.StartsWith("https"))
         {
@@ -14,10 +14,10 @@ public class BaiduResolveJumpUrlProvider : IResolveJumpUrlProvider
             if (jumpUri.Host.Contains("baidu"))
             {
                 string url = jumpUri.ToString();
-                return Task.FromResult<string>(url);
+                return new ValueTask<string>(url);
             }
         }
 
-        return Task.FromResult("");
+        return new ValueTask<string>("");
     }
 }

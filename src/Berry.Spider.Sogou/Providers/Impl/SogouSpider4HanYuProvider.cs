@@ -44,7 +44,7 @@ public class SogouSpider4HanYuProvider : ProviderBase<SogouSpider4HanYuProvider>
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    public async Task PushAsync(SpiderPushToQueueDto dto)
+    public async Task PushAsync(ISpiderPushToQueueDto dto)
     {
         string identityId = dto.GetIdentityId();
         var eto = dto.SourceFrom.TryCreateEto(EtoType.Push, dto.SourceFrom, dto.Keyword, dto.TraceCode, identityId);

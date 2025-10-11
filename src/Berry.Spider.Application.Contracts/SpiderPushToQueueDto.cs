@@ -1,10 +1,9 @@
 using System.Text;
 using Berry.Spider.Core;
-using Berry.Spider.Domain.Shared;
 
 namespace Berry.Spider;
 
-public class SpiderPushToQueueDto : ITraceCode
+public class SpiderPushToQueueDto : ISpiderPushToQueueDto
 {
     public SpiderPushToQueueDto(string keyword, SpiderSourceFrom from, string? traceCode)
     {

@@ -6,7 +6,7 @@ public interface ISpiderProvider
     /// 向队列推送源数据
     /// </summary>
     /// <returns></returns>
-    Task PushAsync(SpiderPushToQueueDto dto);
+    Task PushAsync(ISpiderPushToQueueDto dto);
 
     /// <summary>
     /// 执行获取一级页面数据任务

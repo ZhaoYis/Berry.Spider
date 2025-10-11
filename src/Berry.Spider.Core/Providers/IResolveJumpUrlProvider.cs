@@ -5,5 +5,5 @@ namespace Berry.Spider.Core;
 /// </summary>
 public interface IResolveJumpUrlProvider
 {
-    Task<string> ResolveAsync(string sourceUrl);
+    ValueTask<string> ResolveAsync(string sourceUrl);
 }

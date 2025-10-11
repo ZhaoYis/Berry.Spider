@@ -16,10 +16,10 @@ public class TouTiaoResolveJumpUrlProvider : IResolveJumpUrlProvider
         TouTiaoOptions = options.Value;
     }
 
-    public Task<string> ResolveAsync(string sourceUrl)
+    public ValueTask<string> ResolveAsync(string sourceUrl)
     {
         string jumpToUrl = "";
-        if (string.IsNullOrWhiteSpace(sourceUrl)) return Task.FromResult(jumpToUrl);
+        if (string.IsNullOrWhiteSpace(sourceUrl)) return new ValueTask<string>(jumpToUrl);
 
         //执行一次解码，结果范例如下：
         // /search/jump?url=https://tsearch.toutiaoapi.com/s/search_wenda/list?enable_miaozhen_page=1&enter_answer_id=7175162421706048012&enter_from=search_result&outer_show_aid=7175162421706048012&qid=6931623923998900488&relate_type=0&search_id=xxx&aid=4916&jtoken=xxx
@@ -48,14 +48,14 @@ public class TouTiaoResolveJumpUrlProvider : IResolveJumpUrlProvider
 
         if (!UrlHelper.IsUrl(jumpToUrl))
         {
-            return Task.FromResult("");
+            return new ValueTask<string>("");
         }
 
         if (Toutiaoapi_Com_Regex.Match(jumpToUrl).Success || Toutiao_Com_Regex.Match(jumpToUrl).Success)
         {
-            return Task.FromResult(jumpToUrl);
+            return new ValueTask<string>(jumpToUrl);
         }
 
-        return Task.FromResult("");
+        return new ValueTask<string>("");
     }
 }
