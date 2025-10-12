@@ -160,7 +160,7 @@ public class TouTiaoSpider4ArticleProvider : ProviderBase<TouTiaoSpider4ArticleP
             ImmutableList<SpiderContent> contentItems = ImmutableList.Create<SpiderContent>();
             await this.WebElementLoadProvider.BatchInvokeAsync(
                 eventData.Items.DistinctBy(x => x.Title).ToDictionary(k => k.Title, v => v.Href),
-                drv => drv.FindElement(By.CssSelector(".article-content")),
+                drv => drv.FindElement(By.CssSelector(".wtt-content")),
                 async (root, keyword) =>
                 {
                     if (root == null) return;
