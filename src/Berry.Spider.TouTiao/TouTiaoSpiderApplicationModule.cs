@@ -23,6 +23,7 @@ public class TouTiaoSpiderApplicationModule : AbpModule
         context.Services.AddTransient<TouTiaoSpider4HighQualityQuestionProvider>();
         context.Services.AddTransient<TouTiaoSpider4InformationProvider>();
         context.Services.AddTransient<TouTiaoSpider4InformationCompositionProvider>();
+        context.Services.AddTransient<TouTiaoSpider4ArticleProvider>();
 
         //注入文本解析器
         context.Services.AddSingleton<TouTiaoQuestionTextAnalysisProvider>();

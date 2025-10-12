@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using Berry.Spider.Application.Contracts;
 using Berry.Spider.Core;
 using Berry.Spider.Domain;
@@ -8,37 +8,41 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
+using Volo.Abp.Guids;
 
 namespace Berry.Spider.TouTiao;
 
 /// <summary>
-/// 今日头条：资讯
+/// 今日头条：头条_微头条
 /// </summary>
-[SpiderService([SpiderSourceFrom.TouTiao_Information])]
-public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4InformationProvider>, ISpiderProvider
+[SpiderService([SpiderSourceFrom.TouTiao_Article])]
+public class TouTiaoSpider4ArticleProvider : ProviderBase<TouTiaoSpider4ArticleProvider>, ISpiderProvider
 {
+    private IGuidGenerator GuidGenerator { get; }
     private IWebElementLoadProvider WebElementLoadProvider { get; }
     private IResolveJumpUrlProvider ResolveJumpUrlProvider { get; }
-    private ISpiderContentKeywordRepository SpiderKeywordRepository { get; }
     private IRedisService RedisService { get; }
+    private ISpiderContentRepository SpiderRepository { get; }
     private IEventBusPublisher DistributedEventBus { get; }
     private SpiderOptions Options { get; }
 
-    private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=information&dvpf=pc";
+    private string HomePage => "https://so.toutiao.com/search?keyword={0}&pd=weitoutiao&dvpf=pc";
 
-    public TouTiaoSpider4InformationProvider(ILogger<TouTiaoSpider4InformationProvider> logger,
+    public TouTiaoSpider4ArticleProvider(ILogger<TouTiaoSpider4ArticleProvider> logger,
+        IGuidGenerator guidGenerator,
         IWebElementLoadProvider provider,
         IServiceProvider serviceProvider,
-        ISpiderContentKeywordRepository keywordRepository,
+        ISpiderContentRepository spiderRepository,
         IRedisService redisService,
         IEventBusPublisher eventBus,
         IOptionsSnapshot<SpiderOptions> options) : base(logger)
     {
+        this.GuidGenerator = guidGenerator;
         this.WebElementLoadProvider = provider;
         this.ResolveJumpUrlProvider = serviceProvider.GetRequiredService<TouTiaoResolveJumpUrlProvider>();
         this.RedisService = redisService;
+        this.SpiderRepository = spiderRepository;
         this.DistributedEventBus = eventBus;
-        this.SpiderKeywordRepository = keywordRepository;
         this.Options = options.Value;
     }
 
@@ -135,13 +139,6 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
                             eventData.Keyword, eventData.Keyword, childPageDataItems.ToList(), eventData.TraceCode,
                             eventData.IdentityId);
                         await this.DistributedEventBus.PublishAsync(eto.TryGetRoutingKey(), eto);
-
-                        //保存采集到的标题
-                        if (eto is ISpiderPullEto pullEto)
-                        {
-                            List<SpiderContent_Keyword> list = pullEto.Items.Select(item => new SpiderContent_Keyword(item.Title, pullEto.SourceFrom, eventData.TraceCode)).ToList();
-                            await this.SpiderKeywordRepository.InsertManyAsync(list);
-                        }
                     }
                 });
         }
@@ -157,6 +154,41 @@ public class TouTiaoSpider4InformationProvider : ProviderBase<TouTiaoSpider4Info
     /// <returns></returns>
     public async Task HandlePullEventAsync<T>(T eventData) where T : class, ISpiderPullEto
     {
-        throw new NotImplementedException();
+        try
+        {
+            string groupId = this.GuidGenerator.Create().ToString("N");
+            ImmutableList<SpiderContent> contentItems = ImmutableList.Create<SpiderContent>();
+            await this.WebElementLoadProvider.BatchInvokeAsync(
+                eventData.Items.DistinctBy(x => x.Title).ToDictionary(k => k.Title, v => v.Href),
+                drv => drv.FindElement(By.CssSelector(".article-content")),
+                async (root, keyword) =>
+                {
+                    if (root == null) return;
+
+                    var resultContent = root.TryFindElement(By.TagName("article"));
+                    if (resultContent != null)
+                    {
+                        string content = resultContent.Text;
+                        if (!string.IsNullOrEmpty(content))
+                        {
+                            SpiderContent spiderContent = new SpiderContent(keyword.ToString(), content, groupId, eventData.SourceFrom);
+                            spiderContent.SetTraceCodeIfNotNull(eventData.TraceCode);
+                            spiderContent.SetIdentityIdIfNotNull(eventData.IdentityId);
+                            contentItems = contentItems.Add(spiderContent);
+                        }
+                    }
+
+                    await Task.Delay(20).ConfigureAwait(false);
+                }
+            );
+
+            //去重
+            List<SpiderContent> todoSaveContentItems = contentItems.Where(c => !string.IsNullOrEmpty(c.Content)).ToList();
+            await this.SpiderRepository.InsertManyAsync(todoSaveContentItems);
+        }
+        catch (Exception exception)
+        {
+            this.Logger.LogException(exception);
+        }
     }
 }

@@ -80,6 +80,8 @@ public class SpiderConsumersModule : AbpModule
         context.Services.AddTransient<ITouTiaoSpider4HighQualityQuestionExtNo1EventHandler, TouTiaoSpider4HighQualityQuestionExtNo1EventHandler>();
         context.Services.AddTransient<ITouTiaoSpider4InformationEventHandler, TouTiaoSpider4InformationEventHandler>();
         context.Services.AddTransient<ITouTiaoSpider4InformationCompositionEventHandler, TouTiaoSpider4InformationCompositionEventHandler>();
+        context.Services.AddTransient<ITouTiaoSpider4ArticleEventHandler, TouTiaoSpider4ArticleEventHandler>();
+
 
         //搜狗
         context.Services.AddTransient<ISogouSpider4RelatedSearchEventHandler, SogouSpider4RelatedSearchEventHandler>();

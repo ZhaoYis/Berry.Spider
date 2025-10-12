@@ -32,6 +32,11 @@ public enum SpiderSourceFrom
     /// </summary>
     [Description("头条_资讯_作文板块")] TouTiao_Information_Composition = 102,
 
+    /// <summary>
+    /// 头条_微头条
+    /// </summary>
+    [Description("头条_微头条")] TouTiao_Article = 103,
+
     #region 头条_问答
 
     /// <summary>
@@ -74,7 +79,7 @@ public enum SpiderSourceFrom
     /// 搜狗_问问
     /// </summary>
     [Description("搜狗_问问")] Sogou_WenWen = 401,
-    
+
     /// <summary> 
     /// 搜狗_汉语
     /// </summary>
