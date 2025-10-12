@@ -8,8 +8,8 @@ namespace Berry.Spider.TouTiao;
 [SpiderEventName(EtoType.Pull, RoutingKeyString, SpiderSourceFrom.TouTiao_WeiTouTiao)]
 public class TouTiaoSpider4ArticlePullEto : SpiderPullBaseEto
 {
-    public const string RoutingKeyString = "TouTiao.Article.Pull";
-    public const string QueueNameString = "Berry.TouTiao.Article.Pull";
+    public const string RoutingKeyString = "TouTiao.WeiTouTiao.Pull";
+    public const string QueueNameString = "Berry.TouTiao.WeiTouTiao.Pull";
 
     public TouTiaoSpider4ArticlePullEto() : base(SpiderSourceFrom.TouTiao_WeiTouTiao)
     {
