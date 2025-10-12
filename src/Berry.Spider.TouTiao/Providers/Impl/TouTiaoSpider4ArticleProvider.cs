@@ -15,7 +15,7 @@ namespace Berry.Spider.TouTiao;
 /// <summary>
 /// 今日头条：头条_微头条
 /// </summary>
-[SpiderService([SpiderSourceFrom.TouTiao_Article])]
+[SpiderService([SpiderSourceFrom.TouTiao_WeiTouTiao])]
 public class TouTiaoSpider4ArticleProvider : ProviderBase<TouTiaoSpider4ArticleProvider>, ISpiderProvider
 {
     private IGuidGenerator GuidGenerator { get; }

@@ -35,7 +35,7 @@ public enum SpiderSourceFrom
     /// <summary>
     /// 头条_微头条
     /// </summary>
-    [Description("头条_微头条")] TouTiao_Article = 103,
+    [Description("头条_微头条")] TouTiao_WeiTouTiao = 103,
 
     #region 头条_问答
 

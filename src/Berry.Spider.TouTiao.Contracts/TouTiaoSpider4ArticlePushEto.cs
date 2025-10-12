@@ -2,7 +2,7 @@ using Berry.Spider.Core;
 
 namespace Berry.Spider.TouTiao;
 
-[SpiderEventName(EtoType.Push, RoutingKeyString, SpiderSourceFrom.TouTiao_Article)]
+[SpiderEventName(EtoType.Push, RoutingKeyString, SpiderSourceFrom.TouTiao_WeiTouTiao)]
 public class TouTiaoSpider4ArticlePushEto : SpiderPushBaseEto
 {
     public const string RoutingKeyString = "TouTiao.Article.Push";
