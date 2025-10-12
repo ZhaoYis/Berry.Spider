@@ -3,15 +3,15 @@ using Berry.Spider.Core;
 namespace Berry.Spider.TouTiao;
 
 /// <summary>
-/// 头条：文章
+/// 头条：头条_微头条
 /// </summary>
-[SpiderEventName(EtoType.Pull, RoutingKeyString, SpiderSourceFrom.TouTiao_Information)]
+[SpiderEventName(EtoType.Pull, RoutingKeyString, SpiderSourceFrom.TouTiao_WeiTouTiao)]
 public class TouTiaoSpider4ArticlePullEto : SpiderPullBaseEto
 {
     public const string RoutingKeyString = "TouTiao.Article.Pull";
     public const string QueueNameString = "Berry.TouTiao.Article.Pull";
 
-    public TouTiaoSpider4ArticlePullEto() : base(SpiderSourceFrom.TouTiao_Information)
+    public TouTiaoSpider4ArticlePullEto() : base(SpiderSourceFrom.TouTiao_WeiTouTiao)
     {
     }
 

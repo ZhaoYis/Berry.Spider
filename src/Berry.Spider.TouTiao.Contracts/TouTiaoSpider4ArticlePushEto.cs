@@ -2,6 +2,9 @@ using Berry.Spider.Core;
 
 namespace Berry.Spider.TouTiao;
 
+/// <summary>
+/// 头条：头条_微头条
+/// </summary>
 [SpiderEventName(EtoType.Push, RoutingKeyString, SpiderSourceFrom.TouTiao_WeiTouTiao)]
 public class TouTiaoSpider4ArticlePushEto : SpiderPushBaseEto
 {
