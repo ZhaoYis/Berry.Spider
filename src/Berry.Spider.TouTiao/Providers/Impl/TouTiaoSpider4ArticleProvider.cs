@@ -103,30 +103,24 @@ public class TouTiaoSpider4ArticleProvider : ProviderBase<TouTiaoSpider4ArticleP
                     ImmutableList<ChildPageDataItem> childPageDataItems = ImmutableList.Create<ChildPageDataItem>();
                     foreach (IWebElement element in resultContent)
                     {
-                        var a = element.TryFindElement(By.TagName("a"));
-                        if (a != null)
+                        var aTagList = element.TryFindElements(By.TagName("a"));
+                        if (aTagList is { Count: > 0 })
                         {
-                            string text = a.Text.Trim();
-                            string href = a.GetAttribute("href");
-
-                            if (this.Options.KeywordCheckOptions.IsEnableSimilarityCheck)
+                            foreach (IWebElement a in aTagList)
                             {
-                                //执行相似度检测
-                                double sim = StringHelper.Sim(eventData.Keyword, text);
-                                if (sim * 100 < this.Options.KeywordCheckOptions.MinSimilarity)
+                                string text = a.Text.Trim();
+                                string? href = a.GetAttribute("href");
+                                if (string.IsNullOrEmpty(href)) continue;
+
+                                string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
+                                if (!string.IsNullOrEmpty(realHref) && realHref.Contains("?channel="))
                                 {
-                                    continue;
+                                    childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
+                                    {
+                                        Title = text,
+                                        Href = realHref
+                                    });
                                 }
-                            }
-
-                            string realHref = await this.ResolveJumpUrlProvider.ResolveAsync(href);
-                            if (!string.IsNullOrEmpty(realHref))
-                            {
-                                childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
-                                {
-                                    Title = text,
-                                    Href = realHref
-                                });
                             }
                         }
                     }
