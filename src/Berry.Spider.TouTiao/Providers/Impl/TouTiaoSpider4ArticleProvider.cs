@@ -117,7 +117,7 @@ public class TouTiaoSpider4ArticleProvider : ProviderBase<TouTiaoSpider4ArticleP
                                 {
                                     childPageDataItems = childPageDataItems.Add(new ChildPageDataItem
                                     {
-                                        Title = text,
+                                        Title = string.IsNullOrEmpty(text) ? eventData.Keyword : text,
                                         Href = realHref
                                     });
                                 }
