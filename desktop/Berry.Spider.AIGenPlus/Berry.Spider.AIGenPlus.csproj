@@ -23,7 +23,8 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.4" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-        <PackageReference Include="Microsoft.Extensions.AI" Version="9.8.0" />
+        <PackageReference Include="Microsoft.Agents.AI" Version="1.0.0-preview.251016.1" />
+        <PackageReference Include="Microsoft.Extensions.AI" Version="9.10.1" />
         <PackageReference Include="Microsoft.Extensions.AI.Ollama" Version="9.7.0-preview.1.25356.2"/>
         <PackageReference Include="Microsoft.SemanticKernel" Version="1.63.0" />
         <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.63.0" />
@@ -55,6 +56,10 @@
         <Compile Update="Views\Pages\AiChat.axaml.cs">
             <DependentUpon>AiChat.axaml</DependentUpon>
             <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Views\Pages\Agents\ArticleWriterAgentV2.axaml.cs">
+          <DependentUpon>ArticleWriterAgentV2.axaml</DependentUpon>
+          <SubType>Code</SubType>
         </Compile>
     </ItemGroup>
 

@@ -115,6 +115,9 @@
             <TabItem Header="Article Writer Agent">
                 <agents:ArticleWriterAgent />
             </TabItem>
+            <TabItem Header="Article Writer Agent V2">
+                <agents:ArticleWriterAgentV2 />
+            </TabItem>
         </TabControl>
     </Grid>
 </UserControl>

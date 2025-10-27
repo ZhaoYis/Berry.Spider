@@ -7,7 +7,7 @@ using Volo.Abp.Modularity;
 namespace Berry.Spider.AIGenPlus;
 
 [DependsOn(typeof(AbpAutofacModule),
-              typeof(SpiderSKPluginModule))]
+    typeof(SpiderSKPluginModule))]
 public class SpiderAIGenPlusModule : AbpModule
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)

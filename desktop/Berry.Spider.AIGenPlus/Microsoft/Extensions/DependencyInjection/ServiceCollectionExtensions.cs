@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using AgileConfig.Client;
 using Berry.Spider.AIGenPlus;
+using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
@@ -12,6 +13,9 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// 注入Ollama AI客户端服务
+    /// </summary>
     public static void AddOllamaAiClient(this IServiceCollection services, IConfiguration configuration)
     {
         Check.NotNull(configuration, nameof(configuration));
@@ -26,6 +30,10 @@ public static class ServiceCollectionExtensions
                 services.AddSingleton<ConfigClient>(client);
                 services.AddOllamaChatClient(client);
                 services.ConfigureOllamaOptions(client);
+            }
+            else
+            {
+                throw new AbpInitializationException("Ollama Chat Client is not configured.");
             }
         }
         else
@@ -46,10 +54,8 @@ public static class ServiceCollectionExtensions
         services.AddTransient<Kernel>(serviceProvider =>
         {
             var builder = Kernel.CreateBuilder()
-                                .AddOllamaChatCompletion(modelId: ollamaOptions.ModelId,
-                                                         endpoint: new Uri(ollamaOptions.ServiceAddr))
-                                .AddOllamaChatClient(modelId: ollamaOptions.ModelId)
-                ;
+                .AddOllamaChatCompletion(modelId: ollamaOptions.ModelId, endpoint: new Uri(ollamaOptions.ServiceAddr))
+                .AddOllamaChatClient(modelId: ollamaOptions.ModelId);
             //注入自定义插件
             builder.Plugins.AddPlugins();
             return builder.Build();
@@ -79,11 +85,11 @@ public static class ServiceCollectionExtensions
         //chat client
         var ollamaChatClient = new OllamaChatClient(options.ServiceAddr, options.ModelId);
         services.AddKeyedChatClient(nameof(OllamaChatClient), _ => new ChatClientBuilder(ollamaChatClient)
-                                                                   .UseFunctionInvocation()
-                                                                   //.UseDistributedCache()
-                                                                   //.UseOpenTelemetry()
-                                                                   //.UseLogging()
-                                                                   .Build());
+            .UseFunctionInvocation()
+            //.UseDistributedCache()
+            //.UseOpenTelemetry()
+            //.UseLogging()
+            .Build());
 
         //或者使用OpenAIClient进行初始化
         // var apiKeyCredential = new ApiKeyCredential(options.ModelId);
