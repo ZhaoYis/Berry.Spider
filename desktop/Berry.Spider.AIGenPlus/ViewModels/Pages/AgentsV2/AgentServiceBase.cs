@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
@@ -21,17 +23,12 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// <summary>
     /// Agent实例
     /// </summary>
-    protected ChatClientAgent Agent { get; private set; }
+    private ChatClientAgent Agent { get; set; }
 
     /// <summary>
     /// Agent名称
     /// </summary>
     public abstract string AgentName { get; }
-
-    /// <summary>
-    /// Agent类型
-    /// </summary>
-    public abstract AgentType AgentType { get; }
 
     /// <summary>
     /// Agent指令(System Prompt)
@@ -59,6 +56,39 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     protected virtual ChatResponseFormat? ResponseFormat => null;
 
     /// <summary>
+    /// 恢复之前的对话
+    /// </summary>
+    /// <param name="taskId">任务ID(用于记录执行日志)</param>
+    /// <param name="chatClientAgent">聊天客户端Agent</param>
+    /// <returns></returns>
+    protected virtual async Task<AgentThread> ResumePreviousConversationAsync(string taskId, ChatClientAgent chatClientAgent)
+    {
+        var filePath = Path.Combine(Path.GetTempPath(), $"{taskId}_agent_thread.json");
+        var serializedThread = await File.ReadAllTextAsync(filePath);
+        // 反序列化Agent线程状态
+        if (string.IsNullOrEmpty(serializedThread))
+        {
+            return null;
+        }
+
+        return chatClientAgent.DeserializeThread(JsonSerializer.Deserialize<JsonElement>(serializedThread));
+    }
+
+    /// <summary>
+    /// 保存Agent线程状态
+    /// </summary>
+    /// <param name="taskId">任务ID(用于记录执行日志)</param>
+    /// <param name="agentThread">Agent线程</param>
+    /// <returns></returns>
+    protected virtual Task SaveThreadStateAsync(string taskId, AgentThread agentThread)
+    {
+        // 序列化并保存当前对话状态到持久存储（例如文件、数据库等）
+        var serializedThread = agentThread.Serialize(JsonSerializerOptions.Web).GetRawText();
+        var filePath = Path.Combine(Path.GetTempPath(), $"{taskId}_agent_thread.json");
+        return File.WriteAllTextAsync(filePath, serializedThread);
+    }
+
+    /// <summary>
     /// 执行Agent任务（非流式）
     /// </summary>
     /// <param name="input">输入内容</param>
@@ -69,7 +99,12 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
         try
         {
             (ChatClientAgent chatClientAgent, AgentThread agentThread) = this.GetAgentAndNewThread(taskId);
-            var result = await chatClientAgent.RunAsync(input, agentThread);
+            // 恢复之前的对话
+            AgentThread reloadedThread = await this.ResumePreviousConversationAsync(taskId, chatClientAgent) ?? agentThread;
+            // 执行Agent任务
+            var result = await chatClientAgent.RunAsync(input, reloadedThread);
+            // 保存Agent线程状态
+            await this.SaveThreadStateAsync(taskId, reloadedThread);
             return result.Text;
         }
         catch (Exception e)
@@ -87,6 +122,8 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     public virtual async IAsyncEnumerable<string> ExecuteStreamAsync(string input, string taskId)
     {
         (ChatClientAgent chatClientAgent, AgentThread agentThread) = this.GetAgentAndNewThread(taskId);
+        // 恢复之前的对话
+        AgentThread reloadedThread = await this.ResumePreviousConversationAsync(taskId, chatClientAgent) ?? agentThread;
         await foreach (var output in chatClientAgent.RunStreamingAsync(input, agentThread))
         {
             if (!string.IsNullOrEmpty(output.Text))
@@ -94,6 +131,18 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
                 yield return output.Text;
             }
         }
+
+        // 保存Agent线程状态
+        await this.SaveThreadStateAsync(taskId, reloadedThread);
+    }
+
+    /// <summary>
+    /// 获取Agent实例
+    /// </summary>
+    /// <returns></returns>
+    public virtual AIAgent GetAgent()
+    {
+        return this.Agent ?? throw new BusinessException($"Agent实例未初始化，Agent名称：{AgentName}");
     }
 
     /// <summary>

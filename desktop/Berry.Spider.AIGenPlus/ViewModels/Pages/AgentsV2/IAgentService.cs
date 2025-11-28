@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Agents.AI;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 
@@ -11,9 +12,10 @@ public interface IAgentService
     string AgentName { get; }
 
     /// <summary>
-    /// Agent类型
+    /// 获取Agent实例
     /// </summary>
-    AgentType AgentType { get; }
+    /// <returns>Agent实例</returns>
+    AIAgent GetAgent();
 
     /// <summary>
     /// 执行Agent任务（非流式）

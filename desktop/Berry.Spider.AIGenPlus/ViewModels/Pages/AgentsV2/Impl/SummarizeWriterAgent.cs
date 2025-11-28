@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
-using Volo.Abp.DependencyInjection;
+using Microsoft.SemanticKernel.Agents.Runtime;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 
@@ -11,10 +11,10 @@ namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 /// <param name="chatClient"></param>
 public class SummarizeWriterAgent(
     [FromKeyedServices(nameof(OllamaChatClient))]
-    IChatClient chatClient) : AgentServiceBase(chatClient), ISummarizeWriterAgent, ITransientDependency
+    IChatClient chatClient) : AgentServiceBase(chatClient), ISummarizeWriterAgent
 {
-    public override string AgentName => "SummarizeWriterAgent";
-    public override AgentType AgentType => AgentType.SummarizeWriter;
+    public override string AgentName => nameof(SummarizeWriterAgent);
+    protected override float Temperature => 0.8f;
 
     protected override string Instructions => """
                                                你是一个专业的文章摘要编写器，能够根据输入的文章内容，生成简洁、准确的摘要。

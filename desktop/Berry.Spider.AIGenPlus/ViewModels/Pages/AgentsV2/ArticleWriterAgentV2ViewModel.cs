@@ -1,8 +1,10 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;
-using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp;
 using Volo.Abp.DependencyInjection;
 
@@ -18,8 +20,8 @@ namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 /// </summary>
 /// <param name="kernel"></param>
 public partial class ArticleWriterAgentV2ViewModel(
-    [FromKeyedServices(nameof(OllamaChatClient))]
-    IChatClient chatClient) : ViewModelBase, ITransientDependency
+    ISummarizeWriterAgent summarizeWriterAgent,
+    IMainWriterAgent mainWriterAgent) : ViewModelBase, ITransientDependency
 {
     /// <summary>
     /// 用户输入
@@ -40,6 +42,27 @@ public partial class ArticleWriterAgentV2ViewModel(
     {
         Check.NotNullOrWhiteSpace(this.UserInput, nameof(UserInput));
         this.ShowNotificationMessage("请稍后，AI正在努力思考中...");
+
+        // 顺序执行
+        var workflow = AgentWorkflowBuilder.BuildSequential(
+            "ArticleWriterWorkflow",
+            [summarizeWriterAgent.GetAgent(), mainWriterAgent.GetAgent()]
+        );
+
+        // 执行工作流
+        var messages = new List<ChatMessage> { new ChatMessage(ChatRole.User, this.UserInput) };
+        await using var run = await InProcessExecution.StreamAsync(workflow, messages);
+        // 发送 TurnToken 触发 Agent 执行
+        await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
+        await foreach (var evt in run.WatchStreamAsync())
+        {
+            if (evt is AgentRunUpdateEvent agentUpdate)
+            {
+            }
+            else if (evt is WorkflowOutputEvent output)
+            {
+            }
+        }
     }
 
     private bool CanExecute()

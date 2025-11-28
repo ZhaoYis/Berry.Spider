@@ -1,18 +1,14 @@
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
-using Volo.Abp.DependencyInjection;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 
 public class MainWriterAgent(
     [FromKeyedServices(nameof(OllamaChatClient))]
-    IChatClient chatClient) : AgentServiceBase(chatClient), IMainWriterAgent, ITransientDependency
+    IChatClient chatClient) : AgentServiceBase(chatClient), IMainWriterAgent
 {
-    /// <inheritdoc />
-    public override string AgentName => "MainWriterAgent";
-
-    /// <inheritdoc />
-    public override AgentType AgentType => AgentType.MainWriter;
+    public override string AgentName => nameof(MainWriterAgent);
+    protected override float Temperature => 0.7f;
 
     protected override string Instructions => """
                                               你是一位资深技术博客作家,擅长将技术内容转化为通俗易懂的文章。
