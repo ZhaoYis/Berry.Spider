@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -7,6 +8,12 @@ public class MainWriterAgent(
     [FromKeyedServices("OpenAIClient")] IChatClient chatClient) : AgentServiceBase(chatClient), IMainWriterAgent
 {
     public override string AgentName => nameof(MainWriterAgent);
+
+    /// <summary>
+    /// Agent执行顺序
+    /// </summary>
+    public override int Order => 2;
+
     protected override float Temperature => 0.7f;
 
     protected override string Instructions => """
@@ -49,11 +56,16 @@ public class MainWriterAgent(
                                               [全文总结、技术展望、延伸阅读建议]
 
                                               **质量标准:**
-                                              - 字数不少于1500字(根据用户要求调整)
+                                              - 输出字数根据用户要求的进行调整（强制）,默认1500字
                                               - 代码示例使用```代码块,标注语言类型
                                               - 避免空洞的套话和无意义的形容词
                                               - 逻辑流畅,前后呼应
                                               - 专业术语首次出现时给予解释
                                               - 适当使用列表、表格等提升可读性
                                               """;
+
+    public override Task<string> ExecuteAsync(string input, string taskId)
+    {
+        return base.ExecuteAsync(input, taskId);
+    }
 }

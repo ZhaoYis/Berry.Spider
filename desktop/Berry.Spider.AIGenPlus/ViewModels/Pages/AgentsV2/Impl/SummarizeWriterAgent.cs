@@ -1,17 +1,22 @@
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
+using Volo.Abp;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 
-/// <summary>
-/// 文章摘要编写器Agent服务类
-/// </summary>
-/// <param name="chatClient"></param>
 public class SummarizeWriterAgent(
     [FromKeyedServices("OpenAIClient")] IChatClient chatClient) : AgentServiceBase(chatClient), ISummarizeWriterAgent
 {
     public override string AgentName => nameof(SummarizeWriterAgent);
+
+    /// <summary>
+    /// Agent执行顺序
+    /// </summary>
+    public override int Order => 1;
+
     protected override float Temperature => 0.8f;
 
     protected override string Instructions => """
@@ -37,8 +42,26 @@ public class SummarizeWriterAgent(
                                                   - 如果资料不足,明确指出缺失的部分
                                               """;
 
-    protected override ChatResponseFormat? ResponseFormat =>
+    protected override ChatResponseFormat ResponseFormat =>
         ChatResponseFormat.ForJsonSchema<SummarizeOutput>(schemaName: "SummarizeOutput");
 
-    protected override IEnumerable<AITool>? Tools => [];
+    protected override IEnumerable<AITool> Tools => [];
+
+    public override async Task<string> ExecuteAsync(string input, string taskId)
+    {
+        string response = await base.ExecuteAsync(input, taskId);
+        //TODO:判断内容是否符合json标准
+        SummarizeOutput? summarizeOutput = this.ParseJsonResponse<SummarizeOutput>(response);
+        if (summarizeOutput is null)
+        {
+            throw new BusinessException($"Agent执行失败，Agent名称：{AgentName}，任务ID：{taskId}，输入：{input}，输出：{response}");
+        }
+
+        //TODO:根据解析到的结果可以做一些业务逻辑处理，例如保存到数据库等
+
+        Debug.WriteLine(
+            $"[{nameof(SummarizeWriterAgent)}]Agent执行成功，Agent名称：{AgentName}，任务ID：{taskId}，输入：{input}，输出：{response}");
+
+        return response;
+    }
 }

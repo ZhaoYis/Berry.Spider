@@ -21,14 +21,14 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     private IChatClient ChatClient { get; } = chatClient;
 
     /// <summary>
-    /// Agent实例
-    /// </summary>
-    private ChatClientAgent Agent { get; set; }
-
-    /// <summary>
     /// Agent名称
     /// </summary>
     public abstract string AgentName { get; }
+
+    /// <summary>
+    /// Agent执行顺序
+    /// </summary>
+    public abstract int Order { get; }
 
     /// <summary>
     /// Agent指令(System Prompt)
@@ -61,9 +61,10 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// <param name="taskId">任务ID(用于记录执行日志)</param>
     /// <param name="chatClientAgent">聊天客户端Agent</param>
     /// <returns></returns>
-    protected virtual async Task<AgentThread> ResumePreviousConversationAsync(string taskId, ChatClientAgent chatClientAgent)
+    protected virtual async Task<AgentThread?> ResumePreviousConversationAsync(string taskId,
+        ChatClientAgent chatClientAgent)
     {
-        var filePath = Path.Combine(Path.GetTempPath(), $"{taskId}_agent_thread.json");
+        var filePath = Path.Combine(AppContext.BaseDirectory, "AgentThreads", $"{taskId}.json");
         var serializedThread = await File.ReadAllTextAsync(filePath);
         // 反序列化Agent线程状态
         if (string.IsNullOrEmpty(serializedThread))
@@ -84,7 +85,7 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     {
         // 序列化并保存当前对话状态到持久存储（例如文件、数据库等）
         var serializedThread = agentThread.Serialize(JsonSerializerOptions.Web).GetRawText();
-        var filePath = Path.Combine(Path.GetTempPath(), $"{taskId}_agent_thread.json");
+        var filePath = Path.Combine(AppContext.BaseDirectory, "AgentThreads", $"{taskId}.json");
         return File.WriteAllTextAsync(filePath, serializedThread);
     }
 
@@ -98,9 +99,12 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     {
         try
         {
-            (ChatClientAgent chatClientAgent, AgentThread agentThread) = this.GetAgentAndNewThread(taskId);
+            ChatClientAgent chatClientAgent = this.GetAgent() as ChatClientAgent ??
+                                              throw new BusinessException($"Agent实例未初始化，Agent名称：{AgentName}");
+            AgentThread agentThread = chatClientAgent.GetNewThread(taskId);
             // 恢复之前的对话
-            AgentThread reloadedThread = await this.ResumePreviousConversationAsync(taskId, chatClientAgent) ?? agentThread;
+            AgentThread reloadedThread =
+                await this.ResumePreviousConversationAsync(taskId, chatClientAgent) ?? agentThread;
             // 执行Agent任务
             var result = await chatClientAgent.RunAsync(input, reloadedThread);
             // 保存Agent线程状态
@@ -121,7 +125,9 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// <returns>输出内容</returns>
     public virtual async IAsyncEnumerable<string> ExecuteStreamAsync(string input, string taskId)
     {
-        (ChatClientAgent chatClientAgent, AgentThread agentThread) = this.GetAgentAndNewThread(taskId);
+        ChatClientAgent chatClientAgent = this.GetAgent() as ChatClientAgent ??
+                                          throw new BusinessException($"Agent实例未初始化，Agent名称：{AgentName}");
+        AgentThread agentThread = chatClientAgent.GetNewThread(taskId);
         // 恢复之前的对话
         AgentThread reloadedThread = await this.ResumePreviousConversationAsync(taskId, chatClientAgent) ?? agentThread;
         await foreach (var output in chatClientAgent.RunStreamingAsync(input, agentThread))
@@ -142,28 +148,57 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// <returns></returns>
     public virtual AIAgent GetAgent()
     {
-        return this.Agent ?? throw new BusinessException($"Agent实例未初始化，Agent名称：{AgentName}");
+        return this.CreateNewAIAgent() ?? throw new BusinessException($"Agent实例未初始化，Agent名称：{AgentName}");
+    }
+
+    /// <summary>
+    /// 解析JSON响应
+    /// </summary>
+    protected T? ParseJsonResponse<T>(string jsonContent) where T : class
+    {
+        try
+        {
+            return JsonSerializer.Deserialize<T>(jsonContent, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+        }
+        catch
+        {
+            // 如果失败,尝试提取JSON代码块
+            var startIndex = jsonContent.IndexOf('{');
+            var endIndex = jsonContent.LastIndexOf('}');
+
+            if (startIndex >= 0 && endIndex > startIndex)
+            {
+                var jsonStr = jsonContent.Substring(startIndex, endIndex - startIndex + 1);
+                return JsonSerializer.Deserialize<T>(jsonStr, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+            }
+
+            return null;
+        }
     }
 
     /// <summary>
     /// 获取Agent实例
     /// </summary>
     /// <returns></returns>
-    private (ChatClientAgent, AgentThread) GetAgentAndNewThread(string taskId)
+    private ChatClientAgent CreateNewAIAgent()
     {
-        var options = new ChatClientAgentOptions(instructions: Instructions)
+        var options = new ChatClientAgentOptions(instructions: this.Instructions)
         {
-            Name = AgentName,
+            Name = this.AgentName,
             ChatOptions = new ChatOptions
             {
-                MaxOutputTokens = MaxTokens,
-                Temperature = Temperature,
-                ResponseFormat = ResponseFormat,
+                MaxOutputTokens = this.MaxTokens,
+                Temperature = this.Temperature,
+                ResponseFormat = this.ResponseFormat,
                 Tools = this.Tools?.ToList()
             }
         };
-        this.Agent = this.ChatClient.CreateAIAgent(options);
-        AgentThread agentThread = this.Agent.GetNewThread(taskId);
-        return (this.Agent, agentThread);
+        return this.ChatClient.CreateAIAgent(options);
     }
 }

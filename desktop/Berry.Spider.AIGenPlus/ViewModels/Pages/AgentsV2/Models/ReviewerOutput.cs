@@ -1,0 +1,65 @@
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
+namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
+
+public class ReviewerOutput
+{
+    /**
+     * {
+          "overallScore": 85,
+          "accuracy": {
+            "score": 38,
+            "issues": ["问题描述1", "问题描述2"]
+          },
+          "logic": {
+            "score": 25,
+            "issues": ["问题描述1"]
+          },
+          "originality": {
+            "score": 18,
+            "issues": []
+          },
+          "formatting": {
+            "score": 9,
+            "issues": ["问题描述1"]
+          },
+          "recommendation": "通过",
+          "summary": "总体评价和具体修改建议"
+        }
+     */
+
+    [JsonPropertyName("overallScore")]
+    public int OverallScore { get; set; }
+
+    [JsonPropertyName("accuracy")] public AccuracyScore Accuracy { get; set; } = new();
+    [JsonPropertyName("logic")] public LogicScore Logic { get; set; } = new();
+    [JsonPropertyName("originality")] public OriginalityScore Originality { get; set; } = new();
+    [JsonPropertyName("formatting")] public FormattingScore Formatting { get; set; } = new();
+    [JsonPropertyName("recommendation")] public string Recommendation { get; set; } = string.Empty;
+    [JsonPropertyName("summary")] public string Summary { get; set; } = string.Empty;
+}
+
+public class AccuracyScore
+{
+    [JsonPropertyName("score")] public int Score { get; set; }
+    [JsonPropertyName("issues")] public List<string> Issues { get; set; } = [];
+}
+
+public class LogicScore
+{
+    [JsonPropertyName("score")] public int Score { get; set; }
+    [JsonPropertyName("issues")] public List<string> Issues { get; set; } = [];
+}
+
+public class OriginalityScore
+{
+    [JsonPropertyName("score")] public int Score { get; set; }
+    [JsonPropertyName("issues")] public List<string> Issues { get; set; } = [];
+}
+
+public class FormattingScore
+{
+    [JsonPropertyName("score")] public int Score { get; set; }
+    [JsonPropertyName("issues")] public List<string> Issues { get; set; } = [];
+}

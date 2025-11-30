@@ -12,6 +12,11 @@ public interface IAgentService
     string AgentName { get; }
 
     /// <summary>
+    /// Agent执行顺序
+    /// </summary>
+    int Order { get; }
+
+    /// <summary>
     /// 获取Agent实例
     /// </summary>
     /// <returns>Agent实例</returns>
