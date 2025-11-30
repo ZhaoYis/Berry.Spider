@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
+using Microsoft.SemanticKernel.Connectors.InMemory;
 using Volo.Abp;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
@@ -215,7 +216,11 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
                 FrequencyPenalty = this.FrequencyPenalty,
                 ResponseFormat = this.ResponseFormat,
                 Tools = this.Tools?.ToList()
-            }
+            },
+            ChatMessageStoreFactory = ctx => new VectorChatMessageStore(
+                new InMemoryVectorStore(),
+                ctx.SerializedState,
+                ctx.JsonSerializerOptions)
         };
         return this.ChatClient.CreateAIAgent(options);
     }
