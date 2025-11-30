@@ -1,11 +1,15 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Berry.Spider.AIGenPlus.Functions;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 
 public class MainWriterAgent(
-    [FromKeyedServices("OpenAIClient")] IChatClient chatClient) : AgentServiceBase(chatClient), IMainWriterAgent
+    [FromKeyedServices("OpenAIClient")] IChatClient chatClient,
+    IServiceProvider sp) : AgentServiceBase(chatClient), IMainWriterAgent
 {
     public override string AgentName => nameof(MainWriterAgent);
 
@@ -63,6 +67,11 @@ public class MainWriterAgent(
                                               - 专业术语首次出现时给予解释
                                               - 适当使用列表、表格等提升可读性
                                               """;
+
+    protected override IEnumerable<AITool> Tools =>
+    [
+        sp.GetRequiredService<DateTimeFunction>()
+    ];
 
     public override Task<string> ExecuteAsync(string input, string taskId)
     {
