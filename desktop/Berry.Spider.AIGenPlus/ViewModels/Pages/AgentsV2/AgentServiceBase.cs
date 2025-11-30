@@ -36,17 +36,32 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     protected abstract string Instructions { get; }
 
     /// <summary>
-    /// 最大Token数
+    /// 最大Token数。作用是限制模型生成的Token数量，防止生成过长的文本。默认值为4000。
     /// </summary>
     protected virtual int MaxTokens => 4000;
 
     /// <summary>
-    /// 温度参数
+    /// 温度参数。作用是控制模型生成Token的随机性。值越高，生成的Token越随机；值越低，生成的Token越确定。默认值为0.7f。
     /// </summary>
     protected virtual float Temperature => 0.7f;
 
     /// <summary>
-    /// Agent的工具函数列表
+    /// 频率惩罚参数。作用是惩罚模型生成重复Token的概率。默认值为0.5f。
+    /// </summary>
+    protected virtual float? FrequencyPenalty => 0.5f;
+
+    /// <summary>
+    /// Top-K参数。作用是限制模型生成的Token数量，只保留概率最高的K个Token。默认值为50。
+    /// </summary>
+    protected virtual int? TopK => 50;
+
+    /// <summary>
+    /// Top-P参数。作用是限制模型生成的Token数量，只保留概率最高的P%个Token。默认值为0.7f。
+    /// </summary>
+    protected virtual float? TopP => 0.7f;
+
+    /// <summary>
+    /// Agent的工具函数列表。作用是为模型提供额外的功能，例如调用外部API、执行计算等。
     /// </summary>
     protected virtual IEnumerable<AITool>? Tools => null;
 
@@ -195,6 +210,9 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
             {
                 MaxOutputTokens = this.MaxTokens,
                 Temperature = this.Temperature,
+                TopP = this.TopP,
+                TopK = this.TopK,
+                FrequencyPenalty = this.FrequencyPenalty,
                 ResponseFormat = this.ResponseFormat,
                 Tools = this.Tools?.ToList()
             }
