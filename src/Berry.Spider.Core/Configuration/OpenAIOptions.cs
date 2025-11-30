@@ -11,4 +11,19 @@ public class OpenAIOptions
     /// ApiKey
     /// </summary>
     public string ApiKey { get; set; }
+
+    /// <summary>
+    /// 服务地址
+    /// </summary>
+    public required string ServiceAddr { get; set; }
+
+    /// <summary>
+    /// 默认模型ID
+    /// </summary>
+    public required string ModelId { get; set; }
+
+    /// <summary>
+    /// 默认文本嵌入模型ID
+    /// </summary>
+    public required string EmbeddingModelId { get; set; }
 }

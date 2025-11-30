@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -21,7 +22,7 @@ namespace Berry.Spider.AIGenPlus.ViewModels.Pages.Agents;
 /// ReviewerAgent：内容审查员。根据MainWriterAgent输出的内容进行内容审查，并给出一些优化建议
 /// TerminatorAgent：终结者写手。根据内容优化建议以及主要内容生成最终文章结果
 /// </summary>
-/// <param name="kernel"></param>
+/// <param name="kernel">基于Semantic Kernel实现</param>
 public partial class ArticleWriterAgentViewModel(Kernel kernel) : ViewModelBase, ITransientDependency
 {
     /// <summary>
@@ -59,18 +60,23 @@ public partial class ArticleWriterAgentViewModel(Kernel kernel) : ViewModelBase,
 
         //设置顺序编排器
         InProcessRuntime inProcessRuntime = new InProcessRuntime();
-        SequentialOrchestration orchestration = new(summarizeWriterAgent, mainWriterAgent, reviewerAgent, terminatorAgent)
-        {
-            Name = "ArticleWriterAgent",
-            ResponseCallback = this.OrchestrationMonitor.ResponseCallback,
-            // StreamingResponseCallback = this.OrchestrationMonitor.StreamingResultCallback
-        };
+        //定义顺序编排器
+        SequentialOrchestration orchestration =
+            new(summarizeWriterAgent, mainWriterAgent, reviewerAgent, terminatorAgent)
+            {
+                Name = "ArticleWriterAgent",
+                ResponseCallback = this.OrchestrationMonitor.ResponseCallback,
+                // StreamingResponseCallback = this.OrchestrationMonitor.StreamingResultCallback
+            };
         await inProcessRuntime.StartAsync(this.CancellationTokenSource.Token);
 
         //开始调度
-        var result = await orchestration.InvokeAsync(this.UserInput, inProcessRuntime, this.CancellationTokenSource.Token);
+        var result =
+            await orchestration.InvokeAsync(this.UserInput, inProcessRuntime, this.CancellationTokenSource.Token);
         var output = await result.GetValueAsync(TimeSpan.FromMinutes(10), this.CancellationTokenSource.Token);
         this.AiResponseText = output;
+        // //异步输出
+        // this.AiResponseText = string.Join("\n", this.OrchestrationMonitor.StreamedResponses.Select(x => x.Content));
 
         //停止
         await inProcessRuntime.RunUntilIdleAsync();

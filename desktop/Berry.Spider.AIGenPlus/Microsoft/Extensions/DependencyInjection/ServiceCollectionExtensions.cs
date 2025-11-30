@@ -1,11 +1,13 @@
 using System;
-using System.Net.Http;
+using System.ClientModel;
 using AgileConfig.Client;
 using Berry.Spider.AIGenPlus;
-using Microsoft.Agents.AI;
+using Berry.Spider.Core;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
+using OpenAI;
+using OpenAI.Embeddings;
 using Volo.Abp;
 using Volo.Abp.Threading;
 
@@ -13,6 +15,93 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
+    #region OpenAI AI Client
+
+    /// <summary>
+    /// 注入OpenAI AI客户端服务
+    /// </summary>
+    public static void AddOpenAIClient(this IServiceCollection services, IConfiguration configuration)
+    {
+        Check.NotNull(configuration, nameof(configuration));
+
+        OpenAIOptions? openAIOptions = configuration.GetSection(nameof(OpenAIOptions)).Get<OpenAIOptions>();
+        Check.NotNull(openAIOptions, nameof(openAIOptions));
+
+        var apiKeyCredential = new ApiKeyCredential(openAIOptions.ApiKey);
+        var aiClientOptions = new OpenAIClientOptions
+        {
+            Endpoint = new Uri(openAIOptions.ServiceAddr)
+        };
+
+        // 注入OpenAI Chat Client
+        var openAiClient = new OpenAIClient(apiKeyCredential, aiClientOptions).GetChatClient(openAIOptions.ModelId)
+            .AsIChatClient();
+        services.AddKeyedChatClient(nameof(OpenAIClient), _ => new ChatClientBuilder(openAiClient)
+            .UseFunctionInvocation()
+            .Build());
+
+        // 注入OpenAI Embedding Client
+        EmbeddingClient embeddingClient =
+            new EmbeddingClient(openAIOptions.EmbeddingModelId, apiKeyCredential, aiClientOptions);
+        var embeddingGenerator = embeddingClient.AsIEmbeddingGenerator();
+        services.AddKeyedSingleton("OpenAIEmbeddingGenerator", embeddingGenerator);
+    }
+
+    #endregion
+
+    /// <summary>
+    /// 注入OpenAI Semantic Kernel服务
+    /// </summary>
+    public static void AddOpenAISKernel(this IServiceCollection services, IConfiguration configuration)
+    {
+        Check.NotNull(configuration, nameof(configuration));
+        OpenAIOptions? openAIOptions = configuration.GetSection(nameof(OpenAIOptions)).Get<OpenAIOptions>();
+        Check.NotNull(openAIOptions, nameof(openAIOptions));
+
+        var apiKeyCredential = new ApiKeyCredential(openAIOptions.ApiKey);
+        var aiClientOptions = new OpenAIClientOptions
+        {
+            Endpoint = new Uri(openAIOptions.ServiceAddr)
+        };
+
+        // 注入OpenAI Chat Client
+        var openAiClient = new OpenAIClient(apiKeyCredential, aiClientOptions);
+        services.AddTransient<Kernel>(sp =>
+        {
+            var builder = Kernel.CreateBuilder()
+                .AddOpenAIChatCompletion(openAIOptions.ModelId, openAiClient)
+                .AddOpenAIChatClient(openAIOptions.ModelId, openAiClient);
+            //注入自定义插件
+            builder.Plugins.AddPlugins();
+            return builder.Build();
+        });
+    }
+
+    #region SKernel(Ollama)
+
+    /// <summary>
+    /// 注入Ollama Semantic Kernel服务
+    /// </summary>
+    public static void AddOllamaSKernel(this IServiceCollection services, IConfiguration configuration)
+    {
+        OllamaOptions? ollamaOptions = configuration.GetSection(nameof(OllamaOptions)).Get<OllamaOptions>();
+        Check.NotNull(ollamaOptions, nameof(ollamaOptions));
+
+        services.AddTransient<Kernel>(serviceProvider =>
+        {
+            var builder = Kernel.CreateBuilder()
+                .AddOllamaChatCompletion(modelId: ollamaOptions.ModelId, endpoint: new Uri(ollamaOptions.ServiceAddr))
+                .AddOllamaChatClient(modelId: ollamaOptions.ModelId);
+            //注入自定义插件
+            builder.Plugins.AddPlugins();
+            return builder.Build();
+        });
+    }
+
+    #endregion
+
+    # region Ollama AI Client
+
     /// <summary>
     /// 注入Ollama AI客户端服务
     /// </summary>
@@ -20,7 +109,8 @@ public static class ServiceCollectionExtensions
     {
         Check.NotNull(configuration, nameof(configuration));
 
-        ConfigClientOptions? configClientOptions = configuration.GetSection(nameof(ConfigClientOptions)).Get<ConfigClientOptions>();
+        ConfigClientOptions? configClientOptions =
+            configuration.GetSection(nameof(ConfigClientOptions)).Get<ConfigClientOptions>();
         if (configClientOptions is not null)
         {
             ConfigClient client = new ConfigClient(configClientOptions);
@@ -41,25 +131,6 @@ public static class ServiceCollectionExtensions
             services.AddOllamaChatClient(configuration);
             services.Configure<OllamaOptions>(configuration.GetSection(nameof(OllamaOptions)));
         }
-    }
-
-    /// <summary>
-    /// 注入SK核心Kernel服务
-    /// </summary>
-    public static void AddSKernel(this IServiceCollection services, IConfiguration configuration)
-    {
-        OllamaOptions? ollamaOptions = configuration.GetSection(nameof(OllamaOptions)).Get<OllamaOptions>();
-        Check.NotNull(ollamaOptions, nameof(ollamaOptions));
-
-        services.AddTransient<Kernel>(serviceProvider =>
-        {
-            var builder = Kernel.CreateBuilder()
-                .AddOllamaChatCompletion(modelId: ollamaOptions.ModelId, endpoint: new Uri(ollamaOptions.ServiceAddr))
-                .AddOllamaChatClient(modelId: ollamaOptions.ModelId);
-            //注入自定义插件
-            builder.Plugins.AddPlugins();
-            return builder.Build();
-        });
     }
 
     private static void AddOllamaChatClient(this IServiceCollection services, IConfiguration configuration)
@@ -90,24 +161,13 @@ public static class ServiceCollectionExtensions
             //.UseOpenTelemetry()
             //.UseLogging()
             .Build());
-
-        //或者使用OpenAIClient进行初始化
-        // var apiKeyCredential = new ApiKeyCredential(options.ModelId);
-        // var aiClientOptions = new OpenAIClientOptions
-        // {
-        //     Endpoint = new Uri(options.ServiceAddr)
-        // };
-        //
-        // var openAiClient = new OpenAIClient(apiKeyCredential, aiClientOptions).AsChatClient(options.ModelId);
-        // services.AddKeyedChatClient(serviceKey, _ => new ChatClientBuilder(openAiClient)
-        //     .UseFunctionInvocation()
-        //     .Build());
     }
 
     private static void AddOllamaKeyedEmbeddingClient(this IServiceCollection services, OllamaOptions options)
     {
         //embedding client
-        services.AddKeyedSingleton(nameof(OllamaEmbeddingGenerator), new OllamaEmbeddingGenerator(options.ServiceAddr, options.EmbeddingModelId));
+        services.AddKeyedSingleton(nameof(OllamaEmbeddingGenerator),
+            new OllamaEmbeddingGenerator(options.ServiceAddr, options.EmbeddingModelId));
     }
 
     private static void ConfigureOllamaOptions(this IServiceCollection services, ConfigClient client)
@@ -138,4 +198,6 @@ public static class ServiceCollectionExtensions
             EmbeddingModelId = embeddingModelId
         };
     }
+
+    # endregion
 }

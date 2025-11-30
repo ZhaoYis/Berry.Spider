@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.SemanticKernel.Agents.Runtime;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 
@@ -10,8 +9,7 @@ namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 /// </summary>
 /// <param name="chatClient"></param>
 public class SummarizeWriterAgent(
-    [FromKeyedServices(nameof(OllamaChatClient))]
-    IChatClient chatClient) : AgentServiceBase(chatClient), ISummarizeWriterAgent
+    [FromKeyedServices("OpenAIClient")] IChatClient chatClient) : AgentServiceBase(chatClient), ISummarizeWriterAgent
 {
     public override string AgentName => nameof(SummarizeWriterAgent);
     protected override float Temperature => 0.8f;

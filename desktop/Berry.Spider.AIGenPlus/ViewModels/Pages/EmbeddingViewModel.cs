@@ -14,8 +14,8 @@ using Volo.Abp.DependencyInjection;
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages;
 
 public partial class EmbeddingViewModel(
-    [FromKeyedServices(nameof(OllamaEmbeddingGenerator))]
-    OllamaEmbeddingGenerator embeddingGenerator) : ViewModelBase, ITransientDependency
+    [FromKeyedServices("OpenAIEmbeddingGenerator")]
+    IEmbeddingGenerator<string, Embedding<float>> embeddingGenerator) : ViewModelBase, ITransientDependency
 {
     /**
      * docker启动qdrant服务：

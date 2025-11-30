@@ -10,8 +10,7 @@ using Volo.Abp.DependencyInjection;
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages;
 
 public partial class FunctionCallViewModel(
-    [FromKeyedServices(nameof(OllamaChatClient))]
-    IChatClient chatClient) : ViewModelBase, ITransientDependency
+    [FromKeyedServices("OpenAIClient")] IChatClient chatClient) : ViewModelBase, ITransientDependency
 {
     /// <summary>
     /// 问题
