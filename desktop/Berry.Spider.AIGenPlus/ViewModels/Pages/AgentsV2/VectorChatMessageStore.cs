@@ -16,6 +16,7 @@ namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 internal sealed class VectorChatMessageStore : ChatMessageStore
 {
     private readonly VectorStore _vectorStore;
+    private readonly JsonSerializerOptions _jsonOptions;
 
     public VectorChatMessageStore(
         VectorStore vectorStore,
@@ -27,6 +28,8 @@ internal sealed class VectorChatMessageStore : ChatMessageStore
         {
             this.ThreadDbKey = serializedStoreState.Deserialize<string>();
         }
+
+        this._jsonOptions = jsonSerializerOptions ?? JsonSerializerOptions.Default;
     }
 
     public string? ThreadDbKey { get; private set; }
@@ -70,8 +73,7 @@ internal sealed class VectorChatMessageStore : ChatMessageStore
     }
 
     public override JsonElement Serialize(JsonSerializerOptions? jsonSerializerOptions = null) =>
-        // We have to serialize the thread id, so that on deserialization you can retrieve the messages using the same thread id.
-        JsonSerializer.SerializeToElement(this.ThreadDbKey);
+        JsonSerializer.SerializeToElement(this.ThreadDbKey, jsonSerializerOptions ?? _jsonOptions);
 
     private sealed class ChatHistoryItem
     {
