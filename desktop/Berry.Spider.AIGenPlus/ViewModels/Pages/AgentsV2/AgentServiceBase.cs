@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
@@ -20,6 +21,11 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// 聊天客户端
     /// </summary>
     private IChatClient ChatClient { get; } = chatClient;
+
+    /// <summary>
+    /// Agent客户端实例
+    /// </summary>
+    private ChatClientAgent ChatClientAgent { get; set; }
 
     /// <summary>
     /// Agent名称
@@ -70,6 +76,11 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// 响应格式(用于结构化输出)
     /// </summary>
     protected virtual ChatResponseFormat? ResponseFormat => null;
+
+    /// <summary>
+    /// 锁
+    /// </summary>
+    private static readonly Lock _lock = new();
 
     /// <summary>
     /// 恢复之前的对话
@@ -164,7 +175,20 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// <returns></returns>
     public virtual AIAgent GetAgent()
     {
-        return this.CreateNewAIAgent() ?? throw new BusinessException($"Agent实例未初始化，Agent名称：{AgentName}");
+        _lock.Enter();
+        try
+        {
+            if (this.ChatClientAgent is not null)
+            {
+                return this.ChatClientAgent;
+            }
+
+            return this.ChatClientAgent = this.CreateNewAIAgent() ?? throw new BusinessException($"Agent实例未初始化，Agent名称：{AgentName}");
+        }
+        finally
+        {
+            _lock.Exit();
+        }
     }
 
     /// <summary>
