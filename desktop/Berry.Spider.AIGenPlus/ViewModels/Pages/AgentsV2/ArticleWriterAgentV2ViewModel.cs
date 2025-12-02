@@ -105,6 +105,9 @@ public partial class ArticleWriterAgentV2ViewModel(
             this.ShowNotificationMessage("触发Agent执行失败");
         }
 
+        // 定义 Checkpoint 列表，可用于恢复对话
+        // see https://learn.microsoft.com/en-us/agent-framework/tutorials/workflows/checkpointing-and-resuming?pivots=programming-language-csharp#complete-example-pattern
+        var checkpointList = new List<CheckpointInfo>();
         // 监听工作流事件
         await foreach (var workflowEvent in run.WatchStreamAsync().ConfigureAwait(false))
         {
@@ -125,6 +128,12 @@ public partial class ArticleWriterAgentV2ViewModel(
                     throw workflowError.Data as Exception ?? new InvalidOperationException("Unexpected failure...");
                 case SuperStepCompletedEvent checkpointCompleted:
                     CheckpointInfo? lastCheckpoint = checkpointCompleted.CompletionInfo?.Checkpoint;
+                    if (lastCheckpoint is not null)
+                    {
+                        checkpointList.Add(lastCheckpoint);
+                        Debug.WriteLine($"Checkpoint {checkpointList.Count} created.");
+                    }
+
                     Debug.WriteLine(
                         $"CHECKPOINT x{checkpointCompleted.StepNumber} [{lastCheckpoint?.CheckpointId ?? "(none)"}]");
                     break;
@@ -162,12 +171,18 @@ public partial class ArticleWriterAgentV2ViewModel(
 
                     break;
                 case WorkflowOutputEvent workflowOutputEvent:
-                    Debug.WriteLine($"WORKFLOW OUTPUT: {workflowOutputEvent.SourceId}");
+                    Debug.WriteLine($"Workflow completed: {workflowOutputEvent.Data}");
                     break;
                 default:
                     Debug.WriteLine($"UNHANDLED: {workflowEvent.GetType().Name}");
                     break;
             }
+        }
+
+        // 打印所有 Checkpoint
+        foreach (var checkpoint in checkpointList)
+        {
+            Debug.WriteLine($"Checkpoint: {checkpoint.CheckpointId}");
         }
     }
 
