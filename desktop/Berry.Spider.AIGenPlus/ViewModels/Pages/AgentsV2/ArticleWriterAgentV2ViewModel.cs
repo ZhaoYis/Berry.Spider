@@ -92,12 +92,12 @@ public partial class ArticleWriterAgentV2ViewModel(
         */
 
         // 顺序执行
-        Workflow workflow = AgentWorkflowBuilder.BuildSequential(
+        Workflow workflowBySequential = AgentWorkflowBuilder.BuildSequential(
             "ArticleWriterWorkflow",
             agentServices.OrderBy(x => x.Order).Select(x => x.GetAgent())
         );
         var messages = new List<ChatMessage> { new ChatMessage(ChatRole.User, input) };
-        await using var run = await InProcessExecution.StreamAsync(workflow, messages);
+        await using var run = await InProcessExecution.StreamAsync(workflowBySequential, messages);
         // 发送 TurnToken 用以触发 Agent 执行
         var tiggerStat = await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
         if (tiggerStat is false)
