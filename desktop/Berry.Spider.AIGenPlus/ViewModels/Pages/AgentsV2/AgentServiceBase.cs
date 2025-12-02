@@ -25,7 +25,7 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// <summary>
     /// Agent客户端实例
     /// </summary>
-    private ChatClientAgent ChatClientAgent { get; set; }
+    private ChatClientAgent? ChatClientAgent { get; set; }
 
     /// <summary>
     /// Agent名称
@@ -80,7 +80,30 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// <summary>
     /// 锁
     /// </summary>
-    private static readonly Lock _lock = new();
+    private static readonly Lock Lock = new();
+
+    /// <summary>
+    /// 获取Agent实例
+    /// </summary>
+    /// <returns></returns>
+    public virtual AIAgent GetAgent()
+    {
+        Lock.Enter();
+        try
+        {
+            if (this.ChatClientAgent is not null)
+            {
+                return this.ChatClientAgent;
+            }
+
+            return this.ChatClientAgent = this.CreateNewAIAgent() ??
+                                          throw new BusinessException($"Agent实例未初始化，Agent名称：{AgentName}");
+        }
+        finally
+        {
+            Lock.Exit();
+        }
+    }
 
     /// <summary>
     /// 恢复之前的对话
@@ -114,6 +137,16 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
         var serializedThread = agentThread.Serialize(JsonSerializerOptions.Web).GetRawText();
         var filePath = Path.Combine(AppContext.BaseDirectory, "AgentThreads", $"{taskId}.json");
         return File.WriteAllTextAsync(filePath, serializedThread);
+    }
+
+    /// <summary>
+    /// 创建AI上下文提供程序（默认实现为当前日期时间上下文提供程序）
+    /// </summary>
+    /// <returns></returns>
+    protected virtual Func<ChatClientAgentOptions.AIContextProviderFactoryContext, AIContextProvider>
+        CreateAIContextProvider()
+    {
+        return ctx => new CurrentDateTimeAIContextProvider(this.ChatClient);
     }
 
     /// <summary>
@@ -170,28 +203,6 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     }
 
     /// <summary>
-    /// 获取Agent实例
-    /// </summary>
-    /// <returns></returns>
-    public virtual AIAgent GetAgent()
-    {
-        _lock.Enter();
-        try
-        {
-            if (this.ChatClientAgent is not null)
-            {
-                return this.ChatClientAgent;
-            }
-
-            return this.ChatClientAgent = this.CreateNewAIAgent() ?? throw new BusinessException($"Agent实例未初始化，Agent名称：{AgentName}");
-        }
-        finally
-        {
-            _lock.Exit();
-        }
-    }
-
-    /// <summary>
     /// 解析JSON响应
     /// </summary>
     protected T? ParseJsonResponse<T>(string jsonContent) where T : class
@@ -244,7 +255,8 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
             ChatMessageStoreFactory = ctx => new VectorChatMessageStore(
                 new InMemoryVectorStore(),
                 ctx.SerializedState,
-                ctx.JsonSerializerOptions)
+                ctx.JsonSerializerOptions),
+            AIContextProviderFactory = this.CreateAIContextProvider()
         };
         return this.ChatClient.CreateAIAgent(options);
     }
