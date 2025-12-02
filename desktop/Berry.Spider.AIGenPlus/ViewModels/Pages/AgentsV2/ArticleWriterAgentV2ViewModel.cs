@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -171,7 +173,10 @@ public partial class ArticleWriterAgentV2ViewModel(
 
                     break;
                 case WorkflowOutputEvent workflowOutputEvent:
-                    Debug.WriteLine($"Workflow completed: {workflowOutputEvent.Data}");
+                    Debug.WriteLine(
+                        $"Workflow completed: {JsonSerializer.Serialize(workflowOutputEvent.Data, new JsonSerializerOptions
+                        {
+                            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping })}");
                     break;
                 default:
                     Debug.WriteLine($"UNHANDLED: {workflowEvent.GetType().Name}");
