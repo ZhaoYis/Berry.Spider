@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Agents.AI;
 using Microsoft.Agents.AI.Workflows;
 using Microsoft.Extensions.AI;
 using OpenAI.Responses;
@@ -43,12 +44,6 @@ public partial class ArticleWriterAgentV2ViewModel(
         Check.NotNullOrWhiteSpace(this.UserInput, nameof(UserInput));
         this.ShowNotificationMessage("请稍后，AI正在努力思考中...");
 
-        // 顺序执行
-        Workflow workflow = AgentWorkflowBuilder.BuildSequential(
-            "ArticleWriterWorkflow",
-            agentServices.OrderBy(x => x.Order).Select(x => x.GetAgent())
-        );
-
         // 执行工作流
         var input = $"""
                      **主题:** {this.UserInput}
@@ -65,6 +60,42 @@ public partial class ArticleWriterAgentV2ViewModel(
                      2. 博客撰写: 基于收集的资料撰写博客内容
                      3. 质量审查: 评估博客质量,给出评分和建议
                      """;
+
+        /** 群聊模式
+        Workflow workflowByGroupChat = AgentWorkflowBuilder.CreateGroupChatBuilderWith(agents =>
+                new RoundRobinGroupChatManager(agents)
+                {
+                    MaximumIterationCount = 2
+                })
+            .AddParticipants(agentServices.OrderBy(x => x.Order).Select(x => x.GetAgent())).Build();
+        AgentRunResponse response = await workflowByGroupChat.AsAgent().RunAsync(input);
+        this.AiResponseText = response.Text ?? "AI生成失败";
+        */
+
+        /** 移交编排模式
+        AIAgent initAgent = agentServices.First(agent => agent.Order == 0).GetAgent(); // 初始化Agent，作为第一个接收消息的Agent
+        Workflow workflowByHandoff = AgentWorkflowBuilder.CreateHandoffBuilderWith(initAgent)
+            .WithHandoffs(initAgent, agentServices.Skip(1).Select(x => x.GetAgent()))
+            .WithHandoffs(agentServices.Skip(1).Select(x => x.GetAgent()), initAgent)
+            .Build();
+        AgentRunResponse response = await workflowByHandoff.AsAgent().RunAsync(input);
+        this.AiResponseText = response.Text ?? "AI生成失败";
+        */
+
+        /** 并行编排模式
+        Workflow workflowByConcurrent = AgentWorkflowBuilder.BuildConcurrent(
+            "ArticleWriterWorkflow",
+            agentServices.OrderBy(x => x.Order).Select(x => x.GetAgent())
+        );
+        AgentRunResponse response = await workflowByConcurrent.AsAgent().RunAsync(input);
+        this.AiResponseText = response.Text ?? "AI生成失败";
+        */
+
+        // 顺序执行
+        Workflow workflow = AgentWorkflowBuilder.BuildSequential(
+            "ArticleWriterWorkflow",
+            agentServices.OrderBy(x => x.Order).Select(x => x.GetAgent())
+        );
         var messages = new List<ChatMessage> { new ChatMessage(ChatRole.User, input) };
         await using var run = await InProcessExecution.StreamAsync(workflow, messages);
         // 发送 TurnToken 触发 Agent 执行
