@@ -106,7 +106,7 @@ public partial class ArticleWriterAgentV2ViewModel(
         }
 
         // 监听工作流事件
-        await foreach (var workflowEvent in run.WatchStreamAsync())
+        await foreach (var workflowEvent in run.WatchStreamAsync().ConfigureAwait(false))
         {
             // 处理工作流事件（可以根据实际需求添加或者减少处理逻辑）
             switch (workflowEvent)
@@ -162,7 +162,7 @@ public partial class ArticleWriterAgentV2ViewModel(
 
                     break;
                 case WorkflowOutputEvent workflowOutputEvent:
-                    this.ShowNotificationMessage("AI创作完成");
+                    Debug.WriteLine($"WORKFLOW OUTPUT: {workflowOutputEvent.SourceId}");
                     break;
                 default:
                     Debug.WriteLine($"UNHANDLED: {workflowEvent.GetType().Name}");
