@@ -98,8 +98,14 @@ public partial class ArticleWriterAgentV2ViewModel(
         );
         var messages = new List<ChatMessage> { new ChatMessage(ChatRole.User, input) };
         await using var run = await InProcessExecution.StreamAsync(workflow, messages);
-        // 发送 TurnToken 触发 Agent 执行
-        await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
+        // 发送 TurnToken 用以触发 Agent 执行
+        var tiggerStat = await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
+        if (tiggerStat is false)
+        {
+            this.ShowNotificationMessage("触发Agent执行失败");
+        }
+
+        // 监听工作流事件
         await foreach (var workflowEvent in run.WatchStreamAsync())
         {
             // 处理工作流事件（可以根据实际需求添加或者减少处理逻辑）
