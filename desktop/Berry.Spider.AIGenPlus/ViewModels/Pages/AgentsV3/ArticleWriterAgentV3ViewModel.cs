@@ -52,6 +52,12 @@ public partial class ArticleWriterAgentV3ViewModel(
 
         var messages = new List<ChatMessage> { new ChatMessage(ChatRole.User, this.UserInput) };
         await using var run = await InProcessExecution.StreamAsync(workflow, messages);
+        // // 发送 TurnToken 用以触发 Agent 执行
+        // var tiggerStat = await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
+        // if (tiggerStat is false)
+        // {
+        //     this.ShowNotificationMessage("触发Agent执行失败");
+        // }
 
         try
         {

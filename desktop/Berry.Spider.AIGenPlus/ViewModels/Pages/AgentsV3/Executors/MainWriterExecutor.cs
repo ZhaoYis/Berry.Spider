@@ -15,7 +15,8 @@ public sealed class MainWriterExecutor(string id, IMainWriterAgent mainWriterAge
     protected override RouteBuilder ConfigureRoutes(RouteBuilder routeBuilder)
     {
         //自定义处理器
-        return routeBuilder.AddHandler<ReviewerOutput, MainWriterOutput>(this.HandleReviewerOutputAsync);
+        routeBuilder.AddHandler<ReviewerOutput, MainWriterOutput>(this.HandleReviewerOutputAsync);
+        return base.ConfigureRoutes(routeBuilder);
     }
 
     public async ValueTask<MainWriterOutput> HandleAsync(SummarizeOutput summarizeOutput, IWorkflowContext context,
