@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -24,7 +23,9 @@ namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 /// </summary>
 /// <param name="agentServices">基于Microsoft Agent Framework实现（https://github.com/microsoft/agent-framework）</param>
 public partial class ArticleWriterAgentV2ViewModel(
-    IEnumerable<IAgentService> agentServices) : ViewModelBase, ITransientDependency
+    ISummarizeWriterAgent summarizeWriterAgent,
+    IMainWriterAgent mainWriterAgent,
+    IReviewerAgent reviewerAgent) : ViewModelBase, ITransientDependency
 {
     /// <summary>
     /// 用户输入
@@ -69,16 +70,16 @@ public partial class ArticleWriterAgentV2ViewModel(
                 {
                     MaximumIterationCount = 2
                 })
-            .AddParticipants(agentServices.OrderBy(x => x.Order).Select(x => x.GetAgent())).Build();
+            .AddParticipants([summarizeWriterAgent.GetAgent(), mainWriterAgent.GetAgent(), reviewerAgent.GetAgent()])
+            .Build();
         AgentRunResponse response = await workflowByGroupChat.AsAgent().RunAsync(input);
         this.AiResponseText = response.Text ?? "AI生成失败";
         */
 
         /** 移交编排模式
-        AIAgent initAgent = agentServices.First(agent => agent.Order == 0).GetAgent(); // 初始化Agent，作为第一个接收消息的Agent
-        Workflow workflowByHandoff = AgentWorkflowBuilder.CreateHandoffBuilderWith(initAgent)
-            .WithHandoffs(initAgent, agentServices.Skip(1).Select(x => x.GetAgent()))
-            .WithHandoffs(agentServices.Skip(1).Select(x => x.GetAgent()), initAgent)
+        Workflow workflowByHandoff = AgentWorkflowBuilder.CreateHandoffBuilderWith(summarizeWriterAgent.GetAgent())
+            .WithHandoffs(summarizeWriterAgent.GetAgent(), [mainWriterAgent.GetAgent(), reviewerAgent.GetAgent()])
+            .WithHandoffs([mainWriterAgent.GetAgent(), reviewerAgent.GetAgent()], summarizeWriterAgent.GetAgent())
             .Build();
         AgentRunResponse response = await workflowByHandoff.AsAgent().RunAsync(input);
         this.AiResponseText = response.Text ?? "AI生成失败";
@@ -87,7 +88,7 @@ public partial class ArticleWriterAgentV2ViewModel(
         /** 并行编排模式
         Workflow workflowByConcurrent = AgentWorkflowBuilder.BuildConcurrent(
             "ArticleWriterWorkflow",
-            agentServices.OrderBy(x => x.Order).Select(x => x.GetAgent())
+            [summarizeWriterAgent.GetAgent(), mainWriterAgent.GetAgent(), reviewerAgent.GetAgent()]
         );
         AgentRunResponse response = await workflowByConcurrent.AsAgent().RunAsync(input);
         this.AiResponseText = response.Text ?? "AI生成失败";
@@ -96,7 +97,7 @@ public partial class ArticleWriterAgentV2ViewModel(
         // 顺序执行
         Workflow workflowBySequential = AgentWorkflowBuilder.BuildSequential(
             "ArticleWriterWorkflow",
-            agentServices.OrderBy(x => x.Order).Select(x => x.GetAgent())
+            [summarizeWriterAgent.GetAgent(), mainWriterAgent.GetAgent(), reviewerAgent.GetAgent()]
         );
         var messages = new List<ChatMessage> { new ChatMessage(ChatRole.User, input) };
         await using var run = await InProcessExecution.StreamAsync(workflowBySequential, messages);
