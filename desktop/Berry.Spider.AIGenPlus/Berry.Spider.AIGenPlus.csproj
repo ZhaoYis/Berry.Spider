@@ -65,6 +65,10 @@
           <DependentUpon>ArticleWriterAgentV2.axaml</DependentUpon>
           <SubType>Code</SubType>
         </Compile>
+        <Compile Update="Views\Pages\Agents\ArticleWriterAgentV3.axaml.cs">
+          <DependentUpon>ArticleWriterAgentV3.axaml</DependentUpon>
+          <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>

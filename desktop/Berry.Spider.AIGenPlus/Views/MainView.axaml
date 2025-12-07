@@ -112,11 +112,14 @@
             <TabItem Header="Text Embedding">
                 <pages:Embedding />
             </TabItem>
-            <TabItem Header="Article Writer Agent">
+            <TabItem Header="Article Agent">
                 <agents:ArticleWriterAgent />
             </TabItem>
-            <TabItem Header="Article Writer Agent V2">
+            <TabItem Header="Article Agent V2">
                 <agents:ArticleWriterAgentV2 />
+            </TabItem>
+            <TabItem Header="Article Agent V3">
+                <agents:ArticleWriterAgentV3 />
             </TabItem>
         </TabControl>
     </Grid>

@@ -68,6 +68,9 @@ public class MainWriterAgent(
                                               - 适当使用列表、表格等提升可读性
                                               """;
 
+    protected override ChatResponseFormat ResponseFormat =>
+        ChatResponseFormat.ForJsonSchema<MainWriterOutput>(schemaName: "MainWriterOutput");
+
     protected override IEnumerable<AITool> Tools =>
     [
         sp.GetRequiredService<DateTimeFunction>()
