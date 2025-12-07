@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
+using Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Berry.Spider.AIGenPlus.Views.Pages.Agents;

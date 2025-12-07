@@ -28,16 +28,47 @@ public class ReviewerOutput
           "summary": "总体评价和具体修改建议"
         }
      */
-
+    /// <summary>
+    /// 总评分
+    /// </summary>
     [JsonPropertyName("overallScore")]
     public int OverallScore { get; set; }
 
-    [JsonPropertyName("accuracy")] public AccuracyScore Accuracy { get; set; } = new();
-    [JsonPropertyName("logic")] public LogicScore Logic { get; set; } = new();
-    [JsonPropertyName("originality")] public OriginalityScore Originality { get; set; } = new();
-    [JsonPropertyName("formatting")] public FormattingScore Formatting { get; set; } = new();
-    [JsonPropertyName("recommendation")] public string Recommendation { get; set; } = string.Empty;
-    [JsonPropertyName("summary")] public string Summary { get; set; } = string.Empty;
+    /// <summary>
+    /// 准确性评分
+    /// </summary>
+    [JsonPropertyName("accuracy")]
+    public AccuracyScore Accuracy { get; set; } = new();
+
+    /// <summary>
+    /// 逻辑评分
+    /// </summary>
+    [JsonPropertyName("logic")]
+    public LogicScore Logic { get; set; } = new();
+
+    /// <summary>
+    /// 原创性评分
+    /// </summary>
+    [JsonPropertyName("originality")]
+    public OriginalityScore Originality { get; set; } = new();
+
+    /// <summary>
+    /// 格式化评分
+    /// </summary>
+    [JsonPropertyName("formatting")]
+    public FormattingScore Formatting { get; set; } = new();
+
+    /// <summary>
+    /// 推荐
+    /// </summary>
+    [JsonPropertyName("recommendation")]
+    public string Recommendation { get; set; } = string.Empty;
+
+    /// <summary>
+    /// 总结
+    /// </summary>
+    [JsonPropertyName("summary")]
+    public string Summary { get; set; } = string.Empty;
 }
 
 public class AccuracyScore

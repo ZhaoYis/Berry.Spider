@@ -3,9 +3,10 @@
     d:DesignWidth="800"
     mc:Ignorable="d"
     x:Class="Berry.Spider.AIGenPlus.Views.Pages.Agents.ArticleWriterAgentV3"
-    x:DataType="agentsV2:ArticleWriterAgentV3ViewModel"
+    x:DataType="agentsV3:ArticleWriterAgentV3ViewModel"
     xmlns="https://github.com/avaloniaui"
     xmlns:agentsV2="clr-namespace:Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2"
+    xmlns:agentsV3="clr-namespace:Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">

@@ -106,6 +106,16 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     }
 
     /// <summary>
+    /// 获取自定义指令或默认指令
+    /// </summary>
+    /// <param name="instructions">自定义指令</param>
+    /// <returns>自定义指令或默认指令</returns>
+    public virtual string GetCustomOrDefaultInstructions(string? instructions = null)
+    {
+        return string.IsNullOrEmpty(instructions) ? Instructions : $"{Instructions}{Environment.NewLine}{instructions}";
+    }
+
+    /// <summary>
     /// 恢复之前的对话
     /// </summary>
     /// <param name="taskId">任务ID(用于记录执行日志)</param>

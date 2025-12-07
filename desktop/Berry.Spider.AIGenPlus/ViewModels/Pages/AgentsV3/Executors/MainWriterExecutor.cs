@@ -1,0 +1,87 @@
+using System.Linq;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
+using Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Models;
+using Microsoft.Agents.AI.Workflows;
+using Microsoft.Agents.AI.Workflows.Reflection;
+
+namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Executors;
+
+public sealed class MainWriterExecutor(string id, IMainWriterAgent mainWriterAgent)
+    : ReflectingExecutor<MainWriterExecutor>(id), IMessageHandler<SummarizeOutput, MainWriterOutput>
+{
+    protected override RouteBuilder ConfigureRoutes(RouteBuilder routeBuilder)
+    {
+        //自定义处理器
+        return routeBuilder.AddHandler<ReviewerOutput, MainWriterOutput>(this.HandleReviewerOutputAsync);
+    }
+
+    public async ValueTask<MainWriterOutput> HandleAsync(SummarizeOutput summarizeOutput, IWorkflowContext context,
+        CancellationToken cancellationToken = default)
+    {
+        string prompt = $"""
+                         请根据以下摘要内容创作一篇技术文章：
+                         主题分析：{summarizeOutput.TopicAnalysis}
+                         关键要点：{string.Join("\n", summarizeOutput.KeyPoints.Select(x => $"重要性：{x.Importance} - 内容：{x.Content}"))}
+                         技术细节：{string.Join("\n", summarizeOutput.TechnicalDetails.Select(x => $"标题：{x.Title} - 描述：{x.Description}"))}
+                         代码示例：{string.Join("\n", summarizeOutput.CodeExamples.Select(x => $"语言：{x.Language} - 代码：{x.Code}"))}
+                         引用：{string.Join("\n", summarizeOutput.References.Select(x => $"[{x}]"))}
+                         """;
+        string instructions = mainWriterAgent.GetCustomOrDefaultInstructions(prompt);
+        string result = await mainWriterAgent.ExecuteAsync(instructions, this.Id);
+        MainWriterOutput? mainWriterOutput = JsonSerializer.Deserialize<MainWriterOutput>(result);
+        if (mainWriterOutput is null)
+        {
+            throw new JsonException($"无法将 JSON 字符串反序列化为 {nameof(MainWriterOutput)} 类型。");
+        }
+
+        //发布事件
+        await context.AddEventAsync(new MainWriterFinishedEvent(mainWriterOutput), cancellationToken);
+        return mainWriterOutput;
+    }
+
+    /// <summary>
+    /// 处理审核器输出
+    /// </summary>
+    /// <param name="reviewerOutput">审核器输出</param>
+    /// <param name="context">工作流上下文</param>
+    /// <param name="cancellationToken">取消令牌</param>
+    /// <returns></returns>
+    private async ValueTask<MainWriterOutput> HandleReviewerOutputAsync(ReviewerOutput reviewerOutput,
+        IWorkflowContext context,
+        CancellationToken cancellationToken = default)
+    {
+        string prompt = $"""
+                         以下是对你的之前提供的内容审核建议：
+                         总评分：{reviewerOutput.OverallScore}
+                         准确性评分：{reviewerOutput.Accuracy.Score}
+                         准确性建议：{string.Join(", ", reviewerOutput.Accuracy.Issues)}
+
+                         逻辑评分：{reviewerOutput.Logic.Score}
+                         逻辑建议：{string.Join(", ", reviewerOutput.Logic.Issues)}
+
+                         原创性评分：{reviewerOutput.Originality.Score}
+                         原创性建议：{string.Join(", ", reviewerOutput.Originality.Issues)}
+
+                         格式化评分：{reviewerOutput.Formatting.Score}
+                         格式化建议：{string.Join(", ", reviewerOutput.Formatting.Issues)}
+
+                         总建议：{reviewerOutput.Summary}
+                         推荐：{reviewerOutput.Recommendation}
+
+                         请根据以上的建议改进你的内容，确保符合要求。
+                         """;
+        string result = await mainWriterAgent.ExecuteAsync(prompt, this.Id);
+        MainWriterOutput? mainWriterOutput = JsonSerializer.Deserialize<MainWriterOutput>(result);
+        if (mainWriterOutput is null)
+        {
+            throw new JsonException($"无法将 JSON 字符串反序列化为 {nameof(MainWriterOutput)} 类型。");
+        }
+
+        //发布事件
+        await context.AddEventAsync(new MainWriterFinishedEvent(mainWriterOutput), cancellationToken);
+        return mainWriterOutput;
+    }
+}

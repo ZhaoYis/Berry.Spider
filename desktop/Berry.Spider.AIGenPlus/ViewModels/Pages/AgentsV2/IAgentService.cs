@@ -23,6 +23,13 @@ public interface IAgentService
     AIAgent GetAgent();
 
     /// <summary>
+    /// 获取自定义指令或默认指令
+    /// </summary>
+    /// <param name="instructions">自定义指令</param>
+    /// <returns>自定义指令或默认指令</returns>
+    string GetCustomOrDefaultInstructions(string? instructions = null);
+
+    /// <summary>
     /// 执行Agent任务（非流式）
     /// </summary>
     /// <param name="input">输入内容</param>
