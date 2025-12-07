@@ -249,11 +249,12 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// <returns></returns>
     private ChatClientAgent CreateNewAIAgent()
     {
-        var options = new ChatClientAgentOptions(instructions: this.Instructions)
+        var options = new ChatClientAgentOptions
         {
             Name = this.AgentName,
             ChatOptions = new ChatOptions
             {
+                Instructions = this.Instructions,
                 MaxOutputTokens = this.MaxTokens,
                 Temperature = this.Temperature,
                 TopP = this.TopP,
