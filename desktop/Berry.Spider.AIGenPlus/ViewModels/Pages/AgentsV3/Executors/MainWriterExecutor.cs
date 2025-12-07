@@ -10,15 +10,10 @@ using Microsoft.Agents.AI.Workflows.Reflection;
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Executors;
 
 public sealed class MainWriterExecutor(string id, IMainWriterAgent mainWriterAgent)
-    : ReflectingExecutor<MainWriterExecutor>(id), IMessageHandler<SummarizeOutput, MainWriterOutput>
+    : ReflectingExecutor<MainWriterExecutor>(id),
+        IMessageHandler<SummarizeOutput, MainWriterOutput>,
+        IMessageHandler<ReviewerOutput, MainWriterOutput>
 {
-    protected override RouteBuilder ConfigureRoutes(RouteBuilder routeBuilder)
-    {
-        //自定义处理器
-        routeBuilder.AddHandler<ReviewerOutput, MainWriterOutput>(this.HandleReviewerOutputAsync);
-        return base.ConfigureRoutes(routeBuilder);
-    }
-
     public async ValueTask<MainWriterOutput> HandleAsync(SummarizeOutput summarizeOutput, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {
@@ -43,15 +38,7 @@ public sealed class MainWriterExecutor(string id, IMainWriterAgent mainWriterAge
         return mainWriterOutput;
     }
 
-    /// <summary>
-    /// 处理审核器输出
-    /// </summary>
-    /// <param name="reviewerOutput">审核器输出</param>
-    /// <param name="context">工作流上下文</param>
-    /// <param name="cancellationToken">取消令牌</param>
-    /// <returns></returns>
-    private async ValueTask<MainWriterOutput> HandleReviewerOutputAsync(ReviewerOutput reviewerOutput,
-        IWorkflowContext context,
+    public async ValueTask<MainWriterOutput> HandleAsync(ReviewerOutput reviewerOutput, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {
         string prompt = $"""

@@ -12,11 +12,6 @@ namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Executors;
 public sealed class ReviewerExecutor(string id, IReviewerAgent reviewerAgent)
     : ReflectingExecutor<ReviewerExecutor>(id), IMessageHandler<MainWriterOutput, ReviewerOutput>
 {
-    protected override RouteBuilder ConfigureRoutes(RouteBuilder routeBuilder)
-    {
-        return base.ConfigureRoutes(routeBuilder);
-    }
-
     public async ValueTask<ReviewerOutput> HandleAsync(MainWriterOutput mainWriterOutput, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {
