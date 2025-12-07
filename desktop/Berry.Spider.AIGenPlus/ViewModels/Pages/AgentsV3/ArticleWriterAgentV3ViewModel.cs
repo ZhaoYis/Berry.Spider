@@ -48,10 +48,11 @@ public partial class ArticleWriterAgentV3ViewModel(
             .AddEdge(source: summarizeWriterExecutor, target: mainWriterExecutor)
             .AddEdge(source: mainWriterExecutor, target: reviewerExecutor)
             .AddEdge(source: reviewerExecutor, target: mainWriterExecutor)
-            .WithOutputFrom(reviewerExecutor).Build();
+            .WithOutputFrom(reviewerExecutor)
+            .Build();
 
         var messages = new List<ChatMessage> { new ChatMessage(ChatRole.User, this.UserInput) };
-        await using var run = await InProcessExecution.StreamAsync(workflow, messages);
+        await using StreamingRun run = await InProcessExecution.StreamAsync(workflow, messages);
         // // 发送 TurnToken 用以触发 Agent 执行
         // var tiggerStat = await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
         // if (tiggerStat is false)
