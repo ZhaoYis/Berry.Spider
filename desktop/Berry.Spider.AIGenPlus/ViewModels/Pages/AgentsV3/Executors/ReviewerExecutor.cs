@@ -9,8 +9,11 @@ using Microsoft.Agents.AI.Workflows.Reflection;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Executors;
 
-public sealed class ReviewerExecutor(string id, IReviewerAgent reviewerAgent)
-    : ReflectingExecutor<ReviewerExecutor>(id), IMessageHandler<MainWriterOutput, ReviewerOutput>
+public sealed class ReviewerExecutor(
+    string executorId,
+    IReviewerAgent reviewerAgent,
+    string taskId)
+    : ReflectingExecutor<ReviewerExecutor>(executorId), IMessageHandler<MainWriterOutput, ReviewerOutput>
 {
     public async ValueTask<ReviewerOutput> HandleAsync(MainWriterOutput mainWriterOutput, IWorkflowContext context,
         CancellationToken cancellationToken = default)
@@ -22,7 +25,7 @@ public sealed class ReviewerExecutor(string id, IReviewerAgent reviewerAgent)
                          内容：{mainWriterOutput.Content}
                          """;
         string input = reviewerAgent.GetCustomOrDefaultInstructions(prompt);
-        string result = await reviewerAgent.ExecuteAsync(input, this.Id);
+        string result = await reviewerAgent.ExecuteAsync(input, taskId);
         ReviewerOutput? reviewerOutput = JsonSerializer.Deserialize<ReviewerOutput>(result);
         if (reviewerOutput is null)
         {

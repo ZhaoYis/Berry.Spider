@@ -39,10 +39,12 @@ public partial class ArticleWriterAgentV3ViewModel(
         Check.NotNullOrWhiteSpace(this.UserInput, nameof(UserInput));
         this.ShowNotificationMessage("请稍后，AI正在努力思考中...");
 
+        string taskId = Guid.NewGuid().ToString("N");
         SummarizeWriterExecutor summarizeWriterExecutor =
-            new SummarizeWriterExecutor(nameof(SummarizeWriterExecutor), summarizeWriterAgent);
-        MainWriterExecutor mainWriterExecutor = new MainWriterExecutor(nameof(MainWriterExecutor), mainWriterAgent);
-        ReviewerExecutor reviewerExecutor = new ReviewerExecutor(nameof(ReviewerExecutor), reviewerAgent);
+            new SummarizeWriterExecutor(nameof(SummarizeWriterExecutor), summarizeWriterAgent, taskId);
+        MainWriterExecutor mainWriterExecutor =
+            new MainWriterExecutor(nameof(MainWriterExecutor), mainWriterAgent, taskId);
+        ReviewerExecutor reviewerExecutor = new ReviewerExecutor(nameof(ReviewerExecutor), reviewerAgent, taskId);
         //构建工作流
         var workflow = new WorkflowBuilder(summarizeWriterExecutor)
             .AddEdge(source: summarizeWriterExecutor, target: mainWriterExecutor)

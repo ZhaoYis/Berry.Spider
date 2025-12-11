@@ -8,8 +8,11 @@ using Microsoft.Agents.AI.Workflows.Reflection;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Executors;
 
-public sealed class SummarizeWriterExecutor(string id, ISummarizeWriterAgent summarizeWriterAgent)
-    : ReflectingExecutor<SummarizeWriterExecutor>(id), IMessageHandler<string, SummarizeOutput>
+public sealed class SummarizeWriterExecutor(
+    string executorId,
+    ISummarizeWriterAgent summarizeWriterAgent,
+    string taskId)
+    : ReflectingExecutor<SummarizeWriterExecutor>(executorId), IMessageHandler<string, SummarizeOutput>
 {
     public async ValueTask<SummarizeOutput> HandleAsync(string message, IWorkflowContext context,
         CancellationToken cancellationToken = default)
@@ -19,7 +22,7 @@ public sealed class SummarizeWriterExecutor(string id, ISummarizeWriterAgent sum
                          {message}
                          """;
         string instructions = summarizeWriterAgent.GetCustomOrDefaultInstructions(prompt);
-        string result = await summarizeWriterAgent.ExecuteAsync(instructions, this.Id);
+        string result = await summarizeWriterAgent.ExecuteAsync(instructions, taskId);
         SummarizeOutput? summarizeOutput = JsonSerializer.Deserialize<SummarizeOutput>(result);
         if (summarizeOutput is null)
         {

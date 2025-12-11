@@ -9,8 +9,11 @@ using Microsoft.Agents.AI.Workflows.Reflection;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Executors;
 
-public sealed class MainWriterExecutor(string id, IMainWriterAgent mainWriterAgent)
-    : ReflectingExecutor<MainWriterExecutor>(id),
+public sealed class MainWriterExecutor(
+    string executorId,
+    IMainWriterAgent mainWriterAgent,
+    string taskId)
+    : ReflectingExecutor<MainWriterExecutor>(executorId),
         IMessageHandler<SummarizeOutput, MainWriterOutput>,
         IMessageHandler<ReviewerOutput, MainWriterOutput>
 {
@@ -26,7 +29,7 @@ public sealed class MainWriterExecutor(string id, IMainWriterAgent mainWriterAge
                          引用：{string.Join("\n", summarizeOutput.References.Select(x => $"[{x}]"))}
                          """;
         string instructions = mainWriterAgent.GetCustomOrDefaultInstructions(prompt);
-        string result = await mainWriterAgent.ExecuteAsync(instructions, this.Id);
+        string result = await mainWriterAgent.ExecuteAsync(instructions, taskId);
         MainWriterOutput? mainWriterOutput = JsonSerializer.Deserialize<MainWriterOutput>(result);
         if (mainWriterOutput is null)
         {
