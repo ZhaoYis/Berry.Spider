@@ -38,6 +38,7 @@
                     <StackPanel>
                         <Button Content="AI回答" Margin="10" />
                         <TextBox
+                            Name="AiResponseTextBox"
                             Classes="TextArea"
                             Height="300"
                             IsReadOnly="True"
