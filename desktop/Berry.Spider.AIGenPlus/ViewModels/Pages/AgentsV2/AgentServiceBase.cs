@@ -125,14 +125,31 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
         ChatClientAgent chatClientAgent)
     {
         var filePath = Path.Combine(AppContext.BaseDirectory, "AgentThreads", $"{taskId}.json");
-        var serializedThread = await File.ReadAllTextAsync(filePath);
-        // 反序列化Agent线程状态
-        if (string.IsNullOrEmpty(serializedThread))
+        if (!File.Exists(filePath))
         {
+            // 首次执行或尚未保存过线程状态，直接返回 null 使用新线程
             return null;
         }
 
-        return chatClientAgent.DeserializeThread(JsonSerializer.Deserialize<JsonElement>(serializedThread));
+        try
+        {
+            var serializedThread = await File.ReadAllTextAsync(filePath);
+            // 反序列化Agent线程状态
+            if (string.IsNullOrEmpty(serializedThread))
+            {
+                return null;
+            }
+
+            var json = JsonSerializer.Deserialize<JsonElement>(serializedThread);
+            return chatClientAgent.DeserializeThread(json);
+        }
+        catch (Exception e)
+        {
+            // 状态文件损坏或反序列化失败时，不中断执行，记录诊断信息并回退为新线程
+            System.Diagnostics.Debug.WriteLine(
+                $"[AgentServiceBase] 恢复线程状态失败，taskId={taskId}，filePath={filePath}，error={e.Message}");
+            return null;
+        }
     }
 
     /// <summary>
@@ -145,7 +162,13 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     {
         // 序列化并保存当前对话状态到持久存储（例如文件、数据库等）
         var serializedThread = agentThread.Serialize(JsonSerializerOptions.Web).GetRawText();
-        var filePath = Path.Combine(AppContext.BaseDirectory, "AgentThreads", $"{taskId}.json");
+        var directory = Path.Combine(AppContext.BaseDirectory, "AgentThreads");
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        var filePath = Path.Combine(directory, $"{taskId}.json");
         return File.WriteAllTextAsync(filePath, serializedThread);
     }
 
