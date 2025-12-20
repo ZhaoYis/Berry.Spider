@@ -15,14 +15,21 @@ public sealed class ReviewerExecutor(
     string taskId)
     : ReflectingExecutor<ReviewerExecutor>(executorId), IMessageHandler<MainWriterOutput, ReviewerOutput>
 {
+    /// <summary>
+    /// 根据创作输出，审核技术文章
+    /// </summary>
     public async ValueTask<ReviewerOutput> HandleAsync(MainWriterOutput mainWriterOutput, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {
+        //从当前工作流上下文获取用户原始问题
+        string? originalQuestion = await context.ReadStateAsync<string>(taskId, cancellationToken);
+
         string prompt = $"""
                          请审核以下内容：
                          标题：{mainWriterOutput.Title}
                          描述：{mainWriterOutput.Description}
                          内容：{mainWriterOutput.Content}
+                         用户原始问题：{originalQuestion ?? "N/A"}
                          """;
         string input = reviewerAgent.GetCustomOrDefaultInstructions(prompt);
         string result = await reviewerAgent.ExecuteAsync(input, taskId);

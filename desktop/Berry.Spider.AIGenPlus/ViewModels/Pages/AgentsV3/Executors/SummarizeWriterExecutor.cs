@@ -14,6 +14,9 @@ public sealed class SummarizeWriterExecutor(
     string taskId)
     : ReflectingExecutor<SummarizeWriterExecutor>(executorId), IMessageHandler<string, SummarizeOutput>
 {
+    /// <summary>
+    /// 处理用户原始问题，生成文章摘要
+    /// </summary>
     public async ValueTask<SummarizeOutput> HandleAsync(string message, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {
@@ -28,6 +31,9 @@ public sealed class SummarizeWriterExecutor(
         {
             throw new JsonException($"无法将 JSON 字符串反序列化为 {nameof(SummarizeOutput)} 类型。");
         }
+
+        //将用户原始问题写入当前工作流上下文,后续步骤可以从上下文获取用户原始问题
+        await context.QueueStateUpdateAsync(taskId, message, cancellationToken: cancellationToken);
 
         //发布事件
         await context.AddEventAsync(new SummarizeWriterFinishedEvent(summarizeOutput), cancellationToken);

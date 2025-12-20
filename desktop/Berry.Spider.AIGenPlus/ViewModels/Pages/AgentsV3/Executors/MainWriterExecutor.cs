@@ -17,6 +17,9 @@ public sealed class MainWriterExecutor(
         IMessageHandler<SummarizeOutput, MainWriterOutput>,
         IMessageHandler<ReviewerOutput, MainWriterOutput>
 {
+    /// <summary>
+    /// 根据摘要输出创作技术文章
+    /// </summary>
     public async ValueTask<MainWriterOutput> HandleAsync(SummarizeOutput summarizeOutput, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {
@@ -41,6 +44,9 @@ public sealed class MainWriterExecutor(
         return mainWriterOutput;
     }
 
+    /// <summary>
+    /// 根据审核输出改进技术文章
+    /// </summary>
     public async ValueTask<MainWriterOutput> HandleAsync(ReviewerOutput reviewerOutput, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {
