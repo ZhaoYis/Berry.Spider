@@ -33,7 +33,8 @@ public sealed class SummarizeWriterExecutor(
         }
 
         //将用户原始问题写入当前工作流上下文,后续步骤可以从上下文获取用户原始问题
-        await context.QueueStateUpdateAsync(taskId, message, cancellationToken: cancellationToken);
+        await context.QueueStateUpdateAsync(taskId, message, scopeName: ArticleWriterAgentV3ViewModel.ScopeName,
+            cancellationToken: cancellationToken);
 
         //发布事件
         await context.AddEventAsync(new SummarizeWriterFinishedEvent(summarizeOutput), cancellationToken);

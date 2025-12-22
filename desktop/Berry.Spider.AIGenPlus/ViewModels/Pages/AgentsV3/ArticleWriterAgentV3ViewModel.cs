@@ -19,6 +19,8 @@ public partial class ArticleWriterAgentV3ViewModel(
     IMainWriterAgent mainWriterAgent,
     IReviewerAgent reviewerAgent) : ViewModelBase, ITransientDependency
 {
+    public const string ScopeName = "ArticleWriterAgentV3";
+
     /// <summary>
     /// 用户输入
     /// </summary>
@@ -52,24 +54,11 @@ public partial class ArticleWriterAgentV3ViewModel(
             .AddEdge(source: reviewerExecutor, target: mainWriterExecutor)
             .WithOutputFrom(reviewerExecutor)
             .Build();
-
-        // 工作流输入类型为 string（SummarizeWriterExecutor : IMessageHandler<string, SummarizeOutput>）
-        // 因此这里直接传递用户输入字符串，而不是 List<ChatMessage>
         await using StreamingRun run = await InProcessExecution.StreamAsync(workflow, this.UserInput);
-        // // 发送 TurnToken 用以触发 Agent 执行
-        // var tiggerStat = await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
-        // if (tiggerStat is false)
-        // {
-        //     this.ShowNotificationMessage("触发Agent执行失败");
-        // }
-
-        int eventCount = 0;
-
         try
         {
             await foreach (WorkflowEvent workflowEvent in run.WatchStreamAsync())
             {
-                eventCount++;
                 switch (workflowEvent)
                 {
                     case SummarizeWriterFinishedEvent summarizeWriterFinishedEvent:
@@ -89,16 +78,16 @@ public partial class ArticleWriterAgentV3ViewModel(
                     case WorkflowOutputEvent workflowOutputEvent:
                         this.AiResponseText += workflowOutputEvent.Data;
                         break;
+                    case ExecutorInvokedEvent executorInvoked:
+                        Debug.WriteLine($"EXECUTOR ENTER #{executorInvoked.ExecutorId}");
+                        break;
+                    case ExecutorCompletedEvent executorCompleted:
+                        Debug.WriteLine($"EXECUTOR EXIT #{executorCompleted.ExecutorId}");
+                        break;
                     default:
                         Debug.WriteLine($"[{nameof(ArticleWriterAgentV3ViewModel)}] {workflowEvent.ToString()}");
                         break;
                 }
-            }
-
-            if (eventCount == 0)
-            {
-                Debug.WriteLine(
-                    $"[{nameof(ArticleWriterAgentV3ViewModel)}] 未收到任何 WorkflowEvent，可能存在输入类型不匹配或配置问题。");
             }
         }
         catch (Exception e)

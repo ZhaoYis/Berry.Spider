@@ -13,16 +13,17 @@ public sealed class ReviewerExecutor(
     string executorId,
     IReviewerAgent reviewerAgent,
     string taskId)
-    : ReflectingExecutor<ReviewerExecutor>(executorId), IMessageHandler<MainWriterOutput, ReviewerOutput>
+    : ReflectingExecutor<ReviewerExecutor>(executorId), IMessageHandler<MainWriterOutput>
 {
     /// <summary>
     /// 根据创作输出，审核技术文章
     /// </summary>
-    public async ValueTask<ReviewerOutput> HandleAsync(MainWriterOutput mainWriterOutput, IWorkflowContext context,
+    public async ValueTask HandleAsync(MainWriterOutput mainWriterOutput, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {
         //从当前工作流上下文获取用户原始问题
-        string? originalQuestion = await context.ReadStateAsync<string>(taskId, cancellationToken);
+        string? originalQuestion = await context.ReadStateAsync<string>(taskId,
+            scopeName: ArticleWriterAgentV3ViewModel.ScopeName, cancellationToken);
 
         string prompt = $"""
                          请审核以下内容：
@@ -58,11 +59,10 @@ public sealed class ReviewerExecutor(
                                             推荐：{reviewerOutput.Recommendation}
                                             总结：{reviewerOutput.Summary}
                                             """, cancellationToken);
-            return reviewerOutput;
+            return;
         }
 
         //继续处理
         await context.SendMessageAsync(reviewerOutput, cancellationToken);
-        return reviewerOutput;
     }
 }

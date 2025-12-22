@@ -194,10 +194,9 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
         {
             ChatClientAgent chatClientAgent = this.GetAgent() as ChatClientAgent ??
                                               throw new BusinessException($"Agent实例未初始化，Agent名称：{AgentName}");
-            AgentThread agentThread = chatClientAgent.GetNewThread(taskId);
+            AgentThread agentThread = chatClientAgent.GetNewThread();
             // 恢复之前的对话
-            AgentThread reloadedThread =
-                await this.ResumePreviousConversationAsync(taskId, chatClientAgent) ?? agentThread;
+            AgentThread reloadedThread = await this.ResumePreviousConversationAsync(taskId, chatClientAgent) ?? agentThread;
             // 执行Agent任务
             var result = await chatClientAgent.RunAsync(input, reloadedThread);
             // 保存Agent线程状态
@@ -220,7 +219,7 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     {
         ChatClientAgent chatClientAgent = this.GetAgent() as ChatClientAgent ??
                                           throw new BusinessException($"Agent实例未初始化，Agent名称：{AgentName}");
-        AgentThread agentThread = chatClientAgent.GetNewThread(taskId);
+        AgentThread agentThread = chatClientAgent.GetNewThread();
         // 恢复之前的对话
         AgentThread reloadedThread = await this.ResumePreviousConversationAsync(taskId, chatClientAgent) ?? agentThread;
         await foreach (var output in chatClientAgent.RunStreamingAsync(input, agentThread))
