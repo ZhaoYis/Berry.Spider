@@ -34,7 +34,8 @@ public static class ServiceCollectionExtensions
         };
 
         // 注入OpenAI Chat Client
-        var openAiClient = new OpenAIClient(apiKeyCredential, aiClientOptions).GetChatClient(openAIOptions.ModelId)
+        var openAiClient = new OpenAIClient(apiKeyCredential, aiClientOptions)
+            .GetChatClient(openAIOptions.ModelId)
             .AsIChatClient();
         services.AddKeyedChatClient(nameof(OpenAIClient), _ => new ChatClientBuilder(openAiClient)
             .UseFunctionInvocation()
