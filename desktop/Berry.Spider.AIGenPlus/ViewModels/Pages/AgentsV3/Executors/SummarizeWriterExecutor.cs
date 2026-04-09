@@ -4,19 +4,19 @@ using System.Threading.Tasks;
 using Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 using Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Models;
 using Microsoft.Agents.AI.Workflows;
-using Microsoft.Agents.AI.Workflows.Reflection;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Executors;
 
-public sealed class SummarizeWriterExecutor(
+public sealed partial class SummarizeWriterExecutor(
     string executorId,
     ISummarizeWriterAgent summarizeWriterAgent,
     string taskId)
-    : ReflectingExecutor<SummarizeWriterExecutor>(executorId), IMessageHandler<string, SummarizeOutput>
+    : Executor(executorId)
 {
     /// <summary>
     /// 处理用户原始问题，生成文章摘要
     /// </summary>
+    [MessageHandler]
     public async ValueTask<SummarizeOutput> HandleAsync(string message, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {

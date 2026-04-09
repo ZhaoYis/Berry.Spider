@@ -14,9 +14,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\Berry.Spider.Core\Berry.Spider.Core.csproj" />
-      <ProjectReference Include="..\src\Berry.Spider.EventBus\Berry.Spider.EventBus.csproj" />
-      <ProjectReference Include="..\src\Berry.Spider.FreeRedis\Berry.Spider.FreeRedis.csproj" />
+      <ProjectReference Include="..\Berry.Spider.Core\Berry.Spider.Core.csproj" />
+      <ProjectReference Include="..\Berry.Spider.EventBus\Berry.Spider.EventBus.csproj" />
+      <ProjectReference Include="..\Berry.Spider.FreeRedis\Berry.Spider.FreeRedis.csproj" />
     </ItemGroup>
 
 </Project>

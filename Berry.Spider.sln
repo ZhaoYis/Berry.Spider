@@ -277,7 +277,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.ToolkitStore",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.DesktopProjectDemo", "template\Berry.Spider.DesktopProjectDemo\Berry.Spider.DesktopProjectDemo.csproj", "{2B2EA14E-5757-4D53-9546-4B1C8BFDCBE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.EventBus.Redis", "Berry.Spider.EventBus.Redis\Berry.Spider.EventBus.Redis.csproj", "{740077FB-3F95-4B16-91C4-BC820028CC17}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Berry.Spider.EventBus.Redis", "src\Berry.Spider.EventBus.Redis\Berry.Spider.EventBus.Redis.csproj", "{740077FB-3F95-4B16-91C4-BC820028CC17}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

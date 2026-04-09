@@ -27,9 +27,9 @@
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.3.4" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
         <PackageReference Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.32.0-alpha" />
-        <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.63.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.74.0" />
         <PackageReference Include="Microsoft.SemanticKernel.Connectors.Sqlite" Version="1.32.0-preview" />
-        <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.63.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Core" Version="1.74.0" />
         <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
         <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />

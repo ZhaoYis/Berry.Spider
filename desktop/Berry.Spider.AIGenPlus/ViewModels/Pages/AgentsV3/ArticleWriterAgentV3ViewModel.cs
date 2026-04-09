@@ -54,7 +54,7 @@ public partial class ArticleWriterAgentV3ViewModel(
             .AddEdge(source: reviewerExecutor, target: mainWriterExecutor)
             .WithOutputFrom(reviewerExecutor)
             .Build();
-        await using StreamingRun run = await InProcessExecution.StreamAsync(workflow, this.UserInput);
+        await using StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, this.UserInput);
         try
         {
             await foreach (WorkflowEvent workflowEvent in run.WatchStreamAsync())

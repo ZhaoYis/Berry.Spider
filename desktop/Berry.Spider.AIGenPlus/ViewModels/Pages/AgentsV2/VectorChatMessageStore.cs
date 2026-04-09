@@ -13,52 +13,45 @@ namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 /// <summary>
 /// 向量聊天消息存储
 /// </summary>
-internal sealed class VectorChatMessageStore : ChatMessageStore
+internal sealed class VectorChatMessageStore(VectorStore vectorStore) : ChatHistoryProvider
 {
-    private readonly VectorStore _vectorStore;
-    private readonly JsonSerializerOptions _jsonOptions;
+    private readonly VectorStore _vectorStore = vectorStore ?? throw new ArgumentNullException(nameof(vectorStore));
 
-    public VectorChatMessageStore(
-        VectorStore vectorStore,
-        JsonElement serializedStoreState,
-        JsonSerializerOptions? jsonSerializerOptions = null)
-    {
-        this._vectorStore = vectorStore ?? throw new ArgumentNullException(nameof(vectorStore));
-        if (serializedStoreState.ValueKind is JsonValueKind.String)
-        {
-            this.ThreadDbKey = serializedStoreState.Deserialize<string>();
-        }
-
-        this._jsonOptions = jsonSerializerOptions ?? JsonSerializerOptions.Default;
-    }
-
-    public string? ThreadDbKey { get; private set; }
-
-    public override async Task AddMessagesAsync(
-        IEnumerable<ChatMessage> messages,
+    protected override async ValueTask StoreChatHistoryAsync(InvokedContext context,
         CancellationToken cancellationToken = default)
     {
-        this.ThreadDbKey ??= Guid.NewGuid().ToString("N");
         var collection = this._vectorStore.GetCollection<string, ChatHistoryItem>("ChatHistory");
         await collection.EnsureCollectionExistsAsync(cancellationToken);
-        await collection.UpsertAsync(messages.Select(x => new ChatHistoryItem()
+        await collection.UpsertAsync(context.ResponseMessages?.Select(x => new ChatHistoryItem()
         {
-            Key = $"{this.ThreadDbKey}_{x.MessageId}",
+            Key = $"{context.Agent.Id}_{x.MessageId}",
             Timestamp = DateTimeOffset.UtcNow,
-            ThreadId = this.ThreadDbKey,
+            ThreadId = context.Agent.Id,
             SerializedMessage = JsonSerializer.Serialize(x),
             MessageText = x.Text
-        }), cancellationToken);
+        })!, cancellationToken);
     }
 
-    public override async Task<IEnumerable<ChatMessage>> GetMessagesAsync(
+    protected override ValueTask<IEnumerable<ChatMessage>> InvokingCoreAsync(InvokingContext context,
+        CancellationToken cancellationToken = default)
+    {
+        return base.InvokingCoreAsync(context, cancellationToken);
+    }
+
+    protected override ValueTask InvokedCoreAsync(InvokedContext context,
+        CancellationToken cancellationToken = default)
+    {
+        return base.InvokedCoreAsync(context, cancellationToken);
+    }
+
+    protected override async ValueTask<IEnumerable<ChatMessage>> ProvideChatHistoryAsync(InvokingContext context,
         CancellationToken cancellationToken = default)
     {
         var collection = this._vectorStore.GetCollection<string, ChatHistoryItem>("ChatHistory");
         await collection.EnsureCollectionExistsAsync(cancellationToken);
         var records = collection
             .GetAsync(
-                x => x.ThreadId == this.ThreadDbKey, 10,
+                x => x.ThreadId == context.Agent.Id, 10,
                 new() { OrderBy = x => x.Descending(y => y.Timestamp) },
                 cancellationToken);
 
@@ -71,9 +64,6 @@ internal sealed class VectorChatMessageStore : ChatMessageStore
         messages.Reverse();
         return messages;
     }
-
-    public override JsonElement Serialize(JsonSerializerOptions? jsonSerializerOptions = null) =>
-        JsonSerializer.SerializeToElement(this.ThreadDbKey, jsonSerializerOptions ?? _jsonOptions);
 
     private sealed class ChatHistoryItem
     {

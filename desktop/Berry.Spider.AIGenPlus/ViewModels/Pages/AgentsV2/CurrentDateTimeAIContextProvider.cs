@@ -11,7 +11,7 @@ namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 /// </summary>
 internal sealed class CurrentDateTimeAIContextProvider(IChatClient chatClient) : AIContextProvider
 {
-    public override ValueTask<AIContext> InvokingAsync(InvokingContext context,
+    protected override ValueTask<AIContext> InvokingCoreAsync(InvokingContext context,
         CancellationToken cancellationToken = default)
     {
         return new ValueTask<AIContext>(new AIContext

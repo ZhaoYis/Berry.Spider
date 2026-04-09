@@ -5,19 +5,19 @@ using System.Threading.Tasks;
 using Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 using Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Models;
 using Microsoft.Agents.AI.Workflows;
-using Microsoft.Agents.AI.Workflows.Reflection;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Executors;
 
-public sealed class ReviewerExecutor(
+public sealed partial class ReviewerExecutor(
     string executorId,
     IReviewerAgent reviewerAgent,
     string taskId)
-    : ReflectingExecutor<ReviewerExecutor>(executorId), IMessageHandler<MainWriterOutput>
+    : Executor(executorId)
 {
     /// <summary>
     /// 根据创作输出，审核技术文章
     /// </summary>
+    [MessageHandler]
     public async ValueTask HandleAsync(MainWriterOutput mainWriterOutput, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {

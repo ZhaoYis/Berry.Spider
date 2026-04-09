@@ -121,10 +121,10 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// <param name="taskId">任务ID(用于记录执行日志)</param>
     /// <param name="chatClientAgent">聊天客户端Agent</param>
     /// <returns></returns>
-    protected virtual async Task<AgentThread?> ResumePreviousConversationAsync(string taskId,
+    protected virtual async Task<AgentSession?> ResumePreviousConversationAsync(string taskId,
         ChatClientAgent chatClientAgent)
     {
-        var filePath = Path.Combine(AppContext.BaseDirectory, "AgentThreads", $"{taskId}.json");
+        var filePath = Path.Combine(AppContext.BaseDirectory, "agentSessions", $"{taskId}.json");
         if (!File.Exists(filePath))
         {
             // 首次执行或尚未保存过线程状态，直接返回 null 使用新线程
@@ -140,8 +140,9 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
                 return null;
             }
 
-            var json = JsonSerializer.Deserialize<JsonElement>(serializedThread);
-            return chatClientAgent.DeserializeThread(json);
+            JsonElement serializedState =
+                JsonSerializer.Deserialize<JsonElement>(serializedThread, JsonSerializerOptions.Web);
+            return await chatClientAgent.DeserializeSessionAsync(serializedState);
         }
         catch (Exception e)
         {
@@ -156,30 +157,32 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// 保存Agent线程状态
     /// </summary>
     /// <param name="taskId">任务ID(用于记录执行日志)</param>
-    /// <param name="agentThread">Agent线程</param>
+    /// <param name="chatClientAgent">聊天客户端Agent</param>
+    /// <param name="agentSession">Agent线程</param>
     /// <returns></returns>
-    protected virtual Task SaveThreadStateAsync(string taskId, AgentThread agentThread)
+    protected virtual async Task SaveThreadStateAsync(string taskId, ChatClientAgent chatClientAgent,
+        AgentSession agentSession)
     {
         // 序列化并保存当前对话状态到持久存储（例如文件、数据库等）
-        var serializedThread = agentThread.Serialize(JsonSerializerOptions.Web).GetRawText();
-        var directory = Path.Combine(AppContext.BaseDirectory, "AgentThreads");
+        var serializedThread = await chatClientAgent.SerializeSessionAsync(agentSession);
+        string data = JsonSerializer.Serialize(serializedThread, JsonSerializerOptions.Web);
+        var directory = Path.Combine(AppContext.BaseDirectory, "agentSessions");
         if (!Directory.Exists(directory))
         {
             Directory.CreateDirectory(directory);
         }
 
         var filePath = Path.Combine(directory, $"{taskId}.json");
-        return File.WriteAllTextAsync(filePath, serializedThread);
+        await File.WriteAllTextAsync(filePath, data);
     }
 
     /// <summary>
     /// 创建AI上下文提供程序（默认实现为当前日期时间上下文提供程序）
     /// </summary>
     /// <returns></returns>
-    protected virtual Func<ChatClientAgentOptions.AIContextProviderFactoryContext, AIContextProvider>
-        CreateAIContextProvider()
+    protected virtual IEnumerable<AIContextProvider> CreateAIContextProviders()
     {
-        return ctx => new CurrentDateTimeAIContextProvider(this.ChatClient);
+        return [new CurrentDateTimeAIContextProvider(this.ChatClient)];
     }
 
     /// <summary>
@@ -194,13 +197,14 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
         {
             ChatClientAgent chatClientAgent = this.GetAgent() as ChatClientAgent ??
                                               throw new BusinessException($"Agent实例未初始化，Agent名称：{AgentName}");
-            AgentThread agentThread = chatClientAgent.GetNewThread();
+            AgentSession agentSession = await chatClientAgent.CreateSessionAsync(taskId);
             // 恢复之前的对话
-            AgentThread reloadedThread = await this.ResumePreviousConversationAsync(taskId, chatClientAgent) ?? agentThread;
+            AgentSession reloadedThread =
+                await this.ResumePreviousConversationAsync(taskId, chatClientAgent) ?? agentSession;
             // 执行Agent任务
             var result = await chatClientAgent.RunAsync(input, reloadedThread);
             // 保存Agent线程状态
-            await this.SaveThreadStateAsync(taskId, reloadedThread);
+            await this.SaveThreadStateAsync(taskId, chatClientAgent, reloadedThread);
             return result.Text;
         }
         catch (Exception e)
@@ -219,10 +223,11 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     {
         ChatClientAgent chatClientAgent = this.GetAgent() as ChatClientAgent ??
                                           throw new BusinessException($"Agent实例未初始化，Agent名称：{AgentName}");
-        AgentThread agentThread = chatClientAgent.GetNewThread();
+        AgentSession agentSession = await chatClientAgent.CreateSessionAsync(taskId);
         // 恢复之前的对话
-        AgentThread reloadedThread = await this.ResumePreviousConversationAsync(taskId, chatClientAgent) ?? agentThread;
-        await foreach (var output in chatClientAgent.RunStreamingAsync(input, agentThread))
+        AgentSession reloadedThread =
+            await this.ResumePreviousConversationAsync(taskId, chatClientAgent) ?? agentSession;
+        await foreach (var output in chatClientAgent.RunStreamingAsync(input, agentSession))
         {
             if (!string.IsNullOrEmpty(output.Text))
             {
@@ -231,7 +236,7 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
         }
 
         // 保存Agent线程状态
-        await this.SaveThreadStateAsync(taskId, reloadedThread);
+        await this.SaveThreadStateAsync(taskId, chatClientAgent, reloadedThread);
     }
 
     /// <summary>
@@ -285,12 +290,10 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
                 ResponseFormat = this.ResponseFormat,
                 Tools = this.Tools?.ToList()
             },
-            ChatMessageStoreFactory = ctx => new VectorChatMessageStore(
-                new InMemoryVectorStore(),
-                ctx.SerializedState,
-                ctx.JsonSerializerOptions),
-            AIContextProviderFactory = this.CreateAIContextProvider()
+            // ChatHistoryProvider = new InMemoryChatHistoryProvider()
+            ChatHistoryProvider = new VectorChatMessageStore(new InMemoryVectorStore()),
+            AIContextProviders = this.CreateAIContextProviders()
         };
-        return this.ChatClient.CreateAIAgent(options);
+        return this.ChatClient.AsAIAgent(options);
     }
 }

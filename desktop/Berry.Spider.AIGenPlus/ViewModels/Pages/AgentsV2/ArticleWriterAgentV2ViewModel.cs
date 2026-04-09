@@ -100,7 +100,7 @@ public partial class ArticleWriterAgentV2ViewModel(
             [summarizeWriterAgent.GetAgent(), mainWriterAgent.GetAgent(), reviewerAgent.GetAgent()]
         );
         var messages = new List<ChatMessage> { new ChatMessage(ChatRole.User, input) };
-        await using var run = await InProcessExecution.StreamAsync(workflowBySequential, messages);
+        await using var run = await InProcessExecution.RunStreamingAsync(workflowBySequential, messages);
         // 发送 TurnToken 用以触发 Agent 执行
         var tiggerStat = await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
         if (tiggerStat is false)
@@ -143,7 +143,7 @@ public partial class ArticleWriterAgentV2ViewModel(
                 case RequestInfoEvent requestInfo:
                     Debug.WriteLine($"REQUEST #{requestInfo.Request.RequestId}");
                     break;
-                case AgentRunUpdateEvent streamEvent:
+                case AgentResponseUpdateEvent streamEvent:
                     Debug.WriteLine($"[{streamEvent.ExecutorId}] 输出：{streamEvent.Update.Text}");
 
                     // 函数和工具调用的输出
@@ -165,7 +165,7 @@ public partial class ArticleWriterAgentV2ViewModel(
                     }
 
                     break;
-                case AgentRunResponseEvent messageEvent:
+                case AgentResponseEvent messageEvent:
                     if (messageEvent.Response.Usage is not null)
                     {
                         Debug.WriteLine(

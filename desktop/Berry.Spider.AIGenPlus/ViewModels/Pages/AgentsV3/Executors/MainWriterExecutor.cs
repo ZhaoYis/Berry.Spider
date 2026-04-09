@@ -5,21 +5,18 @@ using System.Threading.Tasks;
 using Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 using Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Models;
 using Microsoft.Agents.AI.Workflows;
-using Microsoft.Agents.AI.Workflows.Reflection;
-
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Executors;
 
-public sealed class MainWriterExecutor(
+public sealed partial class MainWriterExecutor(
     string executorId,
     IMainWriterAgent mainWriterAgent,
     string taskId)
-    : ReflectingExecutor<MainWriterExecutor>(executorId),
-        IMessageHandler<SummarizeOutput, MainWriterOutput>,
-        IMessageHandler<ReviewerOutput, MainWriterOutput>
+    : Executor(executorId)
 {
     /// <summary>
     /// 根据摘要输出创作技术文章
     /// </summary>
+    [MessageHandler]
     public async ValueTask<MainWriterOutput> HandleAsync(SummarizeOutput summarizeOutput, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {
@@ -47,6 +44,7 @@ public sealed class MainWriterExecutor(
     /// <summary>
     /// 根据审核输出改进技术文章
     /// </summary>
+    [MessageHandler]
     public async ValueTask<MainWriterOutput> HandleAsync(ReviewerOutput reviewerOutput, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {
