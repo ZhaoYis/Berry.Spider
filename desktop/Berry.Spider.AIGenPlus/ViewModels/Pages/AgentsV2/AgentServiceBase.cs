@@ -115,31 +115,6 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     }
 
     /// <summary>
-    /// 恢复之前的对话
-    /// </summary>
-    /// <param name="taskId">任务ID(用于记录执行日志)</param>
-    /// <param name="chatClientAgent">聊天客户端Agent</param>
-    /// <returns></returns>
-    protected virtual async Task<AgentSession?> ResumePreviousConversationAsync(string taskId,
-        ChatClientAgent chatClientAgent)
-    {
-        return null;
-    }
-
-    /// <summary>
-    /// 保存Agent线程状态
-    /// </summary>
-    /// <param name="taskId">任务ID(用于记录执行日志)</param>
-    /// <param name="chatClientAgent">聊天客户端Agent</param>
-    /// <param name="agentSession">Agent线程</param>
-    /// <returns></returns>
-    protected virtual Task SaveThreadStateAsync(string taskId, ChatClientAgent chatClientAgent,
-        AgentSession agentSession)
-    {
-        return Task.CompletedTask;
-    }
-
-    /// <summary>
     /// 创建AI上下文提供程序（默认实现为当前日期时间上下文提供程序）
     /// </summary>
     /// <returns></returns>
