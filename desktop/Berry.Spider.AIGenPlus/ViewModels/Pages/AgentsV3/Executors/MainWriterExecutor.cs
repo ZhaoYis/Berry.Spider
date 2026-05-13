@@ -8,7 +8,7 @@ using Microsoft.Agents.AI.Workflows;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Executors;
 
-public partial class MainWriterExecutor(
+internal sealed partial class MainWriterExecutor(
     string executorId,
     IMainWriterAgent mainWriterAgent,
     string taskId)
@@ -18,7 +18,7 @@ public partial class MainWriterExecutor(
     /// 根据摘要输出创作技术文章
     /// </summary>
     [MessageHandler]
-    public async ValueTask<MainWriterOutput> HandleAsync(SummarizeOutput summarizeOutput, IWorkflowContext context,
+    private async ValueTask<MainWriterOutput> HandlerAsync(SummarizeOutput summarizeOutput, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {
         string prompt = $"""
@@ -46,7 +46,7 @@ public partial class MainWriterExecutor(
     /// 根据审核输出改进技术文章
     /// </summary>
     [MessageHandler]
-    public async ValueTask<MainWriterOutput> HandleAsync(ReviewerOutput reviewerOutput, IWorkflowContext context,
+    private async ValueTask<MainWriterOutput> HandlerAsync(ReviewerOutput reviewerOutput, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {
         string prompt = $"""

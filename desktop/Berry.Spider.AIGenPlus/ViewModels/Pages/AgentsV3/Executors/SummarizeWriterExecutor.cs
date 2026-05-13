@@ -7,7 +7,7 @@ using Microsoft.Agents.AI.Workflows;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Executors;
 
-public partial class SummarizeWriterExecutor(
+internal sealed partial class SummarizeWriterExecutor(
     string executorId,
     ISummarizeWriterAgent summarizeWriterAgent,
     string taskId)
@@ -17,7 +17,7 @@ public partial class SummarizeWriterExecutor(
     /// 处理用户原始问题，生成文章摘要
     /// </summary>
     [MessageHandler]
-    public async ValueTask<SummarizeOutput> HandleAsync(string message, IWorkflowContext context,
+    private async ValueTask<SummarizeOutput> HandlerAsync(string message, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {
         string prompt = $"""

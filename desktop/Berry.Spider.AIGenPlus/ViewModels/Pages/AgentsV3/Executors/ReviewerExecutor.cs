@@ -8,7 +8,7 @@ using Microsoft.Agents.AI.Workflows;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Executors;
 
-public partial class ReviewerExecutor(
+internal sealed partial class ReviewerExecutor(
     string executorId,
     IReviewerAgent reviewerAgent,
     string taskId)
@@ -18,7 +18,7 @@ public partial class ReviewerExecutor(
     /// 根据创作输出，审核技术文章
     /// </summary>
     [MessageHandler(Send = [typeof(ReviewerOutput)], Yield = [typeof(string)])]
-    public async ValueTask HandleAsync(MainWriterOutput mainWriterOutput, IWorkflowContext context,
+    private async ValueTask HandlerAsync(MainWriterOutput mainWriterOutput, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {
         //从当前工作流上下文获取用户原始问题
