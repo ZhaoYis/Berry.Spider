@@ -42,6 +42,7 @@ public partial class ArticleWriterAgentV3ViewModel(
     private async Task GeneratingAsync()
     {
         Check.NotNullOrWhiteSpace(this.UserInput, nameof(UserInput));
+        string userInput = this.UserInput;
         this.AiResponseText = string.Empty;
         this.ShowNotificationMessage("请稍后，AI正在努力思考中...");
 
@@ -61,13 +62,7 @@ public partial class ArticleWriterAgentV3ViewModel(
                 .WithOutputFrom(reviewerExecutor)
                 .Build();
 
-            ChatMessage userMessage = new ChatMessage(ChatRole.User, this.UserInput);
-            StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, userMessage);
-            var tiggerStat = await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
-            if (tiggerStat is false)
-            {
-                this.ShowNotificationMessage("触发Agent执行失败");
-            }
+            await using StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, userInput);
 
             await foreach (WorkflowEvent workflowEvent in run.WatchStreamAsync().ConfigureAwait(false))
             {

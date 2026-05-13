@@ -17,7 +17,7 @@ internal sealed partial class ReviewerExecutor(
     /// <summary>
     /// 根据创作输出，审核技术文章
     /// </summary>
-    [MessageHandler(Send = [typeof(ReviewerOutput)], Yield = [typeof(string)])]
+    [MessageHandler]
     private async ValueTask HandlerAsync(MainWriterOutput mainWriterOutput, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {
@@ -92,8 +92,6 @@ internal sealed partial class ReviewerExecutor(
 
     protected override ProtocolBuilder ConfigureProtocol(ProtocolBuilder protocolBuilder)
     {
-        return protocolBuilder
-            .SendsMessage<ReviewerOutput>()
-            .YieldsOutput<string>();
+        return protocolBuilder;
     }
 }
