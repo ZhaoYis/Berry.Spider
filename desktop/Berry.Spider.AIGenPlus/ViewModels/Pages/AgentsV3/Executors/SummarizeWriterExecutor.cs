@@ -45,6 +45,6 @@ internal sealed partial class SummarizeWriterExecutor(
 
     protected override ProtocolBuilder ConfigureProtocol(ProtocolBuilder protocolBuilder)
     {
-        return protocolBuilder;
+        return protocolBuilder.ConfigureRoutes(routes => routes.AddHandler<string, SummarizeOutput>(this.HandlerAsync));
     }
 }

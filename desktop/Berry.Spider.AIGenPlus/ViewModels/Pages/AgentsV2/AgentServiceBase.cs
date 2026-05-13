@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
-using Microsoft.SemanticKernel.Connectors.InMemory;
 using Volo.Abp;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
@@ -124,33 +123,7 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     protected virtual async Task<AgentSession?> ResumePreviousConversationAsync(string taskId,
         ChatClientAgent chatClientAgent)
     {
-        var filePath = Path.Combine(AppContext.BaseDirectory, "agentSessions", $"{taskId}.json");
-        if (!File.Exists(filePath))
-        {
-            // 首次执行或尚未保存过线程状态，直接返回 null 使用新线程
-            return null;
-        }
-
-        try
-        {
-            var serializedThread = await File.ReadAllTextAsync(filePath);
-            // 反序列化Agent线程状态
-            if (string.IsNullOrEmpty(serializedThread))
-            {
-                return null;
-            }
-
-            JsonElement serializedState =
-                JsonSerializer.Deserialize<JsonElement>(serializedThread, JsonSerializerOptions.Web);
-            return await chatClientAgent.DeserializeSessionAsync(serializedState);
-        }
-        catch (Exception e)
-        {
-            // 状态文件损坏或反序列化失败时，不中断执行，记录诊断信息并回退为新线程
-            System.Diagnostics.Debug.WriteLine(
-                $"[AgentServiceBase] 恢复线程状态失败，taskId={taskId}，filePath={filePath}，error={e.Message}");
-            return null;
-        }
+        return null;
     }
 
     /// <summary>
@@ -160,20 +133,10 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// <param name="chatClientAgent">聊天客户端Agent</param>
     /// <param name="agentSession">Agent线程</param>
     /// <returns></returns>
-    protected virtual async Task SaveThreadStateAsync(string taskId, ChatClientAgent chatClientAgent,
+    protected virtual Task SaveThreadStateAsync(string taskId, ChatClientAgent chatClientAgent,
         AgentSession agentSession)
     {
-        // 序列化并保存当前对话状态到持久存储（例如文件、数据库等）
-        var serializedThread = await chatClientAgent.SerializeSessionAsync(agentSession);
-        string data = JsonSerializer.Serialize(serializedThread, JsonSerializerOptions.Web);
-        var directory = Path.Combine(AppContext.BaseDirectory, "agentSessions");
-        if (!Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
-
-        var filePath = Path.Combine(directory, $"{taskId}.json");
-        await File.WriteAllTextAsync(filePath, data);
+        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -197,14 +160,7 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
         {
             ChatClientAgent chatClientAgent = this.GetAgent() as ChatClientAgent ??
                                               throw new BusinessException($"Agent实例未初始化，Agent名称：{AgentName}");
-            AgentSession agentSession = await chatClientAgent.CreateSessionAsync(taskId);
-            // 恢复之前的对话
-            AgentSession reloadedThread =
-                await this.ResumePreviousConversationAsync(taskId, chatClientAgent) ?? agentSession;
-            // 执行Agent任务
-            var result = await chatClientAgent.RunAsync(input, reloadedThread);
-            // 保存Agent线程状态
-            await this.SaveThreadStateAsync(taskId, chatClientAgent, reloadedThread);
+            var result = await chatClientAgent.RunAsync(input);
             return result.Text;
         }
         catch (Exception e)
@@ -223,20 +179,13 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     {
         ChatClientAgent chatClientAgent = this.GetAgent() as ChatClientAgent ??
                                           throw new BusinessException($"Agent实例未初始化，Agent名称：{AgentName}");
-        AgentSession agentSession = await chatClientAgent.CreateSessionAsync(taskId);
-        // 恢复之前的对话
-        AgentSession reloadedThread =
-            await this.ResumePreviousConversationAsync(taskId, chatClientAgent) ?? agentSession;
-        await foreach (var output in chatClientAgent.RunStreamingAsync(input, agentSession))
+        await foreach (var output in chatClientAgent.RunStreamingAsync(input))
         {
             if (!string.IsNullOrEmpty(output.Text))
             {
                 yield return output.Text;
             }
         }
-
-        // 保存Agent线程状态
-        await this.SaveThreadStateAsync(taskId, chatClientAgent, reloadedThread);
     }
 
     /// <summary>
@@ -290,8 +239,9 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
                 ResponseFormat = this.ResponseFormat,
                 Tools = this.Tools?.ToList()
             },
-            // ChatHistoryProvider = new InMemoryChatHistoryProvider()
-            ChatHistoryProvider = new VectorChatMessageStore(new InMemoryVectorStore()),
+            WarnOnChatHistoryProviderConflict = false,
+            ThrowOnChatHistoryProviderConflict = false,
+            ClearOnChatHistoryProviderConflict = true,
             AIContextProviders = this.CreateAIContextProviders()
         };
         return this.ChatClient.AsAIAgent(options);

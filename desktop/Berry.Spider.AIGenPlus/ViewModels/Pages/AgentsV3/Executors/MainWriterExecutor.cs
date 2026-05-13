@@ -84,6 +84,10 @@ internal sealed partial class MainWriterExecutor(
 
     protected override ProtocolBuilder ConfigureProtocol(ProtocolBuilder protocolBuilder)
     {
-        return protocolBuilder;
+        return protocolBuilder.ConfigureRoutes(routes =>
+        {
+            routes.AddHandler<SummarizeOutput, MainWriterOutput>(this.HandlerAsync);
+            routes.AddHandler<ReviewerOutput, MainWriterOutput>(this.HandlerAsync);
+        });
     }
 }
