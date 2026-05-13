@@ -92,6 +92,9 @@ internal sealed partial class ReviewerExecutor(
 
     protected override ProtocolBuilder ConfigureProtocol(ProtocolBuilder protocolBuilder)
     {
-        return protocolBuilder.ConfigureRoutes(routes => routes.AddHandler<MainWriterOutput>(this.HandlerAsync));
+        return protocolBuilder
+            .SendsMessage<ReviewerOutput>()
+            .YieldsOutput<string>()
+            .ConfigureRoutes(routes => routes.AddHandler<MainWriterOutput>(this.HandlerAsync));
     }
 }
