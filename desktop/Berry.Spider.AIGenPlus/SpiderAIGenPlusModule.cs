@@ -14,14 +14,14 @@ public class SpiderAIGenPlusModule : AbpModule
     {
         var configuration = context.Services.GetConfiguration();
         //run ollama ai client
-        //context.Services.AddOllamaAiClient(configuration);
+        context.Services.AddOllamaAiClient(configuration);
         //add semantic kernel(ollama)
-        //context.Services.AddOllamaSKernel(configuration);
+        context.Services.AddOllamaSKernel(configuration);
 
         //run openai ai client
-        context.Services.AddOpenAIClient(configuration);
+        //context.Services.AddOpenAIClient(configuration);
         //add semantic kernel(openai)
-        context.Services.AddOpenAISKernel(configuration);
+        //context.Services.AddOpenAISKernel(configuration);
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)

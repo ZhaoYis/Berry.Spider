@@ -167,8 +167,9 @@ public static class ServiceCollectionExtensions
     private static void AddOllamaKeyedEmbeddingClient(this IServiceCollection services, OllamaOptions options)
     {
         //embedding client
-        services.AddKeyedSingleton(nameof(OllamaEmbeddingGenerator),
-            new OllamaEmbeddingGenerator(options.ServiceAddr, options.EmbeddingModelId));
+        IEmbeddingGenerator<string, Embedding<float>> embeddingGenerator =
+            new OllamaEmbeddingGenerator(options.ServiceAddr, options.EmbeddingModelId);
+        services.AddKeyedSingleton(nameof(OllamaEmbeddingGenerator), embeddingGenerator);
     }
 
     private static void ConfigureOllamaOptions(this IServiceCollection services, ConfigClient client)

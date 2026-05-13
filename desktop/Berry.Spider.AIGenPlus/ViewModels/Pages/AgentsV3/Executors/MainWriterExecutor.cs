@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 using Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 using Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Models;
 using Microsoft.Agents.AI.Workflows;
+
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Executors;
 
-public sealed partial class MainWriterExecutor(
+public partial class MainWriterExecutor(
     string executorId,
     IMainWriterAgent mainWriterAgent,
     string taskId)
@@ -68,7 +69,8 @@ public sealed partial class MainWriterExecutor(
 
                          请根据以上的建议改进你的内容，确保符合要求。
                          """;
-        string result = await mainWriterAgent.ExecuteAsync(prompt, this.Id);
+        string instructions = mainWriterAgent.GetCustomOrDefaultInstructions(prompt);
+        string result = await mainWriterAgent.ExecuteAsync(instructions, taskId);
         MainWriterOutput? mainWriterOutput = JsonSerializer.Deserialize<MainWriterOutput>(result);
         if (mainWriterOutput is null)
         {
@@ -78,5 +80,10 @@ public sealed partial class MainWriterExecutor(
         //发布事件
         await context.AddEventAsync(new MainWriterFinishedEvent(mainWriterOutput), cancellationToken);
         return mainWriterOutput;
+    }
+
+    protected override ProtocolBuilder ConfigureProtocol(ProtocolBuilder protocolBuilder)
+    {
+        return protocolBuilder;
     }
 }

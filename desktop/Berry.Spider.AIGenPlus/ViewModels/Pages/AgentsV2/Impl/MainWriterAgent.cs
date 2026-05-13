@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 
 public class MainWriterAgent(
-    [FromKeyedServices("OpenAIClient")] IChatClient chatClient,
+    [FromKeyedServices("OllamaChatClient")] IChatClient chatClient,
     IServiceProvider sp) : AgentServiceBase(chatClient), IMainWriterAgent
 {
     public override string AgentName => nameof(MainWriterAgent);

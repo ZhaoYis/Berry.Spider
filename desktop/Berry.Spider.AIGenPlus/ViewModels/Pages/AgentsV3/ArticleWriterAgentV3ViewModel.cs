@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 using Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Executors;
@@ -20,6 +21,8 @@ public partial class ArticleWriterAgentV3ViewModel(
     IReviewerAgent reviewerAgent) : ViewModelBase, ITransientDependency
 {
     public const string ScopeName = "ArticleWriterAgentV3";
+    public const string ReviewRoundStateKey = "ReviewRound";
+    public const int MaxReviewRounds = 3;
 
     /// <summary>
     /// 用户输入
@@ -39,25 +42,34 @@ public partial class ArticleWriterAgentV3ViewModel(
     private async Task GeneratingAsync()
     {
         Check.NotNullOrWhiteSpace(this.UserInput, nameof(UserInput));
+        this.AiResponseText = string.Empty;
         this.ShowNotificationMessage("请稍后，AI正在努力思考中...");
 
-        string taskId = Guid.NewGuid().ToString("N");
-        SummarizeWriterExecutor summarizeWriterExecutor =
-            new SummarizeWriterExecutor(nameof(SummarizeWriterExecutor), summarizeWriterAgent, taskId);
-        MainWriterExecutor mainWriterExecutor =
-            new MainWriterExecutor(nameof(MainWriterExecutor), mainWriterAgent, taskId);
-        ReviewerExecutor reviewerExecutor = new ReviewerExecutor(nameof(ReviewerExecutor), reviewerAgent, taskId);
-        //构建工作流
-        var workflow = new WorkflowBuilder(summarizeWriterExecutor)
-            .AddEdge(source: summarizeWriterExecutor, target: mainWriterExecutor)
-            .AddEdge(source: mainWriterExecutor, target: reviewerExecutor)
-            .AddEdge(source: reviewerExecutor, target: mainWriterExecutor)
-            .WithOutputFrom(reviewerExecutor)
-            .Build();
-        await using StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, this.UserInput);
         try
         {
-            await foreach (WorkflowEvent workflowEvent in run.WatchStreamAsync())
+            string taskId = Guid.NewGuid().ToString("N");
+            SummarizeWriterExecutor summarizeWriterExecutor =
+                new SummarizeWriterExecutor(nameof(SummarizeWriterExecutor), summarizeWriterAgent, taskId);
+            MainWriterExecutor mainWriterExecutor =
+                new MainWriterExecutor(nameof(MainWriterExecutor), mainWriterAgent, taskId);
+            ReviewerExecutor reviewerExecutor = new ReviewerExecutor(nameof(ReviewerExecutor), reviewerAgent, taskId);
+            //构建工作流
+            var workflow = new WorkflowBuilder(summarizeWriterExecutor)
+                // .AddEdge(source: summarizeWriterExecutor, target: mainWriterExecutor)
+                // .AddEdge(source: mainWriterExecutor, target: reviewerExecutor)
+                // .AddEdge(source: reviewerExecutor, target: mainWriterExecutor)
+                // .WithOutputFrom(reviewerExecutor)
+                .Build();
+
+            ChatMessage userMessage = new ChatMessage(ChatRole.User, this.UserInput);
+            StreamingRun run = await InProcessExecution.RunStreamingAsync(workflow, userMessage);
+            var tiggerStat = await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
+            if (tiggerStat is false)
+            {
+                this.ShowNotificationMessage("触发Agent执行失败");
+            }
+
+            await foreach (WorkflowEvent workflowEvent in run.WatchStreamAsync().ConfigureAwait(false))
             {
                 switch (workflowEvent)
                 {
@@ -72,8 +84,9 @@ public partial class ArticleWriterAgentV3ViewModel(
                         Debug.WriteLine($"[{nameof(ReviewerFinishedEvent)}] {reviewerFinishedEvent.ToString()}");
                         break;
                     case WorkflowErrorEvent workflowErrorEvent:
-                        Debug.WriteLine(
-                            $"[{nameof(WorkflowErrorEvent)}] {workflowErrorEvent.Data?.ToString() ?? "Workflow error"}");
+                        string errorMessage = workflowErrorEvent.Data?.ToString() ?? "Workflow error";
+                        Debug.WriteLine($"[{nameof(WorkflowErrorEvent)}] {errorMessage}");
+                        this.ShowNotificationMessage("执行失败", errorMessage);
                         break;
                     case WorkflowOutputEvent workflowOutputEvent:
                         this.AiResponseText += workflowOutputEvent.Data;
@@ -90,9 +103,14 @@ public partial class ArticleWriterAgentV3ViewModel(
                 }
             }
         }
+        catch (OperationCanceledException e)
+        {
+            this.ShowNotificationMessage("执行取消", "生成已取消");
+        }
         catch (Exception e)
         {
             Debug.WriteLine($"[{nameof(ArticleWriterAgentV3ViewModel)}] {e.ToString()}");
+            this.ShowNotificationMessage("执行失败", e.Message);
         }
     }
 

@@ -8,7 +8,7 @@ using Microsoft.Agents.AI.Workflows;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Executors;
 
-public sealed partial class ReviewerExecutor(
+public partial class ReviewerExecutor(
     string executorId,
     IReviewerAgent reviewerAgent,
     string taskId)
@@ -17,12 +17,14 @@ public sealed partial class ReviewerExecutor(
     /// <summary>
     /// 根据创作输出，审核技术文章
     /// </summary>
-    [MessageHandler]
+    [MessageHandler(Send = [typeof(ReviewerOutput)], Yield = [typeof(string)])]
     public async ValueTask HandleAsync(MainWriterOutput mainWriterOutput, IWorkflowContext context,
         CancellationToken cancellationToken = default)
     {
         //从当前工作流上下文获取用户原始问题
         string? originalQuestion = await context.ReadStateAsync<string>(taskId,
+            scopeName: ArticleWriterAgentV3ViewModel.ScopeName, cancellationToken);
+        int reviewRound = await context.ReadStateAsync<int>(ArticleWriterAgentV3ViewModel.ReviewRoundStateKey,
             scopeName: ArticleWriterAgentV3ViewModel.ScopeName, cancellationToken);
 
         string prompt = $"""
@@ -62,7 +64,36 @@ public sealed partial class ReviewerExecutor(
             return;
         }
 
+        reviewRound++;
+        await context.QueueStateUpdateAsync(ArticleWriterAgentV3ViewModel.ReviewRoundStateKey, reviewRound,
+            scopeName: ArticleWriterAgentV3ViewModel.ScopeName, cancellationToken: cancellationToken);
+
+        if (reviewRound >= ArticleWriterAgentV3ViewModel.MaxReviewRounds)
+        {
+            await context.YieldOutputAsync($"""
+                                            审核未通过，已达到最大改写轮次。
+                                            标题：{mainWriterOutput.Title}
+                                            内容：{mainWriterOutput.Content}
+                                            当前轮次：{reviewRound}
+                                            总评分：{reviewerOutput.OverallScore}分
+                                            准确性：{reviewerOutput.Accuracy.Score}分
+                                            逻辑性：{reviewerOutput.Logic.Score}分
+                                            原创性：{reviewerOutput.Originality.Score}分
+                                            格式化：{reviewerOutput.Formatting.Score}分
+                                            推荐：{reviewerOutput.Recommendation}
+                                            总结：{reviewerOutput.Summary}
+                                            """, cancellationToken);
+            return;
+        }
+
         //继续处理
         await context.SendMessageAsync(reviewerOutput, cancellationToken);
+    }
+
+    protected override ProtocolBuilder ConfigureProtocol(ProtocolBuilder protocolBuilder)
+    {
+        return protocolBuilder
+            .SendsMessage<ReviewerOutput>()
+            .YieldsOutput<string>();
     }
 }

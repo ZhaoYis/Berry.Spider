@@ -7,7 +7,7 @@ using Microsoft.Agents.AI.Workflows;
 
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV3.Executors;
 
-public sealed partial class SummarizeWriterExecutor(
+public partial class SummarizeWriterExecutor(
     string executorId,
     ISummarizeWriterAgent summarizeWriterAgent,
     string taskId)
@@ -35,9 +35,16 @@ public sealed partial class SummarizeWriterExecutor(
         //将用户原始问题写入当前工作流上下文,后续步骤可以从上下文获取用户原始问题
         await context.QueueStateUpdateAsync(taskId, message, scopeName: ArticleWriterAgentV3ViewModel.ScopeName,
             cancellationToken: cancellationToken);
+        await context.QueueStateUpdateAsync(ArticleWriterAgentV3ViewModel.ReviewRoundStateKey, 0,
+            scopeName: ArticleWriterAgentV3ViewModel.ScopeName, cancellationToken: cancellationToken);
 
         //发布事件
         await context.AddEventAsync(new SummarizeWriterFinishedEvent(summarizeOutput), cancellationToken);
         return summarizeOutput;
+    }
+
+    protected override ProtocolBuilder ConfigureProtocol(ProtocolBuilder protocolBuilder)
+    {
+        return protocolBuilder;
     }
 }

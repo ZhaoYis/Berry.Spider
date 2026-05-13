@@ -8,7 +8,7 @@ using Volo.Abp;
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 
 public class ReviewerAgent(
-    [FromKeyedServices("OpenAIClient")] IChatClient chatClient) : AgentServiceBase(chatClient), IReviewerAgent
+    [FromKeyedServices("OllamaChatClient")] IChatClient chatClient) : AgentServiceBase(chatClient), IReviewerAgent
 {
     public override string AgentName => nameof(ReviewerAgent);
 

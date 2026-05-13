@@ -8,7 +8,7 @@ using Volo.Abp;
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages.AgentsV2;
 
 public class SummarizeWriterAgent(
-    [FromKeyedServices("OpenAIClient")] IChatClient chatClient) : AgentServiceBase(chatClient), ISummarizeWriterAgent
+    [FromKeyedServices("OllamaChatClient")] IChatClient chatClient) : AgentServiceBase(chatClient), ISummarizeWriterAgent
 {
     public override string AgentName => nameof(SummarizeWriterAgent);
 
