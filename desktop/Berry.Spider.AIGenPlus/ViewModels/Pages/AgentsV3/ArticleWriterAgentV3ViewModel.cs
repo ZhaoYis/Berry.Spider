@@ -55,10 +55,10 @@ public partial class ArticleWriterAgentV3ViewModel(
             ReviewerExecutor reviewerExecutor = new ReviewerExecutor(nameof(ReviewerExecutor), reviewerAgent, taskId);
             //构建工作流
             var workflow = new WorkflowBuilder(summarizeWriterExecutor)
-                // .AddEdge(source: summarizeWriterExecutor, target: mainWriterExecutor)
-                // .AddEdge(source: mainWriterExecutor, target: reviewerExecutor)
-                // .AddEdge(source: reviewerExecutor, target: mainWriterExecutor)
-                // .WithOutputFrom(reviewerExecutor)
+                .AddEdge(source: summarizeWriterExecutor, target: mainWriterExecutor)
+                .AddEdge(source: mainWriterExecutor, target: reviewerExecutor)
+                .AddEdge(source: reviewerExecutor, target: mainWriterExecutor)
+                .WithOutputFrom(reviewerExecutor)
                 .Build();
 
             ChatMessage userMessage = new ChatMessage(ChatRole.User, this.UserInput);
