@@ -145,6 +145,27 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     }
 
     /// <summary>
+    /// 执行Agent任务（非流式）泛型
+    /// </summary>
+    /// <param name="input">输入内容</param>
+    /// <param name="taskId">任务ID(用于记录执行日志)</param>
+    /// <returns>输出内容</returns>
+    public async Task<T> ExecuteAsync<T>(string input, string taskId)
+    {
+        try
+        {
+            ChatClientAgent chatClientAgent = this.GetAgent() as ChatClientAgent ??
+                                              throw new BusinessException($"Agent实例未初始化，Agent名称：{AgentName}");
+            var result = await chatClientAgent.RunAsync<T>(input);
+            return result.Result;
+        }
+        catch (Exception e)
+        {
+            throw new BusinessException($"Agent执行任务失败，任务ID：{taskId}，错误信息：{e.Message}");
+        }
+    }
+
+    /// <summary>
     /// 执行Agent任务（流式）
     /// </summary>
     /// <param name="input">输入内容</param>
@@ -217,7 +238,8 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
             WarnOnChatHistoryProviderConflict = false,
             ThrowOnChatHistoryProviderConflict = false,
             ClearOnChatHistoryProviderConflict = true,
-            AIContextProviders = this.CreateAIContextProviders()
+            AIContextProviders = this.CreateAIContextProviders(),
+            ChatHistoryProvider = new InMemoryChatHistoryProvider()
         };
         return this.ChatClient.AsAIAgent(options);
     }

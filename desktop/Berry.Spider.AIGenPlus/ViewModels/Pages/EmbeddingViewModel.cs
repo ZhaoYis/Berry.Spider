@@ -14,7 +14,7 @@ using Volo.Abp.DependencyInjection;
 namespace Berry.Spider.AIGenPlus.ViewModels.Pages;
 
 public partial class EmbeddingViewModel(
-    [FromKeyedServices("OllamaEmbeddingGenerator")]
+    [FromKeyedServices("OpenAIEmbeddingGenerator")]
     IEmbeddingGenerator<string, Embedding<float>> embeddingGenerator) : ViewModelBase, ITransientDependency
 {
     /**

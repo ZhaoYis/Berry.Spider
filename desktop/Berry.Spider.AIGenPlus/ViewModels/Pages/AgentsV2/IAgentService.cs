@@ -38,6 +38,14 @@ public interface IAgentService
     Task<string> ExecuteAsync(string input, string taskId);
 
     /// <summary>
+    /// 执行Agent任务（非流式）泛型
+    /// </summary>
+    /// <param name="input">输入内容</param>
+    /// <param name="taskId">任务ID(用于记录执行日志)</param>
+    /// <returns>输出内容</returns>
+    Task<T> ExecuteAsync<T>(string input, string taskId);
+
+    /// <summary>
     /// 执行Agent任务（流式）
     /// </summary>
     /// <param name="input">输入内容</param>
