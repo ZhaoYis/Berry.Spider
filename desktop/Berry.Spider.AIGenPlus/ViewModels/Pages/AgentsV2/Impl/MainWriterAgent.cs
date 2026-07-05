@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Berry.Spider.AIGenPlus.Functions;
 using Microsoft.Extensions.AI;
@@ -71,11 +72,14 @@ public class MainWriterAgent(
     protected override ChatResponseFormat ResponseFormat =>
         ChatResponseFormat.ForJsonSchema<MainWriterOutput>(schemaName: "MainWriterOutput");
 
-    protected override IEnumerable<AITool> Tools =>
+    protected override IEnumerable<AITool> Tools => 
     [
+        //需要用户进行审核
+        // new ApprovalRequiredAIFunction(sp.GetRequiredService<DateTimeFunction>())
         sp.GetRequiredService<DateTimeFunction>()
     ];
 
+    [Experimental("MEAI001")]
     public override Task<string> ExecuteAsync(string input, string taskId)
     {
         return base.ExecuteAsync(input, taskId);

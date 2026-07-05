@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
@@ -89,7 +90,8 @@ public class ReviewerAgent(
         ChatResponseFormat.ForJsonSchema<ReviewerOutput>(schemaName: "ReviewerOutput");
 
     protected override IEnumerable<AITool> Tools => [];
-
+    
+    [Experimental("MEAI001")]
     public override async Task<string> ExecuteAsync(string input, string taskId)
     {
         string response = await base.ExecuteAsync(input, taskId);
