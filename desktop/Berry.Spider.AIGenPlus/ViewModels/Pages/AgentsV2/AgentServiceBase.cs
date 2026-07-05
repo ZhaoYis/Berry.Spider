@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -85,6 +86,7 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// 获取Agent实例
     /// </summary>
     /// <returns></returns>
+    [Experimental("MEAI001")]
     public virtual AIAgent GetAgent()
     {
         Lock.Enter();
@@ -129,6 +131,7 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// <param name="input">输入内容</param>
     /// <param name="taskId">任务ID(用于记录执行日志)</param>
     /// <returns>输出内容</returns>
+    [Experimental("MEAI001")]
     public virtual async Task<string> ExecuteAsync(string input, string taskId)
     {
         try
@@ -150,6 +153,7 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// <param name="input">输入内容</param>
     /// <param name="taskId">任务ID(用于记录执行日志)</param>
     /// <returns>输出内容</returns>
+    [Experimental("MEAI001")]
     public async Task<T> ExecuteAsync<T>(string input, string taskId)
     {
         try
@@ -171,6 +175,7 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// <param name="input">输入内容</param>
     /// <param name="taskId">任务ID(用于记录执行日志)</param>
     /// <returns>输出内容</returns>
+    [Experimental("MEAI001")]
     public virtual async IAsyncEnumerable<string> ExecuteStreamAsync(string input, string taskId)
     {
         ChatClientAgent chatClientAgent = this.GetAgent() as ChatClientAgent ??
@@ -219,6 +224,7 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
     /// 获取Agent实例
     /// </summary>
     /// <returns></returns>
+    [Experimental("MEAI001")]
     private ChatClientAgent CreateNewAIAgent()
     {
         var options = new ChatClientAgentOptions
@@ -239,7 +245,12 @@ public abstract class AgentServiceBase(IChatClient chatClient) : IAgentService
             ThrowOnChatHistoryProviderConflict = false,
             ClearOnChatHistoryProviderConflict = true,
             AIContextProviders = this.CreateAIContextProviders(),
-            ChatHistoryProvider = new InMemoryChatHistoryProvider()
+            ChatHistoryProvider = new InMemoryChatHistoryProvider(new InMemoryChatHistoryProviderOptions
+            {
+                //ChatReduction 仅适用于消息存储在本地的场景（如InMemoryChatHistoryProvider）。对于消息存储在服务端的场景（如 Azure Foundry Agents），聊天历史由服务自身管理，客户端无法干预裁剪。
+                ChatReducer = new MessageCountingChatReducer(10),
+                ReducerTriggerEvent = InMemoryChatHistoryProviderOptions.ChatReducerTriggerEvent.BeforeMessagesRetrieval
+            })
         };
         return this.ChatClient.AsAIAgent(options);
     }
