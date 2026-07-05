@@ -8,10 +8,10 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:pages="clr-namespace:Berry.Spider.ToolkitStore.Views.Pages"
+    xmlns:pages="clr-namespace:Berry.Spider.DesktopProjectDemo.Views.Pages"
     xmlns:pages1="clr-namespace:Berry.Spider.DesktopProjectDemo.Views.Pages"
     xmlns:viewModels="clr-namespace:Berry.Spider.DesktopProjectDemo.ViewModels"
-    xmlns:vm="using:Berry.Spider.ToolkitStore.ViewModels"
+    xmlns:vm="using:Berry.Spider.DesktopProjectDemo.ViewModels"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <UserControl.Resources>
