@@ -1,8 +1,8 @@
 using System;
-using Berry.Spider.ToolkitStore.Models;
+using Berry.Spider.DesktopProjectDemo.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace Berry.Spider.ToolkitStore.ViewModels;
+namespace Berry.Spider.DesktopProjectDemo.ViewModels;
 
 public class ViewModelRecipientBase : ObservableRecipient
 {

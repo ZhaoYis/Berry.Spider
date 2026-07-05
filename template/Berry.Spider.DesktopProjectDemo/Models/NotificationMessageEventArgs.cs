@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using Avalonia.Controls.Notifications;
 
-namespace Berry.Spider.ToolkitStore.Models;
+namespace Berry.Spider.DesktopProjectDemo.Models;
 
 public class NotificationMessageEventArgs(string messageTitle, string message) : EventArgs
 {

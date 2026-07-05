@@ -1,6 +1,6 @@
 using Volo.Abp.DependencyInjection;
 
-namespace Berry.Spider.ToolkitStore.ViewModels.Pages;
+namespace Berry.Spider.DesktopProjectDemo.ViewModels.Pages;
 
 public partial class HomePageViewModel : ViewModelBase, ITransientDependency
 {

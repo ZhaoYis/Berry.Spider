@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Windows.Input;
 
-namespace Berry.Spider.ToolkitStore.ViewModels;
+namespace Berry.Spider.DesktopProjectDemo.ViewModels;
 
 public class MenuItemViewModel
 {

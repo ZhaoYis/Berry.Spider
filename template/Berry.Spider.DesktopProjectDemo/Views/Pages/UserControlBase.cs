@@ -1,9 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
 using Avalonia.Controls.Primitives;
-using Berry.Spider.ToolkitStore.Models;
+using Berry.Spider.DesktopProjectDemo.Models;
 
-namespace Berry.Spider.ToolkitStore.Views.Pages;
+namespace Berry.Spider.DesktopProjectDemo.Views.Pages;
 
 public class UserControlBase : UserControl
 {

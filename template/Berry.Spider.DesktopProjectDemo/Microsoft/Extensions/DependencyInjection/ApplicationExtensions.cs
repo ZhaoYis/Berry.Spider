@@ -1,4 +1,4 @@
-using Berry.Spider.ToolkitStore;
+using Berry.Spider.DesktopProjectDemo;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

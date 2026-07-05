@@ -1,4 +1,4 @@
-namespace Berry.Spider.ToolkitStore.Models;
+namespace Berry.Spider.DesktopProjectDemo.Models;
 
 public class NotificationTaskMessage(bool isRunning)
 {

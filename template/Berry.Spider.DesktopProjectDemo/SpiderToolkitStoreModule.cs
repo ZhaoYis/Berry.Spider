@@ -1,9 +1,9 @@
-using Berry.Spider.ToolkitStore.Views;
+using Berry.Spider.DesktopProjectDemo.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Volo.Abp.Autofac;
 using Volo.Abp.Modularity;
 
-namespace Berry.Spider.ToolkitStore;
+namespace Berry.Spider.DesktopProjectDemo;
 
 [DependsOn(typeof(AbpAutofacModule))]
 public class SpiderToolkitStoreModule : AbpModule

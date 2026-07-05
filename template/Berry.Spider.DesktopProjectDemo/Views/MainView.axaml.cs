@@ -1,10 +1,8 @@
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-using Berry.Spider.ToolkitStore.ViewModels;
+using Berry.Spider.DesktopProjectDemo.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Berry.Spider.ToolkitStore.Views;
+namespace Berry.Spider.DesktopProjectDemo.Views;
 
 public partial class MainView : UserControl
 {

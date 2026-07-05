@@ -1,15 +1,14 @@
 using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
-using Berry.Spider.ToolkitStore.ViewModels;
-using Berry.Spider.ToolkitStore.Views;
+using Berry.Spider.DesktopProjectDemo.ViewModels;
+using Berry.Spider.DesktopProjectDemo.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Volo.Abp;
 
-namespace Berry.Spider.ToolkitStore;
+namespace Berry.Spider.DesktopProjectDemo;
 
 public partial class App : Application
 {
@@ -54,7 +53,7 @@ public partial class App : Application
             {
                 // Line below is needed to remove Avalonia data validation.
                 // Without this line you will get duplicate validations from both Avalonia and CT
-                BindingPlugins.DataValidators.RemoveAt(0);
+                // BindingPlugins.DataValidators.RemoveAt(0);
                 //初始化MainWindow
                 MainWindow mainWindow = this.Services.GetRequiredService<MainWindow>();
                 mainWindow.DataContext = this.Services.GetRequiredService<MainWindowViewModel>();

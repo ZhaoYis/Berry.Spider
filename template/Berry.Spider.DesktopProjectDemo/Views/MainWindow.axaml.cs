@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace Berry.Spider.ToolkitStore.Views;
+namespace Berry.Spider.DesktopProjectDemo.Views;
 
 public partial class MainWindow : Window
 {

@@ -1,6 +1,6 @@
 <Application
     RequestedThemeVariant="Default"
-    x:Class="Berry.Spider.ToolkitStore.App"
+    x:Class="Berry.Spider.DesktopProjectDemo.App"
     xmlns="https://github.com/avaloniaui"
     xmlns:semi="https://irihi.tech/semi"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">

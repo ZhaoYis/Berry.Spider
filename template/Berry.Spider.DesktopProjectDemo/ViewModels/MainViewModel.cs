@@ -8,7 +8,7 @@ using CommunityToolkit.Mvvm.Input;
 using Semi.Avalonia;
 using Volo.Abp.DependencyInjection;
 
-namespace Berry.Spider.ToolkitStore.ViewModels;
+namespace Berry.Spider.DesktopProjectDemo.ViewModels;
 
 public partial class MainViewModel : ViewModelBase, ITransientDependency
 {

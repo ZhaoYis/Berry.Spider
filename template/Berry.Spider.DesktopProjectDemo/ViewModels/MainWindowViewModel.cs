@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Timers;
-using Berry.Spider.ToolkitStore.Models;
+using Berry.Spider.DesktopProjectDemo.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using Volo.Abp.DependencyInjection;
 
-namespace Berry.Spider.ToolkitStore.ViewModels;
+namespace Berry.Spider.DesktopProjectDemo.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase, IRecipient<NotificationTaskMessage>, ITransientDependency
 {
